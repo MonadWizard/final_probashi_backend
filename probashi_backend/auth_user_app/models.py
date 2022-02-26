@@ -10,56 +10,50 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserManager(BaseUserManager):
 
-    def create_user(self,userid, fullname, email, password=None):
+    def create_user(self,userid, user_fullname, user_email, password=None):
         if userid is None:
             raise TypeError('User ID should not be none')
-        if fullname is None:
+        if user_fullname is None:
             raise TypeError('Users should have a fullname')
-        if email is None:
+        if user_email is None:
             raise TypeError('Users should have a Email')
 
-        user = self.model(userid=userid, fullname=fullname, email=self.normalize_email(email))
+        user = self.model(userid=userid, user_fullname=user_fullname, user_email=self.normalize_email(user_email))
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self,userid, fullname, email, password=None):
+    def create_superuser(self,userid, user_fullname, user_email, password=None):
         if userid is None:
             raise TypeError('User ID should not be none')
         if password is None:
             raise TypeError('Password should not be none')
 
-        user = self.create_user(userid, fullname, email, password)
+        user = self.create_user(userid, user_fullname, user_email, password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
         return user
 
 
-AUTH_PROVIDERS = {'facebook': 'facebook', 'google': 'google',
-                    'twitter': 'twitter', 'email': 'email'}
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     userid= models.CharField(primary_key=True,max_length=30, unique=True, db_index=True)
-    fullname = models.CharField(max_length=255, unique=True, db_index=True)
-    email = models.EmailField(max_length=255, unique=True, db_index=True)
+    user_fullname = models.CharField(max_length=255, unique=True, db_index=True)
+    user_email = models.EmailField(max_length=255, unique=True, db_index=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    auth_provider = models.CharField(
-        max_length=255, blank=False,
-        null=False, default=AUTH_PROVIDERS.get('email'))
+    user_created_at = models.DateTimeField(auto_now_add=True)
+    user_updated_at = models.DateTimeField(auto_now=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['userid','fullname']
+
+    USERNAME_FIELD = 'user_email'
+    REQUIRED_FIELDS = ['userid','user_fullname']
 
     objects = UserManager()
 
     def __str__(self):
-        return self.email
+        return self.user_email
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)
@@ -67,3 +61,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             'refresh': str(refresh),
             'access': str(refresh.access_token)
         }
+
+
+
+
+
+

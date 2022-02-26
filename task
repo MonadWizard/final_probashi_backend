@@ -2,11 +2,28 @@ user_registration:
     1. register [ok]
 
                 {
-                    "email": "demo@demo1.com",
-                    "fullname": "demo1",
+                    "user_email": "demo@demo1.com",
+                    "user_fullname": "demo1",
                     "password": "demodemo"
                 }
 
     2. VerifyEmail [ok]
     
-    3. 
+    3. view user data [ok]
+
+    4. logout user [ok]
+
+    5. Reset Password request [ok]
+
+                {
+                    "user_email": "demo@demo2.com"
+                }
+
+    5. Reset Password [OK]
+            {
+                "password": "string",
+                "token": "b1ggps-86286042e0d49520d8cf63f32a8d1b77",
+                "uidb64": "MDIyNjEwMDIzMjY0NDQ1Mg"
+            }
+
+    

@@ -56,14 +56,14 @@ class RegisterView(generics.GenericAPIView):
         serializer.save()
         user_data = serializer.data
         
-        user = User.objects.get(email=user_data['email'])
+        user = User.objects.get(user_email=user_data['user_email'])
         token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
         relativeLink = reverse('email-verify')
         absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
-        email_body = 'Hi '+user.fullname + \
+        email_body = 'Hi '+user.user_fullname + \
             ' Use the link below to verify your email \n' + absurl
-        data = {'email_body': email_body, 'to_email': user.email,
+        data = {'email_body': email_body, 'to_email': user.user_email,
                 'email_subject': 'Verify your email'}
 
         print('data', data)
@@ -106,11 +106,11 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
 
-        email = request.data.get('email', '')
+        user_email = request.data.get('user_email', '')
 
-        if User.objects.filter(email=email).exists():
-            user = User.objects.get(email=email)
-            uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
+        if User.objects.filter(user_email=user_email).exists():
+            user = User.objects.get(user_email=user_email)
+            uidb64 = urlsafe_base64_encode(smart_bytes(user.userid))
             token = PasswordResetTokenGenerator().make_token(user)
             current_site = get_current_site(
                 request=request).domain
@@ -119,9 +119,11 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
             redirect_url = request.data.get('redirect_url', '')
             absurl = 'http://'+current_site + relativeLink
+            # email_body = 'Hello, \n Use link below to reset your password  \n' + \
+            #     absurl+"?redirect_url="+redirect_url
             email_body = 'Hello, \n Use link below to reset your password  \n' + \
-                absurl+"?redirect_url="+redirect_url
-            data = {'email_body': email_body, 'to_email': user.email,
+                absurl
+            data = {'email_body': email_body, 'to_email': user.user_email,
                     'email_subject': 'Reset your passsword'}
             Util.send_email(data)
         return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
@@ -132,30 +134,33 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
 
     def get(self, request, uidb64, token):
 
-        redirect_url = request.GET.get('redirect_url')
+        # redirect_url = request.GET.get('redirect_url')
 
         try:
             id = smart_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(id=id)
+            user = User.objects.get(userid=id)
 
             if not PasswordResetTokenGenerator().check_token(user, token):
-                if len(redirect_url) > 3:
-                    return CustomRedirect(redirect_url+'?token_valid=False')
-                else:
-                    return CustomRedirect(os.environ.get('FRONTEND_URL', '')+'?token_valid=False')
+                # if len(redirect_url) > 3:
+                #     return CustomRedirect(redirect_url+'?token_valid=False')
+                # else:
+                #     return CustomRedirect(os.environ.get('FRONTEND_URL', '')+'?token_valid=False')
+                return Response({'error', 'Token is not valid, Please request a new link'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': True, 'message': 'Credentials valid', 'uidb64': uidb64, 'token': token }, status=status.HTTP_200_OK)
 
-            if redirect_url and len(redirect_url) > 3:
-                return CustomRedirect(redirect_url+'?token_valid=True&message=Credentials Valid&uidb64='+uidb64+'&token='+token)
-            else:
-                return CustomRedirect(os.environ.get('FRONTEND_URL', '')+'?token_valid=False')
+            # if redirect_url and len(redirect_url) > 3:
+            #     return CustomRedirect(redirect_url+'?token_valid=True&message=Credentials Valid&uidb64='+uidb64+'&token='+token)
+            # else:
+            #     return CustomRedirect(os.environ.get('FRONTEND_URL', '')+'?token_valid=False')
 
         except DjangoUnicodeDecodeError as identifier:
-            try:
-                if not PasswordResetTokenGenerator().check_token(user):
-                    return CustomRedirect(redirect_url+'?token_valid=False')
+            # try:
+            if not PasswordResetTokenGenerator().check_token(user):
+                # return CustomRedirect(redirect_url+'?token_valid=False')
+                return Response({'error', 'Token is not valid, Please request a new link'}, status=status.HTTP_400_BAD_REQUEST)
                     
-            except UnboundLocalError as e:
-                return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
+            # except UnboundLocalError as e:
+            #     return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -179,24 +184,23 @@ class LogoutAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+        return Response("successfully logout",status=status.HTTP_204_NO_CONTENT)
 
 
 class ViewUser(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-
-    def get_object(self,pk):
+    def get_user(self,pk):
         try:
             return User.objects.get(userid=pk)
         except User.DoesNotExist:
             raise Http404
 
     def get(self,request,pk):
-        user = self.get_object(pk)
+
+        user = self.get_user(pk)
         serializer = ViewUserSerializer(user)
-        return Response(serializer.data)
+        return Response (serializer.data)
 
     def put(self,request,pk):
         student = self.get_object(pk)
@@ -210,3 +214,7 @@ class ViewUser(views.APIView):
         student = self.get_object(pk)
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
