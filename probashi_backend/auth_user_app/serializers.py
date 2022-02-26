@@ -10,23 +10,27 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        max_length=68, min_length=6, write_only=True)
+    password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+    userid = serializers.CharField(max_length=68, min_length=6, write_only=True)
 
     default_error_messages = {
-        'username': 'The username should only contain alphanumeric characters'}
-
+        'email': 'The email should only contain alphanumeric characters'}
+    
     class Meta:
         model = User
-        fields = ['email', 'username', 'password']
+        fields = ['userid','email', 'fullname', 'password']
 
     def validate(self, attrs):
+        userid = attrs.get('userid', '')
         email = attrs.get('email', '')
-        username = attrs.get('username', '')
+        fullname = attrs.get('fullname', '')
+        print('attrs', attrs)
 
-        if not username.isalnum():
-            raise serializers.ValidationError(
-                self.default_error_messages)
+        # # validet fullname is allphanumeric
+        # if not fullname.isalnum():
+        #     raise serializers.ValidationError(
+        #         self.default_error_messages)
+        
         return attrs
 
     def create(self, validated_data):
@@ -45,7 +49,7 @@ class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255, min_length=3)
     password = serializers.CharField(
         max_length=68, min_length=6, write_only=True)
-    username = serializers.CharField(
+    fullname = serializers.CharField(
         max_length=255, min_length=3, read_only=True)
 
     tokens = serializers.SerializerMethodField()
@@ -60,7 +64,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'username', 'tokens']
+        fields = ['email', 'password', 'fullname', 'tokens']
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -81,7 +85,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
         return {
             'email': user.email,
-            'username': user.username,
+            'fullname': user.fullname,
             'tokens': user.tokens
         }
 

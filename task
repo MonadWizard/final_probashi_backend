@@ -1,0 +1,12 @@
+user_registration:
+    1. register [ok]
+
+                {
+                    "email": "demo@demo1.com",
+                    "fullname": "demo1",
+                    "password": "demodemo"
+                }
+
+    2. VerifyEmail [ok]
+    
+    3. 
