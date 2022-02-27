@@ -22,8 +22,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'rest_framework',
+    #created apps
     'auth_user_app',
+    'user_profile_app',
+    'consultancy_app',
+    'user_service_app',
+    'user_connection_app',
+    'user_blog_app',
+    'user_chat_app',
+
+    #third party apps
+    'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
 
@@ -69,12 +78,24 @@ CORS_ORIGIN_WHITELIST = [
 
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'probashi_final',
+        'USER': 'postgres',
+        'PASSWORD': 'mypassword',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
+
 
 
 REST_FRAMEWORK = {

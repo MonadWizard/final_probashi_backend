@@ -1,0 +1,42 @@
+Database name = probashi_final
+
+user model: in auth_user_app
+
+user_socialaccount_and_about:  in auth_user_profile_app [for consult pk need]  [ok]
+
+user_experience:  in auth_user_profile_app  [for consult pk need]  [ok]
+
+user_education:  in auth_user_profile_app  [for consult pk need]  [ok]
+
+user_idverification:  in auth_user_profile_app  [for consult pk need] [ok]
+
+user_consult:
+
+user_setting:
+
+facing_trouble:
+
+user_consult_appointment:
+
+create_blog:
+
+blog_comment:
+
+blog_likedislike:
+
+user_connect:
+
+user_connection_request:
+
+user_favourite:
+
+setting_data:
+
+offer_promo_code:
+
+
+
+
+
+
+

@@ -3,5 +3,12 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/', include('auth_user_app.urls'))
+    path('auth_user/', include('auth_user_app.urls')),
+    path('user_profile/', include('user_profile_app.urls')),
+    path('consultancy/', include('consultancy_app.urls')),
+    path('user_service/', include('user_service_app.urls')),
+    path('user_connection/', include('user_connection_app.urls')),
+    path('user_blog/', include('user_blog_app.urls')),
+    path('user_chat/', include('user_chat_app.urls')),
+
 ]
