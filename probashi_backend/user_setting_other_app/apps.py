@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class UserServiceAppConfig(AppConfig):
+class UserSettingOtherAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'user_service_app'
+    name = 'user_setting_other_app'

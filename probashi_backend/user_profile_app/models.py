@@ -2,8 +2,8 @@ from django.db import models
 from auth_user_app.models import User
 
 
-class user_socialaccount_and_about(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+class User_socialaccount_and_about(models.Model):
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
     user_about = models.TextField(blank=True, null=True)
     user_fbaccount = models.CharField(max_length=200, blank=True, null=True)
     user_twitteraccount = models.CharField(max_length=200, blank=True, null=True)
@@ -17,7 +17,7 @@ class user_socialaccount_and_about(models.Model):
     user_immo_account = models.CharField(max_length=200, blank=True, null=True)
 
 
-class user_experience(models.Model):
+class User_experience(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     user_designation = models.CharField(max_length=200, blank=True, null=True)
     user_companyname = models.CharField(max_length=200, blank=True, null=True)
@@ -26,7 +26,7 @@ class user_experience(models.Model):
     userexperience_enddate = models.DateField(blank=True, null=True)
     
 
-class user_education(models.Model):
+class User_education(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     user_edu_degree = models.CharField(max_length=200, blank=True, null=True)
     user_edu_institutename = models.CharField(max_length=200, blank=True, null=True)
@@ -34,7 +34,7 @@ class user_education(models.Model):
     user_edu_enddate = models.DateField(blank=True, null=True)
     
 
-class user_idverification(models.Model):
+class User_idverification(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     is_user_permanent_resident = models.BooleanField(default=False)
     user_verify_id_type = models.CharField(max_length=200, blank=True, null=True)
@@ -43,4 +43,3 @@ class user_idverification(models.Model):
 
 
 
-    

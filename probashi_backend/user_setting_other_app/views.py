@@ -10,11 +10,11 @@ from django.http import Http404
 
 class DemoView(generics.GenericAPIView):
 
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
 
-        return Response("user_service_app_view",status=status.HTTP_204_NO_CONTENT)
+        return Response("user_settings_app_view",status=status.HTTP_204_NO_CONTENT)
 
 
 

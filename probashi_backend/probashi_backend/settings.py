@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     'auth_user_app',
     'user_profile_app',
     'consultancy_app',
-    'user_service_app',
+    'user_setting_other_app',
     'user_connection_app',
     'user_blog_app',
     'user_chat_app',

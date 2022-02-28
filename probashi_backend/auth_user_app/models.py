@@ -57,6 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_nonresidential_country = models.CharField(max_length=200, blank=True, null=True)
     user_nonresidential_city = models.CharField(max_length=200, blank=True, null=True)
     user_durationyear_abroad = models.IntegerField(blank=True, null=True)
+    
     user_current_location_durationyear = models.IntegerField(blank=True, null=True)
     user_industry = models.CharField(max_length=200, blank=True, null=True)
     user_areaof_experience = models.CharField(max_length=200, blank=True, null=True)

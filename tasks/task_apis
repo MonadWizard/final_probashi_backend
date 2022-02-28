@@ -26,4 +26,8 @@ user_registration:
                 "uidb64": "MDIyNjEwMDIzMjY0NDQ1Mg"
             }
 
-    
+create_profile:
+    1. user_basic info to complete profile:
+
+    then skip parts:
+        
