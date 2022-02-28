@@ -1,26 +1,26 @@
 Database name = probashi_final
 
-user model: in auth_user_app   [ok]
+user model: in auth_user_app [ok]
 
-user_socialaccount_and_about:  in auth_user_profile_app [for consult pk need]  [ok]
+user_socialaccount_and_about: in auth_user_profile_app [for consult pk need] [ok]
 
-user_experience:  in auth_user_profile_app  [for consult pk need]  [ok]
+user_experience: in auth_user_profile_app [for consult pk need] [ok]
 
-user_education:  in auth_user_profile_app  [for consult pk need]  [ok]
+user_education: in auth_user_profile_app [for consult pk need] [ok]
 
-user_idverification:  in auth_user_profile_app  [for consult pk need] [ok]
+user_idverification: in auth_user_profile_app [for consult pk need] [ok]
 
-user_consult:  [ok]
+user_consult: [ok]
 
-user_consult_appointment:  [ok]
+user_consult_appointment: [ok]
 
 user_setting: [ok]
 
 facing_trouble: [ok]
 
-create_blog:  []
+create_blog: [ok]
 
-blog_comment:
+blog_comment: [ok]
 
 blog_likedislike:
 
@@ -33,10 +33,3 @@ user_favourite:
 setting_data:
 
 offer_promo_code_data: [ok]
-
-
-
-
-
-
-
