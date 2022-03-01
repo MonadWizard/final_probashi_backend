@@ -6,7 +6,8 @@ from rest_framework import permissions
 from django.http import Http404
 
 from auth_user_app.models import User
-from .serializers import UserProfileSkipPart1Serializer, UserProfileSkipPart2Serializer
+from .models import User_socialaccount_and_about, User_experience, User_education, User_idverification
+from .serializers import UserProfileSkipPart1Serializer, UserProfileSkipPart2Serializer, UserSocialaccountAboutSerializer
 
 
 
@@ -45,7 +46,25 @@ class UserProfileSkipPart2(views.APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserAboutSocialLink(views.APIView):
+    def get_object(self,userid):
+        try:
+            return User_socialaccount_and_about.objects.get(userid=userid)
+        except User_socialaccount_and_about.DoesNotExist:
+            raise Http404
 
+    def get(self,request,userid):
+        userid = self.get_object(userid)
+        serializer = UserSocialaccountAboutSerializer(userid)
+        return Response(serializer.data)
+
+    def put(self,request,userid):
+        userid = self.get_object(userid)
+        serializer = UserSocialaccountAboutSerializer(userid,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 
