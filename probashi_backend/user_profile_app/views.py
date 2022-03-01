@@ -6,36 +6,47 @@ from rest_framework import permissions
 from django.http import Http404
 
 from auth_user_app.models import User
-from .serializers import UserProfileSerializer
+from .serializers import UserProfileSkipPart1Serializer, UserProfileSkipPart2Serializer
 
 
 
-
-class DemoView(generics.GenericAPIView):
-
+class UserProfileSkipPart1(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request):
-
-        return Response("user_profile_view",status=status.HTTP_204_NO_CONTENT)
-
-
-#  problem : user_id exist kore previously. 
-class UserProfile(views.APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request):
-        user_profiledata = request.data
-        serializer = UserProfileSerializer(data = user_profiledata)
+    def get_object(self,userid):
+        try:
+            return User.objects.get(pk=userid)
+        except User.DoesNotExist:
+            raise Http404
+    
+    def put(self,request,userid):
+        userid = self.get_object(userid)
+        serializer = UserProfileSkipPart1Serializer(userid,data=request.data)
         if serializer.is_valid():
-            obj = serializer.save()
-        context = {}
-        context['user_fullname_passport'] = obj.user_fullname_passport
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(context, status=status.HTTP_201_CREATED)
+class UserProfileSkipPart2(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request):
-        queryset = User.objects.all()
-        serializer = UserProfileSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def get_object(self,userid):
+        try:
+            return User.objects.get(pk=userid)
+        except User.DoesNotExist:
+            raise Http404
+    
+    def put(self,request,userid):
+        userid = self.get_object(userid)
+        serializer = UserProfileSkipPart2Serializer(userid,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
 

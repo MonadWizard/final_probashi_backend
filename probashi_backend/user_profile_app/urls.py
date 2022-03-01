@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import DemoView, UserProfile
+from .views import UserProfileSkipPart1, UserProfileSkipPart2
 
 
 
 urlpatterns = [
-    path('demo/', DemoView.as_view(), name="demo"),
-    path('UserProfile/', UserProfile.as_view(), name="UserProfile")
+    path('user-profile-skip1/<str:userid>', UserProfileSkipPart1.as_view(), name="UserProfileskip1"),
+    path('user-profile-skip2/<str:userid>', UserProfileSkipPart2.as_view(), name="UserProfileskip2")
 
 ]
 

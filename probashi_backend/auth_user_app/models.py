@@ -62,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_industry = models.CharField(max_length=200, blank=True, null=True)
     user_areaof_experience = models.CharField(max_length=200, blank=True, null=True)
     user_industry_experienceyear = models.IntegerField(blank=True, null=True)
+    
     user_interested_area = ArrayField(models.CharField(max_length=200), blank=True, null=True)
     user_goal = ArrayField(models.CharField(max_length=200), blank=True, null=True)
     # user_consuttype_personal = models.BooleanField(default=False)

@@ -88,9 +88,9 @@ CORS_ORIGIN_WHITELIST = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'probashi_final',
+        'NAME': 'probashi_db',
         'USER': 'postgres',
-        'PASSWORD': 'mypassword',
+        'PASSWORD': '12345',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
