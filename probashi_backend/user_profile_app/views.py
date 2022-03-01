@@ -15,7 +15,7 @@ class UserProfileSkipPart1(views.APIView):
 
     def get_object(self,userid):
         try:
-            return User.objects.get(pk=userid)
+            return User.objects.get(userid=userid)
         except User.DoesNotExist:
             raise Http404
     

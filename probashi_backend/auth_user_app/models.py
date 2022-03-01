@@ -38,7 +38,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     userid= models.CharField(primary_key=True,max_length=30, unique=True, db_index=True)
     user_fullname = models.CharField(max_length=255, unique=True, db_index=True)
     user_email = models.EmailField(max_length=255, unique=True, db_index=True)
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_consultant = models.BooleanField(default=False)

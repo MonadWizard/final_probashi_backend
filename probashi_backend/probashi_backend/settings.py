@@ -9,7 +9,11 @@ SECRET_KEY = 'django-insecure-@=34_6+7@__b9br5$*#*ywmlh*aco__-jg87!*8b53%m+veidy
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'probashiapi.algorithmgeneration.com',
+	'192.168.0.101',
+	'127.0.0.1'
+    ]
 
 # user model
 AUTH_USER_MODEL = 'auth_user_app.User'
@@ -71,25 +75,37 @@ WSGI_APPLICATION = 'probashi_backend.wsgi.application'
 
 
 # CORS WHITELIST
-CORS_ORIGIN_WHITELIST = [
-    "http://127.0.0.1:8080"
+#CORS_ORIGIN_WHITELIST = [
+    #"http://127.0.0.1:8080"
+#]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4200',
+    'http://localhost:8080',
+    'http://127.0.0.1:4200',
+    'https://probashiapi.algorithmgeneration.com',
+    'http://probashiapi.algorithmgeneration.com',
 ]
 
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'X-Api-Key'
+]
 
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'probashi_db',
-        'USER': 'postgres',
+        'USER': 'agl',
         'PASSWORD': '12345',
         'HOST': '127.0.0.1',
         'PORT': '5432',
@@ -137,7 +153,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
@@ -146,6 +162,8 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/upload/'
+MEDIA_ROOT=os.path.join(BASE_DIR, "upload")
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
