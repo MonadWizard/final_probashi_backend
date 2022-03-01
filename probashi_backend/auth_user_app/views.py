@@ -1,11 +1,13 @@
+from django.http import HttpResponse
 from rest_framework import generics, status, views, permissions
-from .serializers import RegisterSerializer, \
-                        SetNewPasswordSerializer, \
-                        ResetPasswordEmailRequestSerializer, \
-                        EmailVerificationSerializer, \
-                        LoginSerializer, \
-                        LogoutSerializer, \
-                        ViewUserSerializer
+from .serializers import (RegisterSerializer,
+                        UpdateRegisterSerializer,
+                        SetNewPasswordSerializer, 
+                        ResetPasswordEmailRequestSerializer, 
+                        EmailVerificationSerializer, 
+                        LoginSerializer, 
+                        LogoutSerializer, 
+                        ViewUserSerializer )
 
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -29,66 +31,131 @@ import datetime
 
 
 
-
-class CustomRedirect(HttpResponsePermanentRedirect):
-
-    allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
-
-
-class RegisterView(generics.GenericAPIView):
-
-    serializer_class = RegisterSerializer
-
+class MailVerifyRequestView(views.APIView):
+    
     def post(self, request):
-        user = request.data
-        print('user',type(user))
+        data = request.data
+        user_fullname = data['user_fullname']
+        user_email = data['user_email']
+        password = data['password']
 
-        current_time = datetime.datetime.now() 
-        current_time = current_time.strftime("%m%d%H%M%S%f")
-        
-        userid = current_time
-        user["userid"]= userid
-        # print('user::::::::',user)
 
-        serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
+# Token passing
+        payload = {
+            'user_email': user_email,
+            'user_fullname': user_fullname,
+            'password': password,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30, seconds=00),
+            'iat': datetime.datetime.utcnow()
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
 
-        serializer.save()
-        user_data = serializer.data
-        
-        user = User.objects.get(user_email=user_data['user_email'])
-        token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
         relativeLink = reverse('email-verify')
         absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
-        email_body = 'Hi '+user.user_fullname + \
+        
+        email_body = 'Hi '+user_fullname + \
             ' Use the link below to verify your email \n' + absurl
-        data = {'email_body': email_body, 'to_email': user.user_email,
+        
+        data = {'email_body': email_body, 'to_email': user_email,
                 'email_subject': 'Verify your email'}
-
-        print('data', data)
+        # print('data:', data)
 
         Util.send_email(data)
-        return Response(user_data, status=status.HTTP_201_CREATED)
+
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class VerifyEmail(views.APIView):
-    serializer_class = EmailVerificationSerializer
 
+    serializer_class = RegisterSerializer
 
     def get(self, request):
         token = request.GET.get('token')
+
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            user = User.objects.get(userid=payload['user_id'])
-            if not user.is_verified:
-                user.is_verified = True
-                user.save()
-            return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+            verified_mail_payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            print("payload--------------",verified_mail_payload)
+
+
+            # user = request.data
+            # print('user',type(user))
+
+            current_time = datetime.datetime.now() 
+            current_time = current_time.strftime("%m%d%H%M%S%f")
+            
+            userid = current_time
+            verified_mail_payload["userid"]= userid
+            # print('user::::::::',user)
+
+            serializer = self.serializer_class(data=verified_mail_payload)
+            serializer.is_valid(raise_exception=True)
+
+            serializer.save()
+
+            html = "<html><body>Verification Success. It's time for login</body></html>"
+            return HttpResponse(html)
+            # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
-            return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
+            html = "<html><body>Activation Expired.</body></html>"
+            return HttpResponse(html)
+            # return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+            html = "<html><body>Invalid token.</body></html>"
+            return HttpResponse(html)
+            # return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateRegisterView(views.APIView):
+
+
+    def get_object(self,user_email):
+        try:
+            return User.objects.get(user_email__exact=user_email)
+        except User.DoesNotExist:
+            raise Http404
+
+
+    def put(self,request,user_email):
+        user_email = self.get_object(user_email)
+        fullname_pasport = request.data['user_fullname_passport']
+        serializer = UpdateRegisterSerializer(user_email,data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user_data = serializer.data
+        
+        # relativeLink = reverse('email-verify')
+        email_body = 'Hi '+fullname_pasport + \
+            ' welcome to probashi.. \n'
+        data = {'email_body': email_body, 'to_email': user_email,
+                'email_subject': 'welcome to probashi'}
+        # print('data:::::::::', data)
+
+        Util.send_email(data)
+        return Response(user_data, status=status.HTTP_201_CREATED)
+    
+
+
+
+    
+
+# class VerifyEmail(views.APIView):
+#     serializer_class = EmailVerificationSerializer
+
+
+#     def get(self, request):
+#         token = request.GET.get('token')
+#         try:
+#             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            
+#             user = User.objects.get(userid=payload['user_id'])
+#             if not user.is_verified:
+#                 user.is_verified = True
+#                 user.save()
+#             return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+#         except jwt.ExpiredSignatureError as identifier:
+#             return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
+#         except jwt.exceptions.DecodeError as identifier:
+#             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginAPIView(generics.GenericAPIView):
@@ -134,36 +201,21 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
 
     def get(self, request, uidb64, token):
 
-        # redirect_url = request.GET.get('redirect_url')
-
         try:
             id = smart_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(userid=id)
 
             if not PasswordResetTokenGenerator().check_token(user, token):
-                # if len(redirect_url) > 3:
-                #     return CustomRedirect(redirect_url+'?token_valid=False')
-                # else:
-                #     return CustomRedirect(os.environ.get('FRONTEND_URL', '')+'?token_valid=False')
                 return Response({'error', 'Token is not valid, Please request a new link'}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'success': True, 'message': 'Credentials valid', 'uidb64': uidb64, 'token': token }, status=status.HTTP_200_OK)
 
-            # if redirect_url and len(redirect_url) > 3:
-            #     return CustomRedirect(redirect_url+'?token_valid=True&message=Credentials Valid&uidb64='+uidb64+'&token='+token)
-            # else:
-            #     return CustomRedirect(os.environ.get('FRONTEND_URL', '')+'?token_valid=False')
-
+            
         except DjangoUnicodeDecodeError as identifier:
             # try:
             if not PasswordResetTokenGenerator().check_token(user):
-                # return CustomRedirect(redirect_url+'?token_valid=False')
                 return Response({'error', 'Token is not valid, Please request a new link'}, status=status.HTTP_400_BAD_REQUEST)
                     
-            # except UnboundLocalError as e:
-            #     return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
+            
 class SetNewPasswordAPIView(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
@@ -185,7 +237,6 @@ class LogoutAPIView(generics.GenericAPIView):
         serializer.save()
 
         return Response("successfully logout",status=status.HTTP_204_NO_CONTENT)
-
 
 class ViewUser(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)

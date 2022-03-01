@@ -8,6 +8,26 @@ user_registration:
                 }
 
     2. VerifyEmail [ok]
+
+    3. register_profile:   [ok] 
+                {   
+                    "user_fullname_passport": "demo paspoert name",
+                    "user_username": "usernamedem",
+                    "user_gender": "male",
+                    "user_dob": "1997-12-22",
+                    "user_photopath": "http://dmnfbjshdjskdfjkhsdkjhfkjsd.sdfnhsdhj.sdfkhskdh",
+                    "user_residential_district": "Dhaka",
+                    "user_nonresidential_country": "",
+                    "user_nonresidential_city": "",
+                    "user_durationyear_abroad": 0
+                }
+
+    4. login user  [ok]
+                {
+                "user_email": "demo@demo.com",
+                "password": "demodemo"
+                }
+
     
     3. view user data [ok]
 

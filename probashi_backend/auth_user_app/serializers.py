@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 from .models import User
 from django.contrib import auth
@@ -8,33 +7,48 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
-
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
     userid = serializers.CharField(max_length=68, min_length=6, write_only=True)
 
-    default_error_messages = {
-        'email': 'The email should only contain alphanumeric characters'}
+    # default_error_messages = {
+    #     'email': 'The email should only contain alphanumeric characters'}
     
     class Meta:
         model = User
         fields = ['userid','user_email', 'user_fullname', 'password']
 
-    def validate(self, attrs):
-        userid = attrs.get('userid', '')
-        user_email = attrs.get('user_email', '')
-        user_fullname = attrs.get('user_fullname', '')
-        print('attrs', attrs)
+    # def validate(self, attrs):
+    #     # userid = attrs.get('userid', '')
+    #     # user_email = attrs.get('user_email', '')
+    #     # user_fullname = attrs.get('user_fullname', '')
+    #     # print('attrs', attrs)
 
-        # # validet fullname is allphanumeric
-        # if not fullname.isalnum():
-        #     raise serializers.ValidationError(
-        #         self.default_error_messages)
+    #     # # validet fullname is allphanumeric
+    #     # if not fullname.isalnum():
+    #     #     raise serializers.ValidationError(
+    #     #         self.default_error_messages)
         
-        return attrs
+    #     return attrs
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
+
+
+
+class UpdateRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['user_fullname_passport', 
+                'user_username', 'user_gender',
+                'user_dob','user_photopath',
+                'user_residential_district',
+                'user_nonresidential_country',
+                'user_nonresidential_city',
+                'user_durationyear_abroad']
+    
+
+
 
 
 class EmailVerificationSerializer(serializers.ModelSerializer):
