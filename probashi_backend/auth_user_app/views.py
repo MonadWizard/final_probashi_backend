@@ -94,7 +94,7 @@ class VerifyEmail(views.APIView):
 
             serializer.save()
 
-            html = "<html><body>Verification Success. It's time for login</body></html>"
+            html = "<html><body>Verification Success. It's time for complete registration.</body></html>"
             return HttpResponse(html)
             # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
@@ -114,6 +114,11 @@ class UpdateRegisterView(views.APIView):
             return User.objects.get(user_email__exact=user_email)
         except User.DoesNotExist:
             raise Http404
+
+    def get(self,request,user_email):
+        user_email = self.get_object(user_email)
+        serializer = UpdateRegisterSerializer(user_email)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
     def put(self,request,user_email):

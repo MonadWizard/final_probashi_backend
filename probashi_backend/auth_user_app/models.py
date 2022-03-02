@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     userid= models.CharField(primary_key=True,max_length=30, unique=True, db_index=True)
-    user_fullname = models.CharField(max_length=255, unique=True, db_index=True)
+    user_fullname = models.CharField(max_length=255, db_index=True)
     user_email = models.EmailField(max_length=255, unique=True, db_index=True)
     is_verified = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
@@ -52,7 +52,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_username = models.CharField(max_length=100, unique=True, blank=True, null=True)
     user_gender = models.CharField(max_length=20, blank=True, null=True)
     user_dob = models.DateField(blank=True, null=True)
-    user_photopath = models.CharField(max_length=200, blank=True, null=True)
+    user_photopath = models.ImageField(upload_to='user/profile_picture', blank=True, null=True)
+    # user_photopath = models.CharField(max_length=200, blank=True, null=True)
     user_residential_district = models.CharField(max_length=200, blank=True, null=True)
     user_nonresidential_country = models.CharField(max_length=200, blank=True, null=True)
     user_nonresidential_city = models.CharField(max_length=200, blank=True, null=True)

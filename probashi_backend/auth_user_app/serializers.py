@@ -4,8 +4,7 @@ from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from drf_extra_fields.fields import Base64ImageField
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
@@ -37,6 +36,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class UpdateRegisterSerializer(serializers.ModelSerializer):
+    user_photopath=Base64ImageField() # From DRF Extra Fields
     class Meta:
         model = User
         fields = ['user_fullname_passport', 
@@ -47,7 +47,9 @@ class UpdateRegisterSerializer(serializers.ModelSerializer):
                 'user_nonresidential_city',
                 'user_durationyear_abroad']
     
-
+    def create(self, validated_data):
+        user_photopath=validated_data.pop('user_photopath')
+        return User.objects.create(user_photopath=user_photopath)
 
 
 

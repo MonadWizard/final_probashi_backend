@@ -1,5 +1,9 @@
+import django
 from django.contrib import admin
 from django.urls import path, include
+
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,4 +15,4 @@ urlpatterns = [
     path('user_blog/', include('user_blog_app.urls')),
     path('user_chat/', include('user_chat_app.urls')),
 
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

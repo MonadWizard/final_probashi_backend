@@ -4,6 +4,7 @@ djangorestframework
 djangorestframework-simplejwt
 django-cors-headers
 django-environ
+pillow
 
 
 

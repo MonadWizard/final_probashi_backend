@@ -1,5 +1,4 @@
-user_registration:
-    1. register [ok]
+user_registration: 1. register [ok]
 
                 {
                     "user_email": "demo@demo1.com",
@@ -9,8 +8,8 @@ user_registration:
 
     2. VerifyEmail [ok]
 
-    3. register_profile:   [ok] 
-                {   
+    3. register_profile:   [ok]
+                {
                     "user_fullname_passport": "demo paspoert name",
                     "user_username": "usernamedem",
                     "user_gender": "male",
@@ -28,7 +27,7 @@ user_registration:
                 "password": "demodemo"
                 }
 
-    
+
     3. view user data [ok]
 
     4. logout user [ok]
@@ -50,8 +49,66 @@ user_registration:
                 "uidb64": "MDIyNjEwMDIzMjY0NDQ1Mg"
             }
 
-create_profile:
-    1. user_basic info to complete profile:
+create_profile: 7. user_basic info to complete profile:
 
     then skip parts:
-        
+
+    8. user_complete_profile_skip_part1 :    [ok]     http://127.0.0.1:8000/user_profile/user-profile-skip1/0302154349388858/
+
+                            {
+                                "user_current_location_durationyear": "1",
+                                "user_industry": "IT farm",
+                                "user_areaof_experience": "backend",
+                                "user_industry_experienceyear": "1"
+                            }
+    9. user_complete_profile_skip_part2 :    [ok]    http://127.0.0.1:8000/user_profile/user-profile-skip2/0301173702421597/
+
+                                {
+                                    "user_interested_area": ["IOT"],
+                                    "user_goal": ["AI"]
+                                }
+    10. user_info_edit:   [ok]      http://127.0.0.1:8000/user_profile/user-edit-profile/0302154349388858/
+
+                {
+                    "user_fullname_passport": "I am demo 5",
+                    "user_username": "usernamedem2",
+                    "user_gender": "male",
+                    "user_dob": "1997-12-22",
+                    "user_photopath": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAuYAAAHSCAIAAAAv+JkiAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAgAElEQVR4Xuzde3QUx5kw/Kequns0Gt0RIAkQQgIkQMiAjcX9YmxDuDgBY8eO7bXXZjfxbr5342y+3T3+dn12/Z31yXqdi/d9835e5+aseZcY23FiAgQwAUJkg0EIEMJIgLhIgAAhobumu6ue74+WZkaj6UGDJSHFz+9wDjNPVVdX17Sma/pSxbJzpwAhhBBCyNDGwwOEEEIIIUOPSE4dGR4b8swNK+WDs+yVxeJUDWtpD0/+3Aa6/MGBiV5m2uFRAPOFdQDAa+vDEwghhJAhTAsPAFhfX6XtKsUOy350kfH6B+HJIaynH1D54wJvtf3lYvshADD/4auY5AMAaPfzS/Xa1oPs2s1ANleCm//XVzAlwfPP/xWe1JPxk20A4H/56fCEfjLQ5Q8CHJduPbHM+O474QkA2u6jrK4hPEoIIYQMbb26LJypzDRWW69mTuQXroWn9qS9vZtxZv3Z/ex6k7b9ECgVTPrgY1FaCQle68vzrK/dZ/zwVyHLRSbvm8E6"
+
+                }
+
+base64 converted photo added in "user_photopath"
+
+    11. UserAboutSocialLinkCreate:   [ok]    http://127.0.0.1:8000/user_profile/user-about-social-link-create/
+
+                {   
+                    "userid": "0302154349388858",
+                    "user_about": "22222222222",
+                    "user_fbaccount": "dfgjkdfh",
+                    "user_twitteraccount": "khjk",
+                    "user_instagramaccount": "jhg",
+                    "user_linkedinaccount": "jhgjh",
+                    "user_website": "gjhg",
+                    "user_whatsapp_account": "jhgjh",
+                    "user_whatsapp_visibility": "gj",
+                    "user_viber_account": "hgjhg",
+                    "user_immo_account": "jhg"
+                }
+
+    12. UserAboutSocialLinkUpdate:    [ok]    http://127.0.0.1:8000/user_profile/user-about-social-link-update/0302154349388858/
+
+                {   
+                "user_about": "uuuuuuuuuuuuuuuuuuuuuu",
+                "user_fbaccount": "dfgjkdfh",
+                "user_twitteraccount": "khjk",
+                "user_instagramaccount": "jhg",
+                "user_linkedinaccount": "jhgjh",
+                "user_website": "gjhg",
+                "user_whatsapp_account": "jhgjh",
+                "user_whatsapp_visibility": "gj",
+                "user_viber_account": "hgjhg",
+                "user_immo_account": "jhg"
+            }
+
+
