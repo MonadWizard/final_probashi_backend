@@ -38,7 +38,7 @@ class User_idverification(models.Model):
     userid = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     is_user_permanent_resident = models.BooleanField(default=False)
     user_verify_id_type = models.CharField(max_length=200, blank=True, null=True)
-    user_verify_passportphoto_path= models.CharField(max_length=200, blank=True, null=True)
+    user_verify_passportphoto_path= models.ImageField(upload_to='user/ID_verification', blank=True, null=True)
     
 
 

@@ -17,7 +17,6 @@ class UserProfileSkipPart2Serializer(serializers.ModelSerializer):
         fields = ['user_interested_area', 'user_goal' ]
 
 
-
 class UserEditPrifileSerializer(serializers.ModelSerializer):
     user_photopath=Base64ImageField() # From DRF Extra Fields
     class Meta:
@@ -26,9 +25,9 @@ class UserEditPrifileSerializer(serializers.ModelSerializer):
                 'user_username', 'user_gender',
                 'user_dob','user_photopath']
     
-    def create(self, validated_data):
-        user_photopath=validated_data.pop('user_photopath')
-        return User.objects.create(user_photopath=user_photopath)
+    # def create(self, validated_data):
+    #     user_photopath=validated_data.pop('user_photopath')
+    #     return User.objects.create(user_photopath=user_photopath)
 
 
 
@@ -45,9 +44,6 @@ class UserSocialaccountAboutUpdatSerializer(serializers.ModelSerializer):
                     'user_website', 'user_whatsapp_account', 'user_whatsapp_visibility',
                     'user_viber_account','user_immo_account']
 
-
-
-
 class UserExperienceCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_experience
@@ -56,11 +52,24 @@ class UserExperienceCreateSerializer(serializers.ModelSerializer):
 class UserExperienceUpdatSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_experience
-        fields = ['user_designation', 'user_companyname', 'user_responsibilities',
+        fields = ['id','user_designation', 'user_companyname', 'user_responsibilities',
                     'userexperience_startdate', 'userexperience_enddate']
+        # lookup_field = 'id'
 
+        def update(self, instance, validated_data):
+            validated_data.pop("id", None)
+            return super().update(self, instance, validated_data)
 
+class UserEducationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_education
+        fields = '__all__'
 
+class UserIdVerificationCreateSerializer(serializers.ModelSerializer):
+    user_verify_passportphoto_path=Base64ImageField()
+    class Meta:
+        model = User_idverification
+        fields = '__all__'
 
 
 

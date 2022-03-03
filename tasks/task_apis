@@ -82,7 +82,7 @@ base64 converted photo added in "user_photopath"
 
     11. UserAboutSocialLinkCreate:   [ok]    http://127.0.0.1:8000/user_profile/user-about-social-link-create/
 
-                {   
+                {
                     "userid": "0302154349388858",
                     "user_about": "22222222222",
                     "user_fbaccount": "dfgjkdfh",
@@ -98,7 +98,7 @@ base64 converted photo added in "user_photopath"
 
     12. UserAboutSocialLinkUpdate:    [ok]    http://127.0.0.1:8000/user_profile/user-about-social-link-update/0302154349388858/
 
-                {   
+                {
                 "user_about": "uuuuuuuuuuuuuuuuuuuuuu",
                 "user_fbaccount": "dfgjkdfh",
                 "user_twitteraccount": "khjk",
@@ -110,5 +110,40 @@ base64 converted photo added in "user_photopath"
                 "user_viber_account": "hgjhg",
                 "user_immo_account": "jhg"
             }
+
+    13.  user_experience create:   [ok]   http://127.0.0.1:8000/user_profile/user-experience-create/
+
+                {   "userid": "0302154349388858",
+                    "user_designation": "000000000",
+                    "user_companyname": "dfgjkdfh",
+                    "user_responsibilities": "khjk",
+                    "userexperience_startdate": "2010-03-02",
+                    "userexperience_enddate": "2022-03-02"
+                }
+
+
+    14. user_education create:  [ok]  http://127.0.0.1:8000/user_profile/user-education-create/
+
+                {
+                    "userid": "0302171221796917",
+                    "user_edu_degree": "BllaBlla",
+                    "user_edu_institutename": "user_edu_institutename",
+                    "user_edu_startdate": "2020-02-22",
+                    "user_edu_enddate": null
+                }
+
+    15. user_IDverification create:   [ok]  http://127.0.0.1:8000/user_profile/user-idverify-create/
+
+                {
+                    "userid": "0302171221796917",
+                    "is_user_permanent_resident": true,
+                    "user_verify_id_type": "pasport",
+                    "user_verify_passportphoto_path": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEYAAAJRCAIAAADH2SVbAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAgAElEQVR4XuzdeZQcx33g+W9EZtbVdzcajfsGSZAAKPG+b1IkRVISdVu05LElz4414/Ecb2bWu3676zcee+0Ze/b5GHtkWRpbFEWRuklKPCTxvsADxEEAxH2f3UDfVZWZ8ds"
+                }
+
+
+
+
+
 
 
