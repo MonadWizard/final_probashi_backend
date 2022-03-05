@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (UserProfileSkipPart1, UserProfileSkipPart2,
                     UserEditProfile, UserAboutSocialLinkCreate, 
                     UserExperienceCreate, UserEducationCreate,
-                    UserIdVerificationCreate)
+                    UserIdVerificationCreate,UserProfileView)
 
 
 
@@ -16,5 +16,7 @@ urlpatterns = [
     # path('user-experience-update/<str:userid>/', UserExperienceUpdate.as_view(), name="UserExperienceUpdate"),
     path('user-education-create/', UserEducationCreate.as_view(), name="UserEducationCreate"),
     path('user-idverify-create/', UserIdVerificationCreate.as_view(), name="UserIdVerificationCreate"),
+    path('user-profile-view/', UserProfileView.as_view(), name="UserProfileView"),
+
 ]
 

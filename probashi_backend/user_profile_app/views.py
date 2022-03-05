@@ -1,4 +1,4 @@
-from rest_framework import generics, status, views, permissions
+from rest_framework import generics, status, views, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
@@ -11,7 +11,9 @@ from .serializers import (UserProfileSkipPart1Serializer, UserProfileSkipPart2Se
                             UserEditPrifileSerializer, UserSocialaccountAboutCreateSerializer,
                             UserSocialaccountAboutUpdatSerializer, UserExperienceCreateSerializer,
                             UserExperienceUpdatSerializer, UserEducationCreateSerializer,
-                            UserIdVerificationCreateSerializer)
+                            UserIdVerificationCreateSerializer,
+                            UserProfileViewSerializer,UserIDverificationSerializer)
+from rest_framework.decorators import action
 
 
 
@@ -173,10 +175,6 @@ class UserExperienceCreate(views.APIView):
 #         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
-
 class UserEducationCreate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -198,6 +196,22 @@ class UserIdVerificationCreate(views.APIView):
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class UserProfileView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserProfileViewSerializer
+
+    def get_queryset(self):
+            user = self.request.user
+            # user_id = User.objects.all().filter(user_email=user).values('userid')
+            # user_id = user_id[0].get('userid')
+            # return(User.objects.filter(userid=user_id))
+            return User.objects.filter(user_email=user)
+
+
 
 
 
