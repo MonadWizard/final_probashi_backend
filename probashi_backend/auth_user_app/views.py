@@ -1,3 +1,4 @@
+from urllib import request
 from django.http import HttpResponse
 from rest_framework import generics, status, views, permissions
 from .serializers import (RegisterSerializer,
@@ -7,7 +8,7 @@ from .serializers import (RegisterSerializer,
                         EmailVerificationSerializer, 
                         LoginSerializer, 
                         LogoutSerializer, 
-                        ViewUserSerializer )
+                        ViewUserSerializer)
 
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -106,6 +107,17 @@ class VerifyEmail(views.APIView):
             return HttpResponse(html)
             # return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+class MailVerificationCheck(views.APIView):
+
+    def get(self,request):
+        user_mail = User.objects.filter(user_email__exact=request.data['user_email'])
+        mail_verify = user_mail.values('is_verified')
+        return Response(mail_verify, status=status.HTTP_200_OK)
+
+
 class UpdateRegisterView(views.APIView):
 
 
@@ -177,6 +189,8 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
                     'email_subject': 'Reset your passsword'}
             Util.send_email(data)
         return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+
+
 
 
 class PasswordTokenCheckAPI(generics.GenericAPIView):

@@ -32,6 +32,9 @@ class User_education(models.Model):
     user_edu_institutename = models.CharField(max_length=200, blank=True, null=True)
     user_edu_startdate = models.DateField(blank=True, null=True)
     user_edu_enddate = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return self.userid.user_email
     
 
 class User_idverification(models.Model):

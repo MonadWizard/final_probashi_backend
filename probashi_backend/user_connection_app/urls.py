@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import DemoView
+from .views import SearchUserList
 
 
 
 urlpatterns = [
-    path('demo/', DemoView.as_view(), name="demo"),
+    path('userSearch/', SearchUserList.as_view(), name="search_user_list"),
 
 ]
 

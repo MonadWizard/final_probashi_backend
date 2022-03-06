@@ -1,5 +1,3 @@
-from dataclasses import field
-from pyexpat import model
 from rest_framework import serializers
 from auth_user_app.models import User
 from .models import User_socialaccount_and_about, User_experience, User_education, User_idverification
