@@ -110,8 +110,11 @@ class UserProfileViewSerializer(serializers.ModelSerializer):
     user_idverificationdata = UserIDverificationSerializer(many=True, read_only=True)
     class Meta:
         model = User
-        fields = ['userid' ,'user_fullname', 'user_photopath', 'user_socialaboutdata',
-                'user_experiencedata', 'user_educationdata', 'user_idverificationdata']
+        fields = ['userid' ,'user_fullname', 'user_photopath', 'is_consultant',
+                'user_industry','user_geolocation','user_created_at',
+                'user_interested_area','user_goal','user_industry_experienceyear',
+                'user_areaof_experience','user_industry',
+                'user_socialaboutdata','user_experiencedata', 'user_educationdata', 'user_idverificationdata']
         # fields = '__all__'
         depth = 2
 

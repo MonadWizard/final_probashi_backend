@@ -3,8 +3,11 @@ from .models import User
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from drf_extra_fields.fields import Base64ImageField
+
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
@@ -87,9 +90,9 @@ class LoginSerializer(serializers.ModelSerializer):
         filtered_user_by_email = User.objects.filter(user_email=user_email)
         user = auth.authenticate(user_email=user_email, password=password)
 
-        print("filtered_user_by_email::::::",filtered_user_by_email[0])
-        print("user_email::::::",type(user_email))
-        print("filtered_user_by_email[0].auth_provider::::::",str(filtered_user_by_email[0]) != user_email)
+        # print("filtered_user_by_email::::::",filtered_user_by_email[0])
+        # print("user_email::::::",type(user_email))
+        # print("filtered_user_by_email[0].auth_provider::::::",str(filtered_user_by_email[0]) != user_email)
 
         if filtered_user_by_email.exists() and str(filtered_user_by_email[0]) != user_email:
             raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
@@ -163,7 +166,6 @@ class LogoutSerializer(serializers.Serializer):
 
         self.token = attrs['refresh']
         print("refresh::::::",self.token)
-
         return attrs
 
     def save(self, **kwargs):

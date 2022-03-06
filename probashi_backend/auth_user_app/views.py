@@ -221,30 +221,15 @@ class LogoutAPIView(generics.GenericAPIView):
 
         return Response("successfully logout",status=status.HTTP_204_NO_CONTENT)
 
-class ViewUser(views.APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get_user(self,pk):
-        try:
-            return User.objects.get(userid=pk)
-        except User.DoesNotExist:
-            raise Http404
-
-    def get(self,request,pk):
-
-        user = self.get_user(pk)
-        serializer = ViewUserSerializer(user)
-        return Response (serializer.data)
-
-    def put(self,request,pk):
-        userid = self.get_object(pk)
-        serializer = ViewUserSerializer(userid,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
     
+class ViewUser(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ViewUserSerializer
+
+    def get_queryset(self):
+            user = self.request.user
+            return User.objects.filter(user_email=user)
+
 
 
 

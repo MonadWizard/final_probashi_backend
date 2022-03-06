@@ -201,7 +201,7 @@ class UserIdVerificationCreate(views.APIView):
 
 
 class UserProfileView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,]
     serializer_class = UserProfileViewSerializer
 
     def get_queryset(self):
