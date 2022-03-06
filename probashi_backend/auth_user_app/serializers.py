@@ -45,6 +45,8 @@ class UpdateRegisterSerializer(serializers.ModelSerializer):
         fields = ['user_fullname_passport', 
                 'user_username', 'user_gender',
                 'user_dob','user_photopath',
+                'user_device_typeserial',
+                'user_geolocation',
                 'user_residential_district',
                 'user_nonresidential_country',
                 'user_nonresidential_city',
