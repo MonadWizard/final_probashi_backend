@@ -3,7 +3,7 @@ psycopg2-binary
 djangorestframework
 djangorestframework-simplejwt
 django-cors-headers
-django-environ
+django-extra-fields
 pillow
 
 
