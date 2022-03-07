@@ -47,7 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # user_promocode_pk = 
     user_callphone = models.CharField(max_length=30, unique=True, db_index=True, blank=True, null=True)
     user_geolocation = models.CharField(max_length=200, db_index=True, blank=True, null=True)
-    user_device_typeserial= models.CharField(max_length=30, unique=True, blank=True, null=True, db_index=True)
+    user_device_typeserial= models.CharField(max_length=30, blank=True, null=True, db_index=True)
     user_fullname_passport= models.CharField(max_length=200, blank=True, null=True)
     user_username = models.CharField(max_length=100, unique=True, blank=True, null=True)
     user_gender = models.CharField(max_length=20, blank=True, null=True)

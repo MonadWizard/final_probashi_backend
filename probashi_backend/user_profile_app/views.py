@@ -200,6 +200,17 @@ class UserIdVerificationCreate(views.APIView):
 
 
 
+# class UserProfileView(generics.ListAPIView):
+#     permission_classes = [permissions.IsAuthenticated,]
+#     serializer_class = UserProfileViewSerializer
+
+#     def get_queryset(self):
+#             user = self.request.user
+#             # user_id = User.objects.all().filter(user_email=user).values('userid')
+#             # user_id = user_id[0].get('userid')
+#             # return(User.objects.filter(userid=user_id))
+#             return User.objects.filter(user_email=user)
+
 class UserProfileView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class = UserProfileViewSerializer
@@ -209,8 +220,81 @@ class UserProfileView(generics.ListAPIView):
             # user_id = User.objects.all().filter(user_email=user).values('userid')
             # user_id = user_id[0].get('userid')
             # return(User.objects.filter(userid=user_id))
+
             return User.objects.filter(user_email=user)
 
+    def list(self, request):
+        # Note the use of `get_queryset()` instead of `self.queryset`
+        queryset = self.get_queryset()
+        serializer = UserProfileViewSerializer(queryset, many=True)
+        # serializerdata = serializer.data
+        '''
+        [OrderedDict([('userid', '0306144709829726'), ('user_fullname', 'demodemo100'), 
+        ('user_photopath', '/upload/user/profile_picture/0d3866b3-cfc5-45bb-83f9-7585975d413e.png'), 
+        ('is_consultant', False), ('user_industry', None), ('user_geolocation', 'Amazon, africa'), 
+        ('user_created_at', '2022-03-06T14:47:10.044244+06:00'), ('user_interested_area', None), ('user_goal', None), 
+        ('user_industry_experienceyear', None), ('user_areaof_experience', None), ('user_socialaboutdata', None), 
+        ('user_experiencedata', []), ('user_educationdata', []), ('user_idverificationdata', [])])]
+        
+        '''
+
+        # print('serializer data::::::',serializerdata)
+        # print(serializerdata[0]['user_socialaboutdata'])
+
+        if serializer.data[0]['user_socialaboutdata'] == None:
+            serializer.data[0]['user_socialaboutdata'] = {
+            "user_about": "null",
+            "user_fbaccount": "null",
+            "user_twitteraccount": "null",
+            "user_instagramaccount": "null",
+            "user_linkedinaccount": "null",
+            "user_website": "null",
+            "user_whatsapp_account": "null",
+            "user_whatsapp_visibility": "null",
+            "user_viber_account": "null",
+            "user_immo_account": "null"
+            }
+
+        if serializer.data[0]['user_experiencedata'] == []:
+            serializer.data[0]['user_socialaboutdata'] = {
+                "id": "null",
+                "user_designation": "null",
+                "user_companyname": "null",
+                "user_responsibilities": "null",
+                "userexperience_startdate": "null",
+                "userexperience_enddate": "null",
+                "userid": "null"
+            }
+
+        if serializer.data[0]['user_educationdata'] == []:
+            serializer.data[0]['user_educationdata'] = {
+                "id": "null",
+                "user_edu_degree": "null",
+                "user_edu_institutename": "null",
+                "user_edu_startdate": "null",
+                "user_edu_enddate": "null",
+                "userid": "null"
+            }
+
+        if serializer.data[0]['user_idverificationdata'] == []:
+            serializer.data[0]['user_idverificationdata'] = {
+                "id": "null",
+                "is_user_permanent_resident": "null",
+                "user_verify_id_type": "null",
+                "user_verify_passportphoto_path": "null",
+                "userid": "null"
+            }
+
+        if serializer.data[0]['user_socialaboutdata'] != None and serializer.data[0]['user_experiencedata'] != [] and \
+                serializer.data[0]['user_educationdata'] != [] and serializer.data[0]['user_idverificationdata'] != [] : 
+            user = self.request.user
+            User.objects.filter(user_email=user).update(is_consultant=True)    
+
+        # if User.objects.filter(is_consultant=True):
+            # 1st complete consultance API then add Consultancy serilizer to nested user serializer
+            #  then modifi to give active consultancy on User profile
+
+        return Response(serializer.data)
 
 
 

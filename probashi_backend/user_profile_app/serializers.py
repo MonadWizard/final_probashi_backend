@@ -83,7 +83,10 @@ class UserIdVerificationCreateSerializer(serializers.ModelSerializer):
 class UserSocialLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_socialaccount_and_about
-        fields = '__all__'
+        fields = ['user_about','user_fbaccount', 'user_twitteraccount',
+                'user_instagramaccount', 'user_linkedinaccount', 'user_website',
+                'user_whatsapp_account', 'user_whatsapp_visibility', 'user_viber_account',
+                'user_immo_account']
 
 class UserExperienceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -114,7 +117,7 @@ class UserProfileViewSerializer(serializers.ModelSerializer):
                 'user_areaof_experience','user_industry',
                 'user_socialaboutdata','user_experiencedata', 'user_educationdata', 'user_idverificationdata']
         # fields = '__all__'
-        depth = 2
+        depth = 3
 
 
 
