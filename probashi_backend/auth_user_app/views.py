@@ -215,13 +215,14 @@ class LogoutAPIView(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
 
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response("successfully logout",status=status.HTTP_204_NO_CONTENT)
-
+            return Response('logout success',status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
     
 class ViewUser(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -12,7 +12,7 @@ class SerachUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['user_username']
+        fields = ['user_fullname', 'user_areaof_experience', 'user_geolocation']
 
 
 

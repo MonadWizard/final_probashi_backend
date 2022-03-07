@@ -168,7 +168,7 @@ class LogoutSerializer(serializers.Serializer):
     def validate(self, attrs):
 
         self.token = attrs['refresh']
-        print("refresh::::::",self.token)
+        # print("refresh::::::",self.token)
         return attrs
 
     def save(self, **kwargs):
@@ -178,7 +178,7 @@ class LogoutSerializer(serializers.Serializer):
 
         except TokenError:
             # self.fail(self.default_error_message)
-            raise AuthenticationFailed("except TokenError")
+            self.fail('bad_token')
 
 
 class ViewUserSerializer(serializers.ModelSerializer):

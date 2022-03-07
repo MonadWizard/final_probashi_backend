@@ -6,11 +6,13 @@ from rest_framework import permissions
 from django.http import Http404
 from auth_user_app.models import User
 from user_profile_app.models import User_education
+from .serializers import SerachUserSerializer
 
 
 
 class SearchUserList(views.APIView):
-    
+    permission_classes = (permissions.IsAuthenticated,)
+
     def get(self,request):
         Users = User.objects.all()
         # serializer = StudentSerializer(students,many=True)
@@ -30,18 +32,12 @@ class SearchUserList(views.APIView):
         indusrty_search = list(User.objects.filter(user_industry__in=request.data['Industry']).values_list('userid', flat=True))
         location_search = list(User.objects.filter(user_geolocation__in=request.data['Location']).values_list('userid', flat=True))
 
-        print(education_search)
-        print("i",indusrty_search)
-        print(location_search)
-
         searched =list(set(education_search) & set(indusrty_search) & set(location_search))    
-        print("searched:::::::",searched)
         searched_user = User.objects.filter(userid__in=searched)
-        print("searched_user:::::::",searched_user)
 
-
+        serializer = SerachUserSerializer(searched_user,many=True)
         
-        return Response(request.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 
 

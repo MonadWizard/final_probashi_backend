@@ -144,7 +144,12 @@ base64 converted photo added in "user_photopath"
 
     16. User_Profile HomePage:    [ok]    http://127.0.0.1:8000/user_profile/user-profile-view/
 
-    17.
+    17. User_search :  []    http://127.0.0.1:8000/user_connection/userSearch/
+                        {
+                            "EducationDegree" : ["JSC", "SSC", "HSC", "BllaBlla", "BllaBlla2"],
+                            "Industry": ["Business", "Software", "Telephone","New Indrustry", "New Indrustry 2"],
+                            "Location": ["New York,USA", "London,UK", "Dubai,UAE"]
+                        }
 
 
 
