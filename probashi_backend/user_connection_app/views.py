@@ -20,36 +20,27 @@ class SearchUserList(views.APIView):
 
         '''
         {
-            "EducationDegree" : ["JSC", "SSC", "HSC"],
-            "Industry": ["Business", "Software", "Telephone"],
-            "Location": ["New York,USA", "London, UK", "Dubai, UAE"]
+            "EducationDegree" : ["JSC", "SSC", "HSC", "BllaBlla", "BllaBlla2"],
+            "Industry": ["Business", "Software", "Telephone","New Indrustry", "New Indrustry 2"],
+            "Location": ["New York,USA", "London,UK", "Dubai,UAE"]
         }
         '''
 
+        education_search = list(User_education.objects.filter(user_edu_degree__in=request.data['EducationDegree']).values_list('userid', flat=True))
+        indusrty_search = list(User.objects.filter(user_industry__in=request.data['Industry']).values_list('userid', flat=True))
+        location_search = list(User.objects.filter(user_geolocation__in=request.data['Location']).values_list('userid', flat=True))
 
-        print("request.data",request.data)
-        # print('education:::::', request.data['EducationDegree'])
+        print(education_search)
+        print("i",indusrty_search)
+        print(location_search)
 
-        education_search = User_education.objects.filter(user_edu_degree__in=request.data['EducationDegree'])
-        indusrty_search = User.objects.filter(user_industry__in=request.data['Industry'])
-        location_search = User.objects.filter(user_geolocation__in=request.data['Location'])
+        searched =list(set(education_search) & set(indusrty_search) & set(location_search))    
+        print("searched:::::::",searched)
+        searched_user = User.objects.filter(userid__in=searched)
+        print("searched_user:::::::",searched_user)
+
+
         
-        # data = education_search & indusrty_search & location_search
-        
-        print("edu:::::::",list(education_search))
-        print("indusrty:::::::",list(indusrty_search))
-        print("location:::::::",list(location_search))
-        
-        users = User.objects.filter(user_fullname__in=['root','demo2']) 
-        # print(users) 
-
-
-        # serializer = StudentSerializer(data=request.data)
-        # if serializer.is_valid():
-        #     serializer.save()
-
-            # return Response(serializer.data,status=status.HTTP_201_CREATED)
-        # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         return Response(request.data,status=status.HTTP_201_CREATED)
 
 

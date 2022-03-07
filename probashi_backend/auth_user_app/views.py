@@ -76,19 +76,12 @@ class VerifyEmail(views.APIView):
 
         try:
             verified_mail_payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            # print("payload--------------",verified_mail_payload)
-
-
-            # user = request.data
-            # print('user',type(user))
 
             current_time = datetime.datetime.now() 
             current_time = current_time.strftime("%m%d%H%M%S%f")
             
             userid = current_time
             verified_mail_payload["userid"]= userid
-            # verified_mail_payload["is_verified"] = 'True'
-            # print('verified_mail_payload::::::::',verified_mail_payload)
 
             serializer = self.serializer_class(data=verified_mail_payload)
             serializer.is_valid(raise_exception=True)
@@ -97,21 +90,15 @@ class VerifyEmail(views.APIView):
 
             html = "<html><body>Verification Success. It's time for complete registration.</body></html>"
             return HttpResponse(html)
-            # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
             html = "<html><body>Activation Expired.</body></html>"
             return HttpResponse(html)
-            # return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
             html = "<html><body>Invalid token.</body></html>"
             return HttpResponse(html)
-            # return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-class MailVerificationCheck(views.APIView):
-
+class MailVerificationStatus(views.APIView):
     def get(self,request):
         user_mail = User.objects.filter(user_email__exact=request.data['user_email'])
         mail_verify = user_mail.values('is_verified')

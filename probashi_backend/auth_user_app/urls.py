@@ -8,7 +8,7 @@ from .views import  (MailVerifyRequestView,
                     PasswordTokenCheckAPI,
                     RequestPasswordResetEmail,
                     ViewUser, 
-                    MailVerificationCheck)
+                    MailVerificationStatus)
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -17,7 +17,7 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path('mail-verify-request/', MailVerifyRequestView.as_view(), name='mail-verify-request'),
     path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
-    path('email-verify-check/', MailVerificationCheck.as_view(), name="email-verify"),
+    path('emailverifstatus/', MailVerificationStatus.as_view(), name="emailverifystatus"),
     
     
     path('Update-register/<str:user_email>', UpdateRegisterView.as_view(), name="update-register"),
