@@ -12,7 +12,8 @@ class SerachUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['user_fullname', 'user_areaof_experience', 'user_geolocation']
+        #fields = ['user_fullname', 'user_areaof_experience', 'user_geolocation']
+        exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
 
 
 

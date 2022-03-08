@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import SearchUserList
+from .views import GetAllUserPaginationView
 
 
 
 urlpatterns = [
-    path('userSearch/', SearchUserList.as_view(), name="search_user_list"),
+    path('userSearch/', GetAllUserPaginationView.as_view(), name="search_user_list"),
 
 ]
 
