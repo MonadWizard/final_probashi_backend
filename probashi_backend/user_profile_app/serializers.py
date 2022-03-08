@@ -83,10 +83,12 @@ class UserIdVerificationCreateSerializer(serializers.ModelSerializer):
 class UserSocialLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_socialaccount_and_about
-        fields = ['user_about','user_fbaccount', 'user_twitteraccount',
-                'user_instagramaccount', 'user_linkedinaccount', 'user_website',
-                'user_whatsapp_account', 'user_whatsapp_visibility', 'user_viber_account',
-                'user_immo_account']
+        # fields = ['user_about','user_fbaccount', 'user_twitteraccount',
+        #         'user_instagramaccount', 'user_linkedinaccount', 'user_website',
+        #         'user_whatsapp_account', 'user_whatsapp_visibility', 'user_viber_account',
+        #         'user_immo_account']
+        fields = '__all__'
+
 
 class UserExperienceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -111,13 +113,17 @@ class UserProfileViewSerializer(serializers.ModelSerializer):
     user_idverificationdata = UserIDverificationSerializer(many=True, read_only=True)
     class Meta:
         model = User
-        fields = ['userid' ,'user_fullname', 'user_photopath', 'is_consultant',
-                'user_industry','user_geolocation','user_created_at',
-                'user_interested_area','user_goal','user_industry_experienceyear',
-                'user_areaof_experience','user_industry',
-                'user_socialaboutdata','user_experiencedata', 'user_educationdata', 'user_idverificationdata']
+        # fields = ['userid' ,'user_fullname', 'user_photopath', 'is_consultant',
+        #         'user_industry','user_geolocation','user_created_at',
+        #         'user_interested_area','user_goal','user_industry_experienceyear',
+        #         'user_areaof_experience','user_industry',
+        #         'user_socialaboutdata','user_experiencedata', 'user_educationdata', 'user_idverificationdata']
         # fields = '__all__'
-        depth = 3
+        # depth = 3
+        exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
+
+
+
 
 
 

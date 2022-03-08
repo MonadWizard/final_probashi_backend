@@ -20,3 +20,8 @@ class Blog_comment(models.Model):
     userblog_comment = models.TextField(blank=True, null=True)
     userblog_commentpublisher_location = models.CharField(max_length=200, blank=True, null=True)
     
+class Blog_reaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    userblog_reaction = models.CharField(max_length=200, blank=True, null=True)
+    userblog_reactionpublisher_location = models.CharField(max_length=200, blank=True, null=True)

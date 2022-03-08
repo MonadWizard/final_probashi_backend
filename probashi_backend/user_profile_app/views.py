@@ -1,3 +1,4 @@
+from lib2to3.pgen2.token import EQUAL
 from rest_framework import generics, status, views, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -241,6 +242,26 @@ class UserProfileView(generics.ListAPIView):
         # print('serializer data::::::',serializerdata)
         # print(serializerdata[0]['user_socialaboutdata'])
 
+
+
+        if serializer.data[0]['user_socialaboutdata'] != None and serializer.data[0]['user_experiencedata'] != [] and \
+                serializer.data[0]['user_educationdata'] != [] and serializer.data[0]['user_idverificationdata'] != [] : 
+            user = self.request.user
+            User.objects.filter(user_email=user).update(is_consultant=True)    
+
+        complete_profile_persentage = 20
+        if serializer.data[0]['user_socialaboutdata'] != None:
+            complete_profile_persentage += 20
+        if serializer.data[0]['user_experiencedata'] != []:
+            complete_profile_persentage += 20
+        if serializer.data[0]['user_educationdata'] != []:
+            complete_profile_persentage += 20
+        if serializer.data[0]['user_idverificationdata'] != []:
+            complete_profile_persentage += 20
+        serializer.data[0]['profile_complete_percentage'] = complete_profile_persentage
+
+
+
         if serializer.data[0]['user_socialaboutdata'] == None:
             serializer.data[0]['user_socialaboutdata'] = {
             "user_about": "null",
@@ -256,7 +277,7 @@ class UserProfileView(generics.ListAPIView):
             }
 
         if serializer.data[0]['user_experiencedata'] == []:
-            serializer.data[0]['user_socialaboutdata'] = {
+            serializer.data[0]['user_experiencedata'] = {
                 "id": "null",
                 "user_designation": "null",
                 "user_companyname": "null",
@@ -284,11 +305,6 @@ class UserProfileView(generics.ListAPIView):
                 "user_verify_passportphoto_path": "null",
                 "userid": "null"
             }
-
-        if serializer.data[0]['user_socialaboutdata'] != None and serializer.data[0]['user_experiencedata'] != [] and \
-                serializer.data[0]['user_educationdata'] != [] and serializer.data[0]['user_idverificationdata'] != [] : 
-            user = self.request.user
-            User.objects.filter(user_email=user).update(is_consultant=True)    
 
         # if User.objects.filter(is_consultant=True):
             # 1st complete consultance API then add Consultancy serilizer to nested user serializer
