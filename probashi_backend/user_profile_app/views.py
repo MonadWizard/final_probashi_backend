@@ -87,10 +87,9 @@ class UserAboutSocialLinkCreate(views.APIView):
     #     except User.DoesNotExist:
     #         raise Http404
 
-
-
     # def get(self,request, userid):
     #     userid = self.get_user(userid)
+    #     print("userid::::::::",userid)
     #     serializer = UserSocialaccountAboutCreateSerializer(userid, many=True)
     #     return Response(serializer.data)
 
