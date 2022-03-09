@@ -16,21 +16,6 @@ class ConsultancyCreateView(generics.ListCreateAPIView):
 
 
 
-    
-
-
-# class ConsultancyCreateView(views.APIView):
-#     permission_classes = (permissions.IsAuthenticated,)
-
-#     def post(self,request):
-#         print('request.data',request.data)
-#         serializer = ConsultancyCreateSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data,status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 

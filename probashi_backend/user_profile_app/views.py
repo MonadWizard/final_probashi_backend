@@ -79,20 +79,7 @@ class UserEditProfile(views.APIView):
 
 class UserAboutSocialLinkCreate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
-
-
-    # def get_user(self,userid):
-    #     try:
-    #         return User_socialaccount_and_about.objects.get(userid__exact=userid)
-    #     except User.DoesNotExist:
-    #         raise Http404
-
-    # def get(self,request, userid):
-    #     userid = self.get_user(userid)
-    #     print("userid::::::::",userid)
-    #     serializer = UserSocialaccountAboutCreateSerializer(userid, many=True)
-    #     return Response(serializer.data)
-
+    
     def post(self,request):
         serializer = UserSocialaccountAboutCreateSerializer(data=request.data)
         if serializer.is_valid():
