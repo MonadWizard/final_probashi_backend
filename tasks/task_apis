@@ -151,6 +151,56 @@ base64 converted photo added in "user_photopath"
                             "Location": ["New York,USA", "London,UK", "Dubai,UAE"]
                         }
 
+    17.1 user_search: [ok]    http://127.0.0.1:8000/user_connection/userSearch/
+                        
+                        pagination all user data 
+
+    18. consultancy create:    [ok]    http://127.0.0.1:8000/consultancy/consultancy-createview/
+
+                {
+                    "userid": "0302171221796917",
+                    "is_userconsultant_personal": false,
+                    "is_userconsultant_company": true,
+                    "consultant_name": "Demo6",
+                    "consultant_contactnumber": "+880754654646454",
+                    "consultant_email": "dfksjh@sdjlk.ci",
+                    "consultantpersonal_about": null,
+                    "consultantpersonal_presentaddress": "sdnfjksdk,sdf,dfsd,df,sdf",
+                    "consultantpersonal_permanentaddress": "sdf,sdfsdf,dsgd,g,dfgdf,",
+                    "consultantcompany_primarycontract_name": "dsfhksdhf",
+                    "consultantcompany_primarycontract_number": "+8804555455454654654",
+                    "consultantcompany_primarycontract_email": "sdjhfjk@nsdk.sdfks",
+                    "consultantcompany_about": "sdfjjhsdjkhf",
+                    "consultantcompany_reg_officeaddress": "dksfjhksd,sdfsd,sdfsdf,sdfsd,",
+                    "consultantcompany_presentaddress": "dfjskdf,sdf,sd,f,sdf,sdf",
+                    "consultantcompany_website": "http://www.dfsjhjkfhdkj.sdfb",
+                    "consultant_company_fblink": "fb.com/dkfhdskh",
+                    "consultant_company_linkedinlink": "linkedin/dsbfjhsd",
+                    "consultant_service_category": "Real-state",
+                    "consultant_servicelocation": "sdfhjsh,sdfsdh,sdfsd,sdf",
+                    "consultant_servicebudget_startrange": 156455,
+                    "consultant_servicebudget_endrange": 5646545,
+                    "consultant_servicedescription": "fhsdkhfhksdhfkjsfsdkhfshdzk fhzsdhjhjhsjh jghdjgjshgjhdjfhgjd",
+
+                    "consultant_servicedetail_filepath": "JVBERi0xLjcKCjQgMCBvYmoKKElkZW50aXR5KQplbmRvYmoKNSAwIG9iagooQWRvYmUpCmVuZG9iago4IDAgb2JqCjw8Ci9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9MZW5ndGggNzMyNDAKL0xlbmd0aDEgMzQ3MzkyCi9UeXBlIC9TdHJlYW0KPj4Kc3RyZWFtCnic7J0JYFTVvfD/597Z1zv7ZJbMPklmkkwyk4QkhGRCFhAIhEVJkEjYIotCWATBBbAqglpxqXuVWrVUrYaJS8ClVKnaFgStLWqtYEWrraivRW2VzHz/cycs6Svvo+",
+
+
+                    "consultant_cvpath": "JVBERi0xLjcKCjQgMCBvYmoKKElkZW50aXR5KQplbmRvYmoKNSAwIG9iagooQWRvYmUpCmVuZG9iago4IDAgb2JqCjw8Ci9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9MZW5ndGggNzMyNDAKL0xlbmd0aDEgMzQ3MzkyCi9UeXBlIC9TdHJlYW0KPj4Kc3RyZWFtCnic7J0JYFTVvfD/597Z1zv7ZJbMPklmkkwyk4QkhGRCFhAIhEVJkEjYIotCWATBBbAqglpxqXuVWrVUrYaJS8ClVKnaFgStLWqtYEWrraivRW2VzHz/cycs6Svvo+/jfQ2885uc",
+
+                    "consultant_idverification_type": "Driving",
+
+                    "consultant_idverification_passportimagepath": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAuYAAAHSCAIAAAAv+JkiAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAgAElEQVR4Xuzde3QUx5kw/Kequns0Gt0RIAkQQgIkQMiAjcX9YmxDuDgBY8eO7bXXZjfxbr5342y+3T3+dn12/Z31yXqdi/d9835e5+rcGttC1860AAAAAElFTkSuQmCC",
+
+                    "consultant_tin": "6546465-54450-545",
+                    "consultant_bin": "4646-6464-654-64",
+                    "consultant_otherpermits": null,
+                    "consultant_bankaccount": null,
+                    "consultant_bankaccount_number": null,
+                    "consultant_bankaccount_branchnumber": null,
+                    "consultant_bankaccount_swiftcode": null,
+                    "consultant_bankaccount_routingnumber": null
+
+                }
 
 
 

@@ -216,12 +216,6 @@ class UserProfileView(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = UserProfileViewSerializer(queryset, many=True)
         
-        # print("serializer_data:::::::",serializer.data)
-
-        # if serializer.data[0]['user_socialaboutdata'] != None and serializer.data[0]['user_experiencedata'] != [] and \
-        #         serializer.data[0]['user_educationdata'] != [] and serializer.data[0]['user_idverificationdata'] != [] : 
-        #     user = self.request.user
-        #     User.objects.filter(user_email=user).update(is_consultant=True)    
 
         complete_profile_persentage = 5
         if serializer.data[0]['user_username'] != None:
@@ -245,51 +239,6 @@ class UserProfileView(generics.ListAPIView):
 
         serializer.data[0]['profile_complete_percentage'] = complete_profile_persentage
 
-
-
-        # if serializer.data[0]['user_socialaboutdata'] == None:
-        #     serializer.data[0]['user_socialaboutdata'] = {
-        #     "user_about": "null",
-        #     "user_fbaccount": "null",
-        #     "user_twitteraccount": "null",
-        #     "user_instagramaccount": "null",
-        #     "user_linkedinaccount": "null",
-        #     "user_website": "null",
-        #     "user_whatsapp_account": "null",
-        #     "user_whatsapp_visibility": "null",
-        #     "user_viber_account": "null",
-        #     "user_immo_account": "null"
-        #     }
-
-        # if serializer.data[0]['user_experiencedata'] == []:
-        #     serializer.data[0]['user_experiencedata'] = {
-        #         "id": "null",
-        #         "user_designation": "null",
-        #         "user_companyname": "null",
-        #         "user_responsibilities": "null",
-        #         "userexperience_startdate": "null",
-        #         "userexperience_enddate": "null",
-        #         "userid": "null"
-        #     }
-
-        # if serializer.data[0]['user_educationdata'] == []:
-        #     serializer.data[0]['user_educationdata'] = {
-        #         "id": "null",
-        #         "user_edu_degree": "null",
-        #         "user_edu_institutename": "null",
-        #         "user_edu_startdate": "null",
-        #         "user_edu_enddate": "null",
-        #         "userid": "null"
-        #     }
-
-        # if serializer.data[0]['user_idverificationdata'] == []:
-        #     serializer.data[0]['user_idverificationdata'] = {
-        #         "id": "null",
-        #         "is_user_permanent_resident": "null",
-        #         "user_verify_id_type": "null",
-        #         "user_verify_passportphoto_path": "null",
-        #         "userid": "null"
-        #     }
 
 
         return Response(serializer.data)

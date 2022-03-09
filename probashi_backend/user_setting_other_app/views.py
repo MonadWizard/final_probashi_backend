@@ -4,17 +4,44 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
+from .models import StaticSettingData
+from .serializers import (UserIndustryDataSerializer,
+                    UserAreaOfExperienceDataSerializer,
+                    UserInterestedAreaDataSerializer,
+                    UserGoalDataSerializer,
+                    ConsultancyServiceCategoryDataSerializer)
 
 
+class UserIndustryDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(user_industry_data__isnull=False)
+    serializer_class= UserIndustryDataSerializer
 
 
-class DemoView(generics.GenericAPIView):
+class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]    
+    queryset = StaticSettingData.objects.filter(user_areaof_experience_data__isnull=False)
+    serializer_class= UserAreaOfExperienceDataSerializer
 
-    # permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request):
+class UserInterestedAreaDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(user_interested_area_data__isnull=False)
+    serializer_class= UserInterestedAreaDataSerializer
 
-        return Response("user_settings_app_view",status=status.HTTP_204_NO_CONTENT)
+
+class UserGoalDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(user_goal_data__isnull=False)
+    serializer_class= UserGoalDataSerializer
+
+
+class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(consultancyservice_category_data__isnull=False)
+    serializer_class= ConsultancyServiceCategoryDataSerializer
+
+
 
 
 
