@@ -23,19 +23,13 @@ class ConsultancyCreateSerializer(serializers.ModelSerializer):
     consultant_idverification_passportimagepath = Base64ImageField()
     class Meta:
         model = ConsultancyCreate
-        # fields = ['userid', 'is_userconsultant_personal', 'is_userconsultant_company', 
-        #         'consultant_servicedetail_filepath', 'consultant_cvpath', 'consultant_idverification_passportimagepath']
         fields = '__all__'
-    # def create(self, validated_data):
-    #     consultant_servicedetail_filepath=validated_data.pop('consultant_servicedetail_filepath')
-    #     consultant_cvpath=validated_data.pop('consultant_cvpath' )
-    #     consultant_idverification_passportimagepath=validated_data.pop('consultant_idverification_passportimagepath')
-
-    #     return ConsultancyCreate.objects.create(consultant_servicedetail_filepath=consultant_servicedetail_filepath, \
-    #                     consultant_cvpath = consultant_cvpath, consultant_idverification_passportimagepath = consultant_idverification_passportimagepath)    
 
 
-
+class SearchServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultancyCreate
+        fields = '__all__'
 
 
 
