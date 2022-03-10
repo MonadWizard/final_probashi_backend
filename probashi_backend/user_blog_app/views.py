@@ -4,18 +4,19 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
+from .serializers import BlogCreateSerializer
 
 
 
-
-class DemoView(generics.GenericAPIView):
-
+class BlogCreateView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request):
-
-        return Response("user_blog_app_view",status=status.HTTP_204_NO_CONTENT)
-
+    def post(self,request):
+        serializer = BlogCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 
