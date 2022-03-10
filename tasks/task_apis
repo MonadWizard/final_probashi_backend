@@ -214,3 +214,13 @@ base64 converted photo added in "user_photopath"
 23. UserInterestedAreaData [ok] http://127.0.0.1:8000/user_setting_other_app/UserInterestedAreaData/
 24. UserGoalData [ok] http://127.0.0.1:8000/user_setting_other_app/UserGoalData/
 25. ConsultancyServiceCategoryData [ok] http://127.0.0.1:8000/user_setting_other_app/ConsultancyServiceCategoryData/
+
+
+
+
+
+
+
+
+
+
