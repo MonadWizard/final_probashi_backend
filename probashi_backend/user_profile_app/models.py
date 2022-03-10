@@ -18,6 +18,9 @@ class User_socialaccount_and_about(models.Model):
     user_immo_account = models.CharField(max_length=200, blank=True, null=True)
     user_immo_visibility = models.CharField(max_length=20, blank=True, null=True)
 
+    def __str__(self):
+        return str(self.userid)
+
 
 
 class User_experience(models.Model):

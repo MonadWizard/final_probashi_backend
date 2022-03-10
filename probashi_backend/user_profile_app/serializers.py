@@ -31,7 +31,7 @@ class UserEditPrifileSerializer(serializers.ModelSerializer):
 
 
 
-class UserSocialaccountAboutCreateSerializer(serializers.ModelSerializer):
+class UserSocialaccountAboutSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_socialaccount_and_about
         fields = '__all__'

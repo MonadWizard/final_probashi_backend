@@ -9,8 +9,9 @@ from django.http import Http404
 from auth_user_app.models import User
 from .models import User_socialaccount_and_about, User_experience, User_education, User_idverification
 from .serializers import (UserProfileSkipPart1Serializer, UserProfileSkipPart2Serializer,
-                            UserEditPrifileSerializer, UserSocialaccountAboutCreateSerializer,
-                            UserSocialaccountAboutUpdatSerializer, UserExperienceCreateSerializer,
+                            UserEditPrifileSerializer,
+                            UserSocialaccountAboutSerializer,UserSocialaccountAboutUpdatSerializer,
+                            UserExperienceCreateSerializer,
                             UserExperienceUpdatSerializer, UserEducationCreateSerializer,
                             UserIdVerificationCreateSerializer,
                             UserProfileViewSerializer,UserIDverificationSerializer)
@@ -76,8 +77,7 @@ class UserEditProfile(views.APIView):
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-
-class UserAboutSocialLinkCreate(views.APIView):
+"""class UserAboutSocialLinkUpdate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     
     def post(self,request):
@@ -99,19 +99,20 @@ class UserAboutSocialLinkUpdate(views.APIView):
 
     def get(self,request,userid):
         userid = self.get_user(userid)
-        serializer = UserSocialaccountAboutUpdatSerializer(userid)
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
+        # print('userid::::::',userid)
+        serializer = UserSocialaccountAboutSerializer(userid)
+        # print('serializer::::::',serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self,request,userid):
         userid = self.get_user(userid)
         serializer = UserSocialaccountAboutUpdatSerializer(userid,data=request.data)
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-"""
 
 class UserExperienceCreate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -202,6 +203,8 @@ class UserProfileView(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = UserProfileViewSerializer(queryset, many=True)
         
+        # print('serializer.data::::::',serializer.data)
+        # print('about:::::::::', serializer.data[0]['user_socialaboutdata'].get('user_about'))
 
         complete_profile_persentage = 5
         if serializer.data[0]['user_username'] != None:
@@ -210,8 +213,18 @@ class UserProfileView(generics.ListAPIView):
             complete_profile_persentage += 5
         if serializer.data[0]['user_interested_area'] != None:
             complete_profile_persentage += 5
-        if serializer.data[0]['user_socialaboutdata'] != None:
-            complete_profile_persentage += 20
+        if serializer.data[0]['user_socialaboutdata'].get('user_about') != None:
+            complete_profile_persentage += 8
+        if (serializer.data[0]['user_socialaboutdata'].get('user_fbaccount') != None or 
+                        serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount') != None or
+                        serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount') != None or
+                        serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') != None or 
+                        serializer.data[0]['user_socialaboutdata'].get('user_website')!= None ):
+            complete_profile_persentage += 6
+        if (serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account') != None or 
+                serializer.data[0]['user_socialaboutdata'].get('user_viber_account') != None or
+                serializer.data[0]['user_socialaboutdata'].get('user_immo_account') != None):
+            complete_profile_persentage += 6
         if serializer.data[0]['user_experiencedata'] != []:
             complete_profile_persentage += 20
         if serializer.data[0]['user_educationdata'] != []:
@@ -228,10 +241,6 @@ class UserProfileView(generics.ListAPIView):
 
 
         return Response(serializer.data)
-
-
-
-
 
 
 

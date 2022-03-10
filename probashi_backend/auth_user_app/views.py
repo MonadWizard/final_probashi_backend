@@ -17,6 +17,7 @@ from rest_framework import permissions
 from django.http import Http404
 
 from .models import User
+from user_profile_app.models import User_socialaccount_and_about
 from .utils import Util
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
@@ -87,6 +88,10 @@ class VerifyEmail(views.APIView):
             serializer.is_valid(raise_exception=True)
 
             serializer.save()
+
+            User_socialaccount_and_about.objects.create(userid=User.objects.get(userid=userid), )
+
+
 
             html = "<html><body>Verification Success. It's time for complete registration.</body></html>"
             return HttpResponse(html)
