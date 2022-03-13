@@ -16,12 +16,19 @@ class Blog(models.Model):
 
 class Blog_comment(models.Model):
     userid = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    blog = models.ForeignKey(Blog, on_delete=models.DO_NOTHING)
-    userblog_comment = models.TextField(blank=True, null=True)
-    userblog_commentpublisher_location = models.CharField(max_length=200, blank=True, null=True)
+    blogid = models.ForeignKey(Blog, on_delete=models.DO_NOTHING)
+    blogcomment = models.TextField(blank=True, null=True)
+    blogcomment_publisherlocation = models.CharField(max_length=200, blank=True, null=True)
     
 class Blog_reaction(models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE)
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
-    userblog_reaction = models.CharField(max_length=200, blank=True, null=True)
-    userblog_reactionpublisher_location = models.CharField(max_length=200, blank=True, null=True)
+    blogid = models.ForeignKey(Blog, unique=True, on_delete=models.CASCADE)
+    is_user_like = models.BooleanField(default=False)
+    is_user_dislike = models.BooleanField(default=False)
+
+
+
+
+
+
+

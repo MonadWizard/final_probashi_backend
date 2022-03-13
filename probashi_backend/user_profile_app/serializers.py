@@ -1,3 +1,5 @@
+from dataclasses import field
+from pyexpat import model
 from rest_framework import serializers
 from auth_user_app.models import User
 from .models import User_socialaccount_and_about, User_experience, User_education, User_idverification
@@ -25,10 +27,26 @@ class UserEditPrifileSerializer(serializers.ModelSerializer):
                 'user_username', 'user_gender',
                 'user_dob','user_photopath']
     
-    # def create(self, validated_data):
-    #     user_photopath=validated_data.pop('user_photopath')
-    #     return User.objects.create(user_photopath=user_photopath)
 
+class UserEditPrifileWithoutImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['user_fullname_passport', 
+                'user_username', 'user_gender',
+                'user_dob']
+    
+
+
+class UserInterestedAreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['user_interested_area']
+
+
+class UserGoalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['user_goal']
 
 
 class UserSocialaccountAboutSerializer(serializers.ModelSerializer):
@@ -76,41 +94,11 @@ class UserIdVerificationCreateSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
-
-class UserSocialLinkSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User_socialaccount_and_about
-        # fields = ['user_about','user_fbaccount', 'user_twitteraccount',
-        #         'user_instagramaccount', 'user_linkedinaccount', 'user_website',
-        #         'user_whatsapp_account', 'user_whatsapp_visibility', 'user_viber_account',
-        #         'user_immo_account']
-        fields = '__all__'
-
-
-class UserExperienceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User_experience
-        fields = '__all__'
-
-class UserEducationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User_education
-        fields = '__all__'
-
-class UserIDverificationSerializer(serializers.ModelSerializer):
-    # user_socialaboutdata = serializers.PrimaryKeyRelatedField(read_only=True)
-    class Meta:
-        model = User_idverification
-        # fields = ['userid', 'is_user_permanent_resident', 'user_verify_id_type', 'user_verify_passportphoto_path']   
-        fields = '__all__'
 class UserProfileViewSerializer(serializers.ModelSerializer):
-    user_socialaboutdata = UserSocialLinkSerializer(read_only=True)
-    user_experiencedata = UserExperienceSerializer(many=True, read_only=True)
-    user_educationdata = UserEducationSerializer(many=True, read_only=True)
-    user_idverificationdata = UserIDverificationSerializer(many=True, read_only=True)
+    user_socialaboutdata = UserSocialaccountAboutSerializer(read_only=True)
+    user_experiencedata = UserExperienceCreateSerializer(many=True, read_only=True)
+    user_educationdata = UserEducationCreateSerializer(many=True, read_only=True)
+    user_idverificationdata = UserIdVerificationCreateSerializer(many=True, read_only=True)
     class Meta:
         model = User
         # fields = ['userid' ,'user_fullname', 'user_photopath', 'is_consultant',

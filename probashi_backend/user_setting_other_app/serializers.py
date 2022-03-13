@@ -7,6 +7,8 @@ class UserIndustryDataSerializer(serializers.ModelSerializer):
         fields=['user_industry_data']
 
 
+
+
 class UserAreaOfExperienceDataSerializer(serializers.ModelSerializer):
 
     class Meta:

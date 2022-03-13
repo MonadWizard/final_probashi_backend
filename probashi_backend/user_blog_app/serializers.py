@@ -15,3 +15,19 @@ class BlogCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class BlogCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog_comment
+        fields = '__all__'
+
+
+class BlogReactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog_reaction
+        fields = '__all__'
+
+
+
+
+
+

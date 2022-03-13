@@ -14,7 +14,9 @@ from .serializers import (UserProfileSkipPart1Serializer, UserProfileSkipPart2Se
                             UserExperienceCreateSerializer,
                             UserExperienceUpdatSerializer, UserEducationCreateSerializer,
                             UserIdVerificationCreateSerializer,
-                            UserProfileViewSerializer,UserIDverificationSerializer)
+                            UserProfileViewSerializer,
+                            UserEditPrifileWithoutImageSerializer,
+                            UserInterestedAreaSerializer,UserGoalSerializer)
 from rest_framework.decorators import action
 
 
@@ -70,24 +72,77 @@ class UserEditProfile(views.APIView):
 
     def put(self,request,userid):
         userid = self.get_user(userid)
-        serializer = UserEditPrifileSerializer(userid,data=request.data)
+
+        print("request data::::::",request.data)
+        print("request data photopath::::::",request.data['user_photopath'] == "")
+        if request.data['user_photopath'] == "":
+            serializer = UserEditPrifileWithoutImageSerializer(userid,data=request.data)
+        else:
+            serializer = UserEditPrifileSerializer(userid,data=request.data)
         
         if serializer.is_valid(raise_exception=True):
+            # print("serializer data___::::::::",serializer.data)
+
             serializer.save()
+
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-"""class UserAboutSocialLinkUpdate(views.APIView):
+
+
+
+class UserInterestedAreaView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+
+    def get_user(self,userid):
+        try:
+            return User.objects.get(pk=userid)
+        except User.DoesNotExist:
+            raise Http404
+
+    def get(self,request,userid):
+        userid = self.get_user(userid)
+        serializer = UserInterestedAreaSerializer(userid)
+        return Response(serializer.data)
     
-    def post(self,request):
-        serializer = UserSocialaccountAboutCreateSerializer(data=request.data)
+    def put(self,request,userid):
+        userid = self.get_user(userid)
+        serializer = UserInterestedAreaSerializer(userid,data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-"""
+
+
+
+
+
+class UserGoalView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_user(self,userid):
+        try:
+            return User.objects.get(pk=userid)
+        except User.DoesNotExist:
+            raise Http404
+
+    def get(self,request,userid):
+        userid = self.get_user(userid)
+        serializer = UserGoalSerializer(userid)
+        return Response(serializer.data)
+    
+    def put(self,request,userid):
+        userid = self.get_user(userid)
+        serializer = UserGoalSerializer(userid,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 class UserAboutSocialLinkUpdate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     

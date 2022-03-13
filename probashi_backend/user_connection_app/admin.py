@@ -1,7 +1,6 @@
+from lib2to3.pgen2 import driver
 from django.contrib import admin
-from .models import User_consultant, user_consult_appointment
-
+from .models import UserConnectionRequestSend
 # Register your models here.
-admin.site.register(User_consultant)
-admin.site.register(user_consult_appointment)
 
+admin.site.register(UserConnectionRequestSend)

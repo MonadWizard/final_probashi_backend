@@ -3,6 +3,7 @@ from .views import (UserProfileSkipPart1, UserProfileSkipPart2,
                     UserEditProfile, UserAboutSocialLinkUpdate, 
                     UserExperienceCreate, UserEducationCreate,
                     UserIdVerificationCreate,UserProfileView,
+                    UserInterestedAreaView, UserGoalView
                     )
 
 
@@ -17,6 +18,10 @@ urlpatterns = [
     path('user-education-create/', UserEducationCreate.as_view(), name="UserEducationCreate"),
     path('user-idverify-create/', UserIdVerificationCreate.as_view(), name="UserIdVerificationCreate"),
     path('user-profile-view/', UserProfileView.as_view(), name="UserProfileView"),
+    path('user-interestedareas/<str:userid>/', UserInterestedAreaView.as_view(), name="UserInterestedAreaView"),
+    path('user-goals/<str:userid>/', UserGoalView.as_view(), name="UserGoalView"),
+
+
     
 ]
 
