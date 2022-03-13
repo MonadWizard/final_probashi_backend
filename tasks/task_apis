@@ -51,12 +51,11 @@ user_registration:
 
 create_profile:
 
-1. user_basic info to complete profile:
-
+1.  user_basic info to complete profile:
 
     then skip parts:
 
-9.  user_complete_profile_skip_part1 : [ok] http://127.0.0.1:8000/user_profile/user-profile-skip1/0302154349388858/
+2.  user_complete_profile_skip_part1 : [ok] http://127.0.0.1:8000/user_profile/user-profile-skip1/0302154349388858/
 
                             {
                                 "user_current_location_durationyear": "1",
@@ -65,14 +64,14 @@ create_profile:
                                 "user_industry_experienceyear": "1"
                             }
 
-10. user_complete_profile_skip_part2 : [ok] http://127.0.0.1:8000/user_profile/user-profile-skip2/0301173702421597/
+3.  user_complete_profile_skip_part2 : [ok] http://127.0.0.1:8000/user_profile/user-profile-skip2/0301173702421597/
 
                                 {
                                     "user_interested_area": ["IOT"],
                                     "user_goal": ["AI"]
                                 }
 
-11. user_info_edit: [ok] http://127.0.0.1:8000/user_profile/user-edit-profile/0302154349388858/
+4.  user_info_edit: [ok] http://127.0.0.1:8000/user_profile/user-edit-profile/0302154349388858/
 
                 {
                     "user_fullname_passport": "I am demo 5",
@@ -85,7 +84,19 @@ create_profile:
 
 base64 converted photo added in "user_photopath"
 
-12. UserAboutSocialLinkCreate: [ok] http://127.0.0.1:8000/user_profile/user-about-social-link-create/
+13. user_interested_areas: [ok] http://127.0.0.1:8000/user_profile/user-interestedareas/0310145752329358/
+
+            {
+                    "user_interested_area": ["job","workshop"]
+                }
+
+14. user_goal: [ok] http://127.0.0.1:8000/user_profile/user-goals/0310145752329358/
+
+            {
+                "user_goal": ["IOT"]
+            }
+
+15. UserAboutSocialLinkCreate: [ok] http://127.0.0.1:8000/user_profile/user-about-social-link-create/
 
                {
                    "userid": "0302154349388858",
@@ -101,7 +112,7 @@ base64 converted photo added in "user_photopath"
                    "user_immo_account": "jhg"
                }
 
-13. UserAboutSocialLinkUpdate: [ok] http://127.0.0.1:8000/user_profile/user-about-social-link-update/0302154349388858/
+16. UserAboutSocialLinkUpdate: [ok] http://127.0.0.1:8000/user_profile/user-about-social-link-update/0302154349388858/
 
                 {
                 "user_about": "uuuuuuuuuuuuuuuuuuuuuu",
@@ -116,7 +127,7 @@ base64 converted photo added in "user_photopath"
                 "user_immo_account": "jhg"
             }
 
-14. user_experience create: [ok] http://127.0.0.1:8000/user_profile/user-experience-create/
+17. user_experience create: [ok] http://127.0.0.1:8000/user_profile/user-experience-create/
 
                {   "userid": "0302154349388858",
                    "user_designation": "000000000",
@@ -126,7 +137,7 @@ base64 converted photo added in "user_photopath"
                    "userexperience_enddate": "2022-03-02"
                }
 
-15. user_education create: [ok] http://127.0.0.1:8000/user_profile/user-education-create/
+18. user_education create: [ok] http://127.0.0.1:8000/user_profile/user-education-create/
 
                 {
                     "userid": "0302171221796917",
@@ -136,7 +147,7 @@ base64 converted photo added in "user_photopath"
                     "user_edu_enddate": null
                 }
 
-16. user_IDverification create: [ok] http://127.0.0.1:8000/user_profile/user-idverify-create/
+19. user_IDverification create: [ok] http://127.0.0.1:8000/user_profile/user-idverify-create/
 
                 {
                     "userid": "0302171221796917",
@@ -145,75 +156,131 @@ base64 converted photo added in "user_photopath"
                     "user_verify_passportphoto_path": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEYAAAJRCAIAAADH2SVbAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAgAElEQVR4XuzdeZQcx33g+W9EZtbVdzcajfsGSZAAKPG+b1IkRVISdVu05LElz4414/Ecb2bWu3676zcee+0Ze/b5GHtkWRpbFEWRuklKPCTxvsADxEEAxH2f3UDfVZWZ8ds"
                 }
 
-17. User_Profile HomePage: [ok] http://127.0.0.1:8000/user_profile/user-profile-view/
+20. User_Profile HomePage: [ok] http://127.0.0.1:8000/user_profile/user-profile-view/
 
-18. User_search : [] http://127.0.0.1:8000/user_connection/userSearch/
+21. User_search : [] http://127.0.0.1:8000/user_connection/userSearch/
     {
     "EducationDegree" : ["JSC", "SSC", "HSC", "BllaBlla", "BllaBlla2"],
     "Industry": ["Business", "Software", "Telephone","New Indrustry", "New Indrustry 2"],
     "Location": ["New York,USA", "London,UK", "Dubai,UAE"]
     }
 
-18.1 user_search: [ok] http://127.0.0.1:8000/user_connection/userSearch/
+22. user_search: [ok] http://127.0.0.1:8000/user_connection/userSearch/
 
                         pagination all user data
 
-19. consultancy create: [ok] http://127.0.0.1:8000/consultancy/consultancy-createview/
+23. consultancy create: [ok] http://127.0.0.1:8000/consultancy/consultancy-createview/
 
-               {
-                   "userid": "0302171221796917",
-                   "is_userconsultant_personal": false,
-                   "is_userconsultant_company": true,
-                   "consultant_name": "Demo6",
-                   "consultant_contactnumber": "+880754654646454",
-                   "consultant_email": "dfksjh@sdjlk.ci",
-                   "consultantpersonal_about": null,
-                   "consultantpersonal_presentaddress": "sdnfjksdk,sdf,dfsd,df,sdf",
-                   "consultantpersonal_permanentaddress": "sdf,sdfsdf,dsgd,g,dfgdf,",
-                   "consultantcompany_primarycontract_name": "dsfhksdhf",
-                   "consultantcompany_primarycontract_number": "+8804555455454654654",
-                   "consultantcompany_primarycontract_email": "sdjhfjk@nsdk.sdfks",
-                   "consultantcompany_about": "sdfjjhsdjkhf",
-                   "consultantcompany_reg_officeaddress": "dksfjhksd,sdfsd,sdfsdf,sdfsd,",
-                   "consultantcompany_presentaddress": "dfjskdf,sdf,sd,f,sdf,sdf",
-                   "consultantcompany_website": "http://www.dfsjhjkfhdkj.sdfb",
-                   "consultant_company_fblink": "fb.com/dkfhdskh",
-                   "consultant_company_linkedinlink": "linkedin/dsbfjhsd",
-                   "consultant_service_category": "Real-state",
-                   "consultant_servicelocation": "sdfhjsh,sdfsdh,sdfsd,sdf",
-                   "consultant_servicebudget_startrange": 156455,
-                   "consultant_servicebudget_endrange": 5646545,
-                   "consultant_servicedescription": "fhsdkhfhksdhfkjsfsdkhfshdzk fhzsdhjhjhsjh jghdjgjshgjhdjfhgjd",
+              {
+                  "userid": "0302171221796917",
+                  "is_userconsultant_personal": false,
+                  "is_userconsultant_company": true,
+                  "consultant_name": "Demo6",
+                  "consultant_contactnumber": "+880754654646454",
+                  "consultant_email": "dfksjh@sdjlk.ci",
+                  "consultantpersonal_about": null,
+                  "consultantpersonal_presentaddress": "sdnfjksdk,sdf,dfsd,df,sdf",
+                  "consultantpersonal_permanentaddress": "sdf,sdfsdf,dsgd,g,dfgdf,",
+                  "consultantcompany_primarycontract_name": "dsfhksdhf",
+                  "consultantcompany_primarycontract_number": "+8804555455454654654",
+                  "consultantcompany_primarycontract_email": "sdjhfjk@nsdk.sdfks",
+                  "consultantcompany_about": "sdfjjhsdjkhf",
+                  "consultantcompany_reg_officeaddress": "dksfjhksd,sdfsd,sdfsdf,sdfsd,",
+                  "consultantcompany_presentaddress": "dfjskdf,sdf,sd,f,sdf,sdf",
+                  "consultantcompany_website": "http://www.dfsjhjkfhdkj.sdfb",
+                  "consultant_company_fblink": "fb.com/dkfhdskh",
+                  "consultant_company_linkedinlink": "linkedin/dsbfjhsd",
+                  "consultant_service_category": "Real-state",
+                  "consultant_servicelocation": "sdfhjsh,sdfsdh,sdfsd,sdf",
+                  "consultant_servicebudget_startrange": 156455,
+                  "consultant_servicebudget_endrange": 5646545,
+                  "consultant_servicedescription": "fhsdkhfhksdhfkjsfsdkhfshdzk fhzsdhjhjhsjh jghdjgjshgjhdjfhgjd",
 
-                   "consultant_servicedetail_filepath": "JVBERi0xLjcKCjQgMCBvYmoKKElkZW50aXR5KQplbmRvYmoKNSAwIG9iagooQWRvYmUpCmVuZG9iago4IDAgb2JqCjw8Ci9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9MZW5ndGggNzMyNDAKL0xlbmd0aDEgMzQ3MzkyCi9UeXBlIC9TdHJlYW0KPj4Kc3RyZWFtCnic7J0JYFTVvfD/597Z1zv7ZJbMPklmkkwyk4QkhGRCFhAIhEVJkEjYIotCWATBBbAqglpxqXuVWrVUrYaJS8ClVKnaFgStLWqtYEWrraivRW2VzHz/cycs6Svvo+",
+                  "consultant_servicedetail_filepath": "JVBERi0xLjcKCjQgMCBvYmoKKElkZW50aXR5KQplbmRvYmoKNSAwIG9iagooQWRvYmUpCmVuZG9iago4IDAgb2JqCjw8Ci9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9MZW5ndGggNzMyNDAKL0xlbmd0aDEgMzQ3MzkyCi9UeXBlIC9TdHJlYW0KPj4Kc3RyZWFtCnic7J0JYFTVvfD/597Z1zv7ZJbMPklmkkwyk4QkhGRCFhAIhEVJkEjYIotCWATBBbAqglpxqXuVWrVUrYaJS8ClVKnaFgStLWqtYEWrraivRW2VzHz/cycs6Svvo+",
 
 
-                   "consultant_cvpath": "JVBERi0xLjcKCjQgMCBvYmoKKElkZW50aXR5KQplbmRvYmoKNSAwIG9iagooQWRvYmUpCmVuZG9iago4IDAgb2JqCjw8Ci9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9MZW5ndGggNzMyNDAKL0xlbmd0aDEgMzQ3MzkyCi9UeXBlIC9TdHJlYW0KPj4Kc3RyZWFtCnic7J0JYFTVvfD/597Z1zv7ZJbMPklmkkwyk4QkhGRCFhAIhEVJkEjYIotCWATBBbAqglpxqXuVWrVUrYaJS8ClVKnaFgStLWqtYEWrraivRW2VzHz/cycs6Svvo+/jfQ2885uc",
+                  "consultant_cvpath": "JVBERi0xLjcKCjQgMCBvYmoKKElkZW50aXR5KQplbmRvYmoKNSAwIG9iagooQWRvYmUpCmVuZG9iago4IDAgb2JqCjw8Ci9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9MZW5ndGggNzMyNDAKL0xlbmd0aDEgMzQ3MzkyCi9UeXBlIC9TdHJlYW0KPj4Kc3RyZWFtCnic7J0JYFTVvfD/597Z1zv7ZJbMPklmkkwyk4QkhGRCFhAIhEVJkEjYIotCWATBBbAqglpxqXuVWrVUrYaJS8ClVKnaFgStLWqtYEWrraivRW2VzHz/cycs6Svvo+/jfQ2885uc",
 
-                   "consultant_idverification_type": "Driving",
+                  "consultant_idverification_type": "Driving",
 
-                   "consultant_idverification_passportimagepath": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAuYAAAHSCAIAAAAv+JkiAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAgAElEQVR4Xuzde3QUx5kw/Kequns0Gt0RIAkQQgIkQMiAjcX9YmxDuDgBY8eO7bXXZjfxbr5342y+3T3+dn12/Z31yXqdi/d9835e5+rcGttC1860AAAAAElFTkSuQmCC",
+                  "consultant_idverification_passportimagepath": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAuYAAAHSCAIAAAAv+JkiAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAgAElEQVR4Xuzde3QUx5kw/Kequns0Gt0RIAkQQgIkQMiAjcX9YmxDuDgBY8eO7bXXZjfxbr5342y+3T3+dn12/Z31yXqdi/d9835e5+rcGttC1860AAAAAElFTkSuQmCC",
 
-                   "consultant_tin": "6546465-54450-545",
-                   "consultant_bin": "4646-6464-654-64",
-                   "consultant_otherpermits": null,
-                   "consultant_bankaccount": null,
-                   "consultant_bankaccount_number": null,
-                   "consultant_bankaccount_branchnumber": null,
-                   "consultant_bankaccount_swiftcode": null,
-                   "consultant_bankaccount_routingnumber": null
+                  "consultant_tin": "6546465-54450-545",
+                  "consultant_bin": "4646-6464-654-64",
+                  "consultant_otherpermits": null,
+                  "consultant_bankaccount": null,
+                  "consultant_bankaccount_number": null,
+                  "consultant_bankaccount_branchnumber": null,
+                  "consultant_bankaccount_swiftcode": null,
+                  "consultant_bankaccount_routingnumber": null
 
-               }
+              }
 
-20. consultancy Search: [OK] http://127.0.0.1:8000/consultancy/getall-services/?page=2
+24. consultancy Search: [OK] http://127.0.0.1:8000/consultancy/getall-services/?page=2
+
 
     Static setting pages:
 
-21. UserIndustryData: [ok] http://127.0.0.1:8000/user_setting_other_app/UserIndustryData/
-22. User_AreaOf_ExperienceData: [ok] http://127.0.0.1:8000/user_setting_other_app/UserAreaOfExperienceData/
-23. UserInterestedAreaData [ok] http://127.0.0.1:8000/user_setting_other_app/UserInterestedAreaData/
-24. UserGoalData [ok] http://127.0.0.1:8000/user_setting_other_app/UserGoalData/
-25. ConsultancyServiceCategoryData [ok] http://127.0.0.1:8000/user_setting_other_app/ConsultancyServiceCategoryData/
+24. UserIndustryData: [ok] http://127.0.0.1:8000/user_setting_other_app/UserIndustryData/
+
+25. User_AreaOf_ExperienceData: [ok] http://127.0.0.1:8000/user_setting_other_app/UserAreaOfExperienceData/
+
+26. UserInterestedAreaData [ok] http://127.0.0.1:8000/user_setting_other_app/UserInterestedAreaData/
+
+27. UserGoalData [ok] http://127.0.0.1:8000/user_setting_other_app/UserGoalData/
+
+28. ConsultancyServiceCategoryData [ok] http://127.0.0.1:8000/user_setting_other_app/ConsultancyServiceCategoryData/
+
+29. user_Blog_create [ok] http://127.0.0.1:8000/user_blog/blog-create/
+
+                {
+                "userid": "0310145752329358",
+                "userblog_title": "2222222222",
+                "userblog_discription": "sdhgfdh jkgh jdhfjghjhdghjdhgk hdfkjhkgdh khdjlk",
+                "userblog_sharelink": "www.fjhdghdfj.ftdgfd.f.gf.co",
+                "userblog_tags": ["tag1","tag2","tag3"],
+                "userblog_publishlocation": "Mirpur-2,Dhaka",
+                "userblog_addphotopath": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAuYAAAHSCAIAAAAv+JkiAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAgAElEQVR4Xuzde3QUx5kw/Kequns0Gt0RIAkQQgIkQMiAjcX9YmxDuDgBY8eO7bXXZjfxbr5342y+3T3+dn12/Z31yXqdi/d9835e5+aseZcY23FiAgQwAUJkg0EIEMJIgLhIgAAhobumu6ue74+WZkaj6UGDJSHFz+9wDjNPVVdX17Sma/pSxbJzpwAhhBBCyNDGwwOEEEIIIUOP"
+
+                }
+
+30. list all blog: [ok] http://127.0.0.1:8000/user_blog/blog-list/
+
+31. blog-comment_create:    [ok]   http://127.0.0.1:8000/user_blog/blog-comment/
+
+            {
+                "userid": "d2",
+                "blogid": "6",
+                "blogcomment": "This is a test comment",
+                "blogcomment_publisherlocation": "gulshan,Dhaka"
+            }
+
+32. user blog reaction:  [ok]    http://127.0.0.1:8000/user_blog/blog-reaction/
+
+            {
+                "userid":  "d2",
+                "blogid": "6",
+                "is_user_like": true,
+                "is_user_dislike": false
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
