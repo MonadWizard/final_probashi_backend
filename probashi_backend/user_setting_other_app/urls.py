@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (UserIndustryDataView, UserAreaOfExperienceDataView,
                     UserInterestedAreaDataView, UserGoalDataView,
-                    ConsultancyServiceCategoryDataView)
+                    ConsultancyServiceCategoryDataView,
+                    CreateOtherRowsInStaticTableView)
 
 
 
@@ -11,6 +12,8 @@ urlpatterns = [
     path('UserInterestedAreaData/', UserInterestedAreaDataView.as_view(), name="UserInterestedAreaDataView"),
     path('UserGoalData/', UserGoalDataView.as_view(), name="UserGoalDataView"),
     path('ConsultancyServiceCategoryData/', ConsultancyServiceCategoryDataView.as_view(), name="ConsultancyServiceCategoryDataView"),
+    path('other-rows/', CreateOtherRowsInStaticTableView.as_view(), name="CreateOtherRowsInStaticTableView"),
+
 
 
 

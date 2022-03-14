@@ -103,7 +103,8 @@ class UserInterestedAreaView(views.APIView):
     def get(self,request,userid):
         userid = self.get_user(userid)
         serializer = UserInterestedAreaSerializer(userid)
-        return Response(serializer.data)
+        context = {'data':serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
     
     def put(self,request,userid):
         userid = self.get_user(userid)
@@ -130,7 +131,8 @@ class UserGoalView(views.APIView):
     def get(self,request,userid):
         userid = self.get_user(userid)
         serializer = UserGoalSerializer(userid)
-        return Response(serializer.data)
+        context = {'data':serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
     
     def put(self,request,userid):
         userid = self.get_user(userid)

@@ -29,5 +29,11 @@ class BlogReactionSerializer(serializers.ModelSerializer):
 
 
 
+class BlogSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog_reaction
+        fields = '__all__'
+
+
 
 

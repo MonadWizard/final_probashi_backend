@@ -9,13 +9,24 @@ from .serializers import (UserIndustryDataSerializer,
                     UserAreaOfExperienceDataSerializer,
                     UserInterestedAreaDataSerializer,
                     UserGoalDataSerializer,
-                    ConsultancyServiceCategoryDataSerializer)
+                    ConsultancyServiceCategoryDataSerializer,
+                    CreateOtherRowsInStatictableSerializer)
 
 
 class UserIndustryDataView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     queryset = StaticSettingData.objects.filter(user_industry_data__isnull=False)
     serializer_class= UserIndustryDataSerializer
+
+    def post(self, request):
+        serializer = UserIndustryDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        errorcontext = {'user_industry_data': serializer.errors['user_industry_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
 
     def list(self, request):
         queryset = self.get_queryset()
@@ -30,6 +41,15 @@ class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
     queryset = StaticSettingData.objects.filter(user_areaof_experience_data__isnull=False)
     serializer_class= UserAreaOfExperienceDataSerializer
     
+    def post(self, request):
+        serializer = UserAreaOfExperienceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        errorcontext = {'user_areaof_experience_data': serializer.errors['user_areaof_experience_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
     def list(self, request):
         queryset = self.get_queryset()
         serializer = UserAreaOfExperienceDataSerializer(queryset, many=True)
@@ -42,6 +62,15 @@ class UserInterestedAreaDataView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     queryset = StaticSettingData.objects.filter(user_interested_area_data__isnull=False)
     serializer_class= UserInterestedAreaDataSerializer
+
+    def post(self, request):
+        serializer = UserInterestedAreaDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        errorcontext = {'user_interested_area_data': serializer.errors['user_interested_area_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
 
     def list(self, request):
         queryset = self.get_queryset()
@@ -57,6 +86,15 @@ class UserGoalDataView(generics.ListCreateAPIView):
     queryset = StaticSettingData.objects.filter(user_goal_data__isnull=False)
     serializer_class= UserGoalDataSerializer
 
+    def post(self, request):
+        serializer = UserGoalDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
     def list(self, request):
         queryset = self.get_queryset()
         serializer = UserGoalDataSerializer(queryset, many=True)
@@ -71,6 +109,16 @@ class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
     queryset = StaticSettingData.objects.filter(consultancyservice_category_data__isnull=False)
     serializer_class= ConsultancyServiceCategoryDataSerializer
 
+
+    def post(self, request):
+        serializer = ConsultancyServiceCategoryDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        errorcontext = {'consultancyservice_category_data': serializer.errors['consultancyservice_category_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
     def list(self, request):
         queryset = self.get_queryset()
         serializer = ConsultancyServiceCategoryDataSerializer(queryset, many=True)
@@ -79,7 +127,9 @@ class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
 
 
 
+class CreateOtherRowsInStaticTableView(generics.ListCreateAPIView):
+    # permission_classes = [permissions.IsAuthenticated,]
 
-
-
-
+    # permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.all()
+    serializer_class= CreateOtherRowsInStatictableSerializer
