@@ -9,8 +9,8 @@ from user_profile_app.models import User_education
 from .serializers import SerachUserSerializer
 from rest_framework.pagination import PageNumberPagination
 from user_profile_app.serializers import UserProfileViewSerializer
-from .serializers import UserConnectionRequestSendSerializer
-from .models import UserConnectionRequestSend
+from .serializers import UserFavouriteRequestSendSerializer
+from .models import UserFavoutireRequestSend
 class GetAllusersSetPagination(PageNumberPagination):
     page_size = 20
     # page_size_query_param = 'users'
@@ -39,14 +39,14 @@ class GetSpecificUserView(views.APIView):
 
 
 
-class ConnectionRequestSendView(generics.ListCreateAPIView):
+class FavouriteRequestSendView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
-    queryset = UserConnectionRequestSend.objects.all()
-    serializer_class= UserConnectionRequestSendSerializer
+    queryset = UserFavoutireRequestSend.objects.all()
+    serializer_class= UserFavouriteRequestSendSerializer
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = UserConnectionRequestSendSerializer(queryset, many=True)
+        serializer = UserFavouriteRequestSendSerializer(queryset, many=True)
         context = {"data":serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 

@@ -1,6 +1,6 @@
 from lib2to3.pgen2 import driver
 from django.contrib import admin
-from .models import UserConnectionRequestSend
+from .models import UserFavoutireRequestSend
 # Register your models here.
 
-admin.site.register(UserConnectionRequestSend)
+admin.site.register(UserFavoutireRequestSend)

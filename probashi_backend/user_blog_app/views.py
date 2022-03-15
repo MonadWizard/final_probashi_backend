@@ -5,9 +5,13 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
 from .serializers import (BlogCreateSerializer, BlogCommentSerializer,
-                            BlogReactionSerializer, BlogSearchSerializer)
+                            BlogReactionSerializer,
+                            BlogPaginateListViewSerializer, BlogHomePageReactionSerializer)
 from .models import Blog, Blog_reaction, Blog_comment
 from rest_framework.pagination import PageNumberPagination
+
+from django.db.models import Case, IntegerField, Sum, When
+
 
 
 class BlogCreateView(views.APIView):
@@ -19,13 +23,6 @@ class BlogCreateView(views.APIView):
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
-class BlogListView(generics.ListAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = BlogCreateSerializer
-    queryset = Blog.objects.all()
-
 
 
 class BlogCommentView(views.APIView):
@@ -44,29 +41,43 @@ class BlogReactionView(views.APIView):
 
     def post(self,request):
 
+
+        serializer = BlogReactionSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data ,status=status.HTTP_201_CREATED)
+        # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
         if Blog_reaction.objects.filter(blogid__exact=request.data['blogid']):
             if request.data['is_user_like'] == False and request.data['is_user_dislike'] == False:
-                print('blogid::::::::',request.data['is_user_dislike'])
+                # print('blogid::::::::',request.data['is_user_dislike'])
                 Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
                 return Response('delete row',status=status.HTTP_202_ACCEPTED)
-
-        else:
-            serializer = BlogReactionSerializer(data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-            return Response('serializer.data',status=status.HTTP_201_CREATED)
-        return Response('serializer.errors',status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-class GetAllusersSetPagination(PageNumberPagination):
-    page_size = 20
+
+
+class GetAllpostsSetPagination(PageNumberPagination):
+    page_size = 1
     # page_size_query_param = 'users'
     max_page_size = 10000
 
-class GetAllUserPaginationView(generics.ListAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSearchSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-    pagination_class = GetAllusersSetPagination
 
+class BlogPaginateListView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = BlogPaginateListViewSerializer
+    queryset = Blog.objects.all()
+    pagination_class = GetAllpostsSetPagination
+
+    def list(self, request):
+        queryset = self.get_queryset()
+
+        serializer = BlogPaginateListViewSerializer(queryset, many=True)
+        # print('serializer.data::::::',serializer.data[0])
+        
+        
+        
+        return Response(serializer.data)

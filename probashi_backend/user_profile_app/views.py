@@ -1,3 +1,4 @@
+from copy import error
 from lib2to3.pgen2.token import EQUAL
 from rest_framework import generics, status, views, permissions, viewsets
 from rest_framework.response import Response
@@ -108,12 +109,15 @@ class UserInterestedAreaView(views.APIView):
     
     def put(self,request,userid):
         userid = self.get_user(userid)
-        serializer = UserInterestedAreaSerializer(userid,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
+        # print("request data::::::",request.data)
+        if request.data != {}:
+            serializer = UserInterestedAreaSerializer(userid,data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        errorContext = {'error':'No data found'}
+        return Response(errorContext, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -136,11 +140,14 @@ class UserGoalView(views.APIView):
     
     def put(self,request,userid):
         userid = self.get_user(userid)
-        serializer = UserGoalSerializer(userid,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        if request.data != {}:
+            serializer = UserGoalSerializer(userid,data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        errorContext = {'error':'No data found'}
+        return Response(errorContext, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -261,7 +268,7 @@ class UserProfileView(generics.ListAPIView):
         serializer = UserProfileViewSerializer(queryset, many=True)
         
         # print('serializer.data::::::',serializer.data)
-        # print('about:::::::::', serializer.data[0]['user_socialaboutdata'].get('user_about'))
+        # print('about:::::::::', serializer.data[0]['user_socialaboutdata'])
 
         complete_profile_persentage = 5
         if serializer.data[0]['user_username'] != None:
@@ -295,9 +302,9 @@ class UserProfileView(generics.ListAPIView):
 
         serializer.data[0]['profile_complete_percentage'] = complete_profile_persentage
 
+        
 
-
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 

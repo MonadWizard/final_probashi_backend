@@ -53,3 +53,10 @@ class CreateOtherRowsInStatictableSerializer(serializers.ModelSerializer):
                 'user_goal_data',
                 'consultancyservice_category_data']
 
+
+
+class BlogTagDataSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['blog_tags_data']
+

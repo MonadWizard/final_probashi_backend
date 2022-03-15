@@ -10,7 +10,20 @@ from .serializers import (UserIndustryDataSerializer,
                     UserInterestedAreaDataSerializer,
                     UserGoalDataSerializer,
                     ConsultancyServiceCategoryDataSerializer,
-                    CreateOtherRowsInStatictableSerializer)
+                    CreateOtherRowsInStatictableSerializer,
+                    BlogTagDataSerializers)
+
+
+
+
+
+class CreateOtherRowsInStaticTableView(generics.ListCreateAPIView):
+    # permission_classes = [permissions.IsAuthenticated,]
+
+    # permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.all()
+    serializer_class= CreateOtherRowsInStatictableSerializer
+
 
 
 class UserIndustryDataView(generics.ListCreateAPIView):
@@ -127,9 +140,29 @@ class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
 
 
 
-class CreateOtherRowsInStaticTableView(generics.ListCreateAPIView):
-    # permission_classes = [permissions.IsAuthenticated,]
 
-    # permission_classes = [permissions.IsAuthenticated,]
-    queryset = StaticSettingData.objects.all()
-    serializer_class= CreateOtherRowsInStatictableSerializer
+
+class BlogTagDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(blog_tags_data__isnull=False)
+    serializer_class= BlogTagDataSerializers
+
+    def post(self, request):
+        serializer = BlogTagDataSerializers(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        errorcontext = {'blog_tags_data': serializer.errors['blog_tags_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = BlogTagDataSerializers(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+
+
+

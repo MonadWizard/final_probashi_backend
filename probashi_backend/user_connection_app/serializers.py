@@ -3,7 +3,7 @@ from rest_framework import serializers
 from auth_user_app.models import User
 from user_profile_app.models import User_education
 from consultancy_app.models import ConsultancyCreate
-from .models import UserConnectionRequestSend
+from .models import UserFavoutireRequestSend
 
 class UserEducationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,9 +26,9 @@ class SerachUserSerializer(serializers.ModelSerializer):
         # exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
 
 
-class UserConnectionRequestSendSerializer(serializers.ModelSerializer):
+class UserFavouriteRequestSendSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserConnectionRequestSend
+        model = UserFavoutireRequestSend
         fields = '__all__'
 
 

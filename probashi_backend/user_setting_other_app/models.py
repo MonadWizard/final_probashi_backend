@@ -15,6 +15,7 @@ class StaticSettingData(models.Model):
     user_interested_area_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
     user_goal_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
     consultancyservice_category_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    blog_tags_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
 
     def __str__(self):
         if self.user_industry_data:
@@ -27,6 +28,8 @@ class StaticSettingData(models.Model):
             return self.user_goal_data
         elif self.consultancyservice_category_data:
             return self.consultancyservice_category_data
+        elif self.blog_tags_data:
+            return self.blog_tags_data
         else:
             return 'No Data'
 
