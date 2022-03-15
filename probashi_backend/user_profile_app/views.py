@@ -302,9 +302,9 @@ class UserProfileView(generics.ListAPIView):
 
         serializer.data[0]['profile_complete_percentage'] = complete_profile_persentage
 
-        
+        context = {"data": serializer.data}
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(context, status=status.HTTP_200_OK)
 
 
 

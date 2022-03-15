@@ -1,3 +1,4 @@
+from multiprocessing import context
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -62,8 +63,8 @@ class BlogReactionView(views.APIView):
 
 class GetAllpostsSetPagination(PageNumberPagination):
     page_size = 1
-    # page_size_query_param = 'users'
-    max_page_size = 10000
+    # page_size_query_param = 'posts_per_page'
+    # max_page_size = 10000
 
 
 class BlogPaginateListView(generics.ListAPIView):
@@ -73,11 +74,25 @@ class BlogPaginateListView(generics.ListAPIView):
     pagination_class = GetAllpostsSetPagination
 
     def list(self, request):
+        # context = {'request': request.data}
+        # print('request:::::::::', request.data)
         queryset = self.get_queryset()
 
         serializer = BlogPaginateListViewSerializer(queryset, many=True)
+
         # print('serializer.data::::::',serializer.data[0])
         
-        
-        
-        return Response(serializer.data)
+        context = {'data': serializer.data}
+        # return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
+
+
+
+
+
+
+
+
+
+
+
