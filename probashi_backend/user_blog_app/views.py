@@ -66,25 +66,20 @@ class GetAllpostsSetPagination(PageNumberPagination):
     # page_size_query_param = 'posts_per_page'
     # max_page_size = 10000
 
-
 class BlogPaginateListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = BlogPaginateListViewSerializer
     queryset = Blog.objects.all()
     pagination_class = GetAllpostsSetPagination
 
-    def list(self, request):
-        # context = {'request': request.data}
-        # print('request:::::::::', request.data)
-        queryset = self.get_queryset()
+    def get_queryset(self):
+        return Blog.objects.all().order_by('-userblog_publishdate')
 
-        serializer = BlogPaginateListViewSerializer(queryset, many=True)
 
-        # print('serializer.data::::::',serializer.data[0])
-        
-        context = {'data': serializer.data}
-        # return Response(serializer.data)
-        return self.get_paginated_response(serializer.data)
+
+
+
+
 
 
 
