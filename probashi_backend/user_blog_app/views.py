@@ -42,29 +42,30 @@ class BlogReactionView(views.APIView):
 
     def post(self,request):
 
-
-        serializer = BlogReactionSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data ,status=status.HTTP_201_CREATED)
-        # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
         if Blog_reaction.objects.filter(blogid__exact=request.data['blogid']):
             if request.data['is_user_like'] == False and request.data['is_user_dislike'] == False:
                 # print('blogid::::::::',request.data['is_user_dislike'])
                 Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
+
                 return Response('delete row',status=status.HTTP_202_ACCEPTED)
+
+            if request.data['is_user_like'] == True and request.data['is_user_dislike'] == False:
+                return Response('already Liked',status=status.HTTP_400_BAD_REQUEST)
+            if request.data['is_user_like'] == False and request.data['is_user_dislike'] == True:
+                return Response('already disliked',status=status.HTTP_400_BAD_REQUEST)
+        # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+        else:
+            serializer = BlogReactionSerializer(data=request.data)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data ,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 class GetAllpostsSetPagination(PageNumberPagination):
     page_size = 1
-    # page_size_query_param = 'posts_per_page'
-    # max_page_size = 10000
 
 class BlogPaginateListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
