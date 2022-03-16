@@ -52,7 +52,7 @@ class BlogHomePageCommentSerializer(serializers.ModelSerializer):
 
 class BlogPaginateListViewSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="userid.user_fullname")
-    userphoto = serializers.CharField(source="userid.user_photopath")
+    userphoto = serializers.ImageField(source="userid.user_photopath")
     is_consultant = serializers.BooleanField(source="userid.is_consultant")
     # blog_reaction = BlogHomePageReactionSerializer(many=True, read_only=True)
     blog_comment = BlogHomePageCommentSerializer(many=True, read_only=True)

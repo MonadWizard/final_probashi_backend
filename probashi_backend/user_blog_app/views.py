@@ -65,7 +65,7 @@ class BlogReactionView(views.APIView):
 
 
 class GetAllpostsSetPagination(PageNumberPagination):
-    page_size = 1
+    page_size = 10
 
 class BlogPaginateListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)

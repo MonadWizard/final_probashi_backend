@@ -3,7 +3,7 @@ from .views import (UserProfileSkipPart1, UserProfileSkipPart2,
                     UserEditProfile, UserAboutSocialLinkUpdate, 
                     UserExperienceCreate, UserEducationCreate,
                     UserIdVerificationCreate,UserProfileView,
-                    UserInterestedAreaView, UserGoalView
+                    UserInterestedAreaView, UserGoalView,UserExperienceUpdate
                     )
 
 
@@ -14,7 +14,7 @@ urlpatterns = [
     path('user-edit-profile/<str:userid>/', UserEditProfile.as_view(), name="UserEditProfile"),
     path('user-about-social-link-update/<str:userid>/', UserAboutSocialLinkUpdate.as_view(), name="UserAboutSocialLinkUpdate"),
     path('user-experience-create/', UserExperienceCreate.as_view(), name="UserExperienceCreate"),
-    # path('user-experience-update/<str:userid>/', UserExperienceUpdate.as_view(), name="UserExperienceUpdate"),
+    path('user-experience-update/<str:userid>/', UserExperienceUpdate.as_view(), name="UserExperienceUpdate"),
     path('user-education-create/', UserEducationCreate.as_view(), name="UserEducationCreate"),
     path('user-idverify-create/', UserIdVerificationCreate.as_view(), name="UserIdVerificationCreate"),
     path('user-profile-view/', UserProfileView.as_view(), name="UserProfileView"),

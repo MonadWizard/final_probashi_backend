@@ -9,7 +9,8 @@ from user_profile_app.models import User_education
 from .serializers import SerachUserSerializer
 from rest_framework.pagination import PageNumberPagination
 from user_profile_app.serializers import UserProfileViewSerializer
-from .serializers import (UserFavouriteRequestSendSerializer, UserFavouriteRequestsSerializer)
+from .serializers import (UserFavouriteRequestSendSerializer, UserFavouriteRequestsSerializer,
+                        AcceptFavouriteRequestSerializer)
 from .models import UserFavoutireRequestSend
 class GetAllusersSetPagination(PageNumberPagination):
     page_size = 20
@@ -57,10 +58,6 @@ class FavouriteRequestsView(generics.ListAPIView):
 
     def get_queryset(self):
             user = self.request.user
-            # user_id = User.objects.all().filter(user_email=user).values('userid')
-            # user_id = user_id[0].get('userid')
-            # return(User.objects.filter(userid=user_id))
-
             return UserFavoutireRequestSend.objects.filter(favourite_request_to=user)
     
     def list(self, request, format=None):
@@ -69,6 +66,36 @@ class FavouriteRequestsView(generics.ListAPIView):
         context = {"data":serializer.data}
         return Response(context, status=status.HTTP_200_OK)  
 
+
+
+# class AcceptFavouriteRequest(generics.UpdateAPIView):
+#     permission_classes = [permissions.IsAuthenticated,]
+#     queryset = UserFavoutireRequestSend.objects.all()
+
+#     serializer_class= AcceptFavouriteRequestSerializer
+
+
+
+class AcceptFavouriteRequest(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self,requestid):
+        try:
+            return UserFavoutireRequestSend.objects.get(id=requestid)
+        except UserFavoutireRequestSend.DoesNotExist:
+            raise Http404
+
+    def put(self,request,requestid):
+
+        user = self.request.user
+        if UserFavoutireRequestSend.objects.filter(userid__exact=user.userid) and UserFavoutireRequestSend.objects.filter(id__exact=requestid) :    
+
+            requested_data = self.get_object(requestid)
+            serializer = AcceptFavouriteRequestSerializer(requested_data, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 

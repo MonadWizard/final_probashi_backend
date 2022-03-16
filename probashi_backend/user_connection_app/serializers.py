@@ -37,3 +37,15 @@ class UserFavouriteRequestsSerializer(serializers.ModelSerializer):
         model = UserFavoutireRequestSend
         fields = '__all__'
 
+
+class AcceptFavouriteRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFavoutireRequestSend
+        fields = ['is_favourite_accept']
+
+
+
+
+
+
+
