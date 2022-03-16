@@ -218,20 +218,19 @@ base64 converted photo added in "user_photopath"
 
 24. consultancy Search: [OK] http://127.0.0.1:8000/consultancy/getall-services/?page=2
 
-
     Static setting pages:
 
-24. UserIndustryData: [ok] http://127.0.0.1:8000/user_setting_other_app/UserIndustryData/
+25. UserIndustryData: [ok] http://127.0.0.1:8000/user_setting_other_app/UserIndustryData/
 
-25. User_AreaOf_ExperienceData: [ok] http://127.0.0.1:8000/user_setting_other_app/UserAreaOfExperienceData/
+26. User_AreaOf_ExperienceData: [ok] http://127.0.0.1:8000/user_setting_other_app/UserAreaOfExperienceData/
 
-26. UserInterestedAreaData [ok] http://127.0.0.1:8000/user_setting_other_app/UserInterestedAreaData/
+27. UserInterestedAreaData [ok] http://127.0.0.1:8000/user_setting_other_app/UserInterestedAreaData/
 
-27. UserGoalData [ok] http://127.0.0.1:8000/user_setting_other_app/UserGoalData/
+28. UserGoalData [ok] http://127.0.0.1:8000/user_setting_other_app/UserGoalData/
 
-28. ConsultancyServiceCategoryData [ok] http://127.0.0.1:8000/user_setting_other_app/ConsultancyServiceCategoryData/
+29. ConsultancyServiceCategoryData [ok] http://127.0.0.1:8000/user_setting_other_app/ConsultancyServiceCategoryData/
 
-29. user_Blog_create [ok] http://127.0.0.1:8000/user_blog/blog-create/
+30. user_Blog_create [ok] http://127.0.0.1:8000/user_blog/blog-create/
 
                 {
                 "userid": "0310145752329358",
@@ -244,9 +243,9 @@ base64 converted photo added in "user_photopath"
 
                 }
 
-30. list all blog: [ok] http://127.0.0.1:8000/user_blog/blog-list/
+31. list all blog: [ok] http://127.0.0.1:8000/user_blog/blog-list/
 
-31. blog-comment_create:    [ok]   http://127.0.0.1:8000/user_blog/blog-comment/
+32. blog-comment_create: [ok] http://127.0.0.1:8000/user_blog/blog-comment/
 
             {
                 "userid": "d2",
@@ -255,7 +254,7 @@ base64 converted photo added in "user_photopath"
                 "blogcomment_publisherlocation": "gulshan,Dhaka"
             }
 
-32. user blog reaction:  [ok]    http://127.0.0.1:8000/user_blog/blog-reaction/
+33. user blog reaction: [ok] http://127.0.0.1:8000/user_blog/blog-reaction/
 
             {
                 "userid":  "d2",
@@ -264,29 +263,20 @@ base64 converted photo added in "user_photopath"
                 "is_user_dislike": false
             }
 
+34. User Blog HomePage: [ok] http://127.0.0.1:8000/user_blog/blog-list/
+
+35. User Favourite Request Send: [ok] [http://](http://127.0.0.1:8000/user_connection/favourite-request-send/)
+
+                    {
+                        "user":  "0310130109962246",
+                        "favourite_request_to":  "0315113427367284"
+
+                    }
+
+36. get specific user: [ok] http://127.0.0.1:8000/user_connection/specificuser/0310131337008688
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+37.  All Favourite requested user:   [need to be done]
 
 
 

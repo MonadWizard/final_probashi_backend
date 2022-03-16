@@ -1,3 +1,4 @@
+from multiprocessing import context
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -159,7 +160,14 @@ class BlogTagDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = BlogTagDataSerializers(queryset, many=True)
-        context = {"data":serializer.data}
+        # context = {"data":serializer.data}
+        tags = []
+        for data in serializer.data:
+            data['blog_tags_data'] = data['blog_tags_data'].split(',')
+            # print(data['blog_tags_data'])
+            tags += data['blog_tags_data'] 
+        # print(tags)
+        context = {"data":tags}
         return Response(context, status=status.HTTP_200_OK)
 
 

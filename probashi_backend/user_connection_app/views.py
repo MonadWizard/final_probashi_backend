@@ -38,7 +38,6 @@ class GetSpecificUserView(views.APIView):
         return Response(serializer.data)
 
 
-
 class FavouriteRequestSendView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     queryset = UserFavoutireRequestSend.objects.all()
