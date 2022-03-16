@@ -265,7 +265,7 @@ base64 converted photo added in "user_photopath"
 
 34. User Blog HomePage: [ok] http://127.0.0.1:8000/user_blog/blog-list/
 
-35. User Favourite Request Send: [ok] [http://](http://127.0.0.1:8000/user_connection/favourite-request-send/)
+35. User Favourite Request Send: [ok] http://127.0.0.1:8000/user_connection/favourite-request-send/
 
                     {
                         "user":  "0310130109962246",
@@ -275,9 +275,4 @@ base64 converted photo added in "user_photopath"
 
 36. get specific user: [ok] http://127.0.0.1:8000/user_connection/specificuser/0310131337008688
 
-
-37.  All Favourite requested user:   [need to be done]
-
-
-
-
+37. All Favourite requested user: [need to be done]

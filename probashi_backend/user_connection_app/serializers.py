@@ -32,7 +32,8 @@ class UserFavouriteRequestSendSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
-
+class UserFavouriteRequestsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFavoutireRequestSend
+        fields = '__all__'
 
