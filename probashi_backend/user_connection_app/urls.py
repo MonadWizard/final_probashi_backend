@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (GetAllUserPaginationView, GetSpecificUserView, 
                     FavouriteRequestSendView, FavouriteRequestsView,
-                    AcceptFavouriteRequest)
+                    AcceptFavouriteRequest, RejectFavouriteRequest)
 
 
 
@@ -11,6 +11,9 @@ urlpatterns = [
     path('favourite-request-send/', FavouriteRequestSendView.as_view(), name="FavouriteRequestSendView"),
     path('favourite-requests/', FavouriteRequestsView.as_view(), name="FavouriteRequestsView"),
     path('favourite-requests-accept/<str:requestid>', AcceptFavouriteRequest.as_view(), name="AcceptFavouriteRequest"),
+    path('favourite-requests-reject/<str:requestid>', RejectFavouriteRequest.as_view(), name="RejectFavouriteRequest"),
+
+    # now work with favourite request reject.
 
     
     

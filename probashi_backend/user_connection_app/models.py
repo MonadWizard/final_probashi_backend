@@ -9,6 +9,9 @@ class UserFavoutireRequestSend(models.Model):
     favourite_request_note = models.TextField(blank=True, null=True)
 
 
+class UserFavouriteList(models.Model):
+    userid = models.ForeignKey(User, on_delete=models.DO_NOTHING,related_name='login_user_data')
+    favourite_userid = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='friend_user_data')
 
 
 
