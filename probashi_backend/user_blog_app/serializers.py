@@ -64,16 +64,19 @@ class BlogPaginateListViewSerializer(serializers.ModelSerializer):
 
 
     def get_total_like(self, obj):
-        return Blog_reaction.objects.filter(Q(blogid=obj.id) & Q(is_user_like=True)).count()
+        return Blog_reaction.objects.filter(Q(blogid=obj.id) & 
+                                            Q(is_user_like=True)).count()
     
     def get_total_dislike(self, obj):
-        return Blog_reaction.objects.filter(Q(blogid=obj.id) & Q(is_user_dislike=True)).count()
+        return Blog_reaction.objects.filter(Q(blogid=obj.id) & 
+                                            Q(is_user_dislike=True)).count()
 
     def get_user_like(self, obj):
         user = self.context['user']
         user_id = User.objects.filter(user_email=user).values('userid')
         user_id = user_id[0].get('userid')
-        if Blog_reaction.objects.filter(Q(blogid=obj.id) & Q(is_user_like=True) & Q(userid=user_id)):
+        if Blog_reaction.objects.filter(Q(blogid=obj.id) & 
+                                        Q(is_user_like=True) & Q(userid=user_id)):
             return True
         else:
             return False
@@ -83,7 +86,8 @@ class BlogPaginateListViewSerializer(serializers.ModelSerializer):
         user_id = User.objects.filter(user_email=user).values('userid')
         user_id = user_id[0].get('userid')
 
-        if Blog_reaction.objects.filter(Q(blogid=obj.id) & Q(is_user_dislike=True) & Q(userid=user_id)):
+        if Blog_reaction.objects.filter(Q(blogid=obj.id) & 
+                                        Q(is_user_dislike=True) & Q(userid=user_id)):
             return True
         else:
             return False
@@ -106,19 +110,23 @@ class SpecificBlogReactionDetailsSerializers(serializers.ModelSerializer):
 
     def get_total_like(self, obj):
         print("reaction id:::",obj)
-        return Blog_reaction.objects.filter(Q(blogid=obj.blogid) & Q(is_user_like=True)).count()
+        return Blog_reaction.objects.filter(Q(blogid=obj.blogid) & 
+                                            Q(is_user_like=True)).count()
     
     def get_total_dislike(self, obj):
-        return Blog_reaction.objects.filter(Q(blogid=obj.blogid) & Q(is_user_dislike=True)).count()
+        return Blog_reaction.objects.filter(Q(blogid=obj.blogid) & 
+                                            Q(is_user_dislike=True)).count()
 
     def get_user_like(self, obj):
-        if Blog_reaction.objects.filter(Q(blogid=obj.blogid) & Q(is_user_like=True) & Q(userid=obj.userid)):
+        if Blog_reaction.objects.filter(Q(blogid=obj.blogid) & 
+                                        Q(is_user_like=True) & Q(userid=obj.userid)):
             return True
         else:
             return False
     
     def get_user_dislike(self, obj):
-        if Blog_reaction.objects.filter(Q(blogid=obj.blogid) & Q(is_user_dislike=True) & Q(userid=obj.userid)):
+        if Blog_reaction.objects.filter(Q(blogid=obj.blogid) & 
+                                        Q(is_user_dislike=True) & Q(userid=obj.userid)):
             return True
         else:
             return False

@@ -6,9 +6,13 @@ from .serializers import SerachUserSerializer
 from rest_framework.pagination import PageNumberPagination
 from user_profile_app.serializers import UserProfileViewSerializer
 from .serializers import (UserFavouriteRequestSendSerializer, UserFavouriteRequestsSerializer,
-                        AcceptFavouriteRequestSerializer,RejectFavouriteRequestSerializer)
+                        AcceptFavouriteRequestSerializer,RejectFavouriteRequestSerializer,
+                        UserFavouriteListSerializer)
 from .models import UserFavoutireRequestSend, UserFavouriteList
 from django.db.models import Q
+from itertools import chain
+from django.db.models import F
+
 
 class GetAllusersSetPagination(PageNumberPagination):
     page_size = 20
@@ -87,20 +91,22 @@ class AcceptFavouriteRequest(views.APIView):
     def put(self,request,requestid):
 
         user = self.request.user
-        if UserFavoutireRequestSend.objects.filter(Q(favourite_request_to__exact=user.userid) & Q(id__exact=requestid) & Q(is_favourite_accept=False)).exists():    
+        if UserFavoutireRequestSend.objects.filter(Q(favourite_request_to__exact=user.userid) & 
+                                                Q(id__exact=requestid) & Q(is_favourite_accept=False)).exists():    
 
             requested_data = self.get_object(requestid)
             follow_acceptuser= requested_data.favourite_request_to
             # follow_acceptuser_id = requested_data.favourite_request_to.userid
             follow_requesteduser= requested_data.userid
             # follow_requesteduser_id = requested_data.userid.userid
-            print('accepted::::',follow_acceptuser, ",requested::::",follow_requesteduser)
+            # print('accepted::::',follow_acceptuser, ",requested::::",follow_requesteduser)
 
             serializer = AcceptFavouriteRequestSerializer(requested_data, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 UserFavouriteList.objects.create(userid=follow_acceptuser,favourite_userid=follow_requesteduser)
-                UserFavoutireRequestSend.objects.filter(Q(userid__exact=follow_acceptuser) & Q(favourite_request_to__exact=follow_requesteduser)).update(is_favourite_accept=True)
+                UserFavoutireRequestSend.objects.filter(Q(userid__exact=follow_acceptuser) & 
+                                    Q(favourite_request_to__exact=follow_requesteduser)).update(is_favourite_accept=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response("Bad Request",status=status.HTTP_400_BAD_REQUEST)
 
@@ -117,13 +123,49 @@ class RejectFavouriteRequest(views.APIView):
 
     def put(self,request,requestid):
         user = self.request.user
-        if UserFavoutireRequestSend.objects.filter(Q(favourite_request_to__exact=user.userid) & Q(id__exact=requestid)& Q(is_favourite_reject=False)).exists():    
+        if UserFavoutireRequestSend.objects.filter(Q(favourite_request_to__exact=user.userid) & 
+                                                Q(id__exact=requestid)& Q(is_favourite_reject=False)).exists():    
             requested_data = self.get_object(requestid)
             serializer = RejectFavouriteRequestSerializer(requested_data, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response("Bad Request",status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class FavouritesList(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    # serializer_class= UserFavouriteListSerializer
+
+    def get_queryset(self):
+            user = self.request.user
+            return UserFavouriteList.objects.filter(Q(userid=user) | Q(favourite_userid=user))
+    
+    def list(self, request, format=None):
+        # queryset = self.get_queryset()
+        # serializer = UserFavouriteListSerializer(queryset, many=True)
+
+        user = self.request.user
+
+        favourite_data = UserFavouriteList.objects.filter(userid=user).values('id',favourite_user=F("favourite_userid"))
+        user_data = UserFavouriteList.objects.filter(favourite_userid=user).values('id',favourite_user=F('userid'))
+        data = list(chain(favourite_data, user_data))
+
+        context = {"data":data}
+        return Response(context, status=status.HTTP_200_OK)  
+
+
+    # def list(self, request, format=None):
+    #     queryset = self.get_queryset()
+    #     context = {'user': self.request.user}
+
+    #     serializer = UserFavouriteListSerializer(queryset, context=context, many=True)
+        
+    #     context = {"data":serializer.data}
+    #     return Response(context, status=status.HTTP_200_OK)  
+
 
 
 
