@@ -53,15 +53,24 @@ class BlogReactionView(views.APIView):
 
         if Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user_id)).exists():
             if request.data['is_user_like'] == False and request.data['is_user_dislike'] == False:
-                # print('blogid::::::::',request.data['is_user_dislike'])
-                Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
+                # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
+                Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).update(is_user_like=False,is_user_dislike=False)
+                update_false = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values()
 
-                return Response('delete row',status=status.HTTP_202_ACCEPTED)
+                return Response(update_false,status=status.HTTP_202_ACCEPTED)
 
-            if request.data['is_user_like'] == True and request.data['is_user_dislike'] == False:
-                return Response('already Liked',status=status.HTTP_400_BAD_REQUEST)
-            if request.data['is_user_like'] == False and request.data['is_user_dislike'] == True:
-                return Response('already disliked',status=status.HTTP_400_BAD_REQUEST)
+            elif Blog_reaction.objects.filter(Q(is_user_like=request.data['is_user_like']) & 
+                                                Q(is_user_dislike=request.data['is_user_dislike'])).exists():
+                return Response('already react happend',status=status.HTTP_400_BAD_REQUEST)
+
+            
+            else:
+                serializer = BlogReactionSerializer(data=request.data)
+
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data ,status=status.HTTP_201_CREATED)
+
         
         elif request.data['userid'] == user_id : 
             serializer = BlogReactionSerializer(data=request.data)
@@ -92,21 +101,20 @@ class BlogPaginateListView(generics.ListAPIView):
 
 class SpecificBlogReactionDetails(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
-    serializer_class = SpecificBlogReactionDetailsSerializers
-
+    # serializer_class = SpecificBlogReactionDetailsSerializers
+    
     def get_queryset(self):
             user = self.request.user
-            user_id = User.objects.filter(user_email=user).values('userid')
-            user_id = user_id[0].get('userid')
-
             blog_id = self.request.query_params.get('id')
-            return Blog_reaction.objects.filter(Q(userid=user_id) & Q(blogid=blog_id))
+            return Blog_reaction.objects.filter(Q(userid=user) & Q(blogid=blog_id))
 
     def list(self, request):
         queryset = self.get_queryset()
         serializer = SpecificBlogReactionDetailsSerializers(queryset, many=True)
-
-        context = {"data": serializer.data}
+        try:
+            context = {"data": serializer.data[0]}
+        except IndexError:
+            context = {"data": "no data"}
         return Response(context, status=status.HTTP_200_OK)
 
 

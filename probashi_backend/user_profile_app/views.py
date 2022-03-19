@@ -74,8 +74,8 @@ class UserEditProfile(views.APIView):
     def put(self,request,userid):
         userid = self.get_user(userid)
 
-        print("request data::::::",request.data)
-        print("request data photopath::::::",request.data['user_photopath'] == "")
+        # print("request data::::::",request.data)
+        # print("request data photopath::::::",request.data['user_photopath'] == "")
         if request.data['user_photopath'] == "":
             serializer = UserEditPrifileWithoutImageSerializer(userid,data=request.data)
         else:
@@ -213,16 +213,12 @@ class UserExperienceUpdate(views.APIView):
     def put(self,request,userid):
         userid = self.get_user(userid)
         experienceid = self.get_experience(request.data['id'])
-        print('experienced:::::',experienceid)
-
-        print('request.dat:::::',request.data)
 
         serializer = UserExperienceUpdatSerializer(experienceid,data=request.data)
-        # lookup_field = "id"
 
         if serializer.is_valid():
-            # serializer.save()
-            print('serializer.data::::::',serializer.data)
+            serializer.save()
+            # print('serializer.data::::::',serializer.data)
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 

@@ -22,8 +22,8 @@ class Blog_comment(models.Model):
     blogcomment_publisherlocation = models.CharField(max_length=200, blank=True, null=True)
     
 class Blog_reaction(models.Model):
-    userid = models.ForeignKey(User,related_name='user_reaction', on_delete=models.CASCADE)
-    blogid = models.ForeignKey(Blog,related_name='blog_reaction', on_delete=models.CASCADE)
+    userid = models.ForeignKey(User, related_name='user_reaction', on_delete=models.DO_NOTHING)
+    blogid = models.ForeignKey(Blog, related_name='blog_reaction', on_delete=models.DO_NOTHING)
     is_user_like = models.BooleanField(default=False)
     is_user_dislike = models.BooleanField(default=False)
 

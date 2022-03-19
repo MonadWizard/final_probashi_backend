@@ -51,7 +51,8 @@ class FavouriteRequestSendView(generics.CreateAPIView):
         user_id = User.objects.filter(user_email=user).values('userid')
         user_id = user_id[0].get('userid')
         if request.data['userid'] == user_id:
-            if UserFavoutireRequestSend.objects.filter(Q(userid__exact=user_id) & Q(favourite_request_to__exact=request.data['favourite_request_to'])).exists():
+            if UserFavoutireRequestSend.objects.filter(Q(userid__exact=user_id) & 
+                                                    Q(favourite_request_to__exact=request.data['favourite_request_to'])).exists():
                 return Response('You can not send request to same user', status=status.HTTP_400_BAD_REQUEST)
             else:
                 serializer = UserFavouriteRequestSendSerializer(data=request.data)
@@ -69,7 +70,8 @@ class FavouriteRequestsView(generics.ListAPIView):
 
     def get_queryset(self):
             user = self.request.user
-            return UserFavoutireRequestSend.objects.filter(Q(favourite_request_to=user) & Q(is_favourite_accept=False) & Q(is_favourite_reject=False))
+            return UserFavoutireRequestSend.objects.filter(Q(favourite_request_to=user) & 
+                                                        Q(is_favourite_accept=False) & Q(is_favourite_reject=False))
     
     def list(self, request, format=None):
         queryset = self.get_queryset()
@@ -157,14 +159,6 @@ class FavouritesList(generics.ListAPIView):
         return Response(context, status=status.HTTP_200_OK)  
 
 
-    # def list(self, request, format=None):
-    #     queryset = self.get_queryset()
-    #     context = {'user': self.request.user}
-
-    #     serializer = UserFavouriteListSerializer(queryset, context=context, many=True)
-        
-    #     context = {"data":serializer.data}
-    #     return Response(context, status=status.HTTP_200_OK)  
 
 
 

@@ -133,7 +133,6 @@ class SpecificBlogReactionDetailsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Blog_reaction
         fields = ['totalliked', 'totaldisliked', 'userliked', 'userdisliked' ]
-        # fields = '__all__'
 
 
 
