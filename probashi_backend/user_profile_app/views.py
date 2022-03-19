@@ -74,16 +74,12 @@ class UserEditProfile(views.APIView):
     def put(self,request,userid):
         userid = self.get_user(userid)
 
-        # print("request data::::::",request.data)
-        # print("request data photopath::::::",request.data['user_photopath'] == "")
         if request.data['user_photopath'] == "":
             serializer = UserEditPrifileWithoutImageSerializer(userid,data=request.data)
         else:
             serializer = UserEditPrifileSerializer(userid,data=request.data)
         
         if serializer.is_valid(raise_exception=True):
-            # print("serializer data___::::::::",serializer.data)
-
             serializer.save()
 
             return Response(serializer.data,status=status.HTTP_201_CREATED)
@@ -109,7 +105,6 @@ class UserInterestedAreaView(views.APIView):
     
     def put(self,request,userid):
         userid = self.get_user(userid)
-        # print("request data::::::",request.data)
         if request.data != {}:
             serializer = UserInterestedAreaSerializer(userid,data=request.data)
             if serializer.is_valid():
@@ -163,9 +158,7 @@ class UserAboutSocialLinkUpdate(views.APIView):
 
     def get(self,request,userid):
         userid = self.get_user(userid)
-        # print('userid::::::',userid)
         serializer = UserSocialaccountAboutSerializer(userid)
-        # print('serializer::::::',serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self,request,userid):
@@ -218,7 +211,6 @@ class UserExperienceUpdate(views.APIView):
 
         if serializer.is_valid():
             serializer.save()
-            # print('serializer.data::::::',serializer.data)
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
