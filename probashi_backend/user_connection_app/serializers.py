@@ -59,7 +59,7 @@ class UserFavouriteListSerializer(serializers.ModelSerializer):
         # print(user)
         # user_id = User.objects.filter(user_email=user).values('userid')
         # user_id = user_id[0].get('userid')
-        print('obj.user',obj.userid)
+        # print('obj.user',obj.userid)
         if UserFavouriteList.objects.filter(userid=obj.userid):
             return obj.favourite_userid.userid
         elif UserFavouriteList.objects.filter(favourite_userid=obj.userid):

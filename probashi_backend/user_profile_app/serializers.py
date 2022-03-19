@@ -72,7 +72,6 @@ class UserExperienceUpdatSerializer(serializers.ModelSerializer):
         model = User_experience
         fields = ['id','user_designation', 'user_companyname', 'user_responsibilities',
                     'userexperience_startdate', 'userexperience_enddate']
-        # lookup_field = 'id'
 
         def update(self, instance, validated_data):
             validated_data.pop("id", None)

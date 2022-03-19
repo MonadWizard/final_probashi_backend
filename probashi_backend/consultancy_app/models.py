@@ -42,11 +42,28 @@ class ConsultancyCreate(models.Model):
 
 
 class UserConsultAppointmentRequest(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    user_consultant_pk = models.ForeignKey(ConsultancyCreate, on_delete=models.DO_NOTHING)
+    seekerid = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    consultantid = models.ForeignKey(ConsultancyCreate, on_delete=models.DO_NOTHING)
     appointment_request_datetime = models.DateTimeField(auto_now_add=True)
     appointment_seeker_requested_datetime = models.DateTimeField()
     appointment_attendent_name = models.CharField(max_length=200, blank=True, null=True)
     appointment_seeker_cellphone = models.CharField(max_length=200, blank=True, null=True)
     appointment_seeker_email = models.CharField(max_length=200, blank=True, null=True)
     appointment_seeker_note = models.TextField(blank=True, null=True)
+
+    appointment_seeker_starrating = models.DecimalField(max_digits=2, decimal_places=1, blank=True, null=True)
+    appointment_seeker_starrating_comment = models.TextField(blank=True, null=True)
+
+    consultant_provider_starratting = models.DecimalField(max_digits=2, decimal_places=1, blank=True, null=True)
+    consultant_provider_starratting_comment = models.TextField(blank=True, null=True)
+
+    reason_for_missing_appointment = models.TextField(blank=True, null=True)
+
+
+
+
+
+
+
+
+
