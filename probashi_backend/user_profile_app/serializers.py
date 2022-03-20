@@ -90,9 +90,6 @@ class UserIdVerificationCreateSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
 class UserProfileViewSerializer(serializers.ModelSerializer):
     user_socialaboutdata = UserSocialaccountAboutSerializer(read_only=True)
     user_experiencedata = UserExperienceCreateSerializer(many=True, read_only=True)

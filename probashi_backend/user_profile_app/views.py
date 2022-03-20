@@ -1,9 +1,5 @@
-from copy import error
-from lib2to3.pgen2.token import EQUAL
-from rest_framework import generics, status, views, permissions, viewsets
+from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
 
@@ -18,7 +14,6 @@ from .serializers import (UserProfileSkipPart1Serializer, UserProfileSkipPart2Se
                             UserProfileViewSerializer,
                             UserEditPrifileWithoutImageSerializer,
                             UserInterestedAreaSerializer,UserGoalSerializer)
-from rest_framework.decorators import action
 
 
 

@@ -19,14 +19,14 @@ class UserDataConsultancySerializer(serializers.ModelSerializer):
 
 class SearchServiceSerializer(serializers.ModelSerializer):
     # user_educationdata = UserEducationSerializer(many=True, read_only=True)
-    user_education = SerachUserSerializer(many=True, read_only=True)
+    # user_education = SerachUserSerializer(many=True, read_only=True)
     # user_data = UserDataConsultancySerializer(many=True, read_only=True)
     # user_educationdata = serializers.CharField(source="userid.user_fullname")
 
     class Meta:
         model = ConsultancyCreate
-        fields = [ 'id','userid', 'user_education', 'consultant_name']
-        # fields = '__all__'
+        # fields = [ 'id','userid', 'user_education', 'consultant_name']
+        fields = '__all__'
 
 
 

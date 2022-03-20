@@ -5,10 +5,10 @@ from .serializers import (RegisterSerializer,
                         UpdateRegisterSerializer,
                         SetNewPasswordSerializer, 
                         ResetPasswordEmailRequestSerializer, 
-                        EmailVerificationSerializer, 
                         LoginSerializer, 
                         LogoutSerializer, 
-                        ViewUserSerializer)
+                        ViewUserSerializer,
+                        InAppChangePasswordSerializer)
 
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -30,6 +30,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponsePermanentRedirect
 import os
 import datetime 
+from django.db.models import Q
 
 
 
@@ -184,7 +185,6 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
 
 
-
 class PasswordTokenCheckAPI(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
@@ -239,5 +239,46 @@ class ViewUser(generics.ListAPIView):
 
 
 
+# class InAppChangePassword(generics.UpdateAPIView):
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = InAppChangePasswordSerializer
 
+#     def get_queryset(self):
+#             user = self.request.user
+#             print(User.objects.filter(Q(user_email=user) & Q())
+#             return User.objects.filter(user_email=user)
+    
+
+class InAppChangePassword(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = InAppChangePasswordSerializer
+    model = User
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            print('old password::::', self.object.check_password(serializer.data.get("old_password")))
+            if not self.object.check_password(serializer.data.get("old_password")):
+                
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.user_email = request.data.get("user_email")
+            self.object.save()
+            # serializer.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': serializer.data,
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -9,7 +9,10 @@ from .serializers import (BlogCreateSerializer, BlogCommentSerializer,
                             BlogReactionSerializer,
                             BlogPaginateListViewSerializer, 
                             BlogHomePageReactionSerializer,
-                            SpecificBlogReactionDetailsSerializers)
+                            SpecificBlogReactionDetailsSerializers,
+                            SpecificBlogCommentDetailsSerializer,
+                            AllBlogReactionCountSerializer,
+                            AllBlogCommentSerializer)
 from .models import Blog, Blog_reaction, Blog_comment
 from rest_framework.pagination import PageNumberPagination
 
@@ -38,7 +41,7 @@ class BlogCommentView(views.APIView):
         serializer = BlogCommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -119,11 +122,56 @@ class SpecificBlogReactionDetails(generics.ListAPIView):
 
 
 
+class SpecificBlogCommentDetails(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    # serializer_class = SpecificBlogReactionDetailsSerializers
+    
+    def get_queryset(self):
+            user = self.request.user
+            blog_id = self.request.query_params.get('id')
+            return Blog_comment.objects.filter(Q(userid=user) & Q(blogid=blog_id))
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = SpecificBlogCommentDetailsSerializer(queryset, many=True)
+        try:
+            context = {"data": serializer.data}
+        except IndexError:
+            context = {"data": "no data"}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+
+class GetAllpostsLikeSetPagination(PageNumberPagination):
+    page_size = 3
+
+class BlogPaginateReactionListView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = AllBlogReactionCountSerializer
+    queryset = Blog.objects.all()
+    pagination_class = GetAllpostsLikeSetPagination
+
+    def get_serializer_context(self):
+        return {'user': self.request.user}
+
+    def get_queryset(self):
+        return Blog.objects.all().order_by('-userblog_publishdate')
 
 
 
 
+class GetAllpostsCommentSetPagination(PageNumberPagination):
+    page_size = 3
 
+class BlogPaginateCommentListView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = AllBlogCommentSerializer
+    queryset = Blog.objects.all()
+    pagination_class = GetAllpostsCommentSetPagination
 
+    def get_serializer_context(self):
+        return {'user': self.request.user}
 
+    def get_queryset(self):
+        return Blog.objects.all().order_by('-userblog_publishdate')
 

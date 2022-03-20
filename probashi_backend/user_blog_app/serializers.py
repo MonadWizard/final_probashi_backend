@@ -41,7 +41,7 @@ class BlogHomePageReactionSerializer(serializers.ModelSerializer):
     
 class BlogHomePageCommentSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="userid.user_fullname")
-    userphoto = serializers.CharField(source="userid.user_photopath")
+    userphoto = serializers.ImageField(source="userid.user_photopath")
     is_consultant = serializers.BooleanField(source="userid.is_consultant")
 
     class Meta:
@@ -136,4 +136,61 @@ class SpecificBlogReactionDetailsSerializers(serializers.ModelSerializer):
 
 
 
+class SpecificBlogCommentDetailsSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="userid.user_fullname")
+    userphoto = serializers.ImageField(source="userid.user_photopath")
+    is_consultant = serializers.BooleanField(source="userid.is_consultant")
+    class Meta:
+        model = Blog_comment
+        fields = '__all__'
+
+
+class AllBlogReactionCountSerializer(serializers.ModelSerializer):
+    totalliked = serializers.SerializerMethodField('get_total_like')
+    totaldisliked = serializers.SerializerMethodField('get_total_dislike')
+    userliked = serializers.SerializerMethodField('get_user_like')
+    userdisliked = serializers.SerializerMethodField('get_user_dislike')
+
+
+    def get_total_like(self, obj):
+        return Blog_reaction.objects.filter(Q(blogid=obj.id) & 
+                                            Q(is_user_like=True)).count()
+    
+    def get_total_dislike(self, obj):
+        return Blog_reaction.objects.filter(Q(blogid=obj.id) & 
+                                            Q(is_user_dislike=True)).count()
+
+    def get_user_like(self, obj):
+        user = self.context['user']
+        user_id = User.objects.filter(user_email=user).values('userid')
+        user_id = user_id[0].get('userid')
+        if Blog_reaction.objects.filter(Q(blogid=obj.id) & 
+                                        Q(is_user_like=True) & Q(userid=user_id)):
+            return True
+        else:
+            return False
+    
+    def get_user_dislike(self, obj):
+        user = self.context['user']
+        user_id = User.objects.filter(user_email=user).values('userid')
+        user_id = user_id[0].get('userid')
+
+        if Blog_reaction.objects.filter(Q(blogid=obj.id) & 
+                                        Q(is_user_dislike=True) & Q(userid=user_id)):
+            return True
+        else:
+            return False
+
+
+    class Meta:
+        model = Blog_reaction
+        fields = ['id','totalliked', 'totaldisliked', 'userliked', 'userdisliked' ]
+
+
+
+class AllBlogCommentSerializer(serializers.ModelSerializer):
+    blog_comment = BlogHomePageCommentSerializer(many=True, read_only=True)
+    class Meta:
+        model = Blog
+        fields = ['id', 'blog_comment']
 

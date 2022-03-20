@@ -1,4 +1,3 @@
-from pyexpat import model
 from rest_framework import serializers
 from .models import User
 from django.contrib import auth
@@ -56,15 +55,6 @@ class UpdateRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_photopath=validated_data.pop('user_photopath')
         return User.objects.create(user_photopath=user_photopath)
-
-
-
-class EmailVerificationSerializer(serializers.ModelSerializer):
-    token = serializers.CharField(max_length=555)
-
-    class Meta:
-        model = User
-        fields = ['token']
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -185,4 +175,16 @@ class ViewUserSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
         fields='__all__'
+
+
+
+class InAppChangePasswordSerializer(serializers.Serializer):
+    model = User
+
+    user_email = serializers.EmailField(required=True)
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+
+
 
