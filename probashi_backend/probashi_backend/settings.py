@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
+    'import_export',
+
 
 ]
 
@@ -181,3 +183,8 @@ EMAIL_PORT = '2525'
 EMAIL_HOST_USER = '60974a6dc6308a'
 EMAIL_HOST_PASSWORD = '85c90c396ab965'
 
+
+# import xlxs to table data
+# IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'delete' 
+# IMPORT_EXPORT_EXPORT_PERMISSION_CODE = 'delete'
+# IMPORT_EXPORT_USE_TRANSACTIONS = True

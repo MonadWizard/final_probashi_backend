@@ -35,13 +35,22 @@ class StaticSettingData(models.Model):
 
 
 
-class Promo_code_data(models.Model):
+class PromoCodeData(models.Model):
     promo_code = models.CharField(primary_key=True, max_length=200, unique=True, db_index=True)
     promo_code_point = models.IntegerField(default=0)
-    promo_code_status = models.BooleanField(default=False)
-    promo_code_start_date = models.DateField(blank=True, null=True)
-    promo_code_end_date = models.DateField(blank=True, null=True)
+    promo_code_amount = models.IntegerField(default=0)
+    is_promo_code_active = models.BooleanField(default=False)
+    # promo_code_status = models.BooleanField(default=False)
+    # promo_code_start_date = models.DateField(blank=True, null=True)
+    # promo_code_end_date = models.DateField(blank=True, null=True)
 
+    # class Meta:
+    #     db_table = 'PromoCodeData'
+    #     # verbose_name = 'promo_code_data'
+        # verbose_name_plural = 'promo_code_data'
+
+    def __str__(self):
+            return self.promo_code   
 
 class User_settings(models.Model):
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING)

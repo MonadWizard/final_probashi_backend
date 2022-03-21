@@ -5,6 +5,7 @@ djangorestframework-simplejwt
 django-cors-headers
 django-extra-fields
 pillow
+django-import-export
 
 
 
