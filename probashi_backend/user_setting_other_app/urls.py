@@ -2,7 +2,9 @@ from django.urls import path
 from .views import (UserIndustryDataView, UserAreaOfExperienceDataView,
                     UserInterestedAreaDataView, UserGoalDataView,
                     ConsultancyServiceCategoryDataView,
-                    CreateOtherRowsInStaticTableView, BlogTagDataView)
+                    CreateOtherRowsInStaticTableView, BlogTagDataView,
+                    UserEducationDataView,
+                    FatchingTrubleView)
 
 
 
@@ -14,7 +16,9 @@ urlpatterns = [
     path('ConsultancyServiceCategoryData/', ConsultancyServiceCategoryDataView.as_view(), name="ConsultancyServiceCategoryDataView"),
     path('other-rows/', CreateOtherRowsInStaticTableView.as_view(), name="CreateOtherRowsInStaticTableView"),
     path('blog-tagData/', BlogTagDataView.as_view(), name="BlogTagDataView"),
-
+    path('user-educationData/', UserEducationDataView.as_view(), name="UserEducationDataView"),
+    path('user-fatching-truble/', FatchingTrubleView.as_view(), name="FatchingTrubleView"),
+    
     
 
 

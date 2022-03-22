@@ -16,6 +16,7 @@ class StaticSettingData(models.Model):
     user_goal_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
     consultancyservice_category_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
     blog_tags_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    user_education_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
 
     def __str__(self):
         if self.user_industry_data:
@@ -62,5 +63,5 @@ class User_settings(models.Model):
 class Facing_trouble(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     user_problem_message = models.TextField(blank=True, null=True)
-    user_problem_photo_path = models.CharField(max_length=200, blank=True, null=True)
+    user_problem_photo_path = models.ImageField(upload_to='probashi_app/facing_trouble', blank=True, null=True)
 

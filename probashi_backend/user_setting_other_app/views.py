@@ -12,7 +12,9 @@ from .serializers import (UserIndustryDataSerializer,
                     UserGoalDataSerializer,
                     ConsultancyServiceCategoryDataSerializer,
                     CreateOtherRowsInStatictableSerializer,
-                    BlogTagDataSerializers)
+                    BlogTagDataSerializers,
+                    UserEducationDataSerializer,
+                    FacingtroubleSerializer)
 
 
 
@@ -24,7 +26,6 @@ class CreateOtherRowsInStaticTableView(generics.ListCreateAPIView):
     # permission_classes = [permissions.IsAuthenticated,]
     queryset = StaticSettingData.objects.all()
     serializer_class= CreateOtherRowsInStatictableSerializer
-
 
 
 class UserIndustryDataView(generics.ListCreateAPIView):
@@ -49,7 +50,6 @@ class UserIndustryDataView(generics.ListCreateAPIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
-
 class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]    
     queryset = StaticSettingData.objects.filter(user_areaof_experience_data__isnull=False)
@@ -69,7 +69,6 @@ class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
         serializer = UserAreaOfExperienceDataSerializer(queryset, many=True)
         context = {"data":serializer.data}
         return Response(context, status=status.HTTP_200_OK)
-
 
 
 class UserInterestedAreaDataView(generics.ListCreateAPIView):
@@ -93,8 +92,6 @@ class UserInterestedAreaDataView(generics.ListCreateAPIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
-
-
 class UserGoalDataView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     queryset = StaticSettingData.objects.filter(user_goal_data__isnull=False)
@@ -114,8 +111,6 @@ class UserGoalDataView(generics.ListCreateAPIView):
         serializer = UserGoalDataSerializer(queryset, many=True)
         context = {"data":serializer.data}
         return Response(context, status=status.HTTP_200_OK)
-
-
 
 
 class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
@@ -138,8 +133,6 @@ class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
         serializer = ConsultancyServiceCategoryDataSerializer(queryset, many=True)
         context = {"data":serializer.data}
         return Response(context, status=status.HTTP_200_OK)
-
-
 
 
 
@@ -170,6 +163,50 @@ class BlogTagDataView(generics.ListCreateAPIView):
         context = {"data":tags}
         return Response(context, status=status.HTTP_200_OK)
 
+
+
+class UserEducationDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(user_education_data__isnull=False)
+    serializer_class= UserEducationDataSerializer
+
+    def post(self, request):
+        serializer = UserEducationDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_education_data': serializer.errors['user_education_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = UserEducationDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+
+class FatchingTrubleView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    # queryset = StaticSettingData.objects.filter(fatching_truble__isnull=False)
+    serializer_class= FacingtroubleSerializer
+
+    def post(self, request):
+        serializer = FacingtroubleSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        print(serializer.errors)
+        # errorcontext = {'fatching_truble': serializer.errors['fatching_truble'][0]}
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    # def list(self, request):
+    #     queryset = self.get_queryset()
+    #     serializer = FacingtroubleSerializer(queryset, many=True)
+    #     context = {"data":serializer.data}
+    #     return Response(context, status=status.HTTP_200_OK)
 
 
 

@@ -21,7 +21,7 @@ class SerachUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['userid', 'user_fullname', 'user_email', 'user_username', 'user_photopath', 'user_callphone',
                     'is_consultant', 'user_geolocation','user_areaof_experience', 
-                    'user_industry','user_educationdata', 'user_consultancydata']
+                    'user_industry','user_currentdesignation','user_educationdata', 'user_consultancydata']
         
         # exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
 

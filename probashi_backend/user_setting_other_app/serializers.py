@@ -1,8 +1,6 @@
-from asyncio import exceptions
 from rest_framework import serializers
-from .models import StaticSettingData
-from rest_framework.validators import UniqueValidator
-from rest_framework import status
+from .models import StaticSettingData, Facing_trouble
+from drf_extra_fields.fields import Base64ImageField
 
 
 class UserIndustryDataSerializer(serializers.ModelSerializer):
@@ -41,9 +39,6 @@ class ConsultancyServiceCategoryDataSerializer(serializers.ModelSerializer):
     
     
 
-
-
-
 class CreateOtherRowsInStatictableSerializer(serializers.ModelSerializer):
     class Meta:
         model=StaticSettingData
@@ -59,4 +54,20 @@ class BlogTagDataSerializers(serializers.ModelSerializer):
     class Meta:
         model=StaticSettingData
         fields=['blog_tags_data']
+
+
+
+class UserEducationDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['user_education_data']
+
+
+
+class FacingtroubleSerializer(serializers.ModelSerializer):
+    user_problem_photo_path=Base64ImageField() # From DRF Extra Fields
+    class Meta:
+        model = Facing_trouble
+        fields = '__all__'
+
 

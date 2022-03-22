@@ -12,10 +12,10 @@ from user_connection_app.serializers import UserEducationSerializer, SerachUserS
 
 
 
-class UserDataConsultancySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['user_industry', 'user_geolocation']
+# class UserDataConsultancySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['user_industry', 'user_geolocation']
 
 class SearchServiceSerializer(serializers.ModelSerializer):
     # user_educationdata = UserEducationSerializer(many=True, read_only=True)
