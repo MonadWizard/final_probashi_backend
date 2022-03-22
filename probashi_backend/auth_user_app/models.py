@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractBaseUser, \
@@ -34,6 +35,10 @@ class UserManager(BaseUserManager):
         return user
 
 
+AUTH_PROVIDERS = {'facebook': 'facebook','google': 'google',
+                    'linkedin': 'linkedin', 'email': 'email'}
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     userid= models.CharField(primary_key=True, max_length=30, unique=True, db_index=True)
     user_fullname = models.CharField(max_length=255, db_index=True)
@@ -53,7 +58,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_gender = models.CharField(max_length=20, blank=True, null=True)
     user_dob = models.DateField(blank=True, null=True)
     user_photopath = models.ImageField(upload_to='user/profile_picture', blank=True, null=True)
-    # user_photopath = models.CharField(max_length=200, blank=True, null=True)
     user_residential_district = models.CharField(max_length=200, blank=True, null=True)
     user_nonresidential_country = models.CharField(max_length=200, blank=True, null=True)
     user_nonresidential_city = models.CharField(max_length=200, blank=True, null=True)
@@ -66,16 +70,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     user_interested_area = ArrayField(models.CharField(max_length=200), blank=True, null=True)
     user_goal = ArrayField(models.CharField(max_length=200), blank=True, null=True)
-    # user_consuttype_personal = models.BooleanField(default=False)
-    # user_consulttype_company = models.BooleanField(default=False)
+    
+    is_user_serviceholder = models.BooleanField(default=False)
+    is_user_selfemployed = models.BooleanField(default=False)
+    user_currentdesignation = models.CharField(max_length=200, blank=True, null=True)
+    user_company_name = models.CharField(max_length=200, blank=True, null=True)
+    user_office_address = models.CharField(max_length=200, blank=True, null=True)
 
-    # no need
-    # user_social_and_about_pk = models.ForeignKey(user_socialaccount_and_about, on_delete=models.DO_NOTHING)
-    # user_experience_pk =
-    # user_education_pk = 
-    # user_IDverification_pk =
-    # user_consultant_pk =  
-
+    auth_provider = models.CharField(max_length=255, blank=False,
+                                    null=False, default=AUTH_PROVIDERS.get('email'))
 
     USERNAME_FIELD = 'user_email'
     REQUIRED_FIELDS = ['userid','user_fullname']

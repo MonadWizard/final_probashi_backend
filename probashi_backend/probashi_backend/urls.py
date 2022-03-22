@@ -14,5 +14,7 @@ urlpatterns = [
     path('user_connection/', include('user_connection_app.urls')),
     path('user_blog/', include('user_blog_app.urls')),
     path('user_chat/', include('user_chat_app.urls')),
+    path('social-auth/', include('social_auth.urls')),
+
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

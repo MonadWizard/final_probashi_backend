@@ -164,6 +164,7 @@ USE_I18N = True
 USE_TZ = True
 
 
+image_directory = Path(__file__).resolve().parent.parent.parent.parent
 
 STATIC_URL = 'static/'
 
@@ -171,8 +172,8 @@ STATIC_ROOT= os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'probashi_backend/static')
 ]
-MEDIA_URL = '/upload/'
-MEDIA_ROOT=os.path.join(BASE_DIR, "upload")
+MEDIA_URL = '/probashi_images/'
+MEDIA_ROOT=os.path.join(image_directory, "probashi_images")
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

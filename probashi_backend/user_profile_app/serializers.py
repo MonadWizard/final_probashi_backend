@@ -5,6 +5,18 @@ from auth_user_app.models import User
 from .models import User_socialaccount_and_about, User_experience, User_education, User_idverification
 from drf_extra_fields.fields import Base64ImageField
 
+
+
+class UserProfileSkipPart0Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['is_user_serviceholder', 
+                    'is_user_selfemployed', 'user_currentdesignation', 
+                    'user_company_name', 'user_office_address'
+                    ]
+
+
+
 class UserProfileSkipPart1Serializer(serializers.ModelSerializer):
     class Meta:
         model = User
