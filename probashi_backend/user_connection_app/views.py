@@ -1,3 +1,4 @@
+from multiprocessing import context
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from django.http import Http404
@@ -38,7 +39,8 @@ class GetSpecificUserView(views.APIView):
     def get(self, request, userid, format=None):
         user = self.get_object(userid)
         serializer = UserProfileViewSerializer(user)
-        return Response(serializer.data)
+        context = {'data': serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class FavouriteRequestSendView(generics.CreateAPIView):
