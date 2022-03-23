@@ -4,7 +4,7 @@ from rest_framework import serializers
 from auth_user_app.models import User
 from .models import User_socialaccount_and_about, User_experience, User_education, User_idverification
 from drf_extra_fields.fields import Base64ImageField
-
+from consultancy_app.models import ConsultancyCreate
 
 
 class UserProfileSkipPart0Serializer(serializers.ModelSerializer):
@@ -119,6 +119,29 @@ class UserProfileViewSerializer(serializers.ModelSerializer):
         exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
 
 
+
+class UserConsultancyHomepageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultancyCreate
+        fields = '__all__'
+
+
+class UserProfileWithConsultancyViewSerializer(serializers.ModelSerializer):
+    user_consultancydata = UserConsultancyHomepageSerializer(many=True, read_only=True)
+    user_socialaboutdata = UserSocialaccountAboutSerializer(read_only=True)
+    user_experiencedata = UserExperienceCreateSerializer(many=True, read_only=True)
+    user_educationdata = UserEducationCreateSerializer(many=True, read_only=True)
+    user_idverificationdata = UserIdVerificationCreateSerializer(many=True, read_only=True)
+    class Meta:
+        model = User
+        # fields = ['userid' ,'user_fullname', 'user_photopath', 'is_consultant',
+        #         'user_industry','user_geolocation','user_created_at',
+        #         'user_interested_area','user_goal','user_industry_experienceyear',
+        #         'user_areaof_experience','user_industry',
+        #         'user_socialaboutdata','user_experiencedata', 'user_educationdata', 'user_idverificationdata']
+        # fields = '__all__'
+        # depth = 3
+        exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
 
 
 

@@ -2,6 +2,7 @@ from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from rest_framework import permissions
 from django.http import Http404
+from django.db.models import Q
 
 from auth_user_app.models import User
 from .models import User_socialaccount_and_about, User_experience, User_education, User_idverification
@@ -17,7 +18,8 @@ from .serializers import (  UserProfileSkipPart0Serializer,
                             UserIdVerificationCreateSerializer,
                             UserProfileViewSerializer,
                             UserEditPrifileWithoutImageSerializer,
-                            UserInterestedAreaSerializer,UserGoalSerializer)
+                            UserInterestedAreaSerializer,UserGoalSerializer,
+                            UserProfileWithConsultancyViewSerializer)
 
 
 
@@ -259,7 +261,7 @@ class UserIdVerificationCreate(views.APIView):
 
 class UserProfileView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
-    serializer_class = UserProfileViewSerializer
+    # serializer_class = UserProfileViewSerializer
 
     def get_queryset(self):
             user = self.request.user
@@ -271,60 +273,111 @@ class UserProfileView(generics.ListAPIView):
 
     def list(self, request):
         # Note the use of `get_queryset()` instead of `self.queryset`
-        queryset = self.get_queryset()
-        serializer = UserProfileViewSerializer(queryset, many=True)
-        
-        # print('serializer.data::::::',serializer.data)
-        # print('about:::::::::', serializer.data[0]['user_socialaboutdata'])
-
         complete_profile_persentage = 5
-        if serializer.data[0]['user_username'] != None:
-            complete_profile_persentage += 5
-        # skip 0
-        if serializer.data[0]['user_currentdesignation'] != None:
-            complete_profile_persentage += 5
-        #  skip 1
-        if serializer.data[0]['user_industry'] != None:
-            complete_profile_persentage += 5
-        #  skip 2
-        if serializer.data[0]['user_interested_area'] != None:
-            complete_profile_persentage += 5
-        #  about
-        if serializer.data[0]['user_socialaboutdata'].get('user_about') != None:
-            complete_profile_persentage += 5
-        #  social links
-        if (serializer.data[0]['user_socialaboutdata'].get('user_fbaccount') != None or 
-                        serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount') != None or
-                        serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount') != None or
-                        serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') != None or 
-                        serializer.data[0]['user_socialaboutdata'].get('user_website')!= None ):
-            complete_profile_persentage += 5
-        #  contact link
-        if (serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account') != None or 
-                serializer.data[0]['user_socialaboutdata'].get('user_viber_account') != None or
-                serializer.data[0]['user_socialaboutdata'].get('user_immo_account') != None):
-            complete_profile_persentage += 5
-        #  experience
-        if serializer.data[0]['user_experiencedata'] != []:
-            complete_profile_persentage += 20
-        #  education
-        if serializer.data[0]['user_educationdata'] != []:
-            complete_profile_persentage += 20
-        #  id verification
-        if serializer.data[0]['user_idverificationdata'] != []:
-            complete_profile_persentage += 20
-
-        if complete_profile_persentage == 100:
-            user = self.request.user
-            User.objects.filter(user_email=user).update(is_consultant=True)
-
-        serializer.data[0]['profile_complete_percentage'] = complete_profile_persentage
-
-        context = {"data": serializer.data}
-
-        return Response(context, status=status.HTTP_200_OK)
 
 
+        queryset = self.get_queryset()
+        user = self.request.user
+        if User.objects.filter(Q(is_consultant = True) & Q(user_email=user)).exists():
+            serializer = UserProfileWithConsultancyViewSerializer(queryset, many=True)
+
+            if serializer.data[0]['user_username'] != None:
+                complete_profile_persentage += 5
+            # skip 0
+            if serializer.data[0]['user_currentdesignation'] != None:
+                complete_profile_persentage += 5
+            #  skip 1
+            if serializer.data[0]['user_industry'] != None:
+                complete_profile_persentage += 5
+            #  skip 2
+            if serializer.data[0]['user_interested_area'] != None:
+                complete_profile_persentage += 5
+            #  about
+            if serializer.data[0]['user_socialaboutdata'].get('user_about') != None:
+                complete_profile_persentage += 5
+            #  social links
+            if (serializer.data[0]['user_socialaboutdata'].get('user_fbaccount') != None or 
+                            serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount') != None or
+                            serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount') != None or
+                            serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') != None or 
+                            serializer.data[0]['user_socialaboutdata'].get('user_website')!= None ):
+                complete_profile_persentage += 5
+            #  contact link
+            if (serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account') != None or 
+                    serializer.data[0]['user_socialaboutdata'].get('user_viber_account') != None or
+                    serializer.data[0]['user_socialaboutdata'].get('user_immo_account') != None):
+                complete_profile_persentage += 5
+            #  experience
+            if serializer.data[0]['user_experiencedata'] != []:
+                complete_profile_persentage += 20
+            #  education
+            if serializer.data[0]['user_educationdata'] != []:
+                complete_profile_persentage += 20
+            #  id verification
+            if serializer.data[0]['user_idverificationdata'] != []:
+                complete_profile_persentage += 20
+
+
+            serializer.data[0]['profile_complete_percentage'] = complete_profile_persentage
+            
+            context = {"data": serializer.data}
+
+            return Response(context, status=status.HTTP_200_OK)
+
+
+        elif User.objects.filter(Q(is_consultant = False) & Q(user_email=user)).exists():
+            serializer = UserProfileViewSerializer(queryset, many=True)
+            
+            # print('serializer.data::::::',serializer.data)
+            # print('about:::::::::', serializer.data[0]['user_socialaboutdata'])
+
+            if serializer.data[0]['user_username'] != None:
+                complete_profile_persentage += 5
+            # skip 0
+            if serializer.data[0]['user_currentdesignation'] != None:
+                complete_profile_persentage += 5
+            #  skip 1
+            if serializer.data[0]['user_industry'] != None:
+                complete_profile_persentage += 5
+            #  skip 2
+            if serializer.data[0]['user_interested_area'] != None:
+                complete_profile_persentage += 5
+            #  about
+            if serializer.data[0]['user_socialaboutdata'].get('user_about') != None:
+                complete_profile_persentage += 5
+            #  social links
+            if (serializer.data[0]['user_socialaboutdata'].get('user_fbaccount') != None or 
+                            serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount') != None or
+                            serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount') != None or
+                            serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') != None or 
+                            serializer.data[0]['user_socialaboutdata'].get('user_website')!= None ):
+                complete_profile_persentage += 5
+            #  contact link
+            if (serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account') != None or 
+                    serializer.data[0]['user_socialaboutdata'].get('user_viber_account') != None or
+                    serializer.data[0]['user_socialaboutdata'].get('user_immo_account') != None):
+                complete_profile_persentage += 5
+            #  experience
+            if serializer.data[0]['user_experiencedata'] != []:
+                complete_profile_persentage += 20
+            #  education
+            if serializer.data[0]['user_educationdata'] != []:
+                complete_profile_persentage += 20
+            #  id verification
+            if serializer.data[0]['user_idverificationdata'] != []:
+                complete_profile_persentage += 20
+
+            if complete_profile_persentage == 100:
+                user = self.request.user
+                User.objects.filter(user_email=user).update(is_consultant=True)
+
+            serializer.data[0]['profile_complete_percentage'] = complete_profile_persentage
+
+            context = {"data": serializer.data}
+
+            return Response(context, status=status.HTTP_200_OK)
+
+        
 
 
 
