@@ -71,3 +71,15 @@ class FacingtroubleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+class FaqSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['faq_title', 'faq_description']
+
+
+class privacypolicySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['privacypolicy_title', 'privacypolicy_descriptions']
+

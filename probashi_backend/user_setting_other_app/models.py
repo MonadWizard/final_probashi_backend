@@ -17,22 +17,28 @@ class StaticSettingData(models.Model):
     consultancyservice_category_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
     blog_tags_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
     user_education_data = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    
+    faq_title = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    faq_description = models.TextField(blank=True, null=True)
+
+    privacypolicy_title = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    privacypolicy_descriptions = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        if self.user_industry_data:
-            return self.user_industry_data
-        elif self.user_areaof_experience_data:
-            return self.user_areaof_experience_data
-        elif self.user_interested_area_data:
-            return self.user_interested_area_data
-        elif self.user_goal_data:
-            return self.user_goal_data
-        elif self.consultancyservice_category_data:
-            return self.consultancyservice_category_data
-        elif self.blog_tags_data:
-            return self.blog_tags_data
+        if (self.user_industry_data or self.user_areaof_experience_data or
+                self.user_interested_area_data or self.user_goal_data or
+                self.consultancyservice_category_data or self.blog_tags_data or
+                self.user_education_data):
+
+            return (self.user_industry_data or self.user_areaof_experience_data or
+                    self.user_interested_area_data or self.user_goal_data or
+                    self.consultancyservice_category_data or self.blog_tags_data or
+                    self.user_education_data)
+
         else:
             return 'No Data'
+
+    
 
 
 

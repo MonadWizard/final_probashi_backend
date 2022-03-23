@@ -14,7 +14,8 @@ from .serializers import (UserIndustryDataSerializer,
                     CreateOtherRowsInStatictableSerializer,
                     BlogTagDataSerializers,
                     UserEducationDataSerializer,
-                    FacingtroubleSerializer)
+                    FacingtroubleSerializer,
+                    FaqSerializer, privacypolicySerializer)
 
 
 
@@ -207,6 +208,33 @@ class FatchingTrubleView(generics.CreateAPIView):
     #     serializer = FacingtroubleSerializer(queryset, many=True)
     #     context = {"data":serializer.data}
     #     return Response(context, status=status.HTTP_200_OK)
+
+
+
+class FaqView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(faq_title__isnull=False)
+    serializer_class= FaqSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = FaqSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+
+class privacypolicyView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(privacypolicy_title__isnull=False)
+    serializer_class= privacypolicySerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = privacypolicySerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
 
 
 
