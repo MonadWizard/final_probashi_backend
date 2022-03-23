@@ -28,12 +28,12 @@ class StaticSettingData(models.Model):
         if (self.user_industry_data or self.user_areaof_experience_data or
                 self.user_interested_area_data or self.user_goal_data or
                 self.consultancyservice_category_data or self.blog_tags_data or
-                self.user_education_data):
+                self.user_education_data or self.faq_title or self.privacypolicy_title):
 
             return (self.user_industry_data or self.user_areaof_experience_data or
                     self.user_interested_area_data or self.user_goal_data or
                     self.consultancyservice_category_data or self.blog_tags_data or
-                    self.user_education_data)
+                    self.user_education_data or self.faq_title or self.privacypolicy_title)
 
         else:
             return 'No Data'
