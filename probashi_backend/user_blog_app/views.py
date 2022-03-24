@@ -30,7 +30,7 @@ class BlogCreateView(views.APIView):
         serializer = BlogCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -72,7 +72,7 @@ class BlogReactionView(views.APIView):
 
                 if serializer.is_valid():
                     serializer.save()
-                    return Response(serializer.data ,status=status.HTTP_201_CREATED)
+                    return Response(serializer.data ,status=status.HTTP_200_OK)
 
         
         elif request.data['userid'] == user_id : 
@@ -80,7 +80,7 @@ class BlogReactionView(views.APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data ,status=status.HTTP_201_CREATED)
+                return Response(serializer.data ,status=status.HTTP_200_OK)
         return Response('bad request',status=status.HTTP_400_BAD_REQUEST)
 
 

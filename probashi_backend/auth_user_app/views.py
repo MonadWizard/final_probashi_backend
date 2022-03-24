@@ -66,7 +66,7 @@ class MailVerifyRequestView(views.APIView):
 
         Util.send_email(data)
 
-        return Response(data, status=status.HTTP_201_CREATED)
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class VerifyEmail(views.APIView):
@@ -142,7 +142,7 @@ class UpdateRegisterView(views.APIView):
         # print('data:::::::::', data)
 
         Util.send_email(data)
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        return Response(user_data, status=status.HTTP_200_OK)
     
 
 

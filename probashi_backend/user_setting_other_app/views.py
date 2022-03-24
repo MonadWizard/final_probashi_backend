@@ -38,7 +38,7 @@ class UserIndustryDataView(generics.ListCreateAPIView):
         serializer = UserIndustryDataSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         errorcontext = {'user_industry_data': serializer.errors['user_industry_data'][0]}
         return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
 
@@ -60,7 +60,7 @@ class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
         serializer = UserAreaOfExperienceDataSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         errorcontext = {'user_areaof_experience_data': serializer.errors['user_areaof_experience_data'][0]}
         return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
 
@@ -81,7 +81,7 @@ class UserInterestedAreaDataView(generics.ListCreateAPIView):
         serializer = UserInterestedAreaDataSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         errorcontext = {'user_interested_area_data': serializer.errors['user_interested_area_data'][0]}
         return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
 
@@ -102,7 +102,7 @@ class UserGoalDataView(generics.ListCreateAPIView):
         serializer = UserGoalDataSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
         return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
 
@@ -124,7 +124,7 @@ class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
         serializer = ConsultancyServiceCategoryDataSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         errorcontext = {'consultancyservice_category_data': serializer.errors['consultancyservice_category_data'][0]}
         return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
 
@@ -146,7 +146,7 @@ class BlogTagDataView(generics.ListCreateAPIView):
         serializer = BlogTagDataSerializers(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         errorcontext = {'blog_tags_data': serializer.errors['blog_tags_data'][0]}
         return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
 

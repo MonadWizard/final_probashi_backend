@@ -103,7 +103,7 @@ class UserEditProfile(views.APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
 
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -130,7 +130,7 @@ class UserInterestedAreaView(views.APIView):
             serializer = UserInterestedAreaSerializer(userid,data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data,status=status.HTTP_201_CREATED)
+                return Response(serializer.data,status=status.HTTP_200_OK)
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         errorContext = {'error':'No data found'}
         return Response(errorContext, status=status.HTTP_400_BAD_REQUEST)
@@ -199,7 +199,7 @@ class UserExperienceCreate(views.APIView):
         serializer = UserExperienceCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -243,7 +243,7 @@ class UserEducationCreate(views.APIView):
         serializer = UserEducationCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -255,7 +255,7 @@ class UserIdVerificationCreate(views.APIView):
         serializer = UserIdVerificationCreateSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 

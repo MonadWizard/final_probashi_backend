@@ -4,6 +4,9 @@ from user_profile_app.models import User_education
 from consultancy_app.models import ConsultancyCreate
 from .models import UserFavoutireRequestSend, UserFavouriteList
 from django.db.models import Q
+from itertools import chain
+from django.db.models import F
+
 
 
 class UserEducationSerializer(serializers.ModelSerializer):
@@ -33,6 +36,12 @@ class UserFavouriteRequestSendSerializer(serializers.ModelSerializer):
 
 
 class UserFavouriteRequestsSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="userid.user_fullname")
+    userphoto = serializers.ImageField(source="userid.user_photopath")
+    is_consultant = serializers.BooleanField(source="userid.is_consultant")
+    user_designation = serializers.CharField(source="userid.user_currentdesignation")
+    user_location = serializers.ImageField(source="userid.user_geolocation")
+
     class Meta:
         model = UserFavoutireRequestSend
         fields = '__all__'
@@ -51,22 +60,32 @@ class RejectFavouriteRequestSerializer(serializers.ModelSerializer):
 
 
 class UserFavouriteListSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="userid.user_fullname")
+
     favourite_user = serializers.SerializerMethodField('get_favourite_user')
 
     def get_favourite_user(self, obj):
         
-        # user = self.context['user']
-        # print(user)
+        user = self.context['user']
+        print('user::::::::::::',user)
         # user_id = User.objects.filter(user_email=user).values('userid')
         # user_id = user_id[0].get('userid')
         # print('obj.user',obj.userid)
-        if UserFavouriteList.objects.filter(userid=obj.userid):
+        if UserFavouriteList.objects.filter(userid=user):
             return obj.favourite_userid.userid
-        elif UserFavouriteList.objects.filter(favourite_userid=obj.userid):
+        elif UserFavouriteList.objects.filter(favourite_userid=user):
             return obj.userid.userid
+
+
+        # favourite_data = UserFavouriteList.objects.filter(userid=user).values(favourite_user=F("favourite_userid"))
+        # user_data = UserFavouriteList.objects.filter(favourite_userid=user).values(favourite_user=F('userid'))
+        # data = list(chain(favourite_data, user_data))
+        # return data
+
+        
     class Meta:
         model = UserFavouriteList
-        fields = '__all__'
+        fields = ['username', 'favourite_user']
 
 
 

@@ -5,7 +5,7 @@ from django.http import Http404
 from auth_user_app.models import User
 from .serializers import SerachUserSerializer
 from rest_framework.pagination import PageNumberPagination
-from user_profile_app.serializers import UserProfileViewSerializer
+from user_profile_app.serializers import UserProfileViewSerializer, UserProfileWithConsultancyViewSerializer
 from .serializers import (UserFavouriteRequestSendSerializer, UserFavouriteRequestsSerializer,
                         AcceptFavouriteRequestSerializer,RejectFavouriteRequestSerializer,
                         UserFavouriteListSerializer)
@@ -30,19 +30,31 @@ class GetAllUserPaginationView(generics.ListAPIView):
 class GetSpecificUserView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get_object(self, userid):
+    def get_object(self, user_id):
         try:
-            return User.objects.get(userid=userid)
+            return User.objects.get(userid=user_id)
         except User.DoesNotExist:
             raise Http404
 
-    def get(self, request, userid, format=None):
-        user = self.get_object(userid)
-        serializer = UserProfileViewSerializer(user)
-        context = {'data': serializer.data}
-        return Response(context, status=status.HTTP_200_OK)
+    def get(self, request, user_id, format=None):
+        data = self.get_object(user_id)
+        
+        user = self.request.user
+        if User.objects.filter(Q(is_consultant=False) & Q(user_email=user)).exists():
+            serializer = UserProfileWithConsultancyViewSerializer(data)
+            context = {'data': serializer.data}
+            # print(context)
+            return Response(context, status=status.HTTP_200_OK)
+        
+        elif User.objects.filter(Q(is_consultant=True) & Q(user_email=user)).exists():
+            serializer = UserProfileViewSerializer(data)
+            context = {'data': serializer.data}
+            # print(context)
+            return Response(context, status=status.HTTP_200_OK)
+        return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
 
 
+            
 class FavouriteRequestSendView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     queryset = UserFavoutireRequestSend.objects.all()
@@ -60,7 +72,7 @@ class FavouriteRequestSendView(generics.CreateAPIView):
                 serializer = UserFavouriteRequestSendSerializer(data=request.data)
                 if serializer.is_valid():
                     serializer.save()
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response('serializer.errors', status=status.HTTP_400_BAD_REQUEST)
 
@@ -147,14 +159,26 @@ class FavouritesList(generics.ListAPIView):
             user = self.request.user
             return UserFavouriteList.objects.filter(Q(userid=user) | Q(favourite_userid=user))
     
-    def list(self, request, format=None):
-        # queryset = self.get_queryset()
-        # serializer = UserFavouriteListSerializer(queryset, many=True)
+    # def create(self, request, *args, **kwargs):
+    #     many = True if isinstance(request.data, list) else False
+    #     serializer = SintomaPacienteSerializer(data=request.data, many=many,context={'user':request.user})
 
+
+    def list(self, request, format=None):
         user = self.request.user
 
-        favourite_data = UserFavouriteList.objects.filter(userid=user).values('id',favourite_user=F("favourite_userid"))
-        user_data = UserFavouriteList.objects.filter(favourite_userid=user).values('id',favourite_user=F('userid'))
+        # queryset = self.get_queryset()
+
+        # serializer = UserFavouriteListSerializer(queryset,context={'user':request.user}, many=True)
+
+
+        # favourite_data = UserFavouriteList.objects.filter(userid=user).values('id','favourite_userid__user_fullname','favourite_userid__user_photopath',favourite_user=F("favourite_userid"))
+        # user_data = UserFavouriteList.objects.filter(favourite_userid=user).values('id',favourite_user=F('userid'))
+        
+        favourite_data = UserFavouriteList.objects.filter(userid=user).values('id','favourite_userid__user_fullname','favourite_userid__user_photopath','favourite_userid__user_currentdesignation',
+                                    'favourite_userid__is_consultant',favourite_user=F("favourite_userid"))
+        user_data = UserFavouriteList.objects.filter(favourite_userid=user).values('id','userid__user_fullname','userid__user_photopath','userid__user_currentdesignation',
+                                    'userid__is_consultant',favourite_user=F('userid'))
         data = list(chain(favourite_data, user_data))
 
         context = {"data":data}
