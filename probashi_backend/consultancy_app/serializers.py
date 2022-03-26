@@ -1,4 +1,5 @@
 from asyncio.log import logger
+from cgitb import lookup
 from dataclasses import field
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField, Base64FileField
@@ -17,7 +18,7 @@ from user_connection_app.serializers import UserEducationSerializer, SerachUserS
 #         model = User
 #         fields = ['user_industry', 'user_geolocation']
 
-class SearchServiceSerializer(serializers.ModelSerializer):
+class ServiceCategorySerializer(serializers.ModelSerializer):
     # user_educationdata = UserEducationSerializer(many=True, read_only=True)
     # user_education = SerachUserSerializer(many=True, read_only=True)
     # user_data = UserDataConsultancySerializer(many=True, read_only=True)
@@ -26,8 +27,15 @@ class SearchServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultancyCreate
         # fields = [ 'id','userid', 'user_education', 'consultant_name']
-        fields = '__all__'
+        fields = ['consultant_service_category',]
 
+
+class GetServicesSpecificCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultancyCreate
+        # fields = [ 'id','userid', 'user_education', 'consultant_name']
+        # fields = ['consultant_service_category',]
+        fields = '__all__'
 
 
 
