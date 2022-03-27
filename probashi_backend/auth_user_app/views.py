@@ -1,4 +1,3 @@
-from urllib import request
 from django.http import HttpResponse
 from rest_framework import generics, status, views, permissions
 from .serializers import (RegisterSerializer,
@@ -8,7 +7,10 @@ from .serializers import (RegisterSerializer,
                         LoginSerializer, 
                         LogoutSerializer, 
                         ViewUserSerializer,
-                        InAppChangePasswordSerializer)
+                        InAppChangePasswordSerializer,
+                        PhoneOtpRegisterSerializer,
+                        PhoneLoginSerializer,
+                        userRegistrationOTP)
 
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -16,9 +18,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
 
-from .models import User
+from .models import User, PhoneOTP
 from user_profile_app.models import User_socialaccount_and_about
-from .utils import Util
+from .utils import Util, SendMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 import jwt
@@ -31,7 +33,7 @@ from django.http import HttpResponsePermanentRedirect
 import os
 import datetime 
 from django.db.models import Q
-
+import random
 
 
 class MailVerifyRequestView(views.APIView):
@@ -156,28 +158,25 @@ class LoginAPIView(generics.GenericAPIView):
 
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
-    serializer_class = ResetPasswordEmailRequestSerializer
+    # serializer_class = ResetPasswordEmailRequestSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+        # serializer = self.serializer_class(data=request.data)
 
         user_email = request.data.get('user_email', '')
+        otp = request.data.get('otp', '')
 
         if User.objects.filter(user_email=user_email).exists():
             user = User.objects.get(user_email=user_email)
-            uidb64 = urlsafe_base64_encode(smart_bytes(user.userid))
-            token = PasswordResetTokenGenerator().make_token(user)
-            current_site = get_current_site(
-                request=request).domain
-            relativeLink = reverse(
-                'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
+            
+            # otp = random.sample(range(0, 9), 4)
+            # otp = ''.join(map(str, otp))
+            # otp = 1234
+            print('otp:', otp)
+            
 
-            redirect_url = request.data.get('redirect_url', '')
-            absurl = 'http://'+current_site + relativeLink
-            # email_body = 'Hello, \n Use link below to reset your password  \n' + \
-            #     absurl+"?redirect_url="+redirect_url
-            email_body = 'Hello, \n Use link below to reset your password  \n' + \
-                absurl
+            email_body = f'''Hello,{user.user_fullname} \n code for reset password is {otp}'''
+            
             data = {'email_body': email_body, 'to_email': user.user_email,
                     'email_subject': 'Reset your passsword'}
             Util.send_email(data)
@@ -185,33 +184,34 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
 
 
-class PasswordTokenCheckAPI(generics.GenericAPIView):
+class SetNewPasswordAPIView(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = SetNewPasswordSerializer
+    model = User
 
-    def get(self, request, uidb64, token):
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
 
-        try:
-            id = smart_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(userid=id)
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
 
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                return Response({'error', 'Token is not valid, Please request a new link'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({'success': True, 'message': 'Credentials valid', 'uidb64': uidb64, 'token': token }, status=status.HTTP_200_OK)
+        if serializer.is_valid():            
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.userid = request.data.get("userid")
+            self.object.save()
+            # serializer.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': serializer.data,
+            }
 
-            
-        except DjangoUnicodeDecodeError as identifier:
-            # try:
-            if not PasswordResetTokenGenerator().check_token(user):
-                return Response({'error', 'Token is not valid, Please request a new link'}, status=status.HTTP_400_BAD_REQUEST)
-                    
-            
-class SetNewPasswordAPIView(generics.GenericAPIView):
-    serializer_class = SetNewPasswordSerializer
+            return Response(response)
 
-    def patch(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutAPIView(generics.GenericAPIView):
@@ -239,16 +239,6 @@ class ViewUser(generics.ListAPIView):
 
 
 
-# class InAppChangePassword(generics.UpdateAPIView):
-#     permission_classes = [permissions.IsAuthenticated]
-#     serializer_class = InAppChangePasswordSerializer
-
-#     def get_queryset(self):
-#             user = self.request.user
-#             print(User.objects.filter(Q(user_email=user) & Q())
-#             return User.objects.filter(user_email=user)
-    
-
 class InAppChangePassword(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = InAppChangePasswordSerializer
@@ -263,7 +253,7 @@ class InAppChangePassword(generics.UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
-            print('old password::::', self.object.check_password(serializer.data.get("old_password")))
+            # print('old password::::', self.object.check_password(serializer.data.get("old_password")))
             if not self.object.check_password(serializer.data.get("old_password")):
                 
                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
@@ -282,3 +272,69 @@ class InAppChangePassword(generics.UpdateAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+# --------------------x --------------x --------------x --------------x
+
+class VerificationCodeSend(views.APIView):
+    serializer_class = userRegistrationOTP
+
+    def post(self, request):
+        data = request.data
+        user_fullname = data['user_fullname']
+        user_callphone = data['user_callphone']
+        # password = data['password']
+        otp = random.sample(range(0, 9), 4)
+        otp = ''.join(map(str, otp))
+        data['otp'] = otp
+        print('::::::', request.data)
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        # print('serializer::::::::::', serializer.data)
+
+        data = {f'''প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}'''}
+        # print('data:', data)
+
+        SendMessage.send_message(user_callphone,data)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class PhoneNumberRegistration(views.APIView):
+    serializer_class = PhoneOtpRegisterSerializer
+
+    def post(self, request):
+        current_time = datetime.datetime.now() 
+        current_time = current_time.strftime("%m%d%H%M%S%f")
+        userid = current_time
+        request.data["userid"]= userid
+        # request.data["password"]= userid
+
+        time = datetime.datetime.today()
+        if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__lt=time)).exists():
+
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            PhoneOTP.objects.filter(otp=request.data['otp']).update(is_used=True)
+            User_socialaccount_and_about.objects.create(userid=User.objects.get(userid=userid), )
+
+            PhoneOTP.objects.filter(Q(is_used=True) | Q(updated_at__gt=time)).delete()
+            
+
+            return Response(request.data, status=status.HTTP_200_OK)
+        return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
+
+
+# registration complete..............
+# need to work from here.........
+class PhoneNumberLogin(views.APIView):
+    serializer_class = PhoneLoginSerializer
+
+    def post(self, request):
+        print('request.data:', request.data)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

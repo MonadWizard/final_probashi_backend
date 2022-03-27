@@ -7,6 +7,10 @@ from django.contrib.auth.models import AbstractBaseUser, \
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from datetime import datetime, timedelta
+
+
+
 class UserManager(BaseUserManager):
 
     def create_user(self,userid, user_fullname, user_email, password=None):
@@ -21,6 +25,23 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save()
         return user
+
+    def create_user_phone(self,userid, user_fullname,  user_callphone, password=None):
+        if userid is None:
+            raise TypeError('User ID should not be none')
+        if user_fullname is None:
+            raise TypeError('Users should have a fullname')
+        if user_callphone is None:
+            raise TypeError('Users should have a Call Phone Number')
+
+        user = self.model(userid=userid, user_fullname=user_fullname,user_callphone=user_callphone)
+        # user.set_password(password)
+        user.save()
+        return user
+
+
+
+
 
     def create_superuser(self,userid, user_fullname, user_email, password=None):
         if userid is None:
@@ -42,7 +63,7 @@ AUTH_PROVIDERS = {'facebook': 'facebook','google': 'google',
 class User(AbstractBaseUser, PermissionsMixin):
     userid= models.CharField(primary_key=True, max_length=30, unique=True, db_index=True)
     user_fullname = models.CharField(max_length=255, db_index=True)
-    user_email = models.EmailField(max_length=255, unique=True, db_index=True)
+    user_email = models.EmailField(max_length=255, unique=True, db_index=True, blank=True, null=True)
     is_verified = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -86,7 +107,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.user_email
+        return self.user_fullname
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)
@@ -97,6 +118,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 
+class PhoneOTP(models.Model):
+    user_callphone = models.CharField(max_length=30, unique=True, db_index=True)
+    otp = models.CharField(max_length=4, blank=False, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(default=datetime.now()+timedelta(minutes=5))
+    is_used = models.BooleanField(default=False)
 
-
+    def __str__(self):
+        return self.otp
 

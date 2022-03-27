@@ -1,5 +1,6 @@
+from os import PRIO_PGRP
 from rest_framework import serializers
-from .models import User
+from .models import User, PhoneOTP
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
@@ -102,7 +103,6 @@ class LoginSerializer(serializers.ModelSerializer):
             'tokens': user.tokens
         }
 
-        return super().validate(attrs)
 
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
@@ -116,35 +116,11 @@ class ResetPasswordEmailRequestSerializer(serializers.Serializer):
 
 
 class SetNewPasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(
-        min_length=6, max_length=68, write_only=True)
-    token = serializers.CharField(
-        min_length=1, write_only=True)
-    uidb64 = serializers.CharField(
-        min_length=1, write_only=True)
+    model = User
 
-    class Meta:
-        model = User
-        fields = ['password', 'token', 'uidb64']
+    userid = serializers.IntegerField(required=True)
+    new_password = serializers.CharField(required=True)
 
-    def validate(self, attrs):
-        try:
-            password = attrs.get('password')
-            token = attrs.get('token')
-            uidb64 = attrs.get('uidb64')
-
-            id = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(userid=id)
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                raise AuthenticationFailed('The reset link is invalid', 401)
-
-            user.set_password(password)
-            user.save()
-
-            return (user)
-        except Exception as e:
-            raise AuthenticationFailed('The reset link is invalid', 401)
-        return super().validate(attrs)
 
 
 class LogoutSerializer(serializers.Serializer):
@@ -182,8 +158,80 @@ class InAppChangePasswordSerializer(serializers.Serializer):
     model = User
 
     user_email = serializers.EmailField(required=True)
-    old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+
+
+
+# ---------------------x-----------------------x----------------------------x----------
+
+class userRegistrationOTP(serializers.ModelSerializer):
+    class Meta:
+        model = PhoneOTP
+        fields = '__all__'
+
+class PhoneOtpRegisterSerializer(serializers.ModelSerializer):
+    # password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+    userid = serializers.CharField(max_length=68, min_length=6, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['userid','user_callphone', 'user_fullname']
+
+    def create(self, validated_data):
+        print("validated_data:::::",validated_data)
+        return User.objects.create_user_phone(**validated_data)
+
+
+
+
+
+class PhoneLoginSerializer(serializers.ModelSerializer):
+    user_callphone = serializers.CharField(max_length=255, min_length=3)
+    # password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+    # user_fullname = serializers.CharField(
+    #     max_length=255, min_length=3, read_only=True)
+
+    tokens = serializers.SerializerMethodField()
+
+    def get_tokens(self, obj):
+        user = User.objects.get(user_callphone=obj['user_callphone'])
+
+        return {
+            'refresh': user.tokens()['refresh'],
+            'access': user.tokens()['access']
+        }
+
+    class Meta:
+        model = User
+        fields = ['user_callphone', 'tokens']
+
+    def validate(self, attrs):
+        user_callphone = attrs.get('user_callphone', '')
+        # password = attrs.get('password', '')
+        filtered_user_by_user_callphone = User.objects.filter(user_callphone=user_callphone)
+        user = auth.authenticate(user_callphone=user_callphone)
+
+        # print("filtered_user_by_user_callphone::::::",filtered_user_by_user_callphone[0])
+        # print("user_email::::::",type(user_email))
+        # print("filtered_user_by_user_callphone[0].auth_provider::::::",str(filtered_user_by_user_callphone[0]) != user_email)
+
+        if filtered_user_by_user_callphone.exists() and str(filtered_user_by_user_callphone[0]) != user_callphone:
+            raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_user_callphone[0].auth_provider)
+
+        if not user:
+            raise AuthenticationFailed('Invalid credentials, try again')
+        if not user.is_active:
+            raise AuthenticationFailed('Account disabled, contact admin')
+        if not user.is_verified:
+            raise AuthenticationFailed('Email is not verified')
+
+        return {
+            'user_callphone': user.user_callphone,
+            'tokens': user.tokens
+        }
+
+
 
 
 

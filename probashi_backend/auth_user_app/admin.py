@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User
+from .models import User, PhoneOTP
 
 from rest_framework_simplejwt.token_blacklist import models
 from rest_framework_simplejwt.token_blacklist.admin import OutstandingTokenAdmin
@@ -18,3 +18,4 @@ class NewOutstandingTokenAdmin(OutstandingTokenAdmin):
 admin.site.unregister(models.OutstandingToken)
 admin.site.register(models.OutstandingToken, NewOutstandingTokenAdmin)
 
+admin.site.register(PhoneOTP)
