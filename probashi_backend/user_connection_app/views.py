@@ -40,13 +40,13 @@ class GetSpecificUserView(views.APIView):
         data = self.get_object(user_id)
         
         user = self.request.user
-        if User.objects.filter(Q(is_consultant=False) & Q(user_email=user)).exists():
+        if User.objects.filter(Q(is_consultant=False) & Q(userid=user.userid)).exists():
             serializer = UserProfileWithConsultancyViewSerializer(data)
             context = {'data': serializer.data}
             # print(context)
             return Response(context, status=status.HTTP_200_OK)
         
-        elif User.objects.filter(Q(is_consultant=True) & Q(user_email=user)).exists():
+        elif User.objects.filter(Q(is_consultant=True) & Q(user_id=user.userid)).exists():
             serializer = UserProfileViewSerializer(data)
             context = {'data': serializer.data}
             # print(context)
@@ -62,10 +62,8 @@ class FavouriteRequestSendView(generics.CreateAPIView):
 
     def create(self, request):
         user = self.request.user
-        user_id = User.objects.filter(user_email=user).values('userid')
-        user_id = user_id[0].get('userid')
         if request.data['userid'] == user_id:
-            if UserFavoutireRequestSend.objects.filter(Q(userid__exact=user_id) & 
+            if UserFavoutireRequestSend.objects.filter(Q(userid__exact=user.userid) & 
                                                     Q(favourite_request_to__exact=request.data['favourite_request_to'])).exists():
                 return Response('You can not send request to same user', status=status.HTTP_400_BAD_REQUEST)
             else:
@@ -84,7 +82,7 @@ class FavouriteRequestsView(generics.ListAPIView):
 
     def get_queryset(self):
             user = self.request.user
-            return UserFavoutireRequestSend.objects.filter(Q(favourite_request_to=user) & 
+            return UserFavoutireRequestSend.objects.filter(Q(favourite_request_to=user.userid) & 
                                                         Q(is_favourite_accept=False) & Q(is_favourite_reject=False))
     
     def list(self, request, format=None):
@@ -157,7 +155,7 @@ class FavouritesList(generics.ListAPIView):
 
     def get_queryset(self):
             user = self.request.user
-            return UserFavouriteList.objects.filter(Q(userid=user) | Q(favourite_userid=user))
+            return UserFavouriteList.objects.filter(Q(userid=user.userid) | Q(favourite_userid=user.userid))
     
     # def create(self, request, *args, **kwargs):
     #     many = True if isinstance(request.data, list) else False
@@ -175,9 +173,9 @@ class FavouritesList(generics.ListAPIView):
         # favourite_data = UserFavouriteList.objects.filter(userid=user).values('id','favourite_userid__user_fullname','favourite_userid__user_photopath',favourite_user=F("favourite_userid"))
         # user_data = UserFavouriteList.objects.filter(favourite_userid=user).values('id',favourite_user=F('userid'))
         
-        favourite_data = UserFavouriteList.objects.filter(userid=user).values('id','favourite_userid__user_fullname','favourite_userid__user_photopath','favourite_userid__user_currentdesignation',
+        favourite_data = UserFavouriteList.objects.filter(userid=user.userid).values('id','favourite_userid__user_fullname','favourite_userid__user_photopath','favourite_userid__user_currentdesignation',
                                     'favourite_userid__is_consultant',favourite_user=F("favourite_userid"))
-        user_data = UserFavouriteList.objects.filter(favourite_userid=user).values('id','userid__user_fullname','userid__user_photopath','userid__user_currentdesignation',
+        user_data = UserFavouriteList.objects.filter(favourite_userid=user.userid).values('id','userid__user_fullname','userid__user_photopath','userid__user_currentdesignation',
                                     'userid__is_consultant',favourite_user=F('userid'))
         data = list(chain(favourite_data, user_data))
 

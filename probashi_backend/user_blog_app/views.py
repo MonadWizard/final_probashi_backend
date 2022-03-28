@@ -51,10 +51,10 @@ class BlogReactionView(views.APIView):
     def post(self,request):
 
         user = self.request.user
-        user_id = User.objects.filter(user_email=user).values('userid')
-        user_id = user_id[0].get('userid')
+        # user_id = User.objects.filter(user_email=user).values('userid')
+        # user_id = user_id[0].get('userid')
 
-        if Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user_id)).exists():
+        if Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid)).exists():
             if request.data['is_user_like'] == False and request.data['is_user_dislike'] == False:
                 # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
                 Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).update(is_user_like=False,is_user_dislike=False)
@@ -75,7 +75,7 @@ class BlogReactionView(views.APIView):
                     return Response(serializer.data ,status=status.HTTP_200_OK)
 
         
-        elif request.data['userid'] == user_id : 
+        elif request.data['userid'] == user.userid : 
             serializer = BlogReactionSerializer(data=request.data)
 
             if serializer.is_valid():
@@ -109,7 +109,7 @@ class SpecificBlogReactionDetails(generics.ListAPIView):
     def get_queryset(self):
             user = self.request.user
             blog_id = self.request.query_params.get('id')
-            return Blog_reaction.objects.filter(Q(userid=user) & Q(blogid=blog_id))
+            return Blog_reaction.objects.filter(Q(userid=user.userid) & Q(blogid=blog_id))
 
     def list(self, request):
         queryset = self.get_queryset()
@@ -129,7 +129,7 @@ class SpecificBlogCommentDetails(generics.ListAPIView):
     def get_queryset(self):
             user = self.request.user
             blog_id = self.request.query_params.get('id')
-            return Blog_comment.objects.filter(Q(userid=user) & Q(blogid=blog_id))
+            return Blog_comment.objects.filter(Q(userid=user.userid) & Q(blogid=blog_id))
 
     def list(self, request):
         queryset = self.get_queryset()

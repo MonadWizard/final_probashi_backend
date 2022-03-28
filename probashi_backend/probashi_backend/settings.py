@@ -18,6 +18,12 @@ ALLOWED_HOSTS = [
 # user model
 AUTH_USER_MODEL = 'auth_user_app.User'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'auth_user_app.customAuth.CustomerBackendForPhoneNumber',
+]
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

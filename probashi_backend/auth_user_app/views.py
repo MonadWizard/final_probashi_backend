@@ -10,7 +10,7 @@ from .serializers import (RegisterSerializer,
                         InAppChangePasswordSerializer,
                         PhoneOtpRegisterSerializer,
                         PhoneLoginSerializer,
-                        userRegistrationOTP)
+                        userOTP)
 
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -34,6 +34,8 @@ import os
 import datetime 
 from django.db.models import Q
 import random
+from django.utils import timezone
+
 
 
 class MailVerifyRequestView(views.APIView):
@@ -235,7 +237,7 @@ class ViewUser(generics.ListAPIView):
 
     def get_queryset(self):
             user = self.request.user
-            return User.objects.filter(user_email=user)
+            return User.objects.filter(userid=user.userid)
 
 
 
@@ -275,8 +277,8 @@ class InAppChangePassword(generics.UpdateAPIView):
 
 # --------------------x --------------x --------------x --------------x
 
-class VerificationCodeSend(views.APIView):
-    serializer_class = userRegistrationOTP
+class RegistrationVerificationCodeSend(views.APIView):
+    serializer_class = userOTP
 
     def post(self, request):
         data = request.data
@@ -286,7 +288,7 @@ class VerificationCodeSend(views.APIView):
         otp = random.sample(range(0, 9), 4)
         otp = ''.join(map(str, otp))
         data['otp'] = otp
-        print('::::::', request.data)
+        # print('::::::', request.data)
 
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -311,9 +313,10 @@ class PhoneNumberRegistration(views.APIView):
         request.data["userid"]= userid
         # request.data["password"]= userid
 
-        time = datetime.datetime.today()
-        if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__lt=time)).exists():
-
+        time = timezone.localtime()
+        # print('time:::', time)
+        # print("::::::::::::", PhoneOTP.objects.filter(Q(updated_at__lt=time)).exists())
+        if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists():
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -321,20 +324,103 @@ class PhoneNumberRegistration(views.APIView):
             PhoneOTP.objects.filter(otp=request.data['otp']).update(is_used=True)
             User_socialaccount_and_about.objects.create(userid=User.objects.get(userid=userid), )
 
-            PhoneOTP.objects.filter(Q(is_used=True) | Q(updated_at__gt=time)).delete()
+            PhoneOTP.objects.filter(Q(is_used=True) | Q(updated_at__lt=time)).delete()
             
 
             return Response(request.data, status=status.HTTP_200_OK)
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
 
 
-# registration complete..............
-# need to work from here.........
+class LoginVerificationCodeSend(views.APIView):
+    serializer_class = userOTP
+
+    def post(self, request):
+        data = request.data
+        # user_fullname = data['user_fullname']
+        user_callphone = data['user_callphone']
+        # password = data['password']
+        otp = random.sample(range(0, 9), 4)
+        otp = ''.join(map(str, otp))
+        data['otp'] = otp
+        user_fullname = User.objects.filter(user_callphone=user_callphone).values('user_fullname').first()
+        user_fullname = user_fullname['user_fullname']
+        data['user_fullname'] = user_fullname
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        data = {f'''প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}'''}
+        print('data:', data)
+
+        SendMessage.send_message(user_callphone,data)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+# VerificationCodeSend also works for loging  
 class PhoneNumberLogin(views.APIView):
     serializer_class = PhoneLoginSerializer
 
     def post(self, request):
-        print('request.data:', request.data)
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        # print('request.data:', request.data)
+        
+        time = timezone.localtime()
+        # print('time:::', time)
+        if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists():
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            
+            PhoneOTP.objects.filter(otp=request.data['otp']).update(is_used=True)
+            PhoneOTP.objects.filter(Q(is_used=True) | Q(updated_at__lt=time)).delete()
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class PhoneUpdateRegisterView(views.APIView):
+
+
+    def get_object(self,user_callphone):
+        try:
+            return User.objects.get(user_callphone__exact=user_callphone)
+        except User.DoesNotExist:
+            raise Http404
+
+    def get(self,request,user_callphone):
+        user_callphone = self.get_object(user_callphone)
+        serializer = UpdateRegisterSerializer(user_callphone)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    def put(self,request,user_callphone):
+        user_callphone = self.get_object(user_callphone)
+        fullname_pasport = request.data['user_fullname_passport']
+        serializer = UpdateRegisterSerializer(user_callphone,data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user_data = serializer.data
+        
+        # relativeLink = reverse('email-verify')
+        email_body = 'Hi '+fullname_pasport + \
+            ' welcome to probashi.. \n'
+        data = {'email_body': email_body, 'to_email': user_callphone,
+                'email_subject': 'welcome to probashi'}
+        # print('data:::::::::', data)
+
+        # Util.send_email(data)
+        return Response(user_data, status=status.HTTP_200_OK)
+    
+
+
+
+
+
+
+
+
+

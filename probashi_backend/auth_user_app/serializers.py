@@ -10,6 +10,10 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
+from .customAuth import CustomerBackendForPhoneNumber
+
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
     userid = serializers.CharField(max_length=68, min_length=6, write_only=True)
@@ -165,7 +169,7 @@ class InAppChangePasswordSerializer(serializers.Serializer):
 
 # ---------------------x-----------------------x----------------------------x----------
 
-class userRegistrationOTP(serializers.ModelSerializer):
+class userOTP(serializers.ModelSerializer):
     class Meta:
         model = PhoneOTP
         fields = '__all__'
@@ -208,16 +212,17 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         user_callphone = attrs.get('user_callphone', '')
+        print("user_callphone::::::",user_callphone)
         # password = attrs.get('password', '')
         filtered_user_by_user_callphone = User.objects.filter(user_callphone=user_callphone)
-        user = auth.authenticate(user_callphone=user_callphone)
-
+        user = CustomerBackendForPhoneNumber.authenticate(user_callphone=user_callphone)
+        print("::::::::",user)
         # print("filtered_user_by_user_callphone::::::",filtered_user_by_user_callphone[0])
         # print("user_email::::::",type(user_email))
         # print("filtered_user_by_user_callphone[0].auth_provider::::::",str(filtered_user_by_user_callphone[0]) != user_email)
 
-        if filtered_user_by_user_callphone.exists() and str(filtered_user_by_user_callphone[0]) != user_callphone:
-            raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_user_callphone[0].auth_provider)
+        # if filtered_user_by_user_callphone.exists() and str(filtered_user_by_user_callphone[0]) != user_callphone:
+        #     raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_user_callphone[0].auth_provider)
 
         if not user:
             raise AuthenticationFailed('Invalid credentials, try again')

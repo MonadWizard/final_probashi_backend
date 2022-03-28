@@ -10,9 +10,11 @@ from .views import  (MailVerifyRequestView,
                     MailVerificationStatus,
                     InAppChangePassword,
                     
-                    VerificationCodeSend,
+                    RegistrationVerificationCodeSend,
                     PhoneNumberRegistration,
-                    PhoneNumberLogin)
+                    PhoneNumberLogin,
+                    LoginVerificationCodeSend,
+                    PhoneUpdateRegisterView)
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -34,9 +36,11 @@ urlpatterns = [
     path('userinfo/', ViewUser.as_view(), name="user-data"),
     path('app/change-password/', InAppChangePassword.as_view(), name='InAppChangePassword'),
 
-    path('phone-verification-send/', VerificationCodeSend.as_view(), name='VerificationCodeSend'),
+    path('phone-verification-otp/', RegistrationVerificationCodeSend.as_view(), name='VerificationCodeSend'),
     path('phone-number-registration/', PhoneNumberRegistration.as_view(), name='PhoneNumberRegistration'),
+    path('phone-login-otp/', LoginVerificationCodeSend.as_view(), name='LoginVerificationCodeSend'),
     path('phone-number-login/', PhoneNumberLogin.as_view(), name='PhoneNumberLogin'),
+    path('phone-update-register/<str:user_callphone>', PhoneUpdateRegisterView.as_view(), name='PhoneUpdateRegisterView'),
 
 
 ]

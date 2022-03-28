@@ -261,15 +261,12 @@ class UserIdVerificationCreate(views.APIView):
 
 class UserProfileView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
-    # serializer_class = UserProfileViewSerializer
+    serializer_class = UserProfileViewSerializer
 
     def get_queryset(self):
             user = self.request.user
-            # user_id = User.objects.all().filter(user_email=user).values('userid')
-            # user_id = user_id[0].get('userid')
-            # return(User.objects.filter(userid=user_id))
 
-            return User.objects.filter(user_email=user)
+            return User.objects.filter(userid=user.userid)
 
     def list(self, request):
         # Note the use of `get_queryset()` instead of `self.queryset`
@@ -278,7 +275,8 @@ class UserProfileView(generics.ListAPIView):
 
         queryset = self.get_queryset()
         user = self.request.user
-        if User.objects.filter(Q(is_consultant = True) & Q(user_email=user)).exists():
+        # print("::::::::::::",user.userid)
+        if User.objects.filter(Q(is_consultant = True) & Q(userid=user.userid)).exists():
             serializer = UserProfileWithConsultancyViewSerializer(queryset, many=True)
 
             if serializer.data[0]['user_username'] != None:
@@ -325,7 +323,7 @@ class UserProfileView(generics.ListAPIView):
             return Response(context, status=status.HTTP_200_OK)
 
 
-        elif User.objects.filter(Q(is_consultant = False) & Q(user_email=user)).exists():
+        elif User.objects.filter(Q(is_consultant = False) & Q(userid=user.userid)).exists():
             serializer = UserProfileViewSerializer(queryset, many=True)
             
             # print('serializer.data::::::',serializer.data)
@@ -369,14 +367,17 @@ class UserProfileView(generics.ListAPIView):
 
             if complete_profile_persentage == 100:
                 user = self.request.user
-                User.objects.filter(user_email=user).update(is_consultant=True)
+                User.objects.filter(userid=user.userid).update(is_consultant=True)
 
             serializer.data[0]['profile_complete_percentage'] = complete_profile_persentage
+
+
 
             context = {"data": serializer.data}
 
             return Response(context, status=status.HTTP_200_OK)
 
+        return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
         
 
 
