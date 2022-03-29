@@ -60,32 +60,17 @@ class RejectFavouriteRequestSerializer(serializers.ModelSerializer):
 
 
 class UserFavouriteListSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="userid.user_fullname")
+    username = serializers.CharField(source="userid.userid")
+    favourite_user_id = serializers.CharField(source='favourite_userid.userid')
+    favourite_user_name = serializers.CharField(source='favourite_userid.user_fullname')
+    favourite_user_photo = serializers.ImageField(source='favourite_userid.user_photopath')
+    favourite_user_designation = serializers.CharField(source='favourite_userid.user_currentdesignation')
+    is_favourite_user_consultant = serializers.BooleanField(source='favourite_userid.is_consultant')
 
-    favourite_user = serializers.SerializerMethodField('get_favourite_user')
-
-    def get_favourite_user(self, obj):
-        
-        user = self.context['user']
-        print('user::::::::::::',user)
-        # user_id = User.objects.filter(user_email=user).values('userid')
-        # user_id = user_id[0].get('userid')
-        # print('obj.user',obj.userid)
-        if UserFavouriteList.objects.filter(userid=user):
-            return obj.favourite_userid.userid
-        elif UserFavouriteList.objects.filter(favourite_userid=user):
-            return obj.userid.userid
-
-
-        # favourite_data = UserFavouriteList.objects.filter(userid=user).values(favourite_user=F("favourite_userid"))
-        # user_data = UserFavouriteList.objects.filter(favourite_userid=user).values(favourite_user=F('userid'))
-        # data = list(chain(favourite_data, user_data))
-        # return data
-
-        
     class Meta:
         model = UserFavouriteList
-        fields = ['username', 'favourite_user']
+        fields = ['username', 'favourite_user_id', 'favourite_user_name', 'favourite_user_photo',
+                    'favourite_user_designation', 'is_favourite_user_consultant']
 
 
 

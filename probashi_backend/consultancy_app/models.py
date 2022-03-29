@@ -1,6 +1,7 @@
 from django.db import models
 from auth_user_app.models import User
-# Create your models here.
+
+
 
 class ConsultancyCreate(models.Model):
     userid = models.ForeignKey(User,related_name='user_consultancydata', on_delete=models.DO_NOTHING)
@@ -39,7 +40,8 @@ class ConsultancyCreate(models.Model):
     consultant_bankaccount_swiftcode = models.CharField(max_length=200, blank=True, null=True)
     consultant_bankaccount_routingnumber = models.CharField(max_length=200, blank=True, null=True)
 
-
+    def __str__(self):
+        return self.consultant_name
 
 class UserConsultAppointmentRequest(models.Model):
     seekerid = models.ForeignKey(User, on_delete=models.DO_NOTHING)

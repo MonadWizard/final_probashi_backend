@@ -85,7 +85,7 @@ class LoginSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         user_email = attrs.get('user_email', '')
         password = attrs.get('password', '')
-        print("user_email::::::",user_email)
+        # print("user_email::::::",user_email)
 
         filtered_user_by_email = User.objects.filter(user_email=user_email).values('user_email')
         user = auth.authenticate(user_email=user_email, password=password)
