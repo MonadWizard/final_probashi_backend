@@ -37,7 +37,42 @@ class Facebook:
             return "The token is invalid or expired."
 
 
+# import linkedin
+import requests
+from requests.structures import CaseInsensitiveDict
 
+class Linkedin:
+    @staticmethod
+    def validate(auth_token):
+        # print("auth_token::::",auth_token)
 
+        try:
+
+            url = f"https://api.linkedin.com/v2/me?oauth2_access_token={auth_token}"
+            headers = CaseInsensitiveDict()
+            headers["Accept"] = "*/*"
+            resp_name = requests.get(url, headers=headers)
+            resp_dict_name = resp_name.json()
+            # print("resp_dict_name:::",resp_dict_name)
+            resp_fullname = resp_dict_name['localizedFirstName'] + " " + resp_dict_name['localizedLastName']
+
+            # print("resp_fullname:::",resp_fullname)
+
+            url = "https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))"
+            headers = CaseInsensitiveDict()
+            headers["Accept"] = "application/json"
+            headers["Authorization"] = f"Bearer {auth_token}"
+            resp_mail = requests.get(url, headers=headers)
+            resp_dict_mail = resp_mail.json()
+            resp_mail = resp_dict_mail['elements'][0]['handle~']['emailAddress']
+            # print("resp:::",resp_dict_mail)
+            # print(resp.status_code)
+
+            resp_data = {'name': resp_fullname, 'email': resp_mail}
+            # print("resp_data:::",resp_data)
+            return resp_data
+
+        except:
+            return "The token is invalid or expired."
 
 

@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from .serializers import GoogleSocialAuthSerializer, FacebookSocialAuthSerializer
+from .serializers import GoogleSocialAuthSerializer, FacebookSocialAuthSerializer, LinkedinSocialAuthSerializer
 
 # from .serializers import GoogleSocialAuthSerializer, TwitterAuthSerializer, FacebookSocialAuthSerializer
 
@@ -28,5 +28,21 @@ class FacebookSocialAuthView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         data = ((serializer.validated_data)['auth_token'])
         return Response(data, status=status.HTTP_200_OK)
+
+
+
+class LinkedinSocialAuthView(GenericAPIView):
+
+    serializer_class = LinkedinSocialAuthSerializer
+
+#       POST with "auth_token" Send an access token as from facebook to get user information
+    def post(self, request):
+        # print("request.data:::",request.data)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = ((serializer.validated_data)['auth_token'])
+        return Response(data, status=status.HTTP_200_OK)
+
+
 
 
