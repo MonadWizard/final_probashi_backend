@@ -39,18 +39,19 @@ class FacebookSocialAuthSerializer(serializers.Serializer):
     auth_token = serializers.CharField()
 
     def validate_auth_token(self, auth_token):
+        
         user_data = Facebook.validate(auth_token)
 
         try:
-            user_id = user_data['id']
-            email = user_data['email']
-            name = user_data['name']
+            # user_id = user_data['id']
+            user_email = user_data['email']
+            user_fullname = user_data['name']
             provider = 'facebook'
             return register_social_user(
                 provider=provider,
-                user_id=user_id,
-                email=email,
-                name=name
+                # user_id=user_id,
+                user_email=user_email,
+                user_fullname=user_fullname
             )
         except Exception as identifier:
 
@@ -67,22 +68,12 @@ class LinkedinSocialAuthSerializer(serializers.Serializer):
         # print("user_data::::",auth_token)
         user_data = Linkedin.validate(auth_token)
 
-        # current_time = datetime.datetime.now() 
-        # current_time = current_time.strftime("%m%d%H%M%S%f")
-        
-        # userid = current_time
-        # user_data["userid"]= userid
-
-        # print("user_data::::",user_data)
-
         try:
-            # userid = user_data['userid']
             user_email = user_data['email']
             user_fullname = user_data['name']
             provider = 'linkedin'
             return register_social_user(
                 provider=provider,
-                # user_id=userid,
                 user_email=user_email,
                 user_fullname=user_fullname
             )
