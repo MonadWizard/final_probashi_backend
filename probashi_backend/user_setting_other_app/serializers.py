@@ -100,3 +100,61 @@ class UserSettingsOptionViewSerializer(serializers.ModelSerializer):
     class Meta:
         model=User_settings
         fields=['user_mail_notification_enable', 'user_monthly_newsleter_enable']
+
+
+# -----------------------------x--------------------------x--------------------------------x---------------------
+
+class EducationServiceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['educationService_degree']
+
+class OverseasRecruitmentServiceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['overseasrecruitmentservice_job_type']
+
+
+class MedicalConsultancyServiceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['medicalconsultancyservice_treatment_area']
+
+
+class LegalCivilServiceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['legalcivilservice_required', 'legalcivilservice_issue']
+
+
+class PropertyManagementServiceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['propertymanagementservice_propertylocation',
+                'propertymanagementservice_type', 
+                'propertymanagementservice_need']
+
+
+class TourismServiceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['tourismservices']
+
+
+class TrainingServiceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['trainingservice_topic', 'trainingservice_duration']
+
+
+class DigitalServiceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['digitalservice_type']
+
+
+class TradeFacilitationServiceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StaticSettingData
+        fields=['tradefacilitationservice_type', 'tradefacilitationservice_Purpose']
+

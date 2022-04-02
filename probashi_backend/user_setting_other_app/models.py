@@ -24,6 +24,31 @@ class StaticSettingData(models.Model):
     privacypolicy_title = models.CharField(max_length=255, unique=True, blank=True, null=True)
     privacypolicy_descriptions = models.TextField(blank=True, null=True)
 
+# Education Service
+    educationService_degree = models.CharField(max_length=200, blank=True, null=True)
+#Overseas Recruitment Service    
+    overseasrecruitmentservice_job_type = models.CharField(max_length=200, blank=True, null=True)
+# Medical Consultancy Service
+    medicalconsultancyservice_treatment_area = models.CharField(max_length=200, blank=True, null=True)
+# Legal&Civil Service
+    legalcivilservice_required = models.CharField(max_length=200, blank=True, null=True)
+    legalcivilservice_issue = models.CharField(max_length=200, blank=True, null=True)
+# Property Management Service
+    propertymanagementservice_propertylocation = models.CharField(max_length=200, blank=True, null=True)
+    propertymanagementservice_type = models.CharField(max_length=200, blank=True, null=True)
+    propertymanagementservice_need = models.CharField(max_length=200, blank=True, null=True)
+# Tourism Service
+    tourismservices = models.CharField(max_length=200, blank=True, null=True)
+# Training Service
+    trainingservice_topic = models.CharField(max_length=200, blank=True, null=True)
+    trainingservice_duration = models.CharField(max_length=200, blank=True, null=True)
+# Digital Service
+    digitalservice_type = models.CharField(max_length=200, blank=True, null=True)
+# Trade Facilitation Service
+    tradefacilitationservice_type = models.CharField(max_length=200, blank=True, null=True)
+    tradefacilitationservice_Purpose = models.CharField(max_length=200, blank=True, null=True)
+
+
     def __str__(self):
         if (self.user_industry_data or self.user_areaof_experience_data or
                 self.user_interested_area_data or self.user_goal_data or

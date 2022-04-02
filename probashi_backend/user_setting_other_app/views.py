@@ -19,7 +19,18 @@ from .serializers import (UserIndustryDataSerializer,
                     FaqSerializer, privacypolicySerializer,
                     notificationSerializer,
                     updateNotificationStatusSerializer,
-                    UserSettingsOptionViewSerializer)
+                    UserSettingsOptionViewSerializer,
+                    
+                    EducationServiceDataSerializer,
+                    OverseasRecruitmentServiceDataSerializer,
+                    MedicalConsultancyServiceDataSerializer,
+                    LegalCivilServiceDataSerializer,
+                    PropertyManagementServiceDataSerializer,
+                    TourismServiceDataSerializer,
+                    TrainingServiceDataSerializer,
+                    DigitalServiceDataSerializer,
+                    TradeFacilitationServiceDataSerializer
+                    )
 from auth_user_app.utils import Util
 from django.db.models import Q
 
@@ -340,6 +351,96 @@ class UserSettingsOptionView(views.APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+
+
+# ---------------------------------x----------------------------x-------------------------
+class EducationServiceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(educationService_degree__isnull=False)
+    # serializer_class= EducationServiceDataSerializer
+
+    def post(self, request):
+        serializer = EducationServiceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = EducationServiceDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class OverseasRecruitmentServiceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(overseasrecruitmentservice_job_type__isnull=False)
+    # serializer_class= EducationServiceDataSerializer
+
+    def post(self, request):
+        serializer = OverseasRecruitmentServiceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = OverseasRecruitmentServiceDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class MedicalConsultancyServiceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(medicalconsultancyservice_treatment_area__isnull=False)
+    # serializer_class= EducationServiceDataSerializer
+
+    def post(self, request):
+        serializer = MedicalConsultancyServiceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = MedicalConsultancyServiceDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+
+
+class LegalCivilServiceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(Q(legalcivilservice_required__isnull=False) | Q(legalcivilservice_issue__isnull=False) )
+    # serializer_class= EducationServiceDataSerializer
+
+    def post(self, request):
+        serializer = LegalCivilServiceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = LegalCivilServiceDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 

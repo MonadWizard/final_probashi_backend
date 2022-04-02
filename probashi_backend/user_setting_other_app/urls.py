@@ -7,7 +7,12 @@ from .views import (UserIndustryDataView, UserAreaOfExperienceDataView,
                     FatchingTrubleView, 
                     FaqView,privacypolicyView,
                     NotificationView,updateNotificationStatusView,
-                    UserSettingsOptionView)
+                    UserSettingsOptionView,
+                    
+                    EducationServiceDataView,
+                    OverseasRecruitmentServiceDataView,
+                    MedicalConsultancyServiceDataView,
+                    LegalCivilServiceDataView)
 
 
 
@@ -28,7 +33,10 @@ urlpatterns = [
     path('user-setting/<str:userid>/', UserSettingsOptionView.as_view(), name="UserSettingsOptionView"),
 
 
-
+    path('education-service-data/', EducationServiceDataView.as_view(), name="EducationServiceDataView"),
+    path('overseas-recruitment-service-data/', OverseasRecruitmentServiceDataView.as_view(), name="OverseasRecruitmentServiceDataView"),
+    path('medical-consultancy-service-data/', MedicalConsultancyServiceDataView.as_view(), name="MedicalConsultancyServiceDataView"),
+    path('legal-civil-service-data/', LegalCivilServiceDataView.as_view(), name="LegalCivilServiceDataView"),
 
 ]
 
