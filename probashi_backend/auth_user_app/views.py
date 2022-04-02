@@ -18,6 +18,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
 
+from user_setting_other_app.models import User_settings
 from .models import User, PhoneOTP
 from user_profile_app.models import User_socialaccount_and_about
 from .utils import Util, SendMessage
@@ -95,7 +96,7 @@ class VerifyEmail(views.APIView):
             serializer.save()
 
             User_socialaccount_and_about.objects.create(userid=User.objects.get(userid=userid), )
-
+            User_settings.objects.create(userid=User.objects.get(userid=userid), )
 
 
             html = "<html><body>Verification Success. It's time for complete registration.</body></html>"
@@ -290,6 +291,9 @@ class RegistrationVerificationCodeSend(views.APIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+
+
         # print('serializer::::::::::', serializer.data)
 
         data = {f'''প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}'''}
@@ -320,7 +324,7 @@ class PhoneNumberRegistration(views.APIView):
 
             PhoneOTP.objects.filter(otp=request.data['otp']).update(is_used=True)
             User_socialaccount_and_about.objects.create(userid=User.objects.get(userid=userid), )
-
+            User_settings.objects.create(userid=User.objects.get(userid=userid), )
             PhoneOTP.objects.filter(Q(is_used=True) | Q(updated_at__lt=time)).delete()
             
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import StaticSettingData, Facing_trouble, Notification
+from .models import StaticSettingData, Facing_trouble, Notification, User_settings
 from drf_extra_fields.fields import Base64ImageField
 
 
@@ -90,5 +90,13 @@ class notificationSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 
+class updateNotificationStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Notification
+        fields=['is_notification_seen']
 
 
+class UserSettingsOptionViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=User_settings
+        fields=['user_mail_notification_enable', 'user_monthly_newsleter_enable']

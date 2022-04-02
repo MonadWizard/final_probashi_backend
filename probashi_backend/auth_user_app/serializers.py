@@ -183,7 +183,7 @@ class PhoneOtpRegisterSerializer(serializers.ModelSerializer):
         fields = ['userid','user_callphone', 'user_fullname']
 
     def create(self, validated_data):
-        print("validated_data:::::",validated_data)
+        # print("validated_data:::::",validated_data)
         return User.objects.create_user_phone(**validated_data)
 
 

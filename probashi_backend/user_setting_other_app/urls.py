@@ -5,7 +5,9 @@ from .views import (UserIndustryDataView, UserAreaOfExperienceDataView,
                     CreateOtherRowsInStaticTableView, BlogTagDataView,
                     UserEducationDataView,
                     FatchingTrubleView, 
-                    FaqView,privacypolicyView,NotificationView)
+                    FaqView,privacypolicyView,
+                    NotificationView,updateNotificationStatusView,
+                    UserSettingsOptionView)
 
 
 
@@ -22,7 +24,9 @@ urlpatterns = [
     path('faq/', FaqView.as_view(), name="FaqView"),
     path('privacy-pilicy/', privacypolicyView.as_view(), name="privacypolicyView"),
     path('notification/', NotificationView.as_view(), name="NotificationView"),
-    
+    path('update-notification/<str:notificationid>/', updateNotificationStatusView.as_view(), name="updateNotificationStatusView"),
+    path('user-setting/<str:userid>/', UserSettingsOptionView.as_view(), name="UserSettingsOptionView"),
+
 
 
 

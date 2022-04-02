@@ -60,7 +60,7 @@ class PromoCodeData(models.Model):
             return self.promo_code   
 
 class User_settings(models.Model):
-    user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
+    userid = models.OneToOneField(User, on_delete=models.DO_NOTHING)
     user_mail_notification_enable = models.BooleanField(default=True)
     user_monthly_newsleter_enable = models.BooleanField(default=True)
     user_reward_point = models.IntegerField(default=0)
@@ -75,12 +75,12 @@ class Facing_trouble(models.Model):
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    notification_title = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    userid = models.ForeignKey(User,related_name='notification_user', on_delete=models.DO_NOTHING)
+    notification_title = models.CharField(max_length=255, blank=True, null=True)
     notification_description = models.TextField(blank=True, null=True)
     is_notification_seen = models.BooleanField(default=False)
     notification_date = models.DateTimeField(auto_now_add=True)
-    terget_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='notification_user')
+    # terget_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='notification_user')
 
     def __str__(self):
         return self.notification_title

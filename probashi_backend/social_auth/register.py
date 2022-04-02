@@ -5,6 +5,9 @@ import os
 import random
 from rest_framework.exceptions import AuthenticationFailed
 import datetime 
+from user_setting_other_app.models import User_settings
+from user_profile_app.models import User_socialaccount_and_about
+
 
 
 def generate_username(name):
@@ -54,6 +57,9 @@ def register_social_user(provider, user_email, user_fullname):
         user.is_verified = True
         user.auth_provider = provider
         user.save()
+
+        User_socialaccount_and_about.objects.create(userid=User.objects.get(userid=userid), )
+        User_settings.objects.create(userid=User.objects.get(userid=userid), )
 
         new_user = authenticate(
             user_email=user_email, password=social_secret)

@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
-from .models import StaticSettingData,Notification
+from .models import StaticSettingData,Notification, User_settings
 from auth_user_app.models import User
 from .serializers import (UserIndustryDataSerializer,
                     UserAreaOfExperienceDataSerializer,
@@ -17,7 +17,11 @@ from .serializers import (UserIndustryDataSerializer,
                     UserEducationDataSerializer,
                     FacingtroubleSerializer,
                     FaqSerializer, privacypolicySerializer,
-                    notificationSerializer)
+                    notificationSerializer,
+                    updateNotificationStatusSerializer,
+                    UserSettingsOptionViewSerializer)
+from auth_user_app.utils import Util
+from django.db.models import Q
 
 
 
@@ -244,15 +248,22 @@ class NotificationView(generics.ListCreateAPIView):
     # queryset = Notification.objects.filter(user_id=request.user)
     # serializer_class= notificationSerializer
     
-
-# send mail if 'user_mail_notification_enable'==true from 'User_settings'
     def post(self, request):
-        # print("::::::::::::::::::",request.data)
         user = request.user
-        if request.data['user'] == user.userid:
+        if request.data['userid'] == user.userid:
             serializer = notificationSerializer(data = request.data)
             if serializer.is_valid():
                 serializer.save()
+                
+                if User_settings.objects.filter(Q(userid=user.userid)& Q(user_mail_notification_enable=True)).exists():
+                    
+                    email_body = f'''Hello,{user.user_fullname} \n You Have an notification about {serializer.data['notification_title']}'''
+            
+                    data = {'email_body': email_body, 'to_email': user.user_email,
+                            'email_subject': 'Probashi Notification'}
+                    
+                    Util.send_email(data)
+
                 return Response(serializer.data, status=status.HTTP_200_OK)
             errorcontext = {'notification': serializer.errors}
             return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
@@ -262,11 +273,11 @@ class NotificationView(generics.ListCreateAPIView):
     def get_queryset(self):
             user = self.request.user
             # print("::::::::",user.userid)
-            return Notification.objects.filter(user=user.userid)
+            return Notification.objects.filter(userid=user.userid)
 
     def list(self, request):
         user = request.user
-        if request.data['user'] == user.userid:
+        if request.data['userid'] == user.userid:
             queryset = self.get_queryset()
             serializer = notificationSerializer(queryset, many=True)
             context = {"data":serializer.data}
@@ -275,4 +286,61 @@ class NotificationView(generics.ListCreateAPIView):
             return Response("Bad Request",status=status.HTTP_400_BAD_REQUEST)
         
 # need to remove 30 days previous notification from table
+
+
+
+class updateNotificationStatusView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get_notification(self,notificationid):
+        try:
+            return Notification.objects.get(id__exact=notificationid)
+        except Notification.DoesNotExist:
+            raise Http404
+
+    # def get(self,request,notificationid):
+    #     notificationid = self.get_notification(notificationid)
+    #     serializer = updateNotificationStatusSerializer(notificationid)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self,request,notificationid):
+        notificationid = self.get_notification(notificationid)
+        serializer = updateNotificationStatusSerializer(notificationid,data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+class UserSettingsOptionView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get_user(self,userid):
+        try:
+            return User_settings.objects.get(userid__exact=userid)
+        except User_settings.DoesNotExist:
+            raise Http404
+
+    def get(self,request,userid):
+        userid = self.get_user(userid)
+        serializer = UserSettingsOptionViewSerializer(userid)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self,request,userid):
+        userid = self.get_user(userid)
+        serializer = UserSettingsOptionViewSerializer(userid,data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 
