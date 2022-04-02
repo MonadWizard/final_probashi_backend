@@ -43,6 +43,13 @@ class GetAllServicesCategoryView(generics.ListAPIView):
         queryset = ConsultancyCreate.objects.annotate().values('consultant_service_category').distinct()
         return queryset
 
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = ServiceCategorySerializer(queryset, many=True)
+        data = {'data' : serializer.data}
+        return Response(data, status=status.HTTP_200_OK)
+
+
 
 class GetSpecificCategoriesServiceSetPagination(PageNumberPagination):
     page_size = 2
@@ -66,7 +73,8 @@ class GetServicesSpecificCategoryData(views.APIView):
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(queryset, request)
         serializer = GetServicesSpecificCategorySerializer(page, many=True)
-        return paginator.get_paginated_response(serializer.data)
+        data = {'data' : paginator.get_paginated_response(serializer.data)}
+        return data
 
 
 # ----------------------------x---------------------------x---------------
@@ -99,17 +107,29 @@ class ConsultancyTimeSchudileView(generics.ListCreateAPIView):
         queryset = ConsultancyTimeSchudile.objects.filter(consultancyid__userid=user.userid)
         return queryset
 
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = ConsultancyTimeSchudileSerializer(queryset, many=True)
+        data = {'data' : serializer.data}
+        return Response(data, status=status.HTTP_200_OK)
+
 
 
 class GetAllServicesCategorySchedule(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = GetAllServicesCategoryScheduleSerializer
+    # serializer_class = GetAllServicesCategoryScheduleSerializer
 
     def get_queryset(self):
         user = self.request.user
 
         queryset = ConsultancyCreate.objects.filter(userid=user.userid)
         return queryset
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = GetAllServicesCategoryScheduleSerializer(queryset, many=True)
+        data = {'data' : serializer.data}
+        return Response(data, status=status.HTTP_200_OK)
 
 
 
@@ -127,7 +147,9 @@ class NotTakingScheduil_forEachService(views.APIView):
         consultancy = self.get_object(service_Category)
 
         serializer = GetAllCategoryNotTakingScheduleSerializer(consultancy, many=True)
-        return Response(serializer.data)
+        data = {'data' : serializer.data}
+        return Response(data, status=status.HTTP_200_OK)
+
 
 
 
@@ -160,10 +182,7 @@ class AppointmentSeeker_StarRating(generics.UpdateAPIView):
     def get_queryset(self):
         try:
             user = self.request.user
-            # user_id = User.objects.filter(user_email=user).values('userid')
-            # user_id = user_id[0].get('userid')
-            # print('id::::::::::::', self.kwargs.get('id'))
-            return UserConsultAppointmentRequest.objects.filter(seekerid=user)
+            return UserConsultAppointmentRequest.objects.filter(seekerid=user.userid)
         except UserConsultAppointmentRequest.DoesNotExist:
             raise Http404
 
@@ -176,7 +195,7 @@ class ConsultantProvider_StarRating(generics.UpdateAPIView):
     def get_queryset(self):
         try:
             user = self.request.user
-            return UserConsultAppointmentRequest.objects.filter(consultantid__userid=user)
+            return UserConsultAppointmentRequest.objects.filter(consultancy_id__userid=user.userid)
         except UserConsultAppointmentRequest.DoesNotExist:
             raise Http404
 

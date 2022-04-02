@@ -19,7 +19,7 @@ from .views import (ConsultancyCreateView,
 urlpatterns = [
     path('consultancy-createview/', ConsultancyCreateView.as_view(), name="ConsultancyCreateView"),
     path('consultancy-schudile/', ConsultancyTimeSchudileView.as_view(), name="ConsultancyTimeSchudileView"),
-    path('services-category-schedule/', GetAllServicesCategorySchedule.as_view(), name="GetAllServicesCategorySchedule"),
+    path('services-category-schedule/', GetAllServicesCategorySchedule.as_view(), name="GetAllServicesCategorySchedule"), #
     path('getall-services-category/', GetAllServicesCategoryView.as_view(), name="GetAllServicesPaginationView"),
 
     path('nottaking-scheduile/<str:service_Category>/', NotTakingScheduil_forEachService.as_view(), name="NotTakingScheduil_forEachService"),
@@ -28,9 +28,10 @@ urlpatterns = [
     path('appointment-seeker-star-rating/<str:id>/', AppointmentSeeker_StarRating.as_view(), name="AppointmentSeeker_StarRating"),
     path('consultant-provider-star-rating/<str:id>/', ConsultantProvider_StarRating.as_view(), name="ConsultantProvider_StarRating"),
     path('appointment-missing-reason/<str:id>/', AppointmentSeeker_MissingAppointmentReason.as_view(), name="AppointmentSeeker_MissingAppointmentReason"),
-    path('services/<str:consultant_service_category>/', GetServicesSpecificCategoryData.as_view(), name="GetServicesSpecificCategoryData"),
     
-
+    
+    #not used
+    path('services/<str:consultant_service_category>/', GetServicesSpecificCategoryData.as_view(), name="GetServicesSpecificCategoryData"),
     path('specific-service-searchdata/<str:service_Category>/', GetSpecificCategoryServiceSearchData.as_view(), name="GetSpecificCategoryServiceSearchData"),
 
 ]
