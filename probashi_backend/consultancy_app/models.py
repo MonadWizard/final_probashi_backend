@@ -21,8 +21,33 @@ class ConsultancyCreate(models.Model):
     consultantcompany_website = models.CharField(max_length=200, blank=True, null=True)
     consultant_company_fblink = models.CharField(max_length=200, blank=True, null=True)
     consultant_company_linkedinlink = models.CharField(max_length=200, blank=True, null=True)
+    
     consultant_service_category = models.CharField(max_length=200, blank=True, null=True)
-    consultant_servicelocation = models.CharField(max_length=200, blank=True, null=True)
+# Education Service
+    educationService_degree = models.CharField(max_length=200, blank=True, null=True)
+#Overseas Recruitment Service    
+    overseasrecruitmentservice_job_type = models.CharField(max_length=200, blank=True, null=True)
+# Medical Consultancy Service
+    medicalconsultancyservice_treatment_area = models.CharField(max_length=200, blank=True, null=True)
+# Legal&Civil Service
+    legalcivilservice_required = models.CharField(max_length=200, blank=True, null=True)
+    legalcivilservice_issue = models.CharField(max_length=200, blank=True, null=True)
+# Property Management Service
+    propertymanagementservice_propertylocation = models.CharField(max_length=200, blank=True, null=True)
+    propertymanagementservice_type = models.CharField(max_length=200, blank=True, null=True)
+    propertymanagementservice_need = models.CharField(max_length=200, blank=True, null=True)
+# Tourism Service
+    tourismservices = models.CharField(max_length=200, blank=True, null=True)
+# Training Service
+    trainingservice_topic = models.CharField(max_length=200, blank=True, null=True)
+    trainingservice_duration = models.CharField(max_length=200, blank=True, null=True)
+# Digital Service
+    digitalservice_type = models.CharField(max_length=200, blank=True, null=True)
+# Trade Facilitation Service
+    tradefacilitationservice_type = models.CharField(max_length=200, blank=True, null=True)
+    tradefacilitationservice_Purpose = models.CharField(max_length=200, blank=True, null=True)
+
+    consultant_service_locationcountry = models.CharField(max_length=200, blank=True, null=True)
     consultant_servicebudget_startrange = models.IntegerField(blank=True, null=True)
     consultant_servicebudget_endrange = models.IntegerField(blank=True, null=True)
     consultant_servicedescription = models.TextField(blank=True, null=True)
@@ -41,11 +66,31 @@ class ConsultancyCreate(models.Model):
 
 
 
+    def __str__(self):
+        return self.consultant_service_category
+
+
+class ConsultancyTimeSchudile(models.Model):
+    consultancyid = models.ForeignKey(ConsultancyCreate,related_name='consultancy_timeschudile', on_delete=models.DO_NOTHING)
+    consultancy_timeschudile_startdate = models.DateField(blank=True, null=True)
+    consultancy_starttime = models.TimeField(blank=True, null=True)
+    consultancy_endtime = models.TimeField(blank=True, null=True)
+    consultancy_rate = models.IntegerField(blank=True, null=True)
+    is_consultancy_take = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.consultancy_timeschudile_startdate)
+
+
+
+
+
 class UserConsultAppointmentRequest(models.Model):
     seekerid = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    consultantid = models.ForeignKey(ConsultancyCreate, on_delete=models.DO_NOTHING)
+    consultancy_id = models.ForeignKey(ConsultancyCreate, on_delete=models.DO_NOTHING)
+    ConsultancyTimeSchudile = models.ForeignKey(ConsultancyTimeSchudile, unique=True, on_delete=models.DO_NOTHING)
     appointment_request_datetime = models.DateTimeField(auto_now_add=True)
-    appointment_seeker_requested_datetime = models.DateTimeField()
+    # appointment_seeker_requested_datetime = models.DateTimeField()
     appointment_attendent_name = models.CharField(max_length=200, blank=True, null=True)
     appointment_seeker_cellphone = models.CharField(max_length=200, blank=True, null=True)
     appointment_seeker_email = models.CharField(max_length=200, blank=True, null=True)

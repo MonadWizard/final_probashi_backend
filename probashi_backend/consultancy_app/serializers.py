@@ -3,7 +3,8 @@ from cgitb import lookup
 from dataclasses import field
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField, Base64FileField
-from .models import (ConsultancyCreate, UserConsultAppointmentRequest)
+from .models import (ConsultancyCreate, UserConsultAppointmentRequest,
+                    ConsultancyTimeSchudile)
 from auth_user_app.models import User
 import PyPDF2
 import io
@@ -62,14 +63,63 @@ class ConsultancyCreateSerializer(serializers.ModelSerializer):
 
 
 
+
+
+class ConsultancyTimeSchudileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultancyTimeSchudile
+        fields = '__all__'
+
+class GetAllServicesCategoryScheduleSerializer(serializers.ModelSerializer):
+    consultancy_timeschudile = ConsultancyTimeSchudileSerializer(many=True, read_only=True)
+    class Meta:
+        model = ConsultancyCreate
+        fields = ['id', 'consultant_name', 'consultant_service_category', 'consultancy_timeschudile' ]
+
+
+
+
+# --------------------------------x-------------------------------x------------------
+
+class FilteredListSerializer(serializers.ListSerializer):
+    
+    def to_representation(self, data):
+        data = data.filter(is_consultancy_take=False)
+        return super(FilteredListSerializer, self).to_representation(data)
+
+class ConsultancyTimeSchudileNotTakenSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        list_serializer_class = FilteredListSerializer
+        model = ConsultancyTimeSchudile
+        fields = '__all__'
+
+
+class GetAllCategoryNotTakingScheduleSerializer(serializers.ModelSerializer):
+    consultancy_timeschudile = ConsultancyTimeSchudileNotTakenSerializer(many=True, read_only=True)
+
+
+    class Meta:
+        model = ConsultancyCreate
+        fields = ['id', 'consultant_name', 'consultant_service_category', 'consultancy_timeschudile' ]
+
+
+
+# --------------------------------x-------------------------------x------------------
+
+
+
+
 class ConsultantAppointmentRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserConsultAppointmentRequest
         # fields = '__all__'
-        exclude = ['appointment_seeker_starrating','appointment_seeker_starrating_comment',
-                    'consultant_provider_starratting','consultant_provider_starratting_comment',
-                    'reason_for_missing_appointment']
+        fields = ['seekerid','consultancy_id',
+                    'ConsultancyTimeSchudile','appointment_attendent_name',
+                    'appointment_seeker_cellphone','appointment_seeker_email','appointment_seeker_note']
         
+
+
 
 class AppointmentSeeker_StarRatingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -94,4 +144,8 @@ class AppointmentSeeker_MissingAppointmentReasonSerializer(serializers.ModelSeri
 
 
 
-
+class GetSpecificCategoryServiceSearchDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultancyCreate
+        fields = ['id', 'consultant_service_category','consultant_name']
+        # fields = '__all__'

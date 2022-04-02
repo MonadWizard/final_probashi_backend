@@ -5,7 +5,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
-from .models import StaticSettingData
+from .models import StaticSettingData,Notification
+from auth_user_app.models import User
 from .serializers import (UserIndustryDataSerializer,
                     UserAreaOfExperienceDataSerializer,
                     UserInterestedAreaDataSerializer,
@@ -15,7 +16,8 @@ from .serializers import (UserIndustryDataSerializer,
                     BlogTagDataSerializers,
                     UserEducationDataSerializer,
                     FacingtroubleSerializer,
-                    FaqSerializer, privacypolicySerializer)
+                    FaqSerializer, privacypolicySerializer,
+                    notificationSerializer)
 
 
 
@@ -237,5 +239,40 @@ class privacypolicyView(generics.ListAPIView):
 
 
 
+class NotificationView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    # queryset = Notification.objects.filter(user_id=request.user)
+    # serializer_class= notificationSerializer
+    
 
+# send mail if 'user_mail_notification_enable'==true from 'User_settings'
+    def post(self, request):
+        # print("::::::::::::::::::",request.data)
+        user = request.user
+        if request.data['user'] == user.userid:
+            serializer = notificationSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            errorcontext = {'notification': serializer.errors}
+            return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response("Bad Request",status=status.HTTP_400_BAD_REQUEST)
+    
+    def get_queryset(self):
+            user = self.request.user
+            # print("::::::::",user.userid)
+            return Notification.objects.filter(user=user.userid)
+
+    def list(self, request):
+        user = request.user
+        if request.data['user'] == user.userid:
+            queryset = self.get_queryset()
+            serializer = notificationSerializer(queryset, many=True)
+            context = {"data":serializer.data}
+            return Response(context, status=status.HTTP_200_OK)
+        else:
+            return Response("Bad Request",status=status.HTTP_400_BAD_REQUEST)
+        
+# need to remove 30 days previous notification from table
 

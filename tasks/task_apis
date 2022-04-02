@@ -276,3 +276,9 @@ base64 converted photo added in "user_photopath"
 36. get specific user: [ok] http://127.0.0.1:8000/user_connection/specificuser/0310131337008688
 
 37. All Favourite requested user: [need to be done]
+
+38. http://127.0.0.1:8000/consultancy/consultancy-schudile/ [ok]
+
+39. http://127.0.0.1:8000/consultancy/services-category-schedule/ [ok]
+
+

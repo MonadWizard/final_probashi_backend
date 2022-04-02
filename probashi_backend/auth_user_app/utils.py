@@ -28,7 +28,7 @@ class SendMessage:
         headers = { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'}
         payload = {"Username": "psheba", "Password": "ProKaAfS^8#", "From": "PROBASHI", "To": user_callphone, "Message": data}
         response = requests.post(url,data=payload, headers=headers),
-        # print(":::::::::",response)
+        print("respons:::::::::",response)
         return data
 
 

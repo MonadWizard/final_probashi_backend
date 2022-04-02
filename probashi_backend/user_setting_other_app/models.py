@@ -71,3 +71,22 @@ class Facing_trouble(models.Model):
     user_problem_message = models.TextField(blank=True, null=True)
     user_problem_photo_path = models.ImageField(upload_to='probashi_app/facing_trouble', blank=True, null=True)
 
+
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    notification_title = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    notification_description = models.TextField(blank=True, null=True)
+    is_notification_seen = models.BooleanField(default=False)
+    notification_date = models.DateTimeField(auto_now_add=True)
+    terget_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='notification_user')
+
+    def __str__(self):
+        return self.notification_title
+
+
+
+
+
+

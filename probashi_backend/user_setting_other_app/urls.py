@@ -5,7 +5,7 @@ from .views import (UserIndustryDataView, UserAreaOfExperienceDataView,
                     CreateOtherRowsInStaticTableView, BlogTagDataView,
                     UserEducationDataView,
                     FatchingTrubleView, 
-                    FaqView,privacypolicyView)
+                    FaqView,privacypolicyView,NotificationView)
 
 
 
@@ -21,7 +21,7 @@ urlpatterns = [
     path('user-fatching-truble/', FatchingTrubleView.as_view(), name="FatchingTrubleView"),
     path('faq/', FaqView.as_view(), name="FaqView"),
     path('privacy-pilicy/', privacypolicyView.as_view(), name="privacypolicyView"),
-    
+    path('notification/', NotificationView.as_view(), name="NotificationView"),
     
 
 

@@ -62,7 +62,7 @@ class FavouriteRequestSendView(generics.CreateAPIView):
 
     def create(self, request):
         user = self.request.user
-        if request.data['userid'] == user_id:
+        if request.data['userid'] == user.userid:
             if UserFavoutireRequestSend.objects.filter(Q(userid__exact=user.userid) & 
                                                     Q(favourite_request_to__exact=request.data['favourite_request_to'])).exists():
                 return Response('You can not send request to same user', status=status.HTTP_400_BAD_REQUEST)

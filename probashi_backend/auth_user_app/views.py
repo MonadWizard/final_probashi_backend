@@ -154,16 +154,16 @@ class LoginAPIView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
+        
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+
 class RequestPasswordResetEmail(generics.GenericAPIView):
-    # serializer_class = ResetPasswordEmailRequestSerializer
 
     def post(self, request):
-        # serializer = self.serializer_class(data=request.data)
 
         user_email = request.data.get('user_email', '')
         otp = request.data.get('otp', '')
@@ -171,10 +171,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
         if User.objects.filter(user_email=user_email).exists():
             user = User.objects.get(user_email=user_email)
             
-            # otp = random.sample(range(0, 9), 4)
-            # otp = ''.join(map(str, otp))
-            # otp = 1234
-            print('otp:', otp)
+            # print('otp:', otp)
             
 
             email_body = f'''Hello,{user.user_fullname} \n code for reset password is {otp}'''
@@ -213,7 +210,7 @@ class SetNewPasswordAPIView(generics.UpdateAPIView):
 
             return Response(response)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response('Bad Request', status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutAPIView(generics.GenericAPIView):
@@ -250,14 +247,14 @@ class InAppChangePassword(generics.UpdateAPIView):
         obj = self.request.user
         return obj
 
-    def update(self, request, *args, **kwargs):
+    def update(self, request):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
-            # print('old password::::', self.object.check_password(serializer.data.get("old_password")))
-            if not self.object.check_password(serializer.data.get("old_password")):
-                
+            print(request.data['old_password'])
+            print('old password::::', self.object.check_password(request.data['old_password']))
+            if not self.object.check_password(request.data['old_password']):
                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
             self.object.set_password(serializer.data.get("new_password"))
             self.object.user_email = request.data.get("user_email")
@@ -272,7 +269,7 @@ class InAppChangePassword(generics.UpdateAPIView):
 
             return Response(response)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response('Bad Request', status=status.HTTP_400_BAD_REQUEST)
 
 
 # --------------------x --------------x --------------x --------------x
@@ -351,7 +348,7 @@ class LoginVerificationCodeSend(views.APIView):
         serializer.save()
 
         data = {f'''প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}'''}
-        print('data:', data)
+        # print('data:', data)
 
         SendMessage.send_message(user_callphone,data)
 

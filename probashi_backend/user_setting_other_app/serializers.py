@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import StaticSettingData, Facing_trouble
+from .models import StaticSettingData, Facing_trouble, Notification
 from drf_extra_fields.fields import Base64ImageField
 
 
@@ -82,4 +82,13 @@ class privacypolicySerializer(serializers.ModelSerializer):
     class Meta:
         model=StaticSettingData
         fields=['privacypolicy_title', 'privacypolicy_descriptions']
+
+
+class notificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Notification
+        fields='__all__'
+
+
+
 
