@@ -19,6 +19,7 @@ from .serializers import (UserIndustryDataSerializer,
                     FaqSerializer, privacypolicySerializer,
                     notificationSerializer,
                     updateNotificationStatusSerializer,
+                    DeleteNotificationSerializer,
                     UserSettingsOptionViewSerializer,
                     
                     EducationServiceDataSerializer,
@@ -284,7 +285,8 @@ class NotificationView(generics.ListCreateAPIView):
     def get_queryset(self):
             user = self.request.user
             # print("::::::::",user.userid)
-            return Notification.objects.filter(userid=user.userid)
+            return Notification.objects.filter(Q(userid=user.userid) & 
+                                            Q(is_notification_delete=False))
 
     def list(self, request):
         user = request.user
@@ -323,6 +325,30 @@ class updateNotificationStatusView(views.APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
+
+
+class DeleteNotificationView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get_notification(self,notificationid):
+        try:
+            return Notification.objects.get(id__exact=notificationid)
+        except Notification.DoesNotExist:
+            raise Http404
+
+    # def get(self,request,notificationid):
+    #     notificationid = self.get_notification(notificationid)
+    #     serializer = updateNotificationStatusSerializer(notificationid)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self,request,notificationid):
+        notificationid = self.get_notification(notificationid)
+        serializer = DeleteNotificationSerializer(notificationid,data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 

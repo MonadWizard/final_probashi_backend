@@ -105,7 +105,7 @@ class Notification(models.Model):
     notification_description = models.TextField(blank=True, null=True)
     is_notification_seen = models.BooleanField(default=False)
     notification_date = models.DateTimeField(auto_now_add=True)
-    # terget_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='notification_user')
+    is_notification_delete = models.BooleanField(default=False)
 
     def __str__(self):
         return self.notification_title

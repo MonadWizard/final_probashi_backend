@@ -96,6 +96,13 @@ class updateNotificationStatusSerializer(serializers.ModelSerializer):
         fields=['is_notification_seen']
 
 
+class DeleteNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Notification
+        fields=['is_notification_delete']
+
+
+
 class UserSettingsOptionViewSerializer(serializers.ModelSerializer):
     class Meta:
         model=User_settings
