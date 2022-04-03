@@ -11,8 +11,8 @@ urlpatterns = [
     path('specificuser/<str:user_id>/', GetSpecificUserView.as_view(), name="GetSpecificUserView"),
     path('favourite-request-send/', FavouriteRequestSendView.as_view(), name="FavouriteRequestSendView"),
     path('favourite-requests/', FavouriteRequestsView.as_view(), name="FavouriteRequestsView"),
-    path('favourite-requests-accept/<str:requestid>', AcceptFavouriteRequest.as_view(), name="AcceptFavouriteRequest"),
-    path('favourite-requests-reject/<str:requestid>', RejectFavouriteRequest.as_view(), name="RejectFavouriteRequest"),
+    path('favourite-requests-accept/<str:requestid>/', AcceptFavouriteRequest.as_view(), name="AcceptFavouriteRequest"),
+    path('favourite-requests-reject/<str:requestid>/', RejectFavouriteRequest.as_view(), name="RejectFavouriteRequest"),
     path('favourite-list/', FavouritesList.as_view(), name="FavouritesList"),
 
     
@@ -23,4 +23,3 @@ urlpatterns = [
     
 
 ]
-

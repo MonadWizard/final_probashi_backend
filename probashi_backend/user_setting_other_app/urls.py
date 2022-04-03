@@ -12,7 +12,12 @@ from .views import (UserIndustryDataView, UserAreaOfExperienceDataView,
                     EducationServiceDataView,
                     OverseasRecruitmentServiceDataView,
                     MedicalConsultancyServiceDataView,
-                    LegalCivilServiceDataView)
+                    LegalCivilServiceDataView,
+                    PropertyManagementServiceDataView,
+                    TourismServiceDataView,
+                    TrainingServiceDataView,
+                    DigitalServiceDataView,
+                    TradeFacilitationServiceDataView)
 
 
 
@@ -37,6 +42,10 @@ urlpatterns = [
     path('overseas-recruitment-service-data/', OverseasRecruitmentServiceDataView.as_view(), name="OverseasRecruitmentServiceDataView"),
     path('medical-consultancy-service-data/', MedicalConsultancyServiceDataView.as_view(), name="MedicalConsultancyServiceDataView"),
     path('legal-civil-service-data/', LegalCivilServiceDataView.as_view(), name="LegalCivilServiceDataView"),
-
+    path('property-management-service-data/', PropertyManagementServiceDataView.as_view(), name="PropertyManagementServiceDataView"),
+    path('tourism-service-data/', TourismServiceDataView.as_view(), name="TourismServiceDataView"),
+    path('training-service-data/', TrainingServiceDataView.as_view(), name="TrainingServiceDataView"),
+    path('digital-service-data/', DigitalServiceDataView.as_view(), name="DigitalServiceDataView"),
+    path('trade-facilitation-service-data/', TradeFacilitationServiceDataView.as_view(), name="TradeFacilitationServiceDataView"),
 ]
 

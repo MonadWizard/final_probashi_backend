@@ -443,5 +443,117 @@ class LegalCivilServiceDataView(generics.ListCreateAPIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
+class PropertyManagementServiceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(Q(propertymanagementservice_propertylocation__isnull=False) | 
+                                            Q(propertymanagementservice_type__isnull=False) |
+                                            Q(propertymanagementservice_need__isnull=False) )
+    # serializer_class= EducationServiceDataSerializer
+
+    def post(self, request):
+        serializer = PropertyManagementServiceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = PropertyManagementServiceDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class TourismServiceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(Q(tourismservices__isnull=False) )
+    # serializer_class= EducationServiceDataSerializer
+
+    def post(self, request):
+        serializer = TourismServiceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = TourismServiceDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+
+class TrainingServiceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(Q(trainingservice_topic__isnull=False) | Q(trainingservice_duration__isnull=False) )
+    # serializer_class= EducationServiceDataSerializer
+
+    def post(self, request):
+        serializer = TrainingServiceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = TrainingServiceDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class DigitalServiceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(Q(digitalservice_type__isnull=False) )
+    # serializer_class= EducationServiceDataSerializer
+
+    def post(self, request):
+        serializer = DigitalServiceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = DigitalServiceDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+
+class TradeFacilitationServiceDataView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = StaticSettingData.objects.filter(Q(tradefacilitationservice_type__isnull=False) | 
+                                            Q(tradefacilitationservice_Purpose__isnull=False) )
+    # serializer_class= EducationServiceDataSerializer
+
+    def post(self, request):
+        serializer = TradeFacilitationServiceDataSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {'user_goal_data': serializer.errors['user_goal_data'][0]}
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = TradeFacilitationServiceDataSerializer(queryset, many=True)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+
+
 
 
