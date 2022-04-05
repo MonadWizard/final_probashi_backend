@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import DemoView
+from .views import CreateFriendsMathcTable
 
 
 
 urlpatterns = [
-    path('demo/', DemoView.as_view(), name="demo"),
+    path('create-friend-match-table/', CreateFriendsMathcTable, name="CreateFriendsMathcTable"),
 
 ]
 

@@ -12,7 +12,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'probashiapi.algorithmgeneration.com',
 	'192.168.0.101',
-	'127.0.0.1'
+	'127.0.0.1',
+    '192.168.100.87'
     ]
 
 # user model
