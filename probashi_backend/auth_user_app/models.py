@@ -69,6 +69,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_consultant = models.BooleanField(default=False)
     user_created_at = models.DateTimeField(auto_now_add=True)
+
+    is_pro_user = models.BooleanField(default=False)   # work with payment
+    pro_user_created_at = models.DateTimeField(auto_now=True)
     # user_updated_at = models.DateTimeField(auto_now=True)
     # user_promocode_pk = 
     user_callphone = models.CharField(max_length=30, unique=True, db_index=True, blank=True, null=True)

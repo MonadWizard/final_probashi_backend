@@ -104,6 +104,8 @@ class UserConsultAppointmentRequest(models.Model):
 
     reason_for_missing_appointment = models.TextField(blank=True, null=True)
 
+    payment_status = models.BooleanField(default=False)   # not use yet
+
 
 
 

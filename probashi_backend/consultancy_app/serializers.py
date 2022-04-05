@@ -149,3 +149,20 @@ class GetSpecificCategoryServiceSearchDataSerializer(serializers.ModelSerializer
         model = ConsultancyCreate
         fields = ['id', 'consultant_service_category','consultant_name']
         # fields = '__all__'
+
+
+
+# ------------------------------------------------- pro user start------------------------------------------------------
+
+# class BecomeProUserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+        # fields = ['is_pro_user']
+
+
+
+
+# ------------------------------------------------- pro user end------------------------------------------------------
+
+
+

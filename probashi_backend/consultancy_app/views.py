@@ -21,7 +21,10 @@ from .serializers import (ConsultancyCreateSerializer, ServiceCategorySerializer
                         ConsultantProvider_StarRatingSerializer, 
                         AppointmentSeeker_MissingAppointmentReasonSerializer,
                         GetServicesSpecificCategorySerializer,
-                        GetSpecificCategoryServiceSearchDataSerializer)
+                        GetSpecificCategoryServiceSearchDataSerializer,
+                        
+                        )
+from . sslcommerz_helper import Pro_user_CREATE_and_GET_session
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
 from auth_user_app.models import User
@@ -153,12 +156,17 @@ class NotTakingScheduil_forEachService(views.APIView):
 
 
 
-
+# ######################## need to be added payment work........................................
 
 class AppointmentSeeker_ConsultantRequest(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request):
+
+        # work with payment gateway 
+            # after complete payment then execute billow code
+
+
         user = self.request.user
         # print(request.data['seekerid'] == user.userid)
         if request.data['seekerid'] == user.userid:
@@ -325,9 +333,38 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
             raise Http404
 
 
-    def get(self,request,service_Category):
+    def post(self,request,service_Category):
         data = request.data
         consultancy = self.get_services(service_Category,data)
 
         serializer = GetSpecificCategoryServiceSearchDataSerializer(consultancy, many=True)
         return Response(serializer.data)
+
+
+
+
+
+# ------------------------------------------------- pro user payment start------------------------------------------------------
+
+class BecomeProUser(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self,request):
+        user = request.user
+        if request.data['userid'] == user.userid:
+            data = Pro_user_CREATE_and_GET_session(request, user)
+            # print(":::::::", data)
+
+            result = {}
+            result['status'] = data['status'].lower()
+            result['data'] = data['GatewayPageURL']
+            result['logo'] = data['storeLogo']
+
+            return Response(result, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# ------------------------------------------------- pro user payment end------------------------------------------------------
+
+
