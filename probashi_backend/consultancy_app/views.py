@@ -359,7 +359,8 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
         consultancy = self.get_services(service_Category,data)
 
         serializer = GetSpecificCategoryServiceSearchDataSerializer(consultancy, many=True)
-        return Response(serializer.data)
+        data = {'data': serializer.data}
+        return Response(data, status=status.HTTP_200_OK)
 
 
 
