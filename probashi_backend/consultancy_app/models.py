@@ -79,7 +79,7 @@ class ConsultancyTimeSchudile(models.Model):
     is_consultancy_take = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.consultancy_timeschudile_startdate)
+        return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
 
 
 
@@ -87,7 +87,7 @@ class ConsultancyTimeSchudile(models.Model):
 
 class UserConsultAppointmentRequest(models.Model):
     seekerid = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    consultancy_id = models.ForeignKey(ConsultancyCreate, on_delete=models.DO_NOTHING)
+    # consultancy_id = models.ForeignKey(ConsultancyCreate, on_delete=models.DO_NOTHING)
     ConsultancyTimeSchudile = models.ForeignKey(ConsultancyTimeSchudile, unique=True, on_delete=models.DO_NOTHING)
     appointment_request_datetime = models.DateTimeField(auto_now_add=True)
     # appointment_seeker_requested_datetime = models.DateTimeField()

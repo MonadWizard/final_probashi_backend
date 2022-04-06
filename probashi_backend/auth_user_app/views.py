@@ -36,7 +36,7 @@ import datetime
 from django.db.models import Q
 import random
 from django.utils import timezone
-
+from user_chat_app.models import FriendSuggation
 
 
 class MailVerifyRequestView(views.APIView):
@@ -97,7 +97,8 @@ class VerifyEmail(views.APIView):
 
             User_socialaccount_and_about.objects.create(userid=User.objects.get(userid=userid), )
             User_settings.objects.create(userid=User.objects.get(userid=userid), )
-
+            FriendSuggation.objects.create(user=User.objects.get(userid=userid), )
+            
 
             html = "<html><body>Verification Success. It's time for complete registration.</body></html>"
             return HttpResponse(html)

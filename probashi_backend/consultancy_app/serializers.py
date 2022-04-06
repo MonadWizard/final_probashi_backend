@@ -114,7 +114,7 @@ class ConsultantAppointmentRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserConsultAppointmentRequest
         # fields = '__all__'
-        fields = ['seekerid','consultancy_id',
+        fields = ['seekerid',
                     'ConsultancyTimeSchudile','appointment_attendent_name',
                     'appointment_seeker_cellphone','appointment_seeker_email','appointment_seeker_note']
         

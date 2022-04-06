@@ -1,6 +1,6 @@
 from cgitb import lookup
 from multiprocessing import context
-from urllib import request
+from urllib import request, response
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
@@ -24,8 +24,10 @@ from .serializers import (ConsultancyCreateSerializer, ServiceCategorySerializer
                         GetSpecificCategoryServiceSearchDataSerializer,
                         
                         )
-from . sslcommerz_helper import Pro_user_CREATE_and_GET_session
+from . sslcommerz_helper import (Pro_user_CREATE_and_GET_session ,ipn_orderverify, 
+                                Consultancy_CREATE_and_GET_session)
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.decorators import api_view
 from django.db.models import Q
 from auth_user_app.models import User
 
@@ -167,17 +169,36 @@ class AppointmentSeeker_ConsultantRequest(generics.CreateAPIView):
             # after complete payment then execute billow code
 
 
-        user = self.request.user
+        # user = self.request.user
         # print(request.data['seekerid'] == user.userid)
+        # if request.data['seekerid'] == user.userid:
+        #     serializer = ConsultantAppointmentRequestSerializer(data=request.data)
+        #     if serializer.is_valid():
+        #         serializer.save()
+        #         ConsultancyTimeSchudile.objects.filter(id=request.data['ConsultancyTimeSchudile']).update(is_consultancy_take=True)
+        #         # print("::::::::::::",serializer.data)
+        #         return Response(serializer.data, status=status.HTTP_200_OK)
+        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # return Response({"message": "You are not authorized to make this request"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        
+        user = request.user
         if request.data['seekerid'] == user.userid:
-            serializer = ConsultantAppointmentRequestSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                ConsultancyTimeSchudile.objects.filter(id=request.data['ConsultancyTimeSchudile']).update(is_consultancy_take=True)
-                # print("::::::::::::",serializer.data)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"message": "You are not authorized to make this request"}, status=status.HTTP_401_UNAUTHORIZED)
+            data = Consultancy_CREATE_and_GET_session(request, user)
+            print(":::::::", data)
+
+            result = {}
+            result['status'] = data['status'].lower()
+            result['data'] = data['GatewayPageURL']
+            result['logo'] = data['storeLogo']
+
+            return Response(result, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
 
 
 
@@ -363,8 +384,29 @@ class BecomeProUser(views.APIView):
             return Response(result, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+class ValidityWithIPN(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
-
+    def post(self,request):
+        print("ipn data::::::",request.data)
+        if request.data:
+            data = ipn_orderverify(request)
+            print("ipn data::::::",data)
+            return Response(data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+        
 # ------------------------------------------------- pro user payment end------------------------------------------------------
 
+@api_view(['POST'])
+def payment_success(request):
+    return Response("success", status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def payment_fail(request):
+    return Response("Fail", status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def payment_cancle(request):
+    return Response("cancle", status=status.HTTP_200_OK)
 
