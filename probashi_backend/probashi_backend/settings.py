@@ -2,6 +2,9 @@ import os
 import datetime
 from pathlib import Path
 
+
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     'user_chat_app',
 
     #third party apps
+    'channels',
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
@@ -80,7 +84,19 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'probashi_backend.wsgi.application'
+# WSGI_APPLICATION = 'probashi_backend.wsgi.application'
+
+ASGI_APPLICATION = 'probashi_backend.asgi.application'
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
 
 
 # CORS WHITELIST
@@ -118,9 +134,20 @@ DATABASES = {
         'PASSWORD': '12345',
         'HOST': '127.0.0.1',
         'PORT': '5432',
+    },
+
+    'probashi_chat': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'probashichat_db',
+        'USER': 'agl',
+        'PASSWORD': '12345',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
+
 }
 
+DATABASE_ROUTERS = ['db_routers.db_routers.ChatRouter',]
 
 
 REST_FRAMEWORK = {
