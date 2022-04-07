@@ -19,7 +19,7 @@ from rest_framework import permissions
 from django.http import Http404
 
 from user_setting_other_app.models import User_settings
-from .models import User, PhoneOTP
+from .models import User, PhoneOTP, FriendSuggation
 from user_profile_app.models import User_socialaccount_and_about
 from .utils import Util, SendMessage
 from django.contrib.sites.shortcuts import get_current_site
@@ -36,7 +36,7 @@ import datetime
 from django.db.models import Q
 import random
 from django.utils import timezone
-from user_chat_app.models import FriendSuggation
+# from user_chat_app.models import FriendSuggation
 
 
 class MailVerifyRequestView(views.APIView):

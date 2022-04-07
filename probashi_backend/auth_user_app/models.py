@@ -131,3 +131,18 @@ class PhoneOTP(models.Model):
     def __str__(self):
         return self.otp
 
+
+
+
+# -------------------X----------------------------friend matching-------------------------------X-----------------
+
+# location , 
+class FriendSuggation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    localtion = models.TextField()
+    goals = models.TextField()
+    interest = models.TextField()
+
+
+    def __str__(self):
+        return str(self.user)
