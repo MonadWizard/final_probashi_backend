@@ -6,6 +6,12 @@ websocket_urlpatterns = [
 
 ]
 
-#  ws://127.0.0.1:8000/demo/2/
-# send :    
-# {"data": "what3"}
+#  ws://127.0.0.1:8000/chat/2/3
+
+# basic message sending:
+
+#     {"data": "kisui kori na vai... hudai boisa asi."}
+
+
+# pagination message sending:
+#     {"data":"resend","page":"2"}
