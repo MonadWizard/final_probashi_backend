@@ -2,7 +2,7 @@ from django.urls import path
 from . import consumers
 
 websocket_urlpatterns = [
-    path('demo/<str:sender>/<str:receiver>/', consumers.DemoConsumer.as_asgi()),
+    path('chat/<str:sender>/<str:receiver>/', consumers.DemoConsumer.as_asgi()),
 
 ]
 

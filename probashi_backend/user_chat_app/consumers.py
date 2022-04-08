@@ -29,17 +29,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
 
-        # --------------get data from table-----------------
-
-        # data = [
-        #     {'user':'Shaon','message': 'hello', 'date_time': '2020-01-01 16:00:00'},
-        #     {'user':'Rakib','message': 'Hi, how are you?', 'date_time': '2020-01-01 16:00:00'},
-        #     {'user':'Shaon','message': 'Im am fine', 'date_time': '2020-01-01 16:00:00'},  
-        #     {'user':'Shaon','message': 'How are you?', 'date_time': '2020-01-01 16:00:00'},  
-        #     {'user':'Shaon','message': '*I am', 'date_time': '2020-01-01 16:00:00'},
-        # ]
-        # ws://base-url/demo/sender-user-id/receiver-user-id/
-
         data = await self.get_previous_chat()
 
         await self.send(text_data=json.dumps({
@@ -55,73 +44,60 @@ class DemoConsumer(AsyncWebsocketConsumer):
         with connections['probashi_chat'].cursor() as cursor:
             a = f'''
                     SELECT * FROM {self.room_group_name}
-                    ORDER BY id DESC LIMIT 30
+                    ORDER BY id ASC LIMIT 30
                 '''
 
             cursor.execute(a)
             result = cursor.fetchall()
-            chat ={}
+            chat =[]
+            c = {}
             for row in result:
-                chat["id:"] = row[0]
-                chat["message:"] = row[1]
-                chat["date_time:"] = str(row[2])
-                chat["userid:"] = row[3]
-                
-            # print('chat: ', chat)
+                c["id:"] = row[0]
+                c["message:"] = row[1]
+                c["date_time:"] = str(row[2])
+                c["userid:"] = row[3]
+                # print(c)
+                chat.append(c.copy())
+
         return chat
 
 
     @database_sync_to_async
     def get_roomname_sr(self):
         get_roomname = RoomGroupNameTable.objects.using('probashi_chat').filter(Q(user_1=self.sender) & Q(user_2=self.receiver)).exists() 
-        print('get_roomname_sr: ', get_roomname)
         return (get_roomname)
 
     @database_sync_to_async
     def get_roomname_rs(self):
         get_roomname = RoomGroupNameTable.objects.using('probashi_chat').filter(Q(user_1=self.receiver) & Q(user_2=self.sender)).exists() 
-        print('get_roomname_rs: ', get_roomname)
         return (get_roomname)
 
     @database_sync_to_async
     def create_roomname(self):
         new_room_group_name = 'chat' + self.sender + '_' + self.receiver
-        print(type(new_room_group_name), new_room_group_name)
-        # new_room_group_name = 'table_name1'
 
         RoomGroupNameTable.objects.create(user_1=self.sender, user_2=self.receiver, room_group_name = new_room_group_name)
 
         with connections['probashi_chat'].cursor() as cursor:
                 a = f'''
                         CREATE SEQUENCE {new_room_group_name}_id_seq;
-                        CREATE TABLE IF NOT EXISTS public.{new_room_group_name}
-                        (
-                            id bigint NOT NULL DEFAULT nextval('{new_room_group_name}_id_seq'::regclass),
-                            message text COLLATE pg_catalog."default" NOT NULL,
-                            date_time timestamp with time zone NOT NULL,
-                            userid character varying(20) COLLATE pg_catalog."default" NOT NULL,
-                            CONSTRAINT {new_room_group_name}_pkey PRIMARY KEY (id)
-                        )
+                        CREATE TABLE IF NOT EXISTS {new_room_group_name}
+                    (
+                        id bigint NOT NULL DEFAULT nextval('{new_room_group_name}_id_seq'::regclass),
+                        message text COLLATE pg_catalog."default" NOT NULL,
+                        date_time timestamp with time zone NOT NULL,
+                        userid character varying(20) COLLATE pg_catalog."default" NOT NULL,
+                        CONSTRAINT {new_room_group_name}_pkey PRIMARY KEY (id)
+                    )
 
-                        TABLESPACE pg_default;
+                    TABLESPACE pg_default;
 
-                        ALTER TABLE IF EXISTS public.{new_room_group_name}
-                            OWNER to agl;
-
-                        CREATE INDEX IF NOT EXISTS {new_room_group_name}_userid_6d510b74
-                            ON public.{new_room_group_name} USING btree
-                            (userid COLLATE pg_catalog."default" ASC NULLS LAST)
-                            TABLESPACE pg_default;
-                        
-                        CREATE INDEX IF NOT EXISTS {new_room_group_name}_userid_6d510b74_like
-                            ON public.{new_room_group_name} USING btree
-                            (userid COLLATE pg_catalog."default" varchar_pattern_ops ASC NULLS LAST)
-                            TABLESPACE pg_default;
+                    ALTER TABLE IF EXISTS {new_room_group_name}
+                        OWNER to agl;
                     '''
 
                 cursor.execute(a)
 
-        # print('create_roomname: ', new_room_group_name)
         return (new_room_group_name)
 
 
@@ -139,18 +115,12 @@ class DemoConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
 
         if text_data_json['data'] == 'resend':
-            page = text_data_json['page']
-            # print('page: ', page)
+            self.page = text_data_json['page']
             '''
             {"data":"resend","page":"2"}
             '''
-
-            # an async function will be called
-            # which will actually behave like pagination
-            data_user1 = {
-                "message_1": {'user':'Shaon','message': 'hello', 'date_time': '2020-01-01 16:00:00'},
-                "message_2": {'user':'Rakib','message': 'Hi, how are you?', 'date_time': '2020-01-01 16:00:00'},
-            }
+            data = await self.paginate_previous_chat()
+            chat_data = data
         else:
             user = self.sender
             date_time = str(datetime.datetime.now())
@@ -159,37 +129,60 @@ class DemoConsumer(AsyncWebsocketConsumer):
                     {"user": user,"message": text_data_json['data'],"date_time": date_time}
                 }
             
-            data_user1 = 'message-sent'
+            chat_data = 'message-sent'
         
             self.room_name_temp = self.receiver + '_' + self.sender
             self.room_group_name_temp = self.room_group_name
 
-            print('room_name_temp: ' + self.room_group_name_temp)
-
-            # print('data: ', data)
-# --------------------------------------------------------------------
             self.getdata = data
             self.get_data_func = await self.get_data()
 
             await self.channel_layer.group_send(self.room_group_name_temp,{
-                'type': 'send_demo_data',
+                'type': 'send_chat',
                 'data': data,
             })
         await self.channel_layer.group_send(self.room_group_name, {
-            'type': 'send_demo_data',
-            'data': data_user1,
+            'type': 'send_chat',
+            'data': chat_data,
         })
 
 
     @database_sync_to_async
+    def paginate_previous_chat(self):
+        
+        limit = 30
+        offset = (int(self.page) - 1) * limit
+
+        with connections['probashi_chat'].cursor() as cursor:
+            a = f'''
+                    SELECT * FROM {self.room_group_name}
+                    ORDER BY id ASC LIMIT {limit}
+                    OFFSET {offset}
+
+                '''
+
+            cursor.execute(a)
+            result = cursor.fetchall()
+            chat =[]
+            c = {}
+            for row in result:
+                c["id:"] = row[0]
+                c["message:"] = row[1]
+                c["date_time:"] = str(row[2])
+                c["userid:"] = row[3]
+                chat.append(c.copy())
+
+        return chat
+        
+
+
+    @database_sync_to_async
     def get_data(self):
-        # print('data:::::::::::: ', self.getdata['chat'])
         userid = self.getdata['chat']['user']
         message = self.getdata['chat']['message']
         date_time = self.getdata['chat']['date_time']
 
 
-        # print('userid: ', userid, 'message: ', message, 'date_time: ', date_time)
 
         with connections['probashi_chat'].cursor() as cursor:
                 a = f'''
@@ -204,9 +197,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
         
         
 
-    async def send_demo_data(self, event):
+    async def send_chat(self, event):
         data = event['data']
-        # print('event data:::: ', data)
 
         await self.send(text_data=json.dumps({
             'data': data,
@@ -214,3 +206,16 @@ class DemoConsumer(AsyncWebsocketConsumer):
         }))
 
 
+
+
+
+'''
+basic message sending:
+
+    {"data": "kisui kori na vai... hudai boisa asi."}
+
+
+pagination message sending:
+    {"data":"resend","page":"2"}
+
+'''
