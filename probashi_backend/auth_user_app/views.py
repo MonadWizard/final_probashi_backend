@@ -47,31 +47,33 @@ class MailVerifyRequestView(views.APIView):
         user_email = data['user_email']
         password = data['password']
 
+        if User.objects.filter(user_email=user_email).exists():
+            return Response({"message": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+    # Token passing
+            payload = {
+                'user_email': user_email,
+                'user_fullname': user_fullname,
+                'password': password,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30, seconds=00),
+                'iat': datetime.datetime.utcnow()
+            }
+            token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
 
-# Token passing
-        payload = {
-            'user_email': user_email,
-            'user_fullname': user_fullname,
-            'password': password,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30, seconds=00),
-            'iat': datetime.datetime.utcnow()
-        }
-        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+            current_site = get_current_site(request).domain
+            relativeLink = reverse('email-verify')
+            absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
+            
+            email_body = 'Hi '+user_fullname + \
+                ' Use the link below to verify your email \n' + absurl
+            
+            data = {'email_body': email_body, 'to_email': user_email,
+                    'email_subject': 'Verify your email'}
+            # print('data:', data)
 
-        current_site = get_current_site(request).domain
-        relativeLink = reverse('email-verify')
-        absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
-        
-        email_body = 'Hi '+user_fullname + \
-            ' Use the link below to verify your email \n' + absurl
-        
-        data = {'email_body': email_body, 'to_email': user_email,
-                'email_subject': 'Verify your email'}
-        # print('data:', data)
+            Util.send_email(data)
 
-        Util.send_email(data)
-
-        return Response(data, status=status.HTTP_200_OK)
+            return Response(data, status=status.HTTP_200_OK)
 
 
 class VerifyEmail(views.APIView):
@@ -160,6 +162,7 @@ class LoginAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+        
 
 
 
@@ -317,7 +320,7 @@ class PhoneNumberRegistration(views.APIView):
 
         time = timezone.localtime()
         # print('time:::', time)
-        # print("::::::::::::", PhoneOTP.objects.filter(Q(updated_at__lt=time)).exists())
+        # print("::::::::::::", PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists())
         if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists():
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -370,7 +373,7 @@ class PhoneNumberLogin(views.APIView):
         # print('request.data:', request.data)
         
         time = timezone.localtime()
-        # print('time:::', time)
+        # print('time:::', PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists())
         if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists():
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)

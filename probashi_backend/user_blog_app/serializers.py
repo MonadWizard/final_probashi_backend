@@ -73,7 +73,7 @@ class BlogPaginateListViewSerializer(serializers.ModelSerializer):
 
     def get_user_like(self, obj):
         user = self.context['user']
-        user_id = User.objects.filter(user_email=user).values('userid')
+        user_id = User.objects.filter(userid=user.userid).values('userid')
         user_id = user_id[0].get('userid')
         if Blog_reaction.objects.filter(Q(blogid=obj.id) & 
                                         Q(is_user_like=True) & Q(userid=user_id)):
@@ -83,7 +83,7 @@ class BlogPaginateListViewSerializer(serializers.ModelSerializer):
     
     def get_user_dislike(self, obj):
         user = self.context['user']
-        user_id = User.objects.filter(user_email=user).values('userid')
+        user_id = User.objects.filter(userid=user.userid).values('userid')
         user_id = user_id[0].get('userid')
 
         if Blog_reaction.objects.filter(Q(blogid=obj.id) & 
@@ -162,7 +162,7 @@ class AllBlogReactionCountSerializer(serializers.ModelSerializer):
 
     def get_user_like(self, obj):
         user = self.context['user']
-        user_id = User.objects.filter(user_email=user).values('userid')
+        user_id = User.objects.filter(userid=user.userid).values('userid')
         user_id = user_id[0].get('userid')
         if Blog_reaction.objects.filter(Q(blogid=obj.id) & 
                                         Q(is_user_like=True) & Q(userid=user_id)):
@@ -172,7 +172,7 @@ class AllBlogReactionCountSerializer(serializers.ModelSerializer):
     
     def get_user_dislike(self, obj):
         user = self.context['user']
-        user_id = User.objects.filter(user_email=user).values('userid')
+        user_id = User.objects.filter(userid=user.userid).values('userid')
         user_id = user_id[0].get('userid')
 
         if Blog_reaction.objects.filter(Q(blogid=obj.id) & 

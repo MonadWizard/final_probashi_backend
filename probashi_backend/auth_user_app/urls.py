@@ -40,7 +40,7 @@ urlpatterns = [
     path('phone-number-registration/', PhoneNumberRegistration.as_view(), name='PhoneNumberRegistration'),
     path('phone-login-otp/', LoginVerificationCodeSend.as_view(), name='LoginVerificationCodeSend'),
     path('phone-number-login/', PhoneNumberLogin.as_view(), name='PhoneNumberLogin'),
-    path('phone-update-register/<str:user_callphone>', PhoneUpdateRegisterView.as_view(), name='PhoneUpdateRegisterView'),
+    path('phone-update-register/<str:user_callphone>/', PhoneUpdateRegisterView.as_view(), name='PhoneUpdateRegisterView'),
 
 
 ]

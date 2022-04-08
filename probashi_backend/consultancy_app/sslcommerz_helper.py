@@ -120,7 +120,7 @@ def Consultancy_CREATE_and_GET_session(request, user):
     post_body['cancel_url']= 'http://127.0.0.1:8000/consultancy/cancle/'    
     post_body['shipping_method'] = 'NO'
 
-
+    # print("::::::::::::::::::::::::",post_body)
     sslcommerz_api_url = 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php' 
     res = requests.post(sslcommerz_api_url, post_body)
     # print("::::::::", res)
