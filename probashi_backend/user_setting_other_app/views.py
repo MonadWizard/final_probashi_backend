@@ -398,6 +398,7 @@ class EducationServiceDataView(generics.ListCreateAPIView):
 
 
     def list(self, request):
+        print( "request.data::::::::",request.query_params.get('service'))
         queryset = self.get_queryset()
         serializer = EducationServiceDataSerializer(queryset, many=True)
         context = {"data":serializer.data}

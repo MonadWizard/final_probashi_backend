@@ -18,7 +18,7 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 'The token is invalid or expired. Please login again.'
             )
-        googleClientID = '484261068183-vddlkf5r9oqm72stpkqvbpq874sv98a5.apps.googleusercontent.com'
+        googleClientID = '329344095888-ogps4aif4e5l9mb6o0b23cv2gmqijoug.apps.googleusercontent.com'
         # print("user_data['aud']::::",user_data)
         if user_data['aud'] != googleClientID :
             raise AuthenticationFailed('oops, who are you?')
