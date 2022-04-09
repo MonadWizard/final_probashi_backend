@@ -1,4 +1,3 @@
-from cgitb import lookup
 from multiprocessing import context
 from urllib import request, response
 from django.shortcuts import get_object_or_404
@@ -10,7 +9,9 @@ from rest_framework import permissions
 from django.http import Http404
 from .models import (ConsultancyCreate, 
                     UserConsultAppointmentRequest,
-                    ConsultancyTimeSchudile)
+                    ConsultancyTimeSchudile,
+                    ProUserPayment)
+
 from .serializers import (ConsultancyCreateSerializer, ServiceCategorySerializer,
                         ConsultancyTimeSchudileSerializer,
                         GetAllServicesCategoryScheduleSerializer,
@@ -24,7 +25,7 @@ from .serializers import (ConsultancyCreateSerializer, ServiceCategorySerializer
                         GetSpecificCategoryServiceSearchDataSerializer,
                         
                         )
-from . sslcommerz_helper import (Pro_user_CREATE_and_GET_session ,ipn_orderverify, 
+from . sslcommerz_helper import (Pro_user_CREATE_and_GET_session ,
                                 Consultancy_CREATE_and_GET_session)
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
@@ -102,7 +103,6 @@ class ConsultancyCreateView(generics.ListCreateAPIView):
 
 # ----------------------------x---------------------------x---------------
 
-
 class ConsultancyTimeSchudileView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ConsultancyTimeSchudileSerializer
@@ -142,14 +142,19 @@ class GetAllServicesCategorySchedule(generics.ListAPIView):
 class NotTakingScheduil_forEachService(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_object(self,service_Category):
+    def get_object(self,service_Category, user_id):
         try:
-            return ConsultancyCreate.objects.filter(Q(consultant_service_category = service_Category ) )
-        except ConsultancyCreate.DoesNotExist:
+            print('::::::::::::::::::', user_id)
+            return ConsultancyTimeSchudile.objects.filter(Q(consultancyid__consultant_service_category = service_Category ) & 
+                                                    Q(consultancyid__userid=user_id))
+        except ConsultancyTimeSchudile.DoesNotExist:
             raise Http404
 
     def get(self,request,service_Category):
-        consultancy = self.get_object(service_Category)
+        user_id = request.query_params.get('user_id')
+        # user_id = self.request.user.userid
+        # print(':::::::::::::',user)
+        consultancy = self.get_object(service_Category, user_id)
 
         serializer = GetAllCategoryNotTakingScheduleSerializer(consultancy, many=True)
         data = {'data' : serializer.data}
@@ -160,10 +165,12 @@ class NotTakingScheduil_forEachService(views.APIView):
 
 # ######################## need to be added payment work........................................
 
-class AppointmentSeeker_ConsultantRequest(generics.CreateAPIView):
+#################################need to be complete payment............
+
+class AppointmentSeeker_ConsultantRequest(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def create(self, request):
+    def post(self, request):
 
         # work with payment gateway 
             # after complete payment then execute billow code
@@ -185,15 +192,15 @@ class AppointmentSeeker_ConsultantRequest(generics.CreateAPIView):
         user = request.user
         if request.data['seekerid'] == user.userid:
             data = Consultancy_CREATE_and_GET_session(request, user)
-            print(":::::::", data)
+            # print(":::::::", data)
 
             result = {}
             result['status'] = data['status'].lower()
             result['data'] = data['GatewayPageURL']
             result['logo'] = data['storeLogo']
-
+            
             return Response(result, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response('Bad Request',status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -375,39 +382,90 @@ class BecomeProUser(views.APIView):
         user = request.user
         if request.data['userid'] == user.userid:
             data = Pro_user_CREATE_and_GET_session(request, user)
-            # print(":::::::", data)
+            # print(":::::::", data['post_body']['tran_id'])
+            tran_id = data['post_body']['tran_id']
 
-            result = {}
-            result['status'] = data['status'].lower()
-            result['data'] = data['GatewayPageURL']
-            result['logo'] = data['storeLogo']
+            if data['res']['status'].lower() == 'success':
+                result = {}
+                result['status'] = data['res']['status'].lower()
+                result['data'] = data['res']['GatewayPageURL']
+                result['logo'] = data['res']['storeLogo']
 
-            return Response(result, status=status.HTTP_200_OK)
+                ProUserPayment.objects.create(userid=user,tran_id=tran_id)
+
+                return Response(result, status=status.HTTP_200_OK)
+            else:
+                return Response(data['status'], status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class ValidityWithIPN(views.APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+# class ValidityWithIPN(views.APIView):
+#     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self,request):
-        print("ipn data::::::",request.data)
-        if request.data:
-            data = ipn_orderverify(request)
-            print("ipn data::::::",data)
-            return Response(data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+#     def post(self,request):
+#         print("ipn data::::::",request.data)
+#         if request.data:
+#             data = ipn_orderverify(request)
+#             print("ipn data::::::",data)
+#             return Response(data, status=status.HTTP_200_OK)
+#         return Response(status=status.HTTP_400_BAD_REQUEST)
         
 # ------------------------------------------------- pro user payment end------------------------------------------------------
 
-@api_view(['POST'])
-def payment_success(request):
-    return Response("success", status=status.HTTP_200_OK)
+class Pro_Payment_success(views.APIView):
+    # permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        tran_id = request.data['tran_id']
+        # print('::::::::::::::::::',tran_id)
+        # print('::::::::::::::::::',request.data)
+        if ProUserPayment.objects.filter(tran_id=tran_id).exists():
+            pro_user = ProUserPayment.objects.filter(tran_id=tran_id).values('userid')[0]['userid']
+            # print('::::::::::::::::::',pro_user)
+            User.objects.filter(userid=pro_user).update(is_pro_user=True)
+            
+            ProUserPayment.objects.filter(tran_id=tran_id).update(
+                val_id=request.data['val_id'],
+                amount = request.data['amount'],
+                card_type = request.data['card_type'],
+                store_amount = request.data['store_amount'],
+                card_no = request.data['card_no'],
+                bank_tran_id = request.data['bank_tran_id'],
+                status = request.data['status'],
+                tran_date = request.data['tran_date'],
+                error = request.data['error'],
+                currency = request.data['currency'],
+                card_issuer = request.data['card_issuer'],
+                card_brand = request.data['card_brand'],
+                card_sub_brand = request.data['card_sub_brand'],
+                card_issuer_country = request.data['card_issuer_country'],
+                card_issuer_country_code = request.data['card_issuer_country_code'],
+                store_id = request.data['store_id'],
+                verify_sign = request.data['verify_sign'],
+                verify_key = request.data['verify_key'],
+                verify_sign_sha2 = request.data['verify_sign_sha2'],
+                currency_type = request.data['currency_type'],
+                currency_amount = request.data['currency_amount'],
+                currency_rate = request.data['currency_rate'],
+                base_fair = request.data['base_fair'],
+                value_a = request.data['value_a'],
+                value_b = request.data['value_b'],
+                value_c = request.data['value_c'],
+                value_d = request.data['value_d'],
+                subscription_id = request.data['subscription_id'],
+                risk_level = request.data['risk_level'],
+                risk_title = request.data['risk_title']
+            )
+        return Response("success", status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
-def payment_fail(request):
+def Pro_Payment_fail(request):
+    print('::::::::::::::::::',request.data)
+    
     return Response("Fail", status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-def payment_cancle(request):
+def Pro_Payment_cancle(request):
+    print('::::::::::::::::::',request.data)
     return Response("cancle", status=status.HTTP_200_OK)
 

@@ -4,6 +4,7 @@ from .models import UserConsultAppointmentRequest, ConsultancyTimeSchudile
 
 def Pro_user_CREATE_and_GET_session(request, user):
 
+    # print('request data::::::::;', request.data)
     current_time = datetime.datetime.now() 
     current_time = current_time.strftime("%m%d%H%M%S%f")
     tran_id = current_time
@@ -33,9 +34,10 @@ def Pro_user_CREATE_and_GET_session(request, user):
     post_body['product_profile'] = 'premium'
     post_body['total_amount'] = '100'
     post_body['currency'] = 'BDT'
-    post_body['success_url'] = 'https://www.py-bangla.pagla.me/&'
-    post_body['fail_url'] = 'https://www.py-bangla.pagla.me/&'
-    post_body['cancel_url']= 'https://www.py-bangla.pagla.me/&'
+    post_body['success_url'] = 'http://127.0.0.1:8000/consultancy/pro-success/'
+    post_body['fail_url'] = 'http://127.0.0.1:8000/consultancy/pro-fail/'
+    post_body['cancel_url']= 'http://127.0.0.1:8000/consultancy/pro-cancle/'    
+    post_body['shipping_method'] = 'NO'
     post_body['cus_name'] = f'{user.user_fullname}'
     post_body['cus_email'] = f'{email}'
     post_body['tran_id'] = f'{tran_id}'
@@ -43,29 +45,32 @@ def Pro_user_CREATE_and_GET_session(request, user):
     post_body['cus_city'] = f'{city}'
     post_body['cus_country'] = f'{country}'
     post_body['cus_phone'] = f'{phone}'
-    post_body['shipping_method'] = 'NO'
 
-
+    
     sslcommerz_api_url = 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php' 
     res = requests.post(sslcommerz_api_url, post_body)
     # print("::::::::", res)
-    return res.json()
+    resp = {'res': res.json(), 'post_body': post_body}
+    return resp
 
 
-def ipn_orderverify(request):
-    val_id = request.data['val_id']
-    store_id = request.data['store_id']
-    store_passwd = 'mworg624bb703abfce@ssl'
+# def ipn_orderverify(request):
+#     val_id = request.data['val_id']
+#     store_id = request.data['store_id']
+#     store_passwd = 'mworg624bb703abfce@ssl'
 
-    sslcommerez_api_url = f'https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id={val_id}&store_id={store_id}&store_passwd={store_passwd}&format=json'
-    res =request.get(sslcommerez_api_url)
-    return res.json()
+#     sslcommerez_api_url = f'https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id={val_id}&store_id={store_id}&store_passwd={store_passwd}&format=json'
+#     res =request.get(sslcommerez_api_url)
+#     return res.json()
 
 
 def Consultancy_CREATE_and_GET_session(request, user):
 
     current_time = datetime.datetime.now() 
     current_time = current_time.strftime("%m%d%H%M%S%f")
+
+    print('request data', request.data)
+
     tran_id = current_time
     name = user.user_fullname
     email = user.user_email

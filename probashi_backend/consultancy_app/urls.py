@@ -13,12 +13,9 @@ from .views import (ConsultancyCreateView,
 
                     GetSpecificCategoryServiceSearchData,
                     BecomeProUser,
-                    
-                    ValidityWithIPN,
-
-                    payment_success,
-                    payment_fail,
-                    payment_cancle)
+                    Pro_Payment_success,
+                    Pro_Payment_fail,
+                    Pro_Payment_cancle)
 
 
 
@@ -43,11 +40,11 @@ urlpatterns = [
     path('services/<str:consultant_service_category>/', GetServicesSpecificCategoryData.as_view(), name="GetServicesSpecificCategoryData"),
 
     # payment
-    path('validity/', ValidityWithIPN.as_view(), name="payment_success"),
+    # path('validity/', ValidityWithIPN.as_view(), name="payment_success"),
 
     # success fail cancle redirect URL
-    path('success/', payment_success, name="payment_success"),
-    path('fail/', payment_fail, name="payment_fail"),
-    path('cancle/', payment_cancle, name="payment_cancle"),
+    path('pro-success/', Pro_Payment_success.as_view(), name="payment_success"),
+    path('pro-fail/', Pro_Payment_fail, name="payment_fail"),
+    path('pro-cancle/', Pro_Payment_cancle, name="payment_cancle"),
 ]
 
