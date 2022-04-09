@@ -303,9 +303,9 @@ class RegistrationVerificationCodeSend(views.APIView):
         data = {f'''প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}'''}
         # print('data:', data)
 
-        SendMessage.send_message(user_callphone,data)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        send = SendMessage.send_message(user_callphone,data)
+        res_data = {'data': serializer.data, 'send-message': send}
+        return Response(res_data, status=status.HTTP_200_OK)
 
 
 class PhoneNumberRegistration(views.APIView):
@@ -358,9 +358,10 @@ class LoginVerificationCodeSend(views.APIView):
         data = {f'''প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}'''}
         # print('data:', data)
 
-        SendMessage.send_message(user_callphone,data)
+        send = SendMessage.send_message(user_callphone,data)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        res_data = {'data': serializer.data, 'send-message': send}
+        return Response(res_data, status=status.HTTP_200_OK)
 
 
 
