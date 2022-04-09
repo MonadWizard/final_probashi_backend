@@ -35,7 +35,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
+
+    #third party apps
+    'channels',
+    'rest_framework',
+    'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
+    'import_export',
+
+
     #created apps
     'auth_user_app',
     'user_profile_app',
@@ -44,15 +53,7 @@ INSTALLED_APPS = [
     'user_connection_app',
     'user_blog_app',
     'user_chat_app',
-
     'social_auth',
-
-    #third party apps
-    'channels',
-    'rest_framework',
-    'corsheaders',
-    'rest_framework_simplejwt.token_blacklist',
-    'import_export',
 
 
 ]
@@ -202,7 +203,7 @@ USE_TZ = True
 
 image_directory = Path(__file__).resolve().parent.parent.parent.parent
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATIC_ROOT= os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
