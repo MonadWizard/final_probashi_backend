@@ -44,7 +44,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
         with connections['probashi_chat'].cursor() as cursor:
             a = f'''
                     SELECT * FROM {self.room_group_name}
-                    ORDER BY id ASC LIMIT 30
+                    ORDER BY id DESC LIMIT 30
                 '''
 
             cursor.execute(a)
@@ -52,7 +52,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             chat =[]
             c = {}
             for row in result:
-                c["id:"] = row[0]
+                # c["id:"] = row[0]
                 c["message:"] = row[1]
                 c["date_time:"] = str(row[2])
                 c["userid:"] = row[3]
@@ -156,7 +156,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
         with connections['probashi_chat'].cursor() as cursor:
             a = f'''
                     SELECT * FROM {self.room_group_name}
-                    ORDER BY id ASC LIMIT {limit}
+                    ORDER BY id DESC LIMIT {limit}
                     OFFSET {offset}
 
                 '''
@@ -166,7 +166,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             chat =[]
             c = {}
             for row in result:
-                c["id:"] = row[0]
+                # c["id:"] = row[0]
                 c["message:"] = row[1]
                 c["date_time:"] = str(row[2])
                 c["userid:"] = row[3]
