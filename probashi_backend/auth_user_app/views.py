@@ -290,7 +290,8 @@ class RegistrationVerificationCodeSend(views.APIView):
         otp = random.sample(range(0, 9), 4)
         otp = ''.join(map(str, otp))
         data['otp'] = otp
-        # print('::::::', request.data)
+        data['updated_at'] = timezone.now()+timezone.timedelta(minutes=5)
+        print('::::::', data['updated_at'])
 
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -317,6 +318,7 @@ class PhoneNumberRegistration(views.APIView):
         userid = current_time
         request.data["userid"]= userid
         # request.data["password"]= userid
+        
 
         time = timezone.localtime()
         print('time:::', time)
@@ -353,7 +355,8 @@ class LoginVerificationCodeSend(views.APIView):
         user_fullname = User.objects.filter(user_callphone=user_callphone).values('user_fullname').first()
         user_fullname = user_fullname['user_fullname']
         data['user_fullname'] = user_fullname
-
+        data['updated_at'] = timezone.now()+timezone.timedelta(minutes=5)
+        
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
