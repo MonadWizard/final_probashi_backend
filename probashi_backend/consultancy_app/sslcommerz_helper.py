@@ -77,15 +77,15 @@ def Consultancy_CREATE_and_GET_session(request, user):
     phone = user.user_callphone
     address = user.user_geolocation
 
-    consultancy = UserConsultAppointmentRequest.objects.filter(ConsultancyTimeSchudile=request.data['ConsultancyTimeSchudile']).values(
-                                                                                    'ConsultancyTimeSchudile__consultancyid__consultant_name', 
-                                                                                    'ConsultancyTimeSchudile__consultancy_rate',
-                                                                                    'ConsultancyTimeSchudile__consultancyid__consultant_service_category')
+    consultancy = ConsultancyTimeSchudile.objects.filter(id=request.data['ConsultancyTimeSchudile']).values(
+                                                                                    'consultancyid__consultant_name', 
+                                                                                    'consultancy_rate',
+                                                                                    'consultancyid__consultant_service_category')
     
     # print('::::::::::::::::::',consultancy)
-    consultancy_name = consultancy[0]['ConsultancyTimeSchudile__consultancyid__consultant_name']
-    consultancy_amount = consultancy[0]['ConsultancyTimeSchudile__consultancy_rate']
-    consultancy_category = consultancy[0]['ConsultancyTimeSchudile__consultancyid__consultant_service_category']
+    consultancy_name = consultancy[0]['consultancyid__consultant_name']
+    consultancy_amount = consultancy[0]['consultancy_rate']
+    consultancy_category = consultancy[0]['consultancyid__consultant_service_category']
     # print("::::::::::::::::",consultancy_name, '\n', consultancy_amount, '\n', consultancy_category)
 
 
@@ -118,18 +118,19 @@ def Consultancy_CREATE_and_GET_session(request, user):
     post_body['cus_add1'] = address
     post_body['cus_city'] = city
     post_body['cus_country'] = country
-    post_body['tran_id'] = f'{tran_id}'
+    post_body['tran_id'] = tran_id
 
-    post_body['success_url'] = 'http://127.0.0.1:8000/consultancy/success/'
-    post_body['fail_url'] = 'http://127.0.0.1:8000/consultancy/fail/'
-    post_body['cancel_url']= 'http://127.0.0.1:8000/consultancy/cancle/'    
+    post_body['success_url'] = 'http://127.0.0.1:8000/consultancy/consultancy-success/'
+    post_body['fail_url'] = 'http://127.0.0.1:8000/consultancy/consultancy-fail/'
+    post_body['cancel_url']= 'http://127.0.0.1:8000/consultancy/consultancy-cancle/'    
     post_body['shipping_method'] = 'NO'
 
-    # print("::::::::::::::::::::::::",post_body)
+    print("::::::::::::::::::::::::",post_body)
     sslcommerz_api_url = 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php' 
     res = requests.post(sslcommerz_api_url, post_body)
-    print("::::::::", res)
-    return res.json()
+    # print("::::::::", res)
+    resp = {'res': res.json(), 'post_body': post_body}
+    return resp
 
 
 

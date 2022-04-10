@@ -8,7 +8,8 @@ from django.http import Http404
 from .models import (ConsultancyCreate, 
                     UserConsultAppointmentRequest,
                     ConsultancyTimeSchudile,
-                    ProUserPayment)
+                    ProUserPayment,
+                    ConsultancyPayment)
 
 from .serializers import (ConsultancyCreateSerializer, ServiceCategorySerializer,
                         ConsultancyTimeSchudileSerializer,
@@ -29,6 +30,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from django.db.models import Q
 from auth_user_app.models import User
+
 
 
 
@@ -188,7 +190,7 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
         
         
         user = request.user
-        print(":::::::::::", user.userid)
+        # print(":::::::::::", user.userid)
         if request.data['seekerid'] == user.userid:
             data = Consultancy_CREATE_and_GET_session(request, user)
             # print(":::::::", data)
@@ -200,15 +202,111 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
                 result['data'] = data['res']['GatewayPageURL']
                 result['logo'] = data['res']['storeLogo']
 
-                # ProUserPayment.objects.create(userid=user,tran_id=tran_id)
+                consultancy_timesheduleid = request.data['ConsultancyTimeSchudile']
+                ConsultancyPayment.objects.create(userid=request.data['seekerid'],consultancy_sheduleid=consultancy_timesheduleid ,tran_id=tran_id)
 
-                return Response(result, status=status.HTTP_200_OK)
+
+                # work with payment gateway 
+                # after complete payment then execute billow code
+
+                if request.data['seekerid'] == user.userid:
+                    serializer = ConsultantAppointmentRequestSerializer(data=request.data)
+                    if serializer.is_valid():
+                        serializer.save()
+
+                        #########work in success URL
+                        # ConsultancyTimeSchudile.objects.filter(id=request.data['ConsultancyTimeSchudile']).update(is_consultancy_take=True)
+                        # print("::::::::::::",serializer.data)
+                        return Response(result, status=status.HTTP_200_OK)
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": "You are not authorized to make this request"}, status=status.HTTP_401_UNAUTHORIZED)
+                
             else:
                 return Response(data['status'], status=status.HTTP_400_BAD_REQUEST)
         return Response('Bad Request',status=status.HTTP_400_BAD_REQUEST)
 
 
 
+
+
+
+
+class Consultancy_Payment_success(views.APIView):
+    # permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        tran_id = request.data['tran_id']
+        print('::::::::::::::::::',tran_id)
+        print('::::::::::::::::::',request.data)
+
+
+
+
+
+        # if ProUserPayment.objects.filter(tran_id=tran_id).exists():
+        #     pro_user = ProUserPayment.objects.filter(tran_id=tran_id).values('userid')[0]['userid']
+            # print('::::::::::::::::::',pro_user)
+            # User.objects.filter(userid=pro_user).update(is_pro_user=True)
+            
+            # ProUserPayment.objects.filter(tran_id=tran_id).update(
+            #     val_id=request.data['val_id'],
+            #     amount = request.data['amount'],
+            #     card_type = request.data['card_type'],
+            #     store_amount = request.data['store_amount'],
+            #     card_no = request.data['card_no'],
+            #     bank_tran_id = request.data['bank_tran_id'],
+            #     status = request.data['status'],
+            #     tran_date = request.data['tran_date'],
+            #     error = request.data['error'],
+            #     currency = request.data['currency'],
+            #     card_issuer = request.data['card_issuer'],
+            #     card_brand = request.data['card_brand'],
+            #     card_sub_brand = request.data['card_sub_brand'],
+            #     card_issuer_country = request.data['card_issuer_country'],
+            #     card_issuer_country_code = request.data['card_issuer_country_code'],
+            #     store_id = request.data['store_id'],
+            #     verify_sign = request.data['verify_sign'],
+            #     verify_key = request.data['verify_key'],
+            #     verify_sign_sha2 = request.data['verify_sign_sha2'],
+            #     currency_type = request.data['currency_type'],
+            #     currency_amount = request.data['currency_amount'],
+            #     currency_rate = request.data['currency_rate'],
+            #     base_fair = request.data['base_fair'],
+            #     value_a = request.data['value_a'],
+            #     value_b = request.data['value_b'],
+            #     value_c = request.data['value_c'],
+            #     value_d = request.data['value_d'],
+            #     subscription_id = request.data['subscription_id'],
+            #     risk_level = request.data['risk_level'],
+            #     risk_title = request.data['risk_title']
+            # )
+        return Response("success", status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def Consultancy_Payment_fail(request):
+    print('::::::::::::::::::',request.data)
+    
+    return Response("Fail", status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def Consultancy_Payment_cancle(request):
+    print('::::::::::::::::::',request.data)
+    return Response("cancle", status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ----------------------------------------x---------------------------------------x--------------------------
 
 
 
