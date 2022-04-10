@@ -34,9 +34,9 @@ def Pro_user_CREATE_and_GET_session(request, user):
     post_body['product_profile'] = 'premium'
     post_body['total_amount'] = '100'
     post_body['currency'] = 'BDT'
-    post_body['success_url'] = 'http://127.0.0.1:8000/consultancy/pro-success/'
-    post_body['fail_url'] = 'http://127.0.0.1:8000/consultancy/pro-fail/'
-    post_body['cancel_url']= 'http://127.0.0.1:8000/consultancy/pro-cancle/'    
+    post_body['success_url'] = 'https://probashiapi.algorithmgeneration.com/consultancy/pro-success/'
+    post_body['fail_url'] = 'https://probashiapi.algorithmgeneration.com/consultancy/pro-fail/'
+    post_body['cancel_url']= 'https://probashiapi.algorithmgeneration.com/consultancy/pro-cancle/'    
     post_body['shipping_method'] = 'NO'
     post_body['cus_name'] = f'{user.user_fullname}'
     post_body['cus_email'] = f'{email}'
@@ -120,9 +120,9 @@ def Consultancy_CREATE_and_GET_session(request, user):
     post_body['cus_country'] = country
     post_body['tran_id'] = tran_id
 
-    post_body['success_url'] = 'http://127.0.0.1:8000/consultancy/consultancy-success/'
-    post_body['fail_url'] = 'http://127.0.0.1:8000/consultancy/consultancy-fail/'
-    post_body['cancel_url']= 'http://127.0.0.1:8000/consultancy/consultancy-cancle/'    
+    post_body['success_url'] = 'https://probashiapi.algorithmgeneration.com/consultancy/consultancy-success/'
+    post_body['fail_url'] = 'https://probashiapi.algorithmgeneration.com/consultancy/consultancy-fail/'
+    post_body['cancel_url']= 'https://probashiapi.algorithmgeneration.com/consultancy/consultancy-cancle/'    
     post_body['shipping_method'] = 'NO'
 
     print("::::::::::::::::::::::::",post_body)
