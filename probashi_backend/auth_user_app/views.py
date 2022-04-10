@@ -342,6 +342,9 @@ class LoginVerificationCodeSend(views.APIView):
     def post(self, request):
         data = request.data
         # user_fullname = data['user_fullname']
+        time = timezone.localtime() + datetime.timedelta(minutes=5)
+        print('time:::::', time)
+        data['updated_at'] = time
         user_callphone = data['user_callphone']
         # password = data['password']
         otp = random.sample(range(0, 9), 4)
@@ -352,8 +355,8 @@ class LoginVerificationCodeSend(views.APIView):
         data['user_fullname'] = user_fullname
 
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save()
 
         data = {f'''প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}'''}
         # print('data:', data)
