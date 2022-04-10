@@ -78,8 +78,8 @@ class ConsultancyTimeSchudile(models.Model):
     consultancy_rate = models.IntegerField(blank=True, null=True)
     is_consultancy_take = models.BooleanField(default=False)
 
-    def __str__(self):
-        return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
+    # def __str__(self):
+    #     return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
 
 
 
