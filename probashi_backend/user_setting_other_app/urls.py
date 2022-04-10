@@ -19,7 +19,8 @@ from .views import (UserIndustryDataView, UserAreaOfExperienceDataView,
                     TourismServiceDataView,
                     TrainingServiceDataView,
                     DigitalServiceDataView,
-                    TradeFacilitationServiceDataView)
+                    TradeFacilitationServiceDataView,
+                    SpecificConsultancyData)
 
 
 
@@ -41,6 +42,7 @@ urlpatterns = [
     path('user-setting/<str:userid>/', UserSettingsOptionView.as_view(), name="UserSettingsOptionView"),
 
 
+    path('consultancy-category-data/', SpecificConsultancyData.as_view(), name="SpecificConsultancyData"),
     path('education-service-data/', EducationServiceDataView.as_view(), name="EducationServiceDataView"),
     path('overseas-recruitment-service-data/', OverseasRecruitmentServiceDataView.as_view(), name="OverseasRecruitmentServiceDataView"),
     path('medical-consultancy-service-data/', MedicalConsultancyServiceDataView.as_view(), name="MedicalConsultancyServiceDataView"),
