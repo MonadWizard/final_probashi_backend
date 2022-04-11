@@ -18,3 +18,16 @@ class UserFavouriteList(models.Model):
 
     def __str__(self):
         return self.userid.user_fullname
+
+
+
+
+
+
+
+
+
+
+
+
+        

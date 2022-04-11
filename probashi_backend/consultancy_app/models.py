@@ -1,5 +1,7 @@
 from django.db import models
 from auth_user_app.models import User
+from django.contrib.postgres.fields import ArrayField
+
 # Create your models here.
 
 class ConsultancyCreate(models.Model):
@@ -24,28 +26,28 @@ class ConsultancyCreate(models.Model):
     
     consultant_service_category = models.CharField(max_length=200, blank=True, null=True)
 # Education Service
-    educationService_degree = models.CharField(max_length=200, blank=True, null=True)
+    educationService_degree = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
 #Overseas Recruitment Service    
-    overseasrecruitmentservice_job_type = models.CharField(max_length=200, blank=True, null=True)
+    overseasrecruitmentservice_job_type = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
 # Medical Consultancy Service
-    medicalconsultancyservice_treatment_area = models.CharField(max_length=200, blank=True, null=True)
+    medicalconsultancyservice_treatment_area = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
 # Legal&Civil Service
-    legalcivilservice_required = models.CharField(max_length=200, blank=True, null=True)
-    legalcivilservice_issue = models.CharField(max_length=200, blank=True, null=True)
+    legalcivilservice_required = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
+    legalcivilservice_issue = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
 # Property Management Service
     propertymanagementservice_propertylocation = models.CharField(max_length=200, blank=True, null=True)
-    propertymanagementservice_type = models.CharField(max_length=200, blank=True, null=True)
-    propertymanagementservice_need = models.CharField(max_length=200, blank=True, null=True)
+    propertymanagementservice_type = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
+    propertymanagementservice_need = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
 # Tourism Service
-    tourismservices = models.CharField(max_length=200, blank=True, null=True)
+    tourismservices = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
 # Training Service
-    trainingservice_topic = models.CharField(max_length=200, blank=True, null=True)
-    trainingservice_duration = models.CharField(max_length=200, blank=True, null=True)
+    trainingservice_topic = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
+    trainingservice_duration = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
 # Digital Service
-    digitalservice_type = models.CharField(max_length=200, blank=True, null=True)
+    digitalservice_type = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
 # Trade Facilitation Service
-    tradefacilitationservice_type = models.CharField(max_length=200, blank=True, null=True)
-    tradefacilitationservice_Purpose = models.CharField(max_length=200, blank=True, null=True)
+    tradefacilitationservice_type = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
+    tradefacilitationservice_Purpose = ArrayField(models.CharField(max_length=200, blank=True, null=True), blank=True, null=True)
 
     consultant_service_locationcountry = models.CharField(max_length=200, blank=True, null=True)
     consultant_servicebudget_startrange = models.IntegerField(blank=True, null=True)
