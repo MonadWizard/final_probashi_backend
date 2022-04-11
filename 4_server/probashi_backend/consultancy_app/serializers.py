@@ -4,7 +4,7 @@ from dataclasses import field
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField, Base64FileField
 from .models import (ConsultancyCreate, UserConsultAppointmentRequest,
-                    ConsultancyTimeSchudile)
+                    ConsultancyTimeSchudile, ConsultancyPayment)
 from auth_user_app.models import User
 import PyPDF2
 import io
@@ -166,5 +166,7 @@ class GetSpecificCategoryServiceSearchDataSerializer(serializers.ModelSerializer
 
 # ------------------------------------------------- pro user end------------------------------------------------------
 
-
-
+class ConsultancyPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultancyPayment
+        fields = ['userid', 'consultancy_sheduleid', 'tran_id']

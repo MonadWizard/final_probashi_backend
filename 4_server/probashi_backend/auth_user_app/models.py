@@ -126,7 +126,7 @@ class PhoneOTP(models.Model):
     user_callphone = models.CharField(max_length=30, db_index=True)
     otp = models.CharField(max_length=4, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(default=timezone.localtime() + timedelta(minutes=5))
+    updated_at = models.DateTimeField()
     is_used = models.BooleanField(default=False)
 
     def __str__(self):

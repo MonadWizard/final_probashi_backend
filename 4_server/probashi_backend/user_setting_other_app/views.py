@@ -395,19 +395,19 @@ class SpecificConsultancyData(views.APIView):
         if param == 'Digital Service':
             data = StaticSettingData.objects.filter(Q(digitalservice_type__isnull=False)).values_list('digitalservice_type')
             
-            data = {'subcategory1':data[0], 'subcategory2': 'Null', 'subcategory3': 'Null' }
+            data = {'subcategory1':data[0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Education Service':
             data = StaticSettingData.objects.filter(Q(educationService_degree__isnull=False)).values_list('educationService_degree')
             
-            data = {'subcategory1':data[0], 'subcategory2': 'Null', 'subcategory3': 'Null' }
+            data = {'subcategory1':data[0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Immigration Consultancy Service':
-            data = {'subcategory1':'Null', 'subcategory2': 'Null', 'subcategory3': 'Null' }
+            data = {'subcategory1':[], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
@@ -415,21 +415,21 @@ class SpecificConsultancyData(views.APIView):
             data = StaticSettingData.objects.filter(Q(legalcivilservice_required__isnull=False) | 
                                                     Q(legalcivilservice_issue__isnull=False)).values_list('legalcivilservice_required', 'legalcivilservice_issue')
             
-            data = {'subcategory1':data[0], 'subcategory2': data[1], 'subcategory3': 'Null' }
+            data = {'subcategory1':data[0], 'subcategory2': data[1], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Medical Consultancy Service':
             data = StaticSettingData.objects.filter(medicalconsultancyservice_treatment_area__isnull=False).values_list('medicalconsultancyservice_treatment_area')
             
-            data = {'subcategory1':data[0], 'subcategory2': 'Null', 'subcategory3': 'Null' }
+            data = {'subcategory1':data[0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Overseas Recruitment Service':
             data = StaticSettingData.objects.filter(overseasrecruitmentservice_job_type__isnull=False).values_list('overseasrecruitmentservice_job_type')
             
-            data = {'subcategory1':data[0], 'subcategory2': 'Null', 'subcategory3': 'Null' }
+            data = {'subcategory1':data[0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
@@ -446,7 +446,7 @@ class SpecificConsultancyData(views.APIView):
         elif param == 'Tourism Service':
             data = StaticSettingData.objects.filter(tourismservices__isnull=False).values_list('tourismservices')
             
-            data = {'subcategory1':data[0], 'subcategory2':'Null', 'subcategory3': 'Null' }
+            data = {'subcategory1':data[0], 'subcategory2':[], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
         
@@ -454,7 +454,7 @@ class SpecificConsultancyData(views.APIView):
             data = StaticSettingData.objects.filter(Q(tradefacilitationservice_type__isnull=False) | 
                                             Q(tradefacilitationservice_Purpose__isnull=False) ).values_list('tradefacilitationservice_type', 'tradefacilitationservice_Purpose')
             
-            data = {'subcategory1':data[0], 'subcategory2':data[1], 'subcategory3': 'Null' }
+            data = {'subcategory1':data[0], 'subcategory2':data[1], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
@@ -462,138 +462,13 @@ class SpecificConsultancyData(views.APIView):
         elif param == 'Training Service':
             data = StaticSettingData.objects.filter(Q(trainingservice_topic__isnull=False) | Q(trainingservice_duration__isnull=False)).values_list('trainingservice_topic', 'trainingservice_duration')
             
-            data = {'subcategory1':data[0], 'subcategory2':data[1], 'subcategory3': 'Null' }
+            data = {'subcategory1':data[0], 'subcategory2':data[1], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
             
         
         return Response('Bad Request', status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-# class SpecificConsultancyData(views.APIView):
-#     permission_classes = [permissions.IsAuthenticated,]
-
-#     def get(self, request):
-#         param = request.query_params.get('service')
-#         print( "request.data::::::::",param)
-#         if param == 'Digital Service':
-#             data = StaticSettingData.objects.filter(Q(digitalservice_type__isnull=False)).values('digitalservice_type', 'educationService_degree', 
-#                                                                                                 'legalcivilservice_required', 'legalcivilservice_issue',
-#                                                                                                 'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-#                                                                                                 'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-#                                                                                                 'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-#                                                                                                 'trainingservice_topic', 'trainingservice_duration')
-#             # print( "data::::::::",data)
-#             return Response(data, status=status.HTTP_200_OK)
-
-#         elif param == 'Education Service':
-#             data = StaticSettingData.objects.filter(Q(educationService_degree__isnull=False)).values('digitalservice_type', 'educationService_degree', 
-#                                                                                                     'legalcivilservice_required', 'legalcivilservice_issue',
-#                                                                                                     'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-#                                                                                                     'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-#                                                                                                     'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-#                                                                                                     'trainingservice_topic', 'trainingservice_duration')
-#             # print( "data::::::::",data)
-#             return Response(data, status=status.HTTP_200_OK)
-
-#         elif param == 'Immigration Consultancy Service':
-#             # print( "data::::::::",data)
-#             return Response('No need Get Data', status=status.HTTP_200_OK)
-
-#         elif param == 'Legal&Civil Service':
-#             data = StaticSettingData.objects.filter(Q(legalcivilservice_required__isnull=False) | 
-#                                                     Q(legalcivilservice_issue__isnull=False)).values('digitalservice_type', 'educationService_degree', 
-#                                                                                                     'legalcivilservice_required', 'legalcivilservice_issue',
-#                                                                                                     'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-#                                                                                                     'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-#                                                                                                     'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-#                                                                                                     'trainingservice_topic', 'trainingservice_duration')
-#             # print( "data::::::::",data)
-#             return Response(data, status=status.HTTP_200_OK)
-
-#         elif param == 'Medical Consultancy Service':
-#             data = StaticSettingData.objects.filter(medicalconsultancyservice_treatment_area__isnull=False).values('digitalservice_type', 'educationService_degree', 
-#                                                                                                                 'legalcivilservice_required', 'legalcivilservice_issue',
-#                                                                                                                 'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-#                                                                                                                 'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-#                                                                                                                 'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-#                                                                                                                 'trainingservice_topic', 'trainingservice_duration')
-#             # print( "data::::::::",data)
-#             return Response(data, status=status.HTTP_200_OK)
-
-#         elif param == 'Overseas Recruitment Service':
-#             data = StaticSettingData.objects.filter(overseasrecruitmentservice_job_type__isnull=False).values('digitalservice_type', 'educationService_degree', 
-#                                                                                                             'legalcivilservice_required', 'legalcivilservice_issue',
-#                                                                                                             'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-#                                                                                                             'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-#                                                                                                             'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-#                                                                                                             'trainingservice_topic', 'trainingservice_duration')
-#             # print( "data::::::::",data)
-#             return Response(data, status=status.HTTP_200_OK)
-
-#         elif param == 'Property Management Service':
-#             data = StaticSettingData.objects.filter(Q(propertymanagementservice_propertylocation__isnull=False) | 
-#                                             Q(propertymanagementservice_type__isnull=False) |
-#                                             Q(propertymanagementservice_need__isnull=False)).values(
-#                                                             'digitalservice_type', 'educationService_degree', 
-#                                                             'legalcivilservice_required', 'legalcivilservice_issue',
-#                                                             'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-#                                                             'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-#                                                             'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-#                                                             'trainingservice_topic', 'trainingservice_duration')
-#             # print( "data::::::::",data)
-#             return Response(data, status=status.HTTP_200_OK)
-
-#         elif param == 'Tourism Service':
-#             data = StaticSettingData.objects.filter(tourismservices__isnull=False).values('digitalservice_type', 'educationService_degree', 
-#                                                                                         'legalcivilservice_required', 'legalcivilservice_issue',
-#                                                                                         'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-#                                                                                         'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-#                                                                                         'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-#                                                                                         'trainingservice_topic', 'trainingservice_duration')
-#             # print( "data::::::::",data)
-#             return Response(data, status=status.HTTP_200_OK)
-        
-#         elif param == 'Trade Facilitation Service':
-#             data = StaticSettingData.objects.filter(Q(tradefacilitationservice_type__isnull=False) | 
-#                                             Q(tradefacilitationservice_Purpose__isnull=False) ).values('digitalservice_type', 'educationService_degree', 
-#                                                                                                     'legalcivilservice_required', 'legalcivilservice_issue',
-#                                                                                                     'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-#                                                                                                     'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-#                                                                                                     'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-#                                                                                                     'trainingservice_topic', 'trainingservice_duration')
-#             # print( "data::::::::",data)
-#             return Response(data, status=status.HTTP_200_OK)
-
-#         # 
-#         elif param == 'Training Service':
-#             data = StaticSettingData.objects.filter(Q(trainingservice_topic__isnull=False) | 
-#                                                     Q(trainingservice_duration__isnull=False)).values('digitalservice_type', 'educationService_degree', 
-#                                                                                                     'legalcivilservice_required', 'legalcivilservice_issue',
-#                                                                                                     'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-#                                                                                                     'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-#                                                                                                     'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-#                                                                                                     'trainingservice_topic', 'trainingservice_duration')
-#             # print( "data::::::::",data)
-#             return Response(data, status=status.HTTP_200_OK)
-
-            
-        
-#         return Response('context', status=status.HTTP_200_OK)
-
-
-
-
-
-
-
-
-
-
 
 
 

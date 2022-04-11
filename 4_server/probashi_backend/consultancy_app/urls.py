@@ -15,7 +15,10 @@ from .views import (ConsultancyCreateView,
                     BecomeProUser,
                     Pro_Payment_success,
                     Pro_Payment_fail,
-                    Pro_Payment_cancle)
+                    Pro_Payment_cancle,
+                    Consultancy_Payment_success,
+                    Consultancy_Payment_fail,
+                    Consultancy_Payment_cancle)
 
 
 
@@ -42,9 +45,17 @@ urlpatterns = [
     # payment
     # path('validity/', ValidityWithIPN.as_view(), name="payment_success"),
 
-    # success fail cancle redirect URL
+    # pro user success fail cancle redirect URL
     path('pro-success/', Pro_Payment_success.as_view(), name="payment_success"),
     path('pro-fail/', Pro_Payment_fail, name="payment_fail"),
     path('pro-cancle/', Pro_Payment_cancle, name="payment_cancle"),
+
+    # consultancy success fail cancle redirect URL
+    path('consultancy-success/', Consultancy_Payment_success.as_view(), name="payment_success"),
+    path('consultancy-fail/', Consultancy_Payment_fail, name="payment_fail"),
+    path('consultancy-cancle/', Consultancy_Payment_cancle, name="payment_cancle"),
+
+
+
 ]
 
