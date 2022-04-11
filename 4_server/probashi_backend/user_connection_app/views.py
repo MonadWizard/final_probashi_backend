@@ -1,6 +1,7 @@
 from multiprocessing import context
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django.http import Http404
 from auth_user_app.models import User
 from .serializers import SerachUserSerializer
@@ -15,6 +16,22 @@ from itertools import chain
 from django.db.models import F
 
 
+
+@api_view(['GET'])
+def match_friend(request):
+    # country
+    # city
+    # print("user", request.user)
+    # print("::::::::::",request.user.userid)
+    # permissions.IsAuthenticated.has_permission(request, request.user)
+    from user_connection_app.utility import match_friends
+
+    match_friends(user_id="0409143135542106")
+    match_friends(user_id="0409143232003081")
+
+    return Response({
+        'message': 'Successfully matched friends'
+    })
 class GetAllusersSetPagination(PageNumberPagination):
     page_size = 20
     # page_size_query_param = 'users'
@@ -77,7 +94,7 @@ class FavouriteRequestSendView(generics.CreateAPIView):
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response('serializer.errors', status=status.HTTP_400_BAD_REQUEST)
+        return Response('Bad Request', status=status.HTTP_400_BAD_REQUEST)
 
 
 

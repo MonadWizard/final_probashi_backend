@@ -14,6 +14,7 @@ from .models import UserFavoutireRequestSend, UserFavouriteList
 from django.db.models import Q
 from itertools import chain
 from django.db.models import F
+import datetime
 
 
 
@@ -26,8 +27,11 @@ def match_friend(request):
     # permissions.IsAuthenticated.has_permission(request, request.user)
     from user_connection_app.utility import match_friends
 
+    print(datetime.datetime.now())
     match_friends(user_id="0409143135542106")
+    print(datetime.datetime.now())
     match_friends(user_id="0409143232003081")
+    print(datetime.datetime.now())
 
     return Response({
         'message': 'Successfully matched friends'

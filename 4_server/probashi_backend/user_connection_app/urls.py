@@ -4,9 +4,10 @@ from .views import (GetAllUserPaginationView, GetSpecificUserView,
                     AcceptFavouriteRequest, RejectFavouriteRequest,
                     FavouritesList)
 
-
+from user_connection_app import views
 
 urlpatterns = [
+    path('match-friend/', views.match_friend, name='match_friend'),
     path('userSearch/', GetAllUserPaginationView.as_view(), name="GetAllUserPaginationView"),
     path('specificuser/<str:user_id>/', GetSpecificUserView.as_view(), name="GetSpecificUserView"),
     path('favourite-request-send/', FavouriteRequestSendView.as_view(), name="FavouriteRequestSendView"),

@@ -99,7 +99,7 @@ class VerifyEmail(views.APIView):
 
             User_socialaccount_and_about.objects.create(userid=User.objects.get(userid=userid), )
             User_settings.objects.create(userid=User.objects.get(userid=userid), )
-            FriendSuggation.objects.create(user=User.objects.get(userid=userid), )
+            FriendSuggation.objects.create(user=User.objects.get(userid=userid), )              # friend suggation .................
             
 
             html = "<html><body>Verification Success. It's time for complete registration.</body></html>"

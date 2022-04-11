@@ -215,11 +215,19 @@ MEDIA_ROOT=os.path.join(image_directory, "probashi_images")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.mailtrap.io'
+# EMAIL_PORT = '2525'
+# EMAIL_HOST_USER = '60974a6dc6308a'
+# EMAIL_HOST_PASSWORD = '85c90c396ab965'
+
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_PORT = '2525'
-EMAIL_HOST_USER = '60974a6dc6308a'
-EMAIL_HOST_PASSWORD = '85c90c396ab965'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'agtests@adnanfoundation.com'
+EMAIL_HOST_PASSWORD = '@adnanfoundation'
+
 
 
 # import xlxs to table data

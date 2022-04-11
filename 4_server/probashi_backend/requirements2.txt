@@ -15,7 +15,7 @@ cryptography==36.0.2
 daphne==3.0.2
 defusedxml==0.7.1
 diff-match-patch==20200713
-Django==4.0.2
+Django==3.2
 django-cors-headers==3.11.0
 django-environ==0.8.1
 django-extra-fields==3.0.2

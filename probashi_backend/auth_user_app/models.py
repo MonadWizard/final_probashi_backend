@@ -9,7 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from datetime import datetime, timedelta
 from django.utils import timezone
-
+from django.contrib.postgres.fields import ArrayField
 
 
 class UserManager(BaseUserManager):
@@ -140,9 +140,9 @@ class PhoneOTP(models.Model):
 # location , 
 class FriendSuggation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    localtion = models.TextField()
-    goals = models.TextField()
-    interest = models.TextField()
+    location = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    goals = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    interest = ArrayField(models.CharField(max_length=200), blank=True, null=True)
 
 
     def __str__(self):
