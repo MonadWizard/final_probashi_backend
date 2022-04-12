@@ -391,10 +391,12 @@ class SpecificConsultancyData(views.APIView):
 
     def get(self, request):
         param = request.query_params.get('service')
-        # print( "request.data::::::::",param)
+        print( "request.data::::::::",param)
         if param == 'Digital Service':
+            print("Digital Service", param)
             data = StaticSettingData.objects.filter(Q(digitalservice_type__isnull=False)).values_list('digitalservice_type')
             
+            print("data::::::::",data)
             data = {'subcategory1':data[0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
@@ -411,7 +413,7 @@ class SpecificConsultancyData(views.APIView):
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
-        elif param == 'Legal&Civil Service':
+        elif param == 'Legal and Civil Service':
             data = StaticSettingData.objects.filter(Q(legalcivilservice_required__isnull=False) | 
                                                     Q(legalcivilservice_issue__isnull=False)).values_list('legalcivilservice_required', 'legalcivilservice_issue')
             

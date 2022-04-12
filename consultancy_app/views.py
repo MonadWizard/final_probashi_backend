@@ -372,7 +372,7 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
     def get_services(self,consultant_service_category, data):
         try:
             if consultant_service_category == 'Education Service':
-                # print(":::::::::::", data['consultant_service_locationcountry'])
+                print(":::::::::::", 'inside specific')
                 return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                         Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
                                                         Q(educationService_degree = data['educationService_degree']) &

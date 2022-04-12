@@ -141,7 +141,7 @@ class UpdateRegisterView(views.APIView):
         fullname_pasport = request.data['user_fullname_passport']
         serializer = UpdateRegisterSerializer(user_email,data=request.data)
         serializer.is_valid(raise_exception=True)
-        # serializer.save()
+        serializer.save()
         user_data = serializer.data
 
         userid = User.objects.filter(user_email=user_email.user_email).values('userid')[0]['userid']
@@ -149,7 +149,7 @@ class UpdateRegisterView(views.APIView):
         # call friend match table asynchronously
         # asyncio.run(match_friends(userid))
         # friend match call sync..........................................................
-        match_friends(user_id=userid)
+        # match_friends(user_id=userid)
         
         # relativeLink = reverse('email-verify')
         email_body = 'Hi '+fullname_pasport + \
