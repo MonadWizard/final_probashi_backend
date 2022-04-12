@@ -41,6 +41,7 @@ from django.db.models import F
 
 
 
+
 class CreateOtherRowsInStaticTableView(generics.ListCreateAPIView):
     # permission_classes = [permissions.IsAuthenticated,]
 
@@ -391,20 +392,20 @@ class SpecificConsultancyData(views.APIView):
 
     def get(self, request):
         param = request.query_params.get('service')
-        print( "request.data::::::::",param)
+        # print( "request.data::::::::",param)
         if param == 'Digital Service':
             print("Digital Service", param)
-            data = StaticSettingData.objects.filter(Q(digitalservice_type__isnull=False)).values_list('digitalservice_type')
+            data0 = StaticSettingData.objects.filter(Q(digitalservice_type__isnull=False)).values_list('digitalservice_type')
             
-            print("data::::::::",data)
-            data = {'subcategory1':data[0], 'subcategory2': [], 'subcategory3': [] }
+            # print("data::::::::",data)
+            data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Education Service':
-            data = StaticSettingData.objects.filter(Q(educationService_degree__isnull=False)).values_list('educationService_degree')
+            data0 = StaticSettingData.objects.filter(Q(educationService_degree__isnull=False)).values_list('educationService_degree')
             
-            data = {'subcategory1':data[0], 'subcategory2': [], 'subcategory3': [] }
+            data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
@@ -414,57 +415,59 @@ class SpecificConsultancyData(views.APIView):
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Legal and Civil Service':
-            data = StaticSettingData.objects.filter(Q(legalcivilservice_required__isnull=False) | 
-                                                    Q(legalcivilservice_issue__isnull=False)).values_list('legalcivilservice_required', 'legalcivilservice_issue')
-            
-            data = {'subcategory1':data[0], 'subcategory2': data[1], 'subcategory3': [] }
+            data0 = StaticSettingData.objects.filter(Q(legalcivilservice_required__isnull=False)).values_list('legalcivilservice_required')
+            data1 = StaticSettingData.objects.filter(Q(legalcivilservice_issue__isnull=False)).values_list('legalcivilservice_issue')
+            data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [item[0] for item in data1], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Medical Consultancy Service':
-            data = StaticSettingData.objects.filter(medicalconsultancyservice_treatment_area__isnull=False).values_list('medicalconsultancyservice_treatment_area')
+            data0 = StaticSettingData.objects.filter(medicalconsultancyservice_treatment_area__isnull=False).values_list('medicalconsultancyservice_treatment_area')
             
-            data = {'subcategory1':data[0], 'subcategory2': [], 'subcategory3': [] }
+            data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Overseas Recruitment Service':
-            data = StaticSettingData.objects.filter(overseasrecruitmentservice_job_type__isnull=False).values_list('overseasrecruitmentservice_job_type')
+            data0 = StaticSettingData.objects.filter(overseasrecruitmentservice_job_type__isnull=False).values_list('overseasrecruitmentservice_job_type')
             
-            data = {'subcategory1':data[0], 'subcategory2': [], 'subcategory3': [] }
+            data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Property Management Service':
-            data = StaticSettingData.objects.filter(Q(propertymanagementservice_propertylocation__isnull=False) | 
-                                            Q(propertymanagementservice_type__isnull=False) |
-                                            Q(propertymanagementservice_need__isnull=False)).values_list(
-                                            'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need')
+            data0 = StaticSettingData.objects.filter(Q(propertymanagementservice_propertylocation__isnull=False)).values_list('propertymanagementservice_propertylocation')
+            data1 = StaticSettingData.objects.filter(Q(propertymanagementservice_type__isnull=False)).values_list('propertymanagementservice_type')
+            data2 = StaticSettingData.objects.filter(Q(propertymanagementservice_need__isnull=False)).values_list('propertymanagementservice_need')
             
-            data = {'subcategory1':data[0], 'subcategory2':data[1], 'subcategory3': data[2] }
+            # print('data=====', [item[0] for item in data0])
+            data = {'subcategory1': [item[0] for item in data0], 'subcategory2':[item[0] for item in data1], 'subcategory3': [item[0] for item in data2] }
+            # print(data)
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Tourism Service':
-            data = StaticSettingData.objects.filter(tourismservices__isnull=False).values_list('tourismservices')
+            data0 = StaticSettingData.objects.filter(tourismservices__isnull=False).values_list('tourismservices')
             
-            data = {'subcategory1':data[0], 'subcategory2':[], 'subcategory3': [] }
+            data = {'subcategory1':[item[0] for item in data0], 'subcategory2':[], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
         
         elif param == 'Trade Facilitation Service':
-            data = StaticSettingData.objects.filter(Q(tradefacilitationservice_type__isnull=False) | 
-                                            Q(tradefacilitationservice_Purpose__isnull=False) ).values_list('tradefacilitationservice_type', 'tradefacilitationservice_Purpose')
+            data0 = StaticSettingData.objects.filter(Q(tradefacilitationservice_type__isnull=False) ).values_list('tradefacilitationservice_type')
+            data1 = StaticSettingData.objects.filter(Q(tradefacilitationservice_Purpose__isnull=False) ).values_list('tradefacilitationservice_Purpose')
             
-            data = {'subcategory1':data[0], 'subcategory2':data[1], 'subcategory3': [] }
+            # print('data::::::::::::',data)
+            data = {'subcategory1':[item[0] for item in data0], 'subcategory2':[item[0] for item in data1], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 
         # 
         elif param == 'Training Service':
-            data = StaticSettingData.objects.filter(Q(trainingservice_topic__isnull=False) | Q(trainingservice_duration__isnull=False)).values_list('trainingservice_topic', 'trainingservice_duration')
+            data0 = StaticSettingData.objects.filter(Q(trainingservice_topic__isnull=False) ).values_list('trainingservice_topic')
+            data1 = StaticSettingData.objects.filter(Q(trainingservice_duration__isnull=False)).values_list('trainingservice_duration')
             
-            data = {'subcategory1':data[0], 'subcategory2':data[1], 'subcategory3': [] }
+            data = {'subcategory1':[item[0] for item in data0], 'subcategory2':[item[0] for item in data1], 'subcategory3': [] }
             resp = {'data':data}
             return Response(resp, status=status.HTTP_200_OK)
 

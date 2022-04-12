@@ -176,7 +176,7 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
         # print(":::::::::::", user.userid)
         if request.data['seekerid'] == user.userid:
             data = Consultancy_CREATE_and_GET_session(request, user)
-            # print(":::::::", data)
+            print(":::::::", data['res']['status'].lower())
             tran_id = data['post_body']['tran_id']
             
             if data['res']['status'].lower() == 'success':
