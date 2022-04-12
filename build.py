@@ -11,17 +11,18 @@ build_path = f"{BASE_DIR}/BUILD"
 project_path = project_path
 
 try:
-    os.system(f"rm -r {build_path}")
+    os.system(f"rm -r -f {build_path}")
 except Exception as e:
     print(e)
 try:
     os.mkdir(f"{build_path}")
-except print(0):
-    print(0)
+except:
+    print("can not build dir")
+
 try:
     os.system(f"cp -r {project_path} {build_path}")
-except print(0):
-    print(0)
+except:
+    print("can not copy Build")
 
 # # os.system("python -m compileall ./BUILD")
 
@@ -35,4 +36,10 @@ for i in f:
     if i.endswith(".py"):
         py_compile.compile(f'{i}', f'{i}c')
         remove(i)
+
+
+
+
+
+
 
