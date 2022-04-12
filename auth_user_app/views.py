@@ -431,7 +431,7 @@ class PhoneUpdateRegisterView(views.APIView):
         userid = User.objects.filter(user_callphone=user_callphone.user_callphone).values('userid')[0]['userid']
         print('userid::::::::::::', userid)
                 # friend match call sync..........................................................
-        match_friends(user_id=userid)
+        # match_friends(user_id=userid)
         
         # relativeLink = reverse('email-verify')
         email_body = 'Hi '+fullname_pasport + \
