@@ -1,13 +1,10 @@
 import datetime
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-# from .models import RoomGroupNameTable
 from django.db.models import Q
-from channels.db import database_sync_to_async
-from django.db import connections
-# import asyncio
 
 from user_chat_app.db_utilities_async import get_previous_chat_data, get_all_chat_data
+from user_chat_app.db_utilities_async import save_chat_data
 
 class DemoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -45,21 +42,22 @@ class DemoConsumer(AsyncWebsocketConsumer):
             # self.page = text_data_json['page']
             data = await get_previous_chat_data(userid=self.room_name, associated_user_id=text_data_json['receiverid'], page=text_data_json['page'])
             chat_data = data
-        elif text_data_json['data'] == 'message': 
+        elif text_data_json['data'] == 'message':
+            data = {
+                'sender': self.room_name,
+                'receiver': text_data_json['receiverid'],
+                'message': text_data_json['message'],
+                'is_text_message': True,
+            }
+            # save in database
+            await save_chat_data(data=data)
+
             chat_data = {
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
                 'status': 'sent',
-            }
-
-            # save in database
-
-            data = {
-                'sender': self.room_name,
-                'receiver': text_data_json['receiverid'],
-                'message': text_data_json['message'],
-            }
+            }           
         
             self.room_name_temp = text_data_json['receiverid']
             self.room_group_name_temp = 'chat_' + self.room_name_temp

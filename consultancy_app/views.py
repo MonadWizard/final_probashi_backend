@@ -139,21 +139,57 @@ class GetAllServicesCategorySchedule(generics.ListAPIView):
 
 
 
+class SpecificServicesSchedules(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    # serializer_class = GetAllServicesCategoryScheduleSerializer
+
+    def get_queryset(self,id):
+        user = self.request.user
+        id = id
+        # print('id::::::::',id)
+        queryset = ConsultancyCreate.objects.filter(Q(id=id))
+        return queryset
+
+    def list(self, request):
+        # print(":::::::::::::::::", request.query_params.get("id"))
+        id = request.query_params.get("id")
+        queryset = self.get_queryset(id)
+        serializer = GetAllServicesCategoryScheduleSerializer(queryset, many=True)
+        data = {'data' : serializer.data}
+        return Response(data, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class NotTakingScheduil_forEachService(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_object(self, user_id):
+    def get_object(self,service_Category, user_id):
         try:
             # print('::::::::::::::::::', user_id)
-            return ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user_id))
+            return ConsultancyTimeSchudile.objects.filter(Q(consultancyid__consultant_service_category = service_Category ) & 
+                                                    Q(consultancyid__userid=user_id))
         except ConsultancyTimeSchudile.DoesNotExist:
             raise Http404
 
-    def get(self,request,):
+    def get(self,request,service_Category):
         user_id = request.query_params.get('user_id')
         # user_id = self.request.user.userid
         # print(':::::::::::::',user)
-        consultancy = self.get_object(user_id)
+        consultancy = self.get_object(service_Category, user_id)
 
         serializer = GetAllCategoryNotTakingScheduleSerializer(consultancy, many=True)
         data = {'data' : serializer.data}

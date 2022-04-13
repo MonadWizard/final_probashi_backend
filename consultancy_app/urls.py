@@ -11,6 +11,8 @@ from .views import (ConsultancyCreateView,
                     AppointmentSeeker_MissingAppointmentReason,
                     GetServicesSpecificCategoryData,
 
+                    SpecificServicesSchedules,
+
                     GetSpecificCategoryServiceSearchData,
                     BecomeProUser,
                     Pro_Payment_success,
@@ -26,6 +28,8 @@ urlpatterns = [
     path('consultancy-createview/', ConsultancyCreateView.as_view(), name="ConsultancyCreateView"),
     path('consultancy-schudile/', ConsultancyTimeSchudileView.as_view(), name="ConsultancyTimeSchudileView"),
     path('services-category-schedule/', GetAllServicesCategorySchedule.as_view(), name="GetAllServicesCategorySchedule"), #
+
+    path('specific-service/', SpecificServicesSchedules.as_view(), name="SpecificServicesSchedules"),
 
     path('getall-services-category/', GetAllServicesCategoryView.as_view(), name="GetAllServicesPaginationView"),
     path('specific-service-searchdata/<str:service_Category>/', GetSpecificCategoryServiceSearchData.as_view(), name="GetSpecificCategoryServiceSearchData"),
