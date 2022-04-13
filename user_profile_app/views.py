@@ -289,25 +289,35 @@ class UserProfileView(generics.ListAPIView):
             if serializer.data[0]['user_currentdesignation'] != None:
                 complete_profile_persentage += 5
             #  skip 1
-            if serializer.data[0]['user_industry'] != None:
+            if serializer.data[0]['user_industry'] != None :
                 complete_profile_persentage += 5
             #  skip 2
             if serializer.data[0]['user_interested_area'] != None:
                 complete_profile_persentage += 5
             #  about
-            if serializer.data[0]['user_socialaboutdata'].get('user_about') != None:
+            if (serializer.data[0]['user_socialaboutdata'].get('user_about') != None or len(serializer.data[0]['user_socialaboutdata'].get('user_about')) > 2):
                 complete_profile_persentage += 5
             #  social links
             if (serializer.data[0]['user_socialaboutdata'].get('user_fbaccount') != None or 
                             serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount') != None or
                             serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount') != None or
                             serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') != None or 
-                            serializer.data[0]['user_socialaboutdata'].get('user_website')!= None ):
+                            serializer.data[0]['user_socialaboutdata'].get('user_website')!= None or
+                            
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_fbaccount') > 2 )or 
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount') > 2) or
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount') > 2) or
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') >2 )or 
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_website') > 2 )):
                 complete_profile_persentage += 5
             #  contact link
             if (serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account') != None or 
                     serializer.data[0]['user_socialaboutdata'].get('user_viber_account') != None or
-                    serializer.data[0]['user_socialaboutdata'].get('user_immo_account') != None):
+                    serializer.data[0]['user_socialaboutdata'].get('user_immo_account') != None or 
+
+                    len(serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account') > 3 )or 
+                    len(serializer.data[0]['user_socialaboutdata'].get('user_viber_account') > 3 )or
+                    len(serializer.data[0]['user_socialaboutdata'].get('user_immo_account') > 3)) :
                 complete_profile_persentage += 5
             #  experience
             if serializer.data[0]['user_experiencedata'] != []:
@@ -352,12 +362,23 @@ class UserProfileView(generics.ListAPIView):
                             serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount') != None or
                             serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount') != None or
                             serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') != None or 
-                            serializer.data[0]['user_socialaboutdata'].get('user_website')!= None ):
+                            serializer.data[0]['user_socialaboutdata'].get('user_website')!= None or
+                            
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_fbaccount') > 2 )or 
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount') > 2) or
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount') > 2) or
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') >2 )or 
+                            len(serializer.data[0]['user_socialaboutdata'].get('user_website') > 2 )):
+
                 complete_profile_persentage += 5
             #  contact link
             if (serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account') != None or 
                     serializer.data[0]['user_socialaboutdata'].get('user_viber_account') != None or
-                    serializer.data[0]['user_socialaboutdata'].get('user_immo_account') != None):
+                    serializer.data[0]['user_socialaboutdata'].get('user_immo_account') != None or
+                    
+                    len(serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account') > 3 )or 
+                    len(serializer.data[0]['user_socialaboutdata'].get('user_viber_account') > 3 )or
+                    len(serializer.data[0]['user_socialaboutdata'].get('user_immo_account') > 3)):
                 complete_profile_persentage += 5
             #  experience
             if serializer.data[0]['user_experiencedata'] != []:

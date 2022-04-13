@@ -19,7 +19,17 @@ import json
 from rest_framework.pagination import PageNumberPagination
 
 
+from user_connection_app.utility import match_friends
 
+
+class TakeMatchFriend(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+        # print('user:::::',user.userid)
+        match_friends(user_id=user.userid)
+        return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -27,11 +37,13 @@ def take_match_friend(request):
     # country
     # city
     # print("user", request.user)
-    # print("::::::::::",request.user.userid)
-    # permissions.IsAuthenticated.has_permission(request, request.user)
+    print("::::::::::",request.user.userid)
+    permissions.IsAuthenticated.has_permission(request, request.user)
     
 
     from user_connection_app.utility import match_friends
+
+
 
     print(datetime.datetime.now())
     match_friends(user_id="0409143135542106")

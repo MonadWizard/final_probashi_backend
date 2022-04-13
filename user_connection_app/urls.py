@@ -2,12 +2,13 @@ from django.urls import path
 from .views import (GetAllUserPaginationView, GetSpecificUserView, 
                     FavouriteRequestSendView, FavouriteRequestsView,
                     AcceptFavouriteRequest, RejectFavouriteRequest,
-                    FavouritesList, Friends_suggation)
+                    FavouritesList, Friends_suggation,
+                    TakeMatchFriend)
 
-from user_connection_app import views
+# from user_connection_app import views
 
 urlpatterns = [
-    path('match-friend/', views.take_match_friend, name='match_friend'),
+    path('match-friend/', TakeMatchFriend.as_view(), name='match_friend'),
     path('userSearch/', GetAllUserPaginationView.as_view(), name="GetAllUserPaginationView"),
     path('specificuser/<str:user_id>/', GetSpecificUserView.as_view(), name="GetSpecificUserView"),
     path('favourite-request-send/', FavouriteRequestSendView.as_view(), name="FavouriteRequestSendView"),
