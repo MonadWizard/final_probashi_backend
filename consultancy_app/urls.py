@@ -30,7 +30,7 @@ urlpatterns = [
     path('getall-services-category/', GetAllServicesCategoryView.as_view(), name="GetAllServicesPaginationView"),
     path('specific-service-searchdata/<str:service_Category>/', GetSpecificCategoryServiceSearchData.as_view(), name="GetSpecificCategoryServiceSearchData"),
 
-    path('nottaking-scheduile/<str:service_Category>/', NotTakingScheduil_forEachService.as_view(), name="NotTakingScheduil_forEachService"),
+    path('nottaking-scheduile/', NotTakingScheduil_forEachService.as_view(), name="NotTakingScheduil_forEachService"),
     path('consultant-appointment-request/', AppointmentSeeker_ConsultantRequest.as_view(), name="AppointmentSeeker_ConsultantRequest"),
     
     path('appointment-seeker-star-rating/<str:id>/', AppointmentSeeker_StarRating.as_view(), name="AppointmentSeeker_StarRating"),
