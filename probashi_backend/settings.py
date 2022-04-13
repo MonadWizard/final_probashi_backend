@@ -87,8 +87,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'probashi_backend.wsgi.application'
-
+WSGI_APPLICATION = 'probashi_backend.wsgi.application'
 ASGI_APPLICATION = 'probashi_backend.asgi.application'
 
 

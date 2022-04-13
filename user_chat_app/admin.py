@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import RoomGroupNameTable
 
+from user_chat_app.models import ChatTable
 
-admin.site.register(RoomGroupNameTable)
+admin.site.register(ChatTable)
