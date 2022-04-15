@@ -1,6 +1,7 @@
-from dataclasses import dataclass
+# from dataclasses import dataclass
 from django.db import connection, connections
 from asgiref.sync import sync_to_async
+from probashi_backend.utility import sql_array_to_object
 
 from user_chat_app.models import ChatTable
 
@@ -10,34 +11,10 @@ from user_chat_app.db_utility import get_last_chat_data
 @sync_to_async
 def get_all_chat_data(userid):
     chat_list = ChatTable.objects.using('probashi_chat').filter(user_1=userid).order_by('-id')
-
-    # if 
-    # data = chat_list
-    print(chat_list)
     data = {}
-    for chat in chat_list:
-        print(chat.user_2)
-        data[chat.user_2] = get_last_chat_data(chat.user_1, chat.user_2)
-    
-    # print(data)
 
-    # data = {
-    #     'demo4': [
-    #         {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'},
-    #         {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'},
-    #         {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'}
-    #     ],
-    #     'jahid-hasan': [
-    #         {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'},
-    #         {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'},
-    #         {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'}
-    #     ],
-    #     'rakib-hasn': [
-    #         {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'},
-    #         {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'},
-    #         {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'}
-    #     ]
-    # }
+    for chat in chat_list:
+        data[chat.user_2] = get_last_chat_data(chat.user_1, chat.user_2)
     
     return data
 
@@ -91,13 +68,39 @@ def save_chat_data(data):
 
 @sync_to_async
 def get_previous_chat_data(userid, associated_user_id, page):
-    data = {
-        'demo4': [
-            {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'},
-            {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'},
-            {'sender': 'demo2', 'receiver': 'demo4', 'message': 'hi', 'time': '2020-01-01'}
-        ]
-    }
+    # off_set = 
+    limit = 10 * int(page)
+    offset = limit - 10
+    data = {}
+
+    try:
+        chat_table = ChatTable.objects.using('probashi_chat').filter(user_1=userid, user_2=associated_user_id).order_by('-id')[0].table_name
+        
+        sql = "SELECT * FROM " + str(chat_table) + " ORDER BY id "
+        sql += "OFFSET " + str(offset) + " ROWS "
+        sql += "FETCH NEXT 10 ROWS ONLY"
+
+        with connections['probashi_chat'].cursor() as cursor:
+            cursor.execute(sql)
+            result = cursor.fetchall()
+
+            if result is None:
+                return data
+
+            fields = [field[0] for field in cursor.description]
+            temp_data = []
+
+            for row in result:
+                d = sql_array_to_object(field_names=fields, values=row)
+                d['message_time'] = str(d['message_time'])
+                temp_data.append(d)
+            
+            print(temp_data)
+        
+            data[associated_user_id] = temp_data
+    except Exception as e:
+        print(e)
+        return data
     
     return data
 

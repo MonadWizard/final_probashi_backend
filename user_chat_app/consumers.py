@@ -3,7 +3,8 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.db.models import Q
 
-from user_chat_app.db_utilities_async import get_previous_chat_data, get_all_chat_data
+from user_chat_app.db_utilities_async import get_previous_chat_data
+from user_chat_app.db_utilities_async import get_all_chat_data
 from user_chat_app.db_utilities_async import save_chat_data
 
 class DemoConsumer(AsyncWebsocketConsumer):
@@ -29,18 +30,22 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive(self, text_data):
+        # message body
+        # {
+        # "data" : "message",
+        # "message": "I am in office.",
+        # "receiverid": "2222"
+        # }
+        # message with specific user reload body
+        # {
+        # "data":"reload_previous_chat",
+        # "associated_user_id":"1111",
+        # "page":"1"
+        # }
         text_data_json = json.loads(text_data)
-        # scene 1
-        # reload preivous message like pagination with a paritcular user
-        # example: {"data":"resend","associated_user_id":"aboltabol", "page":"2"}
         
-        # scene 2
-        # send message to a particular user
-        # example: {"data":"kisui kori na vai... hudai boisa asi.", "user": "2"}
-
         if text_data_json['data'] == 'reload_previous_chat':
-            # self.page = text_data_json['page']
-            data = await get_previous_chat_data(userid=self.room_name, associated_user_id=text_data_json['receiverid'], page=text_data_json['page'])
+            data = await get_previous_chat_data(userid=self.room_name, associated_user_id=text_data_json['associated_user_id'], page=text_data_json['page'])
             chat_data = data
         elif text_data_json['data'] == 'message':
             data = {
@@ -49,7 +54,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'message': text_data_json['message'],
                 'is_text_message': True,
             }
-            # save in database
+
             await save_chat_data(data=data)
 
             chat_data = {
