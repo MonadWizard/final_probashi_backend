@@ -1,3 +1,5 @@
-chat data base need to be delete..
+just update source code ..
 
-then need to be migration
+basic logic change ..
+
+no migration needed..
