@@ -32,28 +32,28 @@ class TakeMatchFriend(views.APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-def take_match_friend(request):
-    # country
-    # city
-    # print("user", request.user)
-    print("::::::::::",request.user.userid)
-    permissions.IsAuthenticated.has_permission(request, request.user)
+# @api_view(['GET'])
+# def take_match_friend(request):
+#     # country
+#     # city
+#     # print("user", request.user)
+#     print("::::::::::",request.user.userid)
+#     permissions.IsAuthenticated.has_permission(request, request.user)
     
 
-    from user_connection_app.utility import match_friends
+#     from user_connection_app.utility import match_friends
 
 
 
-    print(datetime.datetime.now())
-    match_friends(user_id="0409143135542106")
-    print(datetime.datetime.now())
-    match_friends(user_id="0409143232003081")
-    print(datetime.datetime.now())
+#     print(datetime.datetime.now())
+#     match_friends(user_id="0409143135542106")
+#     print(datetime.datetime.now())
+#     match_friends(user_id="0409143232003081")
+#     print(datetime.datetime.now())
 
-    return Response({
-        'message': 'Successfully matched friends'
-    })
+#     return Response({
+#         'message': 'Successfully matched friends'
+#     })
 
 
 

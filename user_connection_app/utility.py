@@ -11,8 +11,8 @@ def match_friends(user_id):
 
     # residential location (division of BD), country Bangladesh fixed
     # non-residential location (specific country, specific city)
-    print("================")
-    print(user, user.user_email)
+    # print("================")
+    # print(user, user.user_email)
     # run a loop in rest users
     # match location with user
     # match goals with user

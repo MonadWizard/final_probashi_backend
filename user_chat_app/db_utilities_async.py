@@ -15,7 +15,10 @@ def get_all_chat_data(userid):
 
     for chat in chat_list:
         data[chat.user_2] = get_last_chat_data(chat.user_1, chat.user_2)
+        # data['specific user'] = get_last_chat_data(chat.user_1, chat.user_2)
+
     
+    print('::::::::::::', data)
     return data
 
 @sync_to_async
@@ -95,9 +98,13 @@ def get_previous_chat_data(userid, associated_user_id, page):
                 d['message_time'] = str(d['message_time'])
                 temp_data.append(d)
             
-            print(temp_data)
-        
-            data[associated_user_id] = temp_data
+            # print('temp data::::::::',temp_data)
+            #         
+            # data[associated_user_id] = temp_data
+            data['type'] = 'previous message'
+            data['chat'] = temp_data
+            
+            
     except Exception as e:
         print(e)
         return data
