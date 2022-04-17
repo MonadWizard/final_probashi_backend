@@ -18,19 +18,25 @@ def get_all_chat_data(userid):
         # data['specific_user'] = get_last_chat_data(chat.user_1, chat.user_2)
 
         
-    print('resend::::::::::::', data)
     return data
 
 @sync_to_async
 def save_chat_data(data):
-    try:    
+    try:
         chat_table = ChatTable.objects.using('probashi_chat').get(user_1=data['sender'], user_2=data['receiver'])
+        # print('table name::', chat_table.table_name)
+
         print('table-found')
     except:
         table_title = create_chat_table(user_1=data['sender'], user_2=data['receiver'])
         chat_table = ChatTable.objects.using('probashi_chat').create(user_1=data['sender'], user_2=data['receiver'], table_name=table_title)
         chat_table = ChatTable.objects.using('probashi_chat').create(user_1=data['receiver'], user_2=data['sender'], table_name=table_title)
         print('create-a-table')
+
+    # print('chat table', chat_table)
+
+    if 'type' in data :
+        del data['type']
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
     
@@ -59,6 +65,8 @@ def save_chat_data(data):
 
     sql += ")"
 
+    print('sql', sql)
+
     try:
         with connections['probashi_chat'].cursor() as cursor:
             cursor.execute(sql)
@@ -79,9 +87,10 @@ def get_previous_chat_data(userid, associated_user_id, page):
     try:
         chat_table = ChatTable.objects.using('probashi_chat').filter(user_1=userid, user_2=associated_user_id).order_by('-id')[0].table_name
         
-        sql = "SELECT * FROM " + str(chat_table) + " ORDER BY id "
+        sql = "SELECT * FROM " + str(chat_table) + " ORDER BY id DESC "
         sql += "OFFSET " + str(offset) + " ROWS "
         sql += "FETCH NEXT 10 ROWS ONLY"
+
 
         with connections['probashi_chat'].cursor() as cursor:
             cursor.execute(sql)
@@ -98,13 +107,11 @@ def get_previous_chat_data(userid, associated_user_id, page):
                 d['message_time'] = str(d['message_time'])
                 temp_data.append(d)
             
-            # print('temp data::::::::',temp_data)
             #         
             # data[associated_user_id] = temp_data
             data['type'] = 'previous message'
             data['chat'] = temp_data
             
-            print('data:::::::::::', temp_data)
             
             
     except Exception as e:
