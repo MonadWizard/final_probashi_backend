@@ -94,7 +94,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
     async def send_chat(self, event):
         data = event['data']
-        print('event::::::::::::',event)
+        # print('event::::::::::::',event)
         # data['type'] = 'single message'
         # event["message_time"] = datetime.datetime.now()
 
