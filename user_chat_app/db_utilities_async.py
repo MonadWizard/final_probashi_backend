@@ -24,7 +24,7 @@ def get_all_chat_data(userid):
 def save_chat_data(data):
     try:
         chat_table = ChatTable.objects.using('probashi_chat').get(user_1=data['sender'], user_2=data['receiver'])
-        # print('table name::', chat_table.table_name)
+        print('table name::', chat_table.table_name)
 
         print('table-found')
     except:
@@ -37,6 +37,8 @@ def save_chat_data(data):
 
     if 'type' in data :
         del data['type']
+    if 'message-type' in data :
+        del data['message-type']
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
     
@@ -65,7 +67,7 @@ def save_chat_data(data):
 
     sql += ")"
 
-    print('sql', sql)
+    # print('sql', sql)
 
     try:
         with connections['probashi_chat'].cursor() as cursor:
@@ -78,9 +80,10 @@ def save_chat_data(data):
         return False
 
 @sync_to_async
-def get_previous_chat_data(userid, associated_user_id, page):
+def get_previous_chat_data(userid, associated_user_id, chat_id):
     # off_set = 
-    limit = 10 * int(page)
+    
+    limit = int(chat_id)
     offset = limit - 10
     data = {}
 

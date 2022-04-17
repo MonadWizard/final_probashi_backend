@@ -15,11 +15,12 @@ def create_chat_table(user_1, user_2):
     sql += "is_text_message BOOLEAN NOT NULL DEFAULT TRUE,"
     sql += "is_file_message BOOLEAN NOT NULL DEFAULT FALSE,"
     sql += "is_audio_message BOOLEAN NOT NULL DEFAULT FALSE,"
+    sql += "is_image_message BOOLEAN NOT NULL DEFAULT FALSE,"
     sql += "message TEXT NOT NULL,"
     sql += "message_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP"
     sql += ")"
 
-    print(sql)
+    # print(sql)
     
     with connections['probashi_chat'].cursor() as cursor:
         cursor.execute(sql)
@@ -35,10 +36,14 @@ def get_last_chat_data(user_1, user_2):
         cursor.execute(sql)
         result = cursor.fetchone()
 
+        # print('result::::::', result)
+
         if result is None:
             return {}
     
     fields = [field[0] for field in cursor.description]
+
+    # print('fields::::::', fields)
 
     result = sql_array_to_object(values=result, field_names=fields)
     result['message_time'] = str(result['message_time'])

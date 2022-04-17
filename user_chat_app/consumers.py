@@ -18,10 +18,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         # get previous data
         data = await get_all_chat_data(self.room_name)
-        # data['type'] = 'single message'
-        # print('resend::::::::::::',data)
+        # print('last message::::::::::::',data)
         data = dict(data)
-        # print('dict values::::::::::::',list(data.values()))
         data_l = list(data.values())
 
         
@@ -39,36 +37,21 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive(self, text_data):
-        # message body
-        # {
-        # "data" : "message",
-        # "message": "I am in office.",
-        # "receiverid": "2222"
-        # }
-        # message with specific user reload body
-        # {
-        # "data":"reload_previous_chat",
-        # "associated_user_id":"1111",
-        # "page":"1"
-        # }
         text_data_json = json.loads(text_data)
+        # print('text_data_json::::::::::::',text_data_json)
         
         if text_data_json['data'] == 'reload_previous_chat':
-            data = await get_previous_chat_data(userid=self.room_name, associated_user_id=text_data_json['associated_user_id'], page=text_data_json['page'])
-            
-            
+            data = await get_previous_chat_data(userid=self.room_name, associated_user_id=text_data_json['associated_user_id'], chat_id=text_data_json['chat_id'])
             chat_data = data
-        elif text_data_json['data'] == 'message':
+        
+        elif text_data_json['data'] == 'text':
             data = {
-                'type': 'single message',   
+                # 'type': 'single message',   
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
-                'is_text_message': True,
-                "is_file_message": False,
-                "is_audio_message": False,
                 'message_time': str(datetime.datetime.now()),
-
+                # "message-type": "text",
             }
 
             await save_chat_data(data=data)
@@ -78,11 +61,9 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
-                'status': 'sent',
-                'is_text_message': True,
-                "is_file_message": False,
-                "is_audio_message": False,
+                # 'status': 'sent',
                 'message_time': str(datetime.datetime.now()),
+                "message-type": "text",
             }           
         
             self.room_name_temp = text_data_json['receiverid']
@@ -90,40 +71,34 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             await self.channel_layer.group_send(self.room_group_name_temp,{
                 'type': 'send_chat',
-                'data': data,
+                # 'data': data,
+                'data': chat_data,
+
+
             })
 
         await self.channel_layer.group_send(self.room_group_name, {
-            'type': 'send_previous_chats',
+            'type': 'send_chat',
             'data': chat_data,
+            # 'data': data,
+
+            # "message-type": "text"
         })     
         
 
     async def send_chat(self, event):
         data = event['data']
-        # print('event::::::::::::',event)
-        # data['type'] = 'single message'
-        # event["message_time"] = datetime.datetime.now()
-
         await self.send(text_data=json.dumps({
 
             'data': data,
+            # 'type': 'single message',
             
             
         }))
 
-    async def send_previous_chats(self, event):
-        data = event['data']
-        # print('event::::::::::::',event)
-        # data['type'] = 'single message'
-        # event["message_time"] = datetime.datetime.now()
 
-        await self.send(text_data=json.dumps({
 
-            'data': data,
-            
-            
-        }))
+
 
 
 
