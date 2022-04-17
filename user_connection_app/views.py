@@ -74,14 +74,21 @@ class Friends_suggation(views.APIView):
         match_12 = FriendsSuggation.objects.filter(user=user).values('location', 'goals')[0]
         match_13 = FriendsSuggation.objects.filter(user=user).values('location', 'interest')[0]
         match_23 = FriendsSuggation.objects.filter(user=user).values('goals', 'interest')[0]
+        match_1 = FriendsSuggation.objects.filter(user=user).values('location')[0]
+        match_2 = FriendsSuggation.objects.filter(user=user).values('goals')[0]
+        match_3 = FriendsSuggation.objects.filter(user=user).values('interest')[0]
 
         match_friend_all = set.intersection(*[set(x) for x in match_all.values()])
         match_friend_12 = set.intersection(*[set(x) for x in match_12.values()])
         match_friend_13 = set.intersection(*[set(x) for x in match_13.values()])
         match_friend_23 = set.intersection(*[set(x) for x in match_23.values()])
+        match_friend_1 = set.intersection(*[set(x) for x in match_1.values()])
+        match_friend_2 = set.intersection(*[set(x) for x in match_2.values()])
+        match_friend_3 = set.intersection(*[set(x) for x in match_3.values()])
 
+        # print(match_23)
 
-        match_friend_id = set(chain(match_friend_all, match_friend_12, match_friend_13, match_friend_23))
+        match_friend_id = set(chain(match_friend_all, match_friend_12, match_friend_13, match_friend_23,match_friend_1, match_friend_2, match_friend_3))
         match_friend_data = []
         for mf in match_friend_id:
             match_friend = User.objects.filter(userid=mf).values('userid', 'user_fullname', 'user_areaof_experience', 'user_photopath', 'is_consultant')[0]

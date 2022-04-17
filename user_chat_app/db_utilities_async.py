@@ -14,11 +14,11 @@ def get_all_chat_data(userid):
     data = {}
 
     for chat in chat_list:
-        # data[chat.user_2] = get_last_chat_data(chat.user_1, chat.user_2)
-        data['specific_user'] = get_last_chat_data(chat.user_1, chat.user_2)
+        data[chat.user_2] = get_last_chat_data(chat.user_1, chat.user_2)
+        # data['specific_user'] = get_last_chat_data(chat.user_1, chat.user_2)
 
-    
-    print('::::::::::::', data)
+        
+    print('resend::::::::::::', data)
     return data
 
 @sync_to_async

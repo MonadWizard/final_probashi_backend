@@ -19,7 +19,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
         # get previous data
         data = await get_all_chat_data(self.room_name)
         # data['type'] = 'single message'
-        print('resend::::::::::::',data)
+        # print('resend::::::::::::',data)
 
         await self.send(text_data=json.dumps({
             'success': True,
@@ -73,6 +73,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
                 'status': 'sent',
+                'is_text_message': True,
                 "is_file_message": False,
                 "is_audio_message": False,
                 'message_time': str(datetime.datetime.now()),
