@@ -304,20 +304,20 @@ class UserProfileView(generics.ListAPIView):
                             serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount') != None or
                             serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') != None or 
                             serializer.data[0]['user_socialaboutdata'].get('user_website')!= None):
-                if ( len(serializer.data[0]['user_socialaboutdata'].get('user_fbaccount')) > 2  or 
-                            len(serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount')) > 2 or
-                            len(serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount')) > 2 or
-                            len(serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount')) >2 or 
-                            len(serializer.data[0]['user_socialaboutdata'].get('user_website')) > 2 ):
+                if ( int(len(serializer.data[0]['user_socialaboutdata'].get('user_fbaccount'))) > 2  or 
+                            int(len(serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount'))) > 2 or
+                            int(len(serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount'))) > 2 or
+                            int(len(serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount'))) >2 or 
+                            int(len(serializer.data[0]['user_socialaboutdata'].get('user_website'))) > 2 ):
                     complete_profile_persentage += 5
             #  contact link
             if (serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account') != None or 
                     serializer.data[0]['user_socialaboutdata'].get('user_viber_account') != None or
                     serializer.data[0]['user_socialaboutdata'].get('user_immo_account') != None) : 
 
-                if(len(serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account')) > 3 or 
-                    len(serializer.data[0]['user_socialaboutdata'].get('user_viber_account')) > 3 or
-                    len(serializer.data[0]['user_socialaboutdata'].get('user_immo_account')) > 3) :
+                if(int(len(serializer.data[0]['user_socialaboutdata'].get('user_whatsapp_account'))) > 3 or 
+                    int(len(serializer.data[0]['user_socialaboutdata'].get('user_viber_account'))) > 3 or
+                    int(len(serializer.data[0]['user_socialaboutdata'].get('user_immo_account'))) > 3) :
                     
                     complete_profile_persentage += 5
             #  experience
@@ -357,7 +357,7 @@ class UserProfileView(generics.ListAPIView):
                 complete_profile_persentage += 5
             #  about
             if serializer.data[0]['user_socialaboutdata'].get('user_about') != None:
-                if len(serializer.data[0]['user_socialaboutdata'].get('user_about')) > 2:
+                if int(len(serializer.data[0]['user_socialaboutdata'].get('user_about'))) > 2:
                     # print(':::::',len(serializer.data[0]['user_socialaboutdata'].get('user_about')) > 2)
                     complete_profile_persentage += 5
             #  social links
@@ -367,11 +367,11 @@ class UserProfileView(generics.ListAPIView):
                             serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount') != None or 
                             serializer.data[0]['user_socialaboutdata'].get('user_website')!= None):
 
-                if (len(serializer.data[0]['user_socialaboutdata'].get('user_fbaccount') > 2 )or 
-                            len(serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount')) > 2 or
-                            len(serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount')) > 2 or
-                            len(serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount')) >2 or 
-                            len(serializer.data[0]['user_socialaboutdata'].get('user_website')) > 2 ):
+                if (int(len(serializer.data[0]['user_socialaboutdata'].get('user_fbaccount')) > 2 )or 
+                            int(len(serializer.data[0]['user_socialaboutdata'].get('user_twitteraccount'))) > 2 or
+                            int(len(serializer.data[0]['user_socialaboutdata'].get('user_instagramaccount'))) > 2 or
+                            int(len(serializer.data[0]['user_socialaboutdata'].get('user_linkedinaccount'))) >2 or 
+                            int(len(serializer.data[0]['user_socialaboutdata'].get('user_website'))) > 2 ):
 
                     complete_profile_persentage += 5
             #  contact link
