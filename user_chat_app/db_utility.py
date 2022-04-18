@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.db import connection, connections
-
-from probashi_backend.utility import sql_array_to_object
+from auth_user_app.models import User
+from .utility import sql_array_to_object
 
 from user_chat_app.models import ChatTable
 
@@ -12,7 +12,7 @@ def create_chat_table(user_1, user_2):
     sql += "id SERIAL PRIMARY KEY,"
     sql += "sender VARCHAR(255) NOT NULL,"
     sql += "receiver VARCHAR(255) NOT NULL,"
-    sql += "is_text_message BOOLEAN NOT NULL DEFAULT TRUE,"
+    sql += "is_text_message BOOLEAN NOT NULL DEFAULT FALSE,"
     sql += "is_file_message BOOLEAN NOT NULL DEFAULT FALSE,"
     sql += "is_audio_message BOOLEAN NOT NULL DEFAULT FALSE,"
     sql += "is_image_message BOOLEAN NOT NULL DEFAULT FALSE,"
@@ -47,6 +47,22 @@ def get_last_chat_data(user_1, user_2):
 
     result = sql_array_to_object(values=result, field_names=fields)
     result['message_time'] = str(result['message_time'])
-    
-    return result
+    try:
+        # print('sender::::::',result['sender'])
+        sender_data = User.objects.filter(userid=result['sender']).values('userid', 'user_fullname',
+                                                            'is_consultant','user_photopath')[0]
+        result['sender'] = sender_data
+        
+        receiver_data = User.objects.filter(userid=result['receiver']).values('userid', 'user_fullname',
+                                                            'is_consultant','user_photopath')[0]
+        
+        
+        # print('receiver_data::::::\n \n', receiver_data)
+        result['receiver'] = receiver_data
+        
+        return result
+
+    except Exception as e:
+        print(e)
+        return {}
 

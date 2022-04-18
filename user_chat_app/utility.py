@@ -8,6 +8,9 @@ def sql_array_to_object(field_names, values):
             data['message-type'] = 'text'
             data.pop('is_text_message')
 
+        if data.get('is_image_message') == True:
+            data['message-type'] = 'image'
+            data.pop('is_image_message')
 
         if data.get('is_text_message') == False:
             data.pop('is_text_message')

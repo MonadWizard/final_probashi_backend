@@ -5,7 +5,7 @@ from django.db.models import Q
 
 from user_chat_app.db_utilities_async import get_previous_chat_data
 from user_chat_app.db_utilities_async import get_all_chat_data
-from user_chat_app.db_utilities_async import save_chat_data
+from user_chat_app.db_utilities_async import save_chat_data, save_chat_data_image
 
 class DemoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -21,9 +21,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
         # print('last message::::::::::::',data)
         data = dict(data)
         data_l = list(data.values())
-
-        
-        # print('resend::::::::::::',data_l)
 
         await self.send(text_data=json.dumps({
             'success': True,
@@ -46,12 +43,11 @@ class DemoConsumer(AsyncWebsocketConsumer):
         
         elif text_data_json['data'] == 'text':
             data = {
-                # 'type': 'single message',   
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
                 'message_time': str(datetime.datetime.now()),
-                # "message-type": "text",
+                'is_text_message': True,
             }
 
             await save_chat_data(data=data)
@@ -63,7 +59,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'message': text_data_json['message'],
                 # 'status': 'sent',
                 'message_time': str(datetime.datetime.now()),
-                "message-type": "text",
+                "message-type": text_data_json['data'],
             }           
         
             self.room_name_temp = text_data_json['receiverid']
@@ -77,12 +73,63 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             })
 
+
+
+# images send.................................................
+
+        
+        elif text_data_json['data'] == 'image':
+            data = {
+                'sender': self.room_name,
+                'receiver': text_data_json['receiverid'],
+                'message': text_data_json['message'],
+                'message_time': str(datetime.datetime.now()),
+                'is_image_message': True,
+            }
+
+            await save_chat_data_image(data=data)
+
+            chat_data = {
+                'type': 'single message',
+                'sender': self.room_name,
+                'receiver': text_data_json['receiverid'],
+                'message': text_data_json['message'],
+                # 'status': 'sent',
+                'message_time': str(datetime.datetime.now()),
+                "message-type": text_data_json['data'],
+            }           
+        
+            self.room_name_temp = text_data_json['receiverid']
+            self.room_group_name_temp = 'chat_' + self.room_name_temp
+
+            await self.channel_layer.group_send(self.room_group_name_temp,{
+                'type': 'send_chat',
+                # 'data': data,
+                'data': chat_data,
+
+
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         await self.channel_layer.group_send(self.room_group_name, {
             'type': 'send_chat',
             'data': chat_data,
             # 'data': data,
 
-            # "message-type": "text"
         })     
         
 
@@ -91,7 +138,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
 
             'data': data,
-            # 'type': 'single message',
             
             
         }))

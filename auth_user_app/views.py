@@ -50,7 +50,7 @@ class MailVerifyRequestView(views.APIView):
         password = data['password']
 
         if User.objects.filter(user_email=user_email).exists():
-            return Response({"message": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({ "message": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         else:
     # Token passing
             payload = {
@@ -137,15 +137,18 @@ class UpdateRegisterView(views.APIView):
 
 
     def put(self,request,user_email):
+        print('request.data:', request.data)
         user_email = self.get_object(user_email)
-        fullname_pasport = request.data['user_fullname_passport']
+        request.data['user_fullname'] =request.data['user_fullname_passport']
+        del request.data['user_fullname_passport']
+        fullname_pasport = request.data['user_fullname']
         serializer = UpdateRegisterSerializer(user_email,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user_data = serializer.data
 
         userid = User.objects.filter(user_email=user_email.user_email).values('userid')[0]['userid']
-        print('userid::::::::::::', userid)
+        # print('userid::::::::::::', userid)
         # call friend match table asynchronously
         # asyncio.run(match_friends(userid))
         # friend match call sync..........................................................
@@ -420,8 +423,11 @@ class PhoneUpdateRegisterView(views.APIView):
 
 
     def put(self,request,user_callphone):
+        request.data['user_fullname'] =request.data['user_fullname_passport']
+        del request.data['user_fullname_passport']
+
         user_callphone = self.get_object(user_callphone)
-        fullname_pasport = request.data['user_fullname_passport']
+        fullname_pasport = request.data['user_fullname']
         serializer = UpdateRegisterSerializer(user_callphone,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

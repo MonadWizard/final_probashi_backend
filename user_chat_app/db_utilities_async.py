@@ -1,7 +1,7 @@
 # from dataclasses import dataclass
 from django.db import connection, connections
 from asgiref.sync import sync_to_async
-from probashi_backend.utility import sql_array_to_object
+from user_chat_app.utility import sql_array_to_object
 
 from user_chat_app.models import ChatTable
 
@@ -12,12 +12,13 @@ from user_chat_app.db_utility import get_last_chat_data
 def get_all_chat_data(userid):
     chat_list = ChatTable.objects.using('probashi_chat').filter(user_1=userid).order_by('-id')
     data = {}
+    # print('chat list:::::::::',chat_list)
 
     for chat in chat_list:
         data[chat.user_2] = get_last_chat_data(chat.user_1, chat.user_2)
         # data['specific_user'] = get_last_chat_data(chat.user_1, chat.user_2)
 
-        
+        # print('data::::::::::',data)
     return data
 
 @sync_to_async
@@ -35,10 +36,10 @@ def save_chat_data(data):
 
     # print('chat table', chat_table)
 
-    if 'type' in data :
-        del data['type']
-    if 'message-type' in data :
-        del data['message-type']
+    # if 'type' in data :
+    #     del data['type']
+    # if 'message-type' in data :
+    #     del data['message-type']
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
     
@@ -78,6 +79,72 @@ def save_chat_data(data):
         print(e)
         print('error')
         return False
+
+
+# image data save. ..............................................
+
+@sync_to_async
+def save_chat_data_image(data):
+    try:
+        chat_table = ChatTable.objects.using('probashi_chat').get(user_1=data['sender'], user_2=data['receiver'])
+        print('table name::', chat_table.table_name)
+
+        print('table-found')
+    except:
+        table_title = create_chat_table(user_1=data['sender'], user_2=data['receiver'])
+        chat_table = ChatTable.objects.using('probashi_chat').create(user_1=data['sender'], user_2=data['receiver'], table_name=table_title)
+        chat_table = ChatTable.objects.using('probashi_chat').create(user_1=data['receiver'], user_2=data['sender'], table_name=table_title)
+        print('create-a-table')
+
+    # print('chat table', chat_table)
+
+    # if 'type' in data :
+    #     del data['type']
+    # if 'message-type' in data :
+    #     del data['message-type']
+
+    sql = "INSERT INTO " + str(chat_table.table_name) + "("
+    
+    index = 1
+    for key in data.keys():
+        sql += str(key)
+        
+        if index != len(data.keys()):
+            sql += ','
+        
+        index += 1
+    
+    sql += ") VALUES ("
+    
+    index = 1
+    for value in data.values():
+        if type(value) == str:
+                value = value.replace("'", "''")
+
+        sql += "'" + str(value) + "'"        
+
+        if index != len(data.values()):
+            sql += ','
+        
+        index += 1
+
+    sql += ")"
+
+    print('sql:::::::::', sql)
+
+    try:
+        with connections['probashi_chat'].cursor() as cursor:
+            cursor.execute(sql)
+
+            return True
+    except Exception as e:
+        print(e)
+        print('error')
+        return False
+
+
+
+
 
 @sync_to_async
 def get_previous_chat_data(userid, associated_user_id, chat_id):

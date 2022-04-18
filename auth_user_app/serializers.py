@@ -47,7 +47,7 @@ class UpdateRegisterSerializer(serializers.ModelSerializer):
     user_photopath=Base64ImageField() # From DRF Extra Fields
     class Meta:
         model = User
-        fields = ['user_fullname_passport', 
+        fields = ['user_fullname', 
                 'user_username', 'user_gender',
                 'user_dob','user_photopath',
                 'user_device_typeserial',
