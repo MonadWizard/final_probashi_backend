@@ -29,8 +29,7 @@ class ServiceCategorySerializer(serializers.ModelSerializer):
         model = ConsultancyCreate
         # fields = [ 'id','userid', 'user_education', 'consultant_name']
         fields = ['consultant_service_category',]
-        extra_kwargs = {'consultant_service_category': {"error_messages": {"required": "no service category"}}}
-
+        
 
 
 class GetServicesSpecificCategorySerializer(serializers.ModelSerializer):
@@ -39,7 +38,6 @@ class GetServicesSpecificCategorySerializer(serializers.ModelSerializer):
         # fields = [ 'id','userid', 'user_education', 'consultant_name']
         # fields = ['consultant_service_category',]
         fields = '__all__'
-        extra_kwargs = {'__all__': {"error_messages": {"required": "field missing or incorrect"}}}
         
 
 
@@ -64,8 +62,7 @@ class ConsultancyCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultancyCreate
         fields = '__all__'
-        extra_kwargs = {'__all__': {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 
@@ -74,15 +71,23 @@ class ConsultancyTimeSchudileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultancyTimeSchudile
         fields = '__all__'
-        extra_kwargs = {"--all__": {"error_messages": {"required": "field missing or incorrect"}}}
+    
 
 
 class GetAllServicesCategoryScheduleSerializer(serializers.ModelSerializer):
     consultancy_timeschudile = ConsultancyTimeSchudileSerializer(many=True, read_only=True)
+
+    # consultancy_timeschudile = serializers.SerializerMethodField()
+    
+    # def consultancy_timeschudile(self):
+    #     qs = ConsultancyTimeSchudile.objects.filter(is_consultancy_take=False)
+    #     serializer = ConsultancyTimeSchudileSerializer(qs, many=True)
+    #     return serializer.data
+
     class Meta:
         model = ConsultancyCreate
         fields = ['id', 'consultant_name', 'consultant_service_category', 'consultancy_timeschudile' ]
-        extra_kwargs = {'__all__': {"error_messages": {"required": "field missing or incorrect"}}}
+        
 
 
 
@@ -101,8 +106,7 @@ class ConsultancyTimeSchudileNotTakenSerializer(serializers.ModelSerializer):
         list_serializer_class = FilteredListSerializer
         model = ConsultancyTimeSchudile
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 class GetAllCategoryNotTakingScheduleSerializer(serializers.ModelSerializer):
     # consultancy_timeschudile = ConsultancyTimeSchudileNotTakenSerializer(many=True, read_only=True)
@@ -113,8 +117,7 @@ class GetAllCategoryNotTakingScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultancyTimeSchudile
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 # --------------------------------x-------------------------------x------------------
@@ -129,30 +132,26 @@ class ConsultantAppointmentRequestSerializer(serializers.ModelSerializer):
         fields = ['seekerid',
                     'ConsultancyTimeSchudile','appointment_attendent_name',
                     'appointment_seeker_cellphone','appointment_seeker_email','appointment_seeker_note']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 class AppointmentSeeker_StarRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserConsultAppointmentRequest
         fields = ['appointment_seeker_starrating', 'appointment_seeker_starrating_comment']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 class ConsultantProvider_StarRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserConsultAppointmentRequest
         fields = ['consultant_provider_starratting', 'consultant_provider_starratting_comment']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 class AppointmentSeeker_MissingAppointmentReasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserConsultAppointmentRequest
         fields = ['reason_for_missing_appointment']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 
@@ -166,8 +165,7 @@ class GetSpecificCategoryServiceSearchDataSerializer(serializers.ModelSerializer
         model = ConsultancyCreate
         fields = ['id', 'consultant_service_category','consultant_name', 'consultant_service_locationcountry', 'consultant_servicedescription','user_id']
         # fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 # ------------------------------------------------- pro user start------------------------------------------------------
@@ -186,4 +184,4 @@ class ConsultancyPaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultancyPayment
         fields = ['userid', 'consultancy_sheduleid', 'tran_id']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
+        

@@ -32,6 +32,7 @@ from django.db.models import Q
 from auth_user_app.models import User
 
 
+from probashi_backend.renderers import UserRenderer
 
 
 # class GetAllServiceSetPagination(PageNumberPagination):
@@ -43,6 +44,8 @@ class GetAllServicesCategoryView(generics.ListAPIView):
     # queryset = ConsultancyCreate.objects.all()
     serializer_class = ServiceCategorySerializer
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
+
     # pagination_class = GetAllServiceSetPagination
 
     def get_queryset(self):
@@ -67,6 +70,8 @@ class GetSpecificCategoriesServiceSetPagination(PageNumberPagination):
 class GetServicesSpecificCategoryData(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = GetSpecificCategoriesServiceSetPagination
+    renderer_classes = [UserRenderer]
+
 
     def get_services(self,consultant_service_category):
         try:
@@ -88,8 +93,11 @@ class ConsultancyCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     queryset = ConsultancyCreate.objects.all()
     serializer_class = ConsultancyCreateSerializer
+    renderer_classes = [UserRenderer]
+
 
     def create(self, request):
+        print("permission class::::::::::::::::::", self.permission_classes)
         user = request.user
         if request.data['userid'] == user.userid:
             serializer = ConsultancyCreateSerializer(data=request.data)
@@ -97,7 +105,7 @@ class ConsultancyCreateView(generics.ListCreateAPIView):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"message": "You are not authorized to perform this action"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"message": "You are not authorized to perform this action"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -106,6 +114,7 @@ class ConsultancyCreateView(generics.ListCreateAPIView):
 class ConsultancyTimeSchudileView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ConsultancyTimeSchudileSerializer
+    renderer_classes = [UserRenderer]
 
     def get_queryset(self):
         user = self.request.user
@@ -123,6 +132,7 @@ class ConsultancyTimeSchudileView(generics.ListCreateAPIView):
 class GetAllServicesCategorySchedule(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     # serializer_class = GetAllServicesCategoryScheduleSerializer
+    renderer_classes = [UserRenderer]
 
     def get_queryset(self):
         user = self.request.user
@@ -142,9 +152,9 @@ class GetAllServicesCategorySchedule(generics.ListAPIView):
 class SpecificServicesSchedules(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     # serializer_class = GetAllServicesCategoryScheduleSerializer
+    renderer_classes = [UserRenderer]
 
     def get_queryset(self,id):
-        user = self.request.user
         id = id
         # print('id::::::::',id)
         queryset = ConsultancyCreate.objects.filter(Q(id=id))
@@ -176,10 +186,11 @@ class SpecificServicesSchedules(generics.ListAPIView):
 
 class NotTakingScheduil_forSpecificUser(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = [UserRenderer]
 
     def get_object(self, user_id):
         try:
-            # print('::::::::::::::::::', user_id)
+            print('::::::::::::::::::', ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user_id)))
             return ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user_id))
         except ConsultancyTimeSchudile.DoesNotExist:
             raise Http404
@@ -203,14 +214,17 @@ class NotTakingScheduil_forSpecificUser(views.APIView):
 
 class AppointmentSeeker_ConsultantRequest(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = [UserRenderer]
 
     def post(self, request):
         
         user = request.user
         # print(":::::::::::", user.userid)
-        if request.data['seekerid'] == user.userid:
+        consultancyTimeSchudile= ConsultancyTimeSchudile.objects.filter(id=request.data['ConsultancyTimeSchudile']).first()
+        # print(":::::::::::", consultancyTimeSchudile)
+        if request.data['seekerid'] == user.userid and consultancyTimeSchudile != None:
             data = Consultancy_CREATE_and_GET_session(request, user)
-            print(":::::::", data['res']['status'].lower())
+            # print("status:::::::", data['res']['status'].lower())
             tran_id = data['post_body']['tran_id']
             
             if data['res']['status'].lower() == 'success':
@@ -224,7 +238,7 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
                 if serializer.is_valid():
                     serializer.save()
 
-                if request.data['seekerid'] == user.userid:
+                    
                     serializer = ConsultantAppointmentRequestSerializer(data=request.data)
                     if serializer.is_valid():
                         serializer.save()
@@ -232,13 +246,15 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
                         #########work in success URL
                         # ConsultancyTimeSchudile.objects.filter(id=request.data['ConsultancyTimeSchudile']).update(is_consultancy_take=True)
                         # print("::::::::::::",serializer.data)
+                        # success_msg = {'success': True, 'data' : result}
                         return Response(result, status=status.HTTP_200_OK)
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                return Response({"message": "You are not authorized to make this request"}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({"message": "You are not authorized to make this request"}, status=status.HTTP_400_BAD_REQUEST)
                 
             else:
-                return Response(data['status'], status=status.HTTP_400_BAD_REQUEST)
-        return Response('Bad Request',status=status.HTTP_400_BAD_REQUEST)
+                return Response(data['res']['status'].lower(), status=status.HTTP_400_BAD_REQUEST)
+        error_msg = {'success': False, 'message': 'seekerid or ConsultancyTimeSchudile invalid'}
+        return Response('seekerid or ConsultancyTimeSchudile invalid',status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -323,6 +339,8 @@ class AppointmentSeeker_StarRating(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     # queryset = UserConsultAppointmentRequest.objects.all()
     serializer_class = AppointmentSeeker_StarRatingSerializer
+    renderer_classes = [UserRenderer]
+
     lookup_field = 'id'
 
     def get_queryset(self):
@@ -336,6 +354,8 @@ class AppointmentSeeker_StarRating(generics.UpdateAPIView):
 class ConsultantProvider_StarRating(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ConsultantProvider_StarRatingSerializer
+    renderer_classes = [UserRenderer]
+
     lookup_field = 'id'
 
     def get_queryset(self):
@@ -351,6 +371,8 @@ class ConsultantProvider_StarRating(generics.UpdateAPIView):
 class AppointmentSeeker_MissingAppointmentReason(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = AppointmentSeeker_MissingAppointmentReasonSerializer
+    renderer_classes = [UserRenderer]
+
     lookup_field = 'id'
 
     def get_queryset(self):
@@ -395,65 +417,210 @@ class AppointmentSeeker_MissingAppointmentReason(generics.UpdateAPIView):
 
 class GetSpecificCategoryServiceSearchData(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    # renderer_classes = [UserRenderer]
+
 
     def get_services(self,consultant_service_category, data):
         try:
             if consultant_service_category == 'Education Service':
-                print(":::::::::::", 'inside specific')
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                        Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                        Q(educationService_degree = data['educationService_degree']) &
-                                                        Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                        Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+                print("EDU:::::::::::", type(data['consultant_service_locationcountry']))
+                if data['educationService_degree'] != [] and data['consultant_service_locationcountry'] != '':
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(educationService_degree = data['educationService_degree']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+                elif data['educationService_degree'] == [] and data['consultant_service_locationcountry'] != '':
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+                elif data['consultant_service_locationcountry'] == '' and data['educationService_degree'] != []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(educationService_degree = data['educationService_degree']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+                else:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )                                            
+            
+            
             if consultant_service_category == 'Digital Service':
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                        (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                        Q(is_userconsultant_company = data['is_userconsultant_company'])) &
-                                                        Q(digitalservice_type = data['digitalservice_type']) )
+                if data['digitalservice_type'] != []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) &
+                                                            Q(digitalservice_type = data['digitalservice_type']) )
+                else:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) )
+            
+            
             if consultant_service_category == 'Immigration Consultancy Service':
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                        (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                        Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                        Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                        Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                        Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-            if consultant_service_category == 'Legal and Civil Service':
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                        (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                        Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                        Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                        Q(legalcivilservice_required = data['legalcivilservice_required']) &
-                                                        Q(legalcivilservice_issue = data['legalcivilservice_issue']) )
-            if consultant_service_category == 'Medical Consultancy Service':
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                        (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                        Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                        Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                        Q(medicalconsultancyservice_treatment_area = data['medicalconsultancyservice_treatment_area']) &
-                                                        Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                        Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-            if consultant_service_category == 'Overseas Recruitment Service':
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                        (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                        Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                        Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                        Q(overseasrecruitmentservice_job_type = data['overseasrecruitmentservice_job_type']) &
-                                                        Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                        Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+                
+                if data['consultant_service_locationcountry'] != '':
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+                else:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+            
 
+            
+            if consultant_service_category == 'Legal and Civil Service':
+                
+                if data['consultant_service_locationcountry'] != '' and data['legalcivilservice_required'] != [] and data['legalcivilservice_issue'] != [] :
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(legalcivilservice_required = data['legalcivilservice_required']) &
+                                                            Q(legalcivilservice_issue = data['legalcivilservice_issue']) )
+
+                elif data['consultant_service_locationcountry'] == '' and data['legalcivilservice_required'] != [] and data['legalcivilservice_issue'] != [] :
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(legalcivilservice_required = data['legalcivilservice_required']) &
+                                                            Q(legalcivilservice_issue = data['legalcivilservice_issue']) ))
+
+                elif data['consultant_service_locationcountry'] != '' and data['legalcivilservice_required'] == [] and data['legalcivilservice_issue'] != [] :
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(legalcivilservice_issue = data['legalcivilservice_issue']) )
+
+                elif data['consultant_service_locationcountry'] != '' and data['legalcivilservice_required'] != [] and data['legalcivilservice_issue'] == []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(legalcivilservice_required = data['legalcivilservice_required']) )
+
+                elif data['consultant_service_locationcountry'] == '' and data['legalcivilservice_required'] == [] and data['legalcivilservice_issue'] != []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(legalcivilservice_issue = data['legalcivilservice_issue']) )
+
+                elif data['consultant_service_locationcountry'] != '' and data['legalcivilservice_required'] == [] and data['legalcivilservice_issue'] == []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) )
+
+                elif data['consultant_service_locationcountry'] == '' and data['legalcivilservice_required'] != [] and data['legalcivilservice_issue'] == [] :
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(legalcivilservice_required = data['legalcivilservice_required']) )
+                else:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])))
+
+
+            
+            
+            if consultant_service_category == 'Medical Consultancy Service':
+                if data['consultant_service_locationcountry'] != '' and data['medicalconsultancyservice_treatment_area'] != []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(medicalconsultancyservice_treatment_area = data['medicalconsultancyservice_treatment_area']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+                elif data['consultant_service_locationcountry'] == '' and data['medicalconsultancyservice_treatment_area'] != []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(medicalconsultancyservice_treatment_area = data['medicalconsultancyservice_treatment_area']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+                elif data['consultant_service_locationcountry'] != '' and data['medicalconsultancyservice_treatment_area'] == []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+                else: 
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
+                
+            
+            
+            if consultant_service_category == 'Overseas Recruitment Service':
+                if data['consultant_service_locationcountry'] != '' and data['overseasrecruitmentservice_job_type'] != []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(overseasrecruitmentservice_job_type = data['overseasrecruitmentservice_job_type']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+                elif data['consultant_service_locationcountry'] == '' and data['overseasrecruitmentservice_job_type'] != []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(overseasrecruitmentservice_job_type = data['overseasrecruitmentservice_job_type']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+
+                elif data['consultant_service_locationcountry'] != '' and data['overseasrecruitmentservice_job_type'] == []:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+
+                else:
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+
+                
+            
+
+# ============================================================================================================
+            
             if consultant_service_category == 'Property Management Service':
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                        (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                        Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                        Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                        Q(propertymanagementservice_propertylocation= data['propertymanagementservice_propertylocation']) &
-                                                        Q(propertymanagementservice_type = data['propertymanagementservice_type']) &
-                                                        Q(propertymanagementservice_need= data['propertymanagementservice_need']) )
+                if (data['consultant_service_locationcountry'] != '' and data['propertymanagementservice_propertylocation'] != '' and  
+                        data['propertymanagementservice_type'] != [] and data['propertymanagementservice_need'] != []):
+                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
+                                                            Q(propertymanagementservice_propertylocation= data['propertymanagementservice_propertylocation']) &
+                                                            Q(propertymanagementservice_type = data['propertymanagementservice_type']) &
+                                                            Q(propertymanagementservice_need= data['propertymanagementservice_need']) )
+                
+            
+            
             if consultant_service_category == 'Tourism Service':
                 return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                         (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
                                                         Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
                                                         Q(tourismservices = data['tourismservices']) )
+            
+            
             if consultant_service_category == 'Trade Facilitation Service':
                 return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category )  &
                                                         (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
@@ -461,6 +628,8 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                                                         Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
                                                         Q(tradefacilitationservice_type = data['tradefacilitationservice_type']) &
                                                         Q(tradefacilitationservice_Purpose = data['tradefacilitationservice_Purpose']) )
+            
+            
             if consultant_service_category == 'Training Service':
                 return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                         (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
@@ -476,8 +645,8 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
         consultancy = self.get_services(service_Category,data)
 
         serializer = GetSpecificCategoryServiceSearchDataSerializer(consultancy, many=True)
-        data = {'data': serializer.data}
-        return Response(data, status=status.HTTP_200_OK)
+        # data = {'data': serializer.data}
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
@@ -487,6 +656,7 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
 
 class BecomeProUser(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def post(self,request):
         user = request.user

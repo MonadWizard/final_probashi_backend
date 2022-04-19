@@ -13,12 +13,13 @@ class UserEducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_education
         fields = ['user_edu_degree']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
+        
+
 class ConsultancySerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultancyCreate
         fields = ['consultant_service_category']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
+        
 
 class SerachUserSerializer(serializers.ModelSerializer):
     user_educationdata = UserEducationSerializer(many=True, read_only=True)
@@ -28,7 +29,6 @@ class SerachUserSerializer(serializers.ModelSerializer):
         fields = ['userid', 'user_fullname', 'user_email', 'user_username', 'user_photopath', 'user_callphone',
                     'is_consultant', 'user_geolocation','user_areaof_experience', 
                     'user_industry','user_currentdesignation','user_educationdata', 'user_consultancydata']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
         
         # exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
 
@@ -37,8 +37,7 @@ class UserFavouriteRequestSendSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFavoutireRequestSend
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 class UserFavouriteRequestsSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="userid.user_fullname")
@@ -50,22 +49,19 @@ class UserFavouriteRequestsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFavoutireRequestSend
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 class AcceptFavouriteRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFavoutireRequestSend
         fields = ['is_favourite_accept']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 class RejectFavouriteRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFavoutireRequestSend
         fields = ['is_favourite_reject']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 class UserFavouriteListSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="userid.userid")
@@ -79,8 +75,7 @@ class UserFavouriteListSerializer(serializers.ModelSerializer):
         model = UserFavouriteList
         fields = ['username', 'favourite_user_id', 'favourite_user_name', 'favourite_user_photo',
                     'favourite_user_designation', 'is_favourite_user_consultant']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 

@@ -4,9 +4,10 @@ from rest_framework.generics import GenericAPIView
 from .serializers import GoogleSocialAuthSerializer, FacebookSocialAuthSerializer, LinkedinSocialAuthSerializer
 
 # from .serializers import GoogleSocialAuthSerializer, TwitterAuthSerializer, FacebookSocialAuthSerializer
-
+from probashi_backend.renderers import UserRenderer
 
 class GoogleSocialAuthView(GenericAPIView):
+    # renderer_classes = [UserRenderer]
 
     serializer_class = GoogleSocialAuthSerializer
 
@@ -21,6 +22,8 @@ class GoogleSocialAuthView(GenericAPIView):
 class FacebookSocialAuthView(GenericAPIView):
 
     serializer_class = FacebookSocialAuthSerializer
+    renderer_classes = [UserRenderer]
+
 
 #       POST with "auth_token" Send an access token as from facebook to get user information
     def post(self, request):
@@ -34,6 +37,8 @@ class FacebookSocialAuthView(GenericAPIView):
 class LinkedinSocialAuthView(GenericAPIView):
 
     serializer_class = LinkedinSocialAuthSerializer
+    renderer_classes = [UserRenderer]
+
 
 #       POST with "auth_token" Send an access token as from facebook to get user information
     def post(self, request):

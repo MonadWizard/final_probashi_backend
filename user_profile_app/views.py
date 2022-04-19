@@ -4,6 +4,8 @@ from rest_framework import permissions
 from django.http import Http404
 from django.db.models import Q
 
+from probashi_backend.renderers import UserRenderer
+
 from auth_user_app.models import User
 from .models import User_socialaccount_and_about, User_experience, User_education, User_idverification
 from .serializers import (  UserProfileSkipPart0Serializer,
@@ -21,11 +23,13 @@ from .serializers import (  UserProfileSkipPart0Serializer,
                             UserInterestedAreaSerializer,UserGoalSerializer,
                             UserProfileWithConsultancyViewSerializer)
 
+from probashi_backend.renderers import UserRenderer
 
 
 
 class UserProfileSkipPart0(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def get_user(self,userid):
         try:
@@ -45,6 +49,8 @@ class UserProfileSkipPart0(views.APIView):
 
 class UserProfileSkipPart1(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
+
 
     def get_user(self,userid):
         try:
@@ -62,6 +68,7 @@ class UserProfileSkipPart1(views.APIView):
 
 class UserProfileSkipPart2(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def get_user(self,userid):
         try:
@@ -84,6 +91,7 @@ class UserProfileSkipPart2(views.APIView):
 
 class UserEditProfile(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def get_user(self,userid):
         try:
@@ -115,6 +123,7 @@ class UserEditProfile(views.APIView):
 
 class UserInterestedAreaView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def get_user(self,userid):
         try:
@@ -145,6 +154,7 @@ class UserInterestedAreaView(views.APIView):
 
 class UserGoalView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def get_user(self,userid):
         try:
@@ -174,7 +184,8 @@ class UserGoalView(views.APIView):
 
 class UserAboutSocialLinkUpdate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    
+    renderer_classes = [UserRenderer]
+
     def get_user(self,userid):
         try:
             return User_socialaccount_and_about.objects.get(userid__exact=userid)
@@ -198,6 +209,7 @@ class UserAboutSocialLinkUpdate(views.APIView):
 
 class UserExperienceCreate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def post(self,request):
         serializer = UserExperienceCreateSerializer(data=request.data)
@@ -209,6 +221,7 @@ class UserExperienceCreate(views.APIView):
 
 class UserExperienceUpdate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
 
     def get_user(self,userid):
@@ -242,6 +255,7 @@ class UserExperienceUpdate(views.APIView):
 
 class UserEducationCreate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def post(self,request):
         serializer = UserEducationCreateSerializer(data=request.data)
@@ -254,6 +268,7 @@ class UserEducationCreate(views.APIView):
 
 class UserIdVerificationCreate(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def post(self,request):
         serializer = UserIdVerificationCreateSerializer(data=request.data)
@@ -266,6 +281,8 @@ class UserIdVerificationCreate(views.APIView):
 class UserProfileView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class = UserProfileViewSerializer
+    renderer_classes = [UserRenderer]
+
 
     def get_queryset(self):
             user = self.request.user
@@ -401,9 +418,9 @@ class UserProfileView(generics.ListAPIView):
 
 
 
-            context = {"data": serializer.data}
+            # context = {"data": serializer.data}
 
-            return Response(context, status=status.HTTP_200_OK)
+            return Response(serializer.data[0], status=status.HTTP_200_OK)
 
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
         

@@ -17,22 +17,19 @@ class BlogCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 class BlogCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog_comment
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 class BlogReactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog_reaction
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 
@@ -42,8 +39,7 @@ class BlogHomePageReactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog_reaction
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
     
     
 class BlogHomePageCommentSerializer(serializers.ModelSerializer):
@@ -54,8 +50,7 @@ class BlogHomePageCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog_comment
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 
@@ -105,8 +100,7 @@ class BlogPaginateListViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 
@@ -120,7 +114,7 @@ class SpecificBlogReactionDetailsSerializers(serializers.ModelSerializer):
 
 
     def get_total_like(self, obj):
-        print("reaction id:::",obj)
+        # print("reaction id:::",obj)
         return Blog_reaction.objects.filter(Q(blogid=obj.blogid) & 
                                             Q(is_user_like=True)).count()
     
@@ -129,23 +123,27 @@ class SpecificBlogReactionDetailsSerializers(serializers.ModelSerializer):
                                             Q(is_user_dislike=True)).count()
 
     def get_user_like(self, obj):
+        print("user_id::::::", self.context.get('userid'))
+        userid = self.context.get('userid')
         if Blog_reaction.objects.filter(Q(blogid=obj.blogid) & 
-                                        Q(is_user_like=True) & Q(userid=obj.userid)):
+                                        Q(is_user_like=True) & Q(userid=userid)):
             return True
         else:
             return False
     
     def get_user_dislike(self, obj):
+        userid = self.context.get('userid')
         if Blog_reaction.objects.filter(Q(blogid=obj.blogid) & 
-                                        Q(is_user_dislike=True) & Q(userid=obj.userid)):
+                                        Q(is_user_dislike=True) & Q(userid=userid)):
             return True
         else:
             return False
     class Meta:
         model = Blog_reaction
         fields = ['totalliked', 'totaldisliked', 'userliked', 'userdisliked' ]
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
+        # fields = ['totalliked', 'totaldisliked' ]
 
+        
 
 
 
@@ -156,8 +154,7 @@ class SpecificBlogCommentDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog_comment
         fields = '__all__'
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 class AllBlogReactionCountSerializer(serializers.ModelSerializer):
@@ -200,8 +197,7 @@ class AllBlogReactionCountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog_reaction
         fields = ['id','totalliked', 'totaldisliked', 'userliked', 'userdisliked' ]
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 
 
 class AllBlogCommentSerializer(serializers.ModelSerializer):
@@ -209,6 +205,5 @@ class AllBlogCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = ['id', 'blog_comment']
-        extra_kwargs = {"__all__": {"error_messages": {"required": "field missing or incorrect"}}}
-
+        
 

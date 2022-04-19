@@ -17,6 +17,7 @@ from django.db.models import F
 import datetime
 import json 
 from rest_framework.pagination import PageNumberPagination
+from probashi_backend.renderers import UserRenderer
 
 
 from user_connection_app.utility import match_friends
@@ -24,12 +25,13 @@ from user_connection_app.utility import match_friends
 
 class TakeMatchFriend(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def get(self, request):
         user = request.user
         # print('user:::::',user.userid)
         match_friends(user_id=user.userid)
-        return Response(status=status.HTTP_200_OK)
+        return Response('matching prepaired',status=status.HTTP_200_OK)
 
 
 # @api_view(['GET'])
@@ -58,18 +60,21 @@ class TakeMatchFriend(views.APIView):
 
 
 
+
 class GetMatchFriendSetPagination(PageNumberPagination):
-    page_size = 20
-    # page_size_query_param = 'users'
-    max_page_size = 10000
+    page_size = 3
+    page_size_query_param = 'page_size'
+    # max_page_size = 10000
 
 class Friends_suggation(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class= UserFavouriteRequestsSerializer
     pagination_class = GetMatchFriendSetPagination
+    renderer_classes = [UserRenderer]
 
     def get(self,request):
-        user = request.user
+        user = request.user.userid
+        # print('user:::::',user)
         match_all = FriendsSuggation.objects.filter(user=user).values('location', 'goals', 'interest')[0]
         match_12 = FriendsSuggation.objects.filter(user=user).values('location', 'goals')[0]
         match_13 = FriendsSuggation.objects.filter(user=user).values('location', 'interest')[0]
@@ -78,37 +83,39 @@ class Friends_suggation(views.APIView):
         match_2 = FriendsSuggation.objects.filter(user=user).values('goals')[0]
         match_3 = FriendsSuggation.objects.filter(user=user).values('interest')[0]
 
-        match_friend_all = set.intersection(*[set(x) for x in match_all.values()])
-        match_friend_12 = set.intersection(*[set(x) for x in match_12.values()])
-        match_friend_13 = set.intersection(*[set(x) for x in match_13.values()])
-        match_friend_23 = set.intersection(*[set(x) for x in match_23.values()])
-        match_friend_1 = set.intersection(*[set(x) for x in match_1.values()])
-        match_friend_2 = set.intersection(*[set(x) for x in match_2.values()])
-        match_friend_3 = set.intersection(*[set(x) for x in match_3.values()])
+        try:
+            match_friend_all = set.intersection(*[set(x) for x in match_all.values()])
+            match_friend_12 = set.intersection(*[set(x) for x in match_12.values()])
+            match_friend_13 = set.intersection(*[set(x) for x in match_13.values()])
+            match_friend_23 = set.intersection(*[set(x) for x in match_23.values()])
+            match_friend_1 = set.intersection(*[set(x) for x in match_1.values()])
+            match_friend_2 = set.intersection(*[set(x) for x in match_2.values()])
+            match_friend_3 = set.intersection(*[set(x) for x in match_3.values()])
 
-        # print(match_23)
+            # print("match friend all:::::::",match_friend_all)
 
-        match_friend_id = set(chain(match_friend_all, match_friend_12, match_friend_13, match_friend_23,match_friend_1, match_friend_2, match_friend_3))
-        match_friend_data = []
-        for mf in match_friend_id:
-            match_friend = User.objects.filter(userid=mf).values('userid', 'user_fullname', 'user_areaof_experience', 'user_photopath', 'is_consultant')[0]
-            match_friend_data.append(match_friend)
+            match_friend_id = set(chain(match_friend_all, match_friend_12, match_friend_13, match_friend_23,match_friend_1, match_friend_2, match_friend_3))
+            match_friend_data = []
+            for mf in match_friend_id:
+                match_friend = User.objects.filter(userid=mf).values('userid', 'user_fullname', 'user_areaof_experience', 'user_photopath', 'is_consultant')[0]
+                match_friend_data.append(match_friend)
+            
+# -------------------------paginator
+
+
+
+# ------------------------------------------------paginator
+            
+            return Response(match_friend_data)
+
+        except Exception as e:
+            # print("error:::::",e)
+            return Response({
+                'message': 'No match found'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
         
-        data = {'data': match_friend_data}
-
-
-        # paginator = self.pagination_class
-
-        # # paginator.page_size = 10
-
-        # # result_page = paginator.paginate_queryset(match_friend_id, request)
-
-        # # serializer = TalentScoringSerializer(result_page, many=True)
-
-        # return paginator.get_paginated_response(data)
-
-
-        return Response(data)
 
 
 
@@ -126,10 +133,12 @@ class GetAllUserPaginationView(generics.ListAPIView):
     serializer_class = SerachUserSerializer
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = GetAllusersSetPagination
+    renderer_classes = [UserRenderer]
 
 
 class GetSpecificUserView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def get_object(self, user_id):
         try:
@@ -143,15 +152,15 @@ class GetSpecificUserView(views.APIView):
         user = self.request.user
         if User.objects.filter(Q(is_consultant=False) & Q(userid=user.userid)).exists():
             serializer = UserProfileWithConsultancyViewSerializer(data)
-            context = {'data': serializer.data}
+            # context = {'data': serializer.data}
             # print(context)
-            return Response(context, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
         elif User.objects.filter(Q(is_consultant=True) & Q(user_id=user.userid)).exists():
             serializer = UserProfileViewSerializer(data)
             context = {'data': serializer.data}
             # print(context)
-            return Response(context, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -160,6 +169,7 @@ class FavouriteRequestSendView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     queryset = UserFavoutireRequestSend.objects.all()
     serializer_class= UserFavouriteRequestSendSerializer
+    renderer_classes = [UserRenderer]
 
     def create(self, request):
         user = self.request.user
@@ -185,6 +195,7 @@ class FavouriteRequestSendView(generics.CreateAPIView):
 class FavouriteRequestsView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class= UserFavouriteRequestsSerializer
+    renderer_classes = [UserRenderer]
 
     def get_queryset(self):
             user = self.request.user
@@ -201,6 +212,9 @@ class FavouriteRequestsView(generics.ListAPIView):
 
 class AcceptFavouriteRequest(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
+
+
 
     def get_object(self,requestid):
         try:
@@ -234,6 +248,7 @@ class AcceptFavouriteRequest(views.APIView):
 
 class RejectFavouriteRequest(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    renderer_classes = [UserRenderer]
 
     def get_object(self,requestid):
         try:
@@ -259,6 +274,7 @@ class RejectFavouriteRequest(views.APIView):
 class FavouritesList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     # serializer_class= UserFavouriteListSerializer
+    renderer_classes = [UserRenderer]
 
     def get_queryset(self):
             user = self.request.user

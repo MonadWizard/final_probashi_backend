@@ -1,4 +1,6 @@
-from django.http import HttpResponse
+from sre_constants import SUCCESS
+from django.http import HttpResponse, JsonResponse
+
 from rest_framework import generics, status, views, permissions
 from .serializers import (RegisterSerializer,
                         UpdateRegisterSerializer,
@@ -38,11 +40,13 @@ from django.db.models import Q
 import random
 from django.utils import timezone
 from user_connection_app.utility import match_friends
-import asyncio
 
+from probashi_backend.renderers import UserRenderer
+import json
 
 class MailVerifyRequestView(views.APIView):
-    
+    # renderer_classes = [UserRenderer]
+
     def post(self, request):
         data = request.data
         user_fullname = data['user_fullname']
@@ -50,7 +54,7 @@ class MailVerifyRequestView(views.APIView):
         password = data['password']
 
         if User.objects.filter(user_email=user_email).exists():
-            return Response({ "message": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success": False ,"message": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         else:
     # Token passing
             payload = {
@@ -75,7 +79,8 @@ class MailVerifyRequestView(views.APIView):
 
             Util.send_email(data)
 
-            return Response(data, status=status.HTTP_200_OK)
+            resp_msg = {'success': True, 'message': 'Email sent successfully'}
+            return Response(resp_msg, status=status.HTTP_200_OK)
 
 
 class VerifyEmail(views.APIView):
@@ -115,14 +120,16 @@ class VerifyEmail(views.APIView):
 
 
 class MailVerificationStatus(views.APIView):
+    renderer_classes = [UserRenderer]
     def get(self,request):
         user_mail = User.objects.filter(user_email__exact=request.data['user_email'])
         mail_verify = user_mail.values('is_verified')
-        return Response(mail_verify, status=status.HTTP_200_OK)
+        print(type(mail_verify))
+        return Response(list(mail_verify)[0], status=status.HTTP_200_OK)
 
 
 class UpdateRegisterView(views.APIView):
-
+    renderer_classes = [UserRenderer]
 
     def get_object(self,user_email):
         try:
@@ -137,7 +144,7 @@ class UpdateRegisterView(views.APIView):
 
 
     def put(self,request,user_email):
-        print('request.data:', request.data)
+        # print('request.data:', request.data)
         user_email = self.get_object(user_email)
         request.data['user_fullname'] =request.data['user_fullname_passport']
         del request.data['user_fullname_passport']
@@ -167,6 +174,7 @@ class UpdateRegisterView(views.APIView):
 
 
 class LoginAPIView(generics.GenericAPIView):
+    renderer_classes = [UserRenderer]
     serializer_class = LoginSerializer
 
     def post(self, request):
@@ -179,6 +187,7 @@ class LoginAPIView(generics.GenericAPIView):
 
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
+    renderer_classes = [UserRenderer]
 
     def post(self, request):
 
@@ -202,6 +211,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
 class SetNewPasswordAPIView(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = [UserRenderer]
     serializer_class = SetNewPasswordSerializer
     model = User
 
@@ -231,6 +241,7 @@ class SetNewPasswordAPIView(generics.UpdateAPIView):
 
 
 class LogoutAPIView(generics.GenericAPIView):
+    renderer_classes = [UserRenderer]
     serializer_class = LogoutSerializer
 
     permission_classes = (permissions.IsAuthenticated,)
@@ -246,6 +257,7 @@ class LogoutAPIView(generics.GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
 class ViewUser(generics.ListAPIView):
+    renderer_classes = [UserRenderer]
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ViewUserSerializer
 
@@ -256,6 +268,7 @@ class ViewUser(generics.ListAPIView):
 
 
 class InAppChangePassword(generics.UpdateAPIView):
+    renderer_classes = [UserRenderer]
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = InAppChangePasswordSerializer
     model = User
@@ -292,11 +305,12 @@ class InAppChangePassword(generics.UpdateAPIView):
 # --------------------x --------------x --------------x --------------x
 
 class RegistrationVerificationCodeSend(views.APIView):
+    # renderer_classes = [UserRenderer]
     serializer_class = userOTP
 
     def post(self, request):
         if User.objects.filter(user_callphone=request.data['user_callphone']).exists():
-            return Response({"user_callphone": ["This phone number is already registered."]}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success":False,"message":{"user_callphone": "This phone number is already registered."}}, status=status.HTTP_400_BAD_REQUEST)
         else:
             data = request.data
             user_fullname = data['user_fullname']
@@ -316,10 +330,11 @@ class RegistrationVerificationCodeSend(views.APIView):
             # print('data:', data)
 
             send = SendMessage.send_message(user_callphone,data)
-            res_data = {'data': serializer.data, 'send-message': send}
+            res_data = {"success":True,'data': "otp send to user's phone", 'send-message': send}
             return Response(res_data, status=status.HTTP_200_OK)
 
 class PhoneNumberRegistration(views.APIView):
+    # renderer_classes = [UserRenderer]
     serializer_class = PhoneOtpRegisterSerializer
 
     def post(self, request):
@@ -346,12 +361,14 @@ class PhoneNumberRegistration(views.APIView):
             FriendsSuggation.objects.create(user=User.objects.get(userid=userid), )              # friend suggation .................
 
             
-
-            return Response(request.data, status=status.HTTP_200_OK)
-        return Response("Input data incorrect", status=status.HTTP_400_BAD_REQUEST)
+            succ_resp = {"success": True, "data": "user registered successfully"}
+            return Response(succ_resp, status=status.HTTP_200_OK)
+        resp_msg = {'success': False, 'message': 'Input data incorrect'}
+        return Response(resp_msg, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginVerificationCodeSend(views.APIView):
+    # renderer_classes = [UserRenderer]
     serializer_class = userOTP
 
     def post(self, request):
@@ -377,23 +394,24 @@ class LoginVerificationCodeSend(views.APIView):
 
             send = SendMessage.send_message(user_callphone,data)
 
-            res_data = {'data': serializer.data, 'send-message': send}
+            res_data = {'success': True,'data': "otp send to user's phone", 'send-message': send}
             return Response(res_data, status=status.HTTP_200_OK)
         else:
-            return Response({"user_callphone": ["This phone number is not valid or registered."]}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success":False,"message": {"user_callphone": "This phone number is not valid or registered."}}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 # VerificationCodeSend also works for loging  
 class PhoneNumberLogin(views.APIView):
+    # renderer_classes = [UserRenderer]
     serializer_class = PhoneLoginSerializer
 
     def post(self, request):
         # print('request.data:', request.data)
         
         time = timezone.localtime()
-        print('time:::', time)
-        print('time:::', PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists())
+        # print('time:::', time)
+        # print('time:::', PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists())
         if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists():
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -401,13 +419,18 @@ class PhoneNumberLogin(views.APIView):
             PhoneOTP.objects.filter(otp=request.data['otp']).update(is_used=True)
             PhoneOTP.objects.filter(Q(is_used=True) | Q(updated_at__lt=time)).delete()
 
+            
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response("invalid phone number or otp", status=status.HTTP_400_BAD_REQUEST)
+        if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone'])).exists():
+            return Response({"success":False,"message":"invalid or expired otp"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({"success":False,"message":"invalid phone number"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 
 class PhoneUpdateRegisterView(views.APIView):
+    renderer_classes = [UserRenderer]
 
 
     def get_object(self,user_callphone):
