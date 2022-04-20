@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-@=34_6+7@__b9br5$*#*ywmlh*aco__-jg87!*8b53%m+veidy'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'probashiapi.algorithmgeneration.com',

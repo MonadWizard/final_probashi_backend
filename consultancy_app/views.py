@@ -127,6 +127,20 @@ class ConsultancyTimeSchudileView(generics.ListCreateAPIView):
         data = {'data' : serializer.data}
         return Response(data, status=status.HTTP_200_OK)
 
+    def create(self, request):
+        user = request.user
+        con_user = ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user.userid) &
+                                                        Q(consultancyid = request.data['consultancyid'])).exists()
+        # print("con_user::::::::::::::::::", con_user)   
+        if con_user == True:
+            serializer = ConsultancyTimeSchudileSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "You are not authorized to perform this action"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class GetAllServicesCategorySchedule(generics.ListAPIView):
@@ -190,7 +204,7 @@ class NotTakingScheduil_forSpecificUser(views.APIView):
 
     def get_object(self, user_id):
         try:
-            print('::::::::::::::::::', ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user_id)))
+            # print('::::::::::::::::::', ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user_id)))
             return ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user_id))
         except ConsultancyTimeSchudile.DoesNotExist:
             raise Http404
