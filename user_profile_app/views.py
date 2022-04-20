@@ -352,7 +352,7 @@ class UserProfileView(generics.ListAPIView):
             
             context = {"data": serializer.data}
 
-            return Response(serializer.data[0], status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
         elif User.objects.filter(Q(is_consultant = False) & Q(userid=user.userid)).exists():
@@ -420,7 +420,7 @@ class UserProfileView(generics.ListAPIView):
 
             # context = {"data": serializer.data}
 
-            return Response(serializer.data[0], status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
         
