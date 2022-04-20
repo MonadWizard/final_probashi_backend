@@ -21,6 +21,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
         # print('last message::::::::::::',data)
         data = dict(data)
         data_l = list(data.values())
+        data_l = list(filter(None, data_l))
+        print("data_l::::::::::::::::::::::::", data_l)
 
         await self.send(text_data=json.dumps({
             'success': True,
@@ -46,7 +48,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
-                'message_time': str(datetime.datetime.now()),
+                'message_time': str(datetime.datetime.now(datetime.timezone.utc)),
                 'is_text_message': True,
             }
 
@@ -58,7 +60,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
                 # 'status': 'sent',
-                'message_time': str(datetime.datetime.now()),
+                'message_time': str(datetime.datetime.now(datetime.timezone.utc)),
                 "message-type": text_data_json['data'],
             }           
         
@@ -83,7 +85,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
-                'message_time': str(datetime.datetime.now()),
+                'message_time': str(datetime.datetime.now(datetime.timezone.utc)),
                 'is_image_message': True,
             }
 
@@ -95,7 +97,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
                 # 'status': 'sent',
-                'message_time': str(datetime.datetime.now()),
+                'message_time': str(datetime.datetime.now(datetime.timezone.utc)),
                 "message-type": text_data_json['data'],
             }           
         
