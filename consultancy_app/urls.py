@@ -3,6 +3,7 @@ from .views import (ConsultancyCreateView,
                     ConsultancyTimeSchudileView,
                     GetAllServicesCategorySchedule,
                     NotTakingScheduil_forSpecificUser,
+                    ALLScheduils_forConsultancyProvider,
 
                     GetAllServicesCategoryView,
                     AppointmentSeeker_ConsultantRequest, 
@@ -30,7 +31,7 @@ urlpatterns = [
     path('services-category-schedule/', GetAllServicesCategorySchedule.as_view(), name="GetAllServicesCategorySchedule"), #
 
     path('specific-service/', SpecificServicesSchedules.as_view(), name="SpecificServicesSchedules"),
-
+    path('all-schedule/', ALLScheduils_forConsultancyProvider.as_view(), name="ALLScheduils_forConsultancyProvider"),
     path('getall-services-category/', GetAllServicesCategoryView.as_view(), name="GetAllServicesPaginationView"),
     path('specific-service-searchdata/<str:service_Category>/', GetSpecificCategoryServiceSearchData.as_view(), name="GetSpecificCategoryServiceSearchData"),
 

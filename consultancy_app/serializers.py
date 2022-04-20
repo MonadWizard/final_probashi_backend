@@ -73,21 +73,18 @@ class ConsultancyTimeSchudileSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
 
+class GetAllCategoryScheduleSerializer(serializers.ModelSerializer):
+    consultancy_timeschudiles = ConsultancyTimeSchudileSerializer(source='consultancy_timeschudile',many=True, read_only=True)
+    # consultancy_id = serializers.CharField(source='consultancyid.id')
+    # consultancy_name = serializers.CharField(source='consultancyid.consultant_name')
 
-class GetAllServicesCategoryScheduleSerializer(serializers.ModelSerializer):
-    consultancy_timeschudile = ConsultancyTimeSchudileSerializer(many=True, read_only=True)
-
-    # consultancy_timeschudile = serializers.SerializerMethodField()
-    
-    # def consultancy_timeschudile(self):
-    #     qs = ConsultancyTimeSchudile.objects.filter(is_consultancy_take=False)
-    #     serializer = ConsultancyTimeSchudileSerializer(qs, many=True)
-    #     return serializer.data
 
     class Meta:
         model = ConsultancyCreate
-        fields = ['id', 'consultant_name', 'consultant_service_category', 'consultancy_timeschudile' ]
+        # fields = '__all__'
+        fields = ['id', 'consultant_name', 'consultant_service_category', 'consultancy_timeschudiles' ]
         
+  
 
 
 
@@ -101,23 +98,44 @@ class FilteredListSerializer(serializers.ListSerializer):
         return super(FilteredListSerializer, self).to_representation(data)
 
 class ConsultancyTimeSchudileNotTakenSerializer(serializers.ModelSerializer):
-
     class Meta:
         list_serializer_class = FilteredListSerializer
         model = ConsultancyTimeSchudile
         fields = '__all__'
+
+    
         
 
 class GetAllCategoryNotTakingScheduleSerializer(serializers.ModelSerializer):
-    # consultancy_timeschudile = ConsultancyTimeSchudileNotTakenSerializer(many=True, read_only=True)
-    consultancy_id = serializers.CharField(source='consultancyid.id')
+    consultancy_timeschudiles = ConsultancyTimeSchudileNotTakenSerializer(source='consultancy_timeschudile',many=True, read_only=True)
+    # consultancy_id = serializers.CharField(source='consultancyid.id')
     # consultancy_name = serializers.CharField(source='consultancyid.consultant_name')
 
 
     class Meta:
-        model = ConsultancyTimeSchudile
-        fields = '__all__'
+        model = ConsultancyCreate
+        # fields = '__all__'
+        fields = ['id', 'consultant_name', 'consultant_service_category', 'consultancy_timeschudiles' ]
         
+
+
+
+
+
+
+class GetAllServicesCategoryScheduleSerializer(serializers.ModelSerializer):
+    consultancy_timeschudile = ConsultancyTimeSchudileNotTakenSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ConsultancyCreate
+        fields = ['id', 'consultant_name', 'consultant_service_category', 'consultancy_timeschudile' ]
+        
+
+
+
+
+
+
 
 
 # --------------------------------x-------------------------------x------------------

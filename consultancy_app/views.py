@@ -15,7 +15,7 @@ from .serializers import (ConsultancyCreateSerializer, ServiceCategorySerializer
                         ConsultancyTimeSchudileSerializer,
                         GetAllServicesCategoryScheduleSerializer,
                         GetAllCategoryNotTakingScheduleSerializer,
-
+                        GetAllCategoryScheduleSerializer,
                         ConsultantAppointmentRequestSerializer, 
                         AppointmentSeeker_StarRatingSerializer,
                         ConsultantProvider_StarRatingSerializer, 
@@ -187,6 +187,25 @@ class SpecificServicesSchedules(generics.ListAPIView):
 
 
 
+class ALLScheduils_forConsultancyProvider(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = [UserRenderer]
+
+    def get_object(self, user_id):
+        try:
+            return ConsultancyCreate.objects.filter(Q(userid=user_id))
+        except ConsultancyCreate.DoesNotExist:
+            raise Http404
+
+    def get(self,request):
+        user_id = request.user.userid
+        
+        consultancy = self.get_object(user_id)
+
+        serializer = GetAllCategoryScheduleSerializer(consultancy, many=True)
+        data = {'data' : serializer.data}
+        return Response(data, status=status.HTTP_200_OK)
+
 
 
 
@@ -205,8 +224,8 @@ class NotTakingScheduil_forSpecificUser(views.APIView):
     def get_object(self, user_id):
         try:
             # print('::::::::::::::::::', ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user_id)))
-            return ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user_id))
-        except ConsultancyTimeSchudile.DoesNotExist:
+            return ConsultancyCreate.objects.filter(Q(userid=user_id))
+        except ConsultancyCreate.DoesNotExist:
             raise Http404
 
     def get(self,request):
