@@ -122,11 +122,17 @@ class VerifyEmail(views.APIView):
 class MailVerificationStatus(views.APIView):
     renderer_classes = [UserRenderer]
     def get(self,request):
-        user_mail = User.objects.filter(user_email__exact=request.data['user_email'])
-        mail_verify = user_mail.values('is_verified')
-        print(type(mail_verify))
-        return Response(list(mail_verify)[0], status=status.HTTP_200_OK)
-
+        try:
+            user_mail = User.objects.filter(user_email__exact=request.data['user_email']).values('is_verified').exists()
+            # mail_verify = user_mail.values('is_verified')
+            # print(user_mail)
+            if user_mail == True:
+                return Response({"is_verified": True}, status=status.HTTP_200_OK)
+            else:
+                return Response({"is_verified": False}, status=status.HTTP_200_OK)
+            # return Response('list(mail_verify)[0]', status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response("Email does not exists", status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateRegisterView(views.APIView):
     renderer_classes = [UserRenderer]
@@ -330,7 +336,7 @@ class RegistrationVerificationCodeSend(views.APIView):
             # print('data:', data)
 
             send = SendMessage.send_message(user_callphone,data)
-            res_data = {"success":True,'data': "otp send to user's phone", 'send-message': send}
+            res_data = {"success":True,'data': serializer.data, 'send-message': send}
             return Response(res_data, status=status.HTTP_200_OK)
 
 class PhoneNumberRegistration(views.APIView):
@@ -394,7 +400,7 @@ class LoginVerificationCodeSend(views.APIView):
 
             send = SendMessage.send_message(user_callphone,data)
 
-            res_data = {'success': True,'data': "otp send to user's phone", 'send-message': send}
+            res_data = {'success': True,'data': serializer.data, 'send-message': send}
             return Response(res_data, status=status.HTTP_200_OK)
         else:
             return Response({"success":False,"message": {"user_callphone": "This phone number is not valid or registered."}}, status=status.HTTP_400_BAD_REQUEST)
