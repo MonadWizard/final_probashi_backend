@@ -79,7 +79,7 @@ class MailVerifyRequestView(views.APIView):
 
             Util.send_email(data)
 
-            resp_msg = {'success': True, 'message': 'Email sent successfully'}
+            resp_msg = {'success': True, 'data': data}
             return Response(resp_msg, status=status.HTTP_200_OK)
 
 
