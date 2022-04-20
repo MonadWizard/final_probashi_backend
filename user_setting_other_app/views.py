@@ -73,8 +73,8 @@ class UserIndustryDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = UserIndustryDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
@@ -96,8 +96,8 @@ class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = UserAreaOfExperienceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class UserInterestedAreaDataView(generics.ListCreateAPIView):
@@ -119,8 +119,8 @@ class UserInterestedAreaDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = UserInterestedAreaDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class UserGoalDataView(generics.ListCreateAPIView):
@@ -142,8 +142,8 @@ class UserGoalDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = UserGoalDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
@@ -166,8 +166,8 @@ class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = ConsultancyServiceCategoryDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 
@@ -197,8 +197,8 @@ class BlogTagDataView(generics.ListCreateAPIView):
             # print(data['blog_tags_data'])
             tags += data['blog_tags_data'] 
         # print(tags)
-        # context = {"data":tags}
-        return Response(tags, status=status.HTTP_200_OK)
+        context = {"data":tags}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 
@@ -220,8 +220,8 @@ class UserEducationDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = UserEducationDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 
@@ -236,7 +236,7 @@ class FatchingTrubleView(generics.CreateAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        print(serializer.errors)
+        # print(serializer.errors)
         # errorcontext = {'fatching_truble': serializer.errors['fatching_truble'][0]}
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -258,8 +258,8 @@ class FaqView(generics.ListAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = FaqSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 
@@ -272,8 +272,8 @@ class privacypolicyView(generics.ListAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = privacypolicySerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 
@@ -316,8 +316,8 @@ class NotificationView(generics.ListCreateAPIView):
         if request.data['userid'] == user.userid:
             queryset = self.get_queryset()
             serializer = notificationSerializer(queryset, many=True)
-            # context = {"data":serializer.data}
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            context = {"data":serializer.data}
+            return Response(context, status=status.HTTP_200_OK)
         else:
             return Response('Invalid user',status=status.HTTP_400_BAD_REQUEST)
         
@@ -424,41 +424,41 @@ class SpecificConsultancyData(views.APIView):
             
             # print("data::::::::",data)
             data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [], 'subcategory3': [] }
-            # resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            resp = {'data':data}
+            return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Education Service':
             data0 = StaticSettingData.objects.filter(Q(educationService_degree__isnull=False)).values_list('educationService_degree')
             
             data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [], 'subcategory3': [] }
-            # resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            resp = {'data':data}
+            return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Immigration Consultancy Service':
             data = {'subcategory1':[], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Legal and Civil Service':
             data0 = StaticSettingData.objects.filter(Q(legalcivilservice_required__isnull=False)).values_list('legalcivilservice_required')
             data1 = StaticSettingData.objects.filter(Q(legalcivilservice_issue__isnull=False)).values_list('legalcivilservice_issue')
             data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [item[0] for item in data1], 'subcategory3': [] }
             resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Medical Consultancy Service':
             data0 = StaticSettingData.objects.filter(medicalconsultancyservice_treatment_area__isnull=False).values_list('medicalconsultancyservice_treatment_area')
             
             data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Overseas Recruitment Service':
             data0 = StaticSettingData.objects.filter(overseasrecruitmentservice_job_type__isnull=False).values_list('overseasrecruitmentservice_job_type')
             
             data = {'subcategory1':[item[0] for item in data0], 'subcategory2': [], 'subcategory3': [] }
             resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Property Management Service':
             data0 = StaticSettingData.objects.filter(Q(propertymanagementservice_propertylocation__isnull=False)).values_list('propertymanagementservice_propertylocation')
@@ -469,14 +469,14 @@ class SpecificConsultancyData(views.APIView):
             data = {'subcategory1': [item[0] for item in data0], 'subcategory2':[item[0] for item in data1], 'subcategory3': [item[0] for item in data2] }
             # print(data)
             resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(resp, status=status.HTTP_200_OK)
 
         elif param == 'Tourism Service':
             data0 = StaticSettingData.objects.filter(tourismservices__isnull=False).values_list('tourismservices')
             
             data = {'subcategory1':[item[0] for item in data0], 'subcategory2':[], 'subcategory3': [] }
             resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(resp, status=status.HTTP_200_OK)
         
         elif param == 'Trade Facilitation Service':
             data0 = StaticSettingData.objects.filter(Q(tradefacilitationservice_type__isnull=False) ).values_list('tradefacilitationservice_type')
@@ -485,7 +485,7 @@ class SpecificConsultancyData(views.APIView):
             # print('data::::::::::::',data)
             data = {'subcategory1':[item[0] for item in data0], 'subcategory2':[item[0] for item in data1], 'subcategory3': [] }
             resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(resp, status=status.HTTP_200_OK)
 
         # 
         elif param == 'Training Service':
@@ -493,8 +493,8 @@ class SpecificConsultancyData(views.APIView):
             data1 = StaticSettingData.objects.filter(Q(trainingservice_duration__isnull=False)).values_list('trainingservice_duration')
             
             data = {'subcategory1':[item[0] for item in data0], 'subcategory2':[item[0] for item in data1], 'subcategory3': [] }
-            # resp = {'data':data}
-            return Response(data, status=status.HTTP_200_OK)
+            resp = {'data':data}
+            return Response(resp, status=status.HTTP_200_OK)
 
             
         
@@ -525,8 +525,8 @@ class EducationServiceDataView(generics.ListCreateAPIView):
         # print( "request.data::::::::",request.query_params.get('service'))
         queryset = self.get_queryset()
         serializer = EducationServiceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class OverseasRecruitmentServiceDataView(generics.ListCreateAPIView):
@@ -547,8 +547,8 @@ class OverseasRecruitmentServiceDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = OverseasRecruitmentServiceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class MedicalConsultancyServiceDataView(generics.ListCreateAPIView):
@@ -569,8 +569,8 @@ class MedicalConsultancyServiceDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = MedicalConsultancyServiceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 
@@ -593,8 +593,8 @@ class LegalCivilServiceDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = LegalCivilServiceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class PropertyManagementServiceDataView(generics.ListCreateAPIView):
@@ -617,8 +617,8 @@ class PropertyManagementServiceDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = PropertyManagementServiceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class TourismServiceDataView(generics.ListCreateAPIView):
@@ -639,8 +639,8 @@ class TourismServiceDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = TourismServiceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 
@@ -662,8 +662,8 @@ class TrainingServiceDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = TrainingServiceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class DigitalServiceDataView(generics.ListCreateAPIView):
@@ -684,8 +684,8 @@ class DigitalServiceDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = DigitalServiceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 
@@ -708,8 +708,8 @@ class TradeFacilitationServiceDataView(generics.ListCreateAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = TradeFacilitationServiceDataSerializer(queryset, many=True)
-        # context = {"data":serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        context = {"data":serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
 
 
 

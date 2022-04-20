@@ -128,9 +128,9 @@ class SpecificBlogReactionDetails(generics.ListAPIView):
         # print("queryset:::", queryset)
         serializer = SpecificBlogReactionDetailsSerializers(queryset,context={'userid':userid}, many=True)
         try:
-            context = serializer.data[0]
+            context = {"data": serializer.data[0]}
         except IndexError:
-            context = "no data"
+            context = {"data": "no data"}
         return Response(context, status=status.HTTP_200_OK)
 
 

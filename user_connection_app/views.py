@@ -25,7 +25,7 @@ from user_connection_app.utility import match_friends
 
 class TakeMatchFriend(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    renderer_classes = [UserRenderer]
+    # renderer_classes = [UserRenderer]
 
     def get(self, request):
         user = request.user
@@ -70,7 +70,7 @@ class Friends_suggation(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class= UserFavouriteRequestsSerializer
     pagination_class = GetMatchFriendSetPagination
-    renderer_classes = [UserRenderer]
+    # renderer_classes = [UserRenderer]
 
     def get(self,request):
         user = request.user.userid
@@ -105,12 +105,13 @@ class Friends_suggation(views.APIView):
 
 
 # ------------------------------------------------paginator
-            
-            return Response(match_friend_data)
+            context = {'success': True, 'data': match_friend_data}
+            return Response(context)
 
         except Exception as e:
             # print("error:::::",e)
             return Response({
+                'success': False,
                 'message': 'No match found'
             }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -152,15 +153,15 @@ class GetSpecificUserView(views.APIView):
         user = self.request.user
         if User.objects.filter(Q(is_consultant=False) & Q(userid=user.userid)).exists():
             serializer = UserProfileWithConsultancyViewSerializer(data)
-            # context = {'data': serializer.data}
+            context = {'data': serializer.data}
             # print(context)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(context, status=status.HTTP_200_OK)
         
         elif User.objects.filter(Q(is_consultant=True) & Q(user_id=user.userid)).exists():
             serializer = UserProfileViewSerializer(data)
             context = {'data': serializer.data}
             # print(context)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(context, status=status.HTTP_200_OK)
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
 
 

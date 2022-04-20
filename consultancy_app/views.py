@@ -393,7 +393,7 @@ class ConsultantProvider_StarRating(generics.UpdateAPIView):
     def get_queryset(self):
         try:
             user = self.request.user
-            return UserConsultAppointmentRequest.objects.filter(consultancy_id__userid=user.userid)
+            return UserConsultAppointmentRequest.objects.filter(ConsultancyTimeSchudile__consultancyid__userid=user.userid)
         except UserConsultAppointmentRequest.DoesNotExist:
             raise Http404
 
@@ -449,7 +449,7 @@ class AppointmentSeeker_MissingAppointmentReason(generics.UpdateAPIView):
 
 class GetSpecificCategoryServiceSearchData(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    # renderer_classes = [UserRenderer]
+    renderer_classes = [UserRenderer]
 
 
     def get_services(self,consultant_service_category, data):
@@ -677,8 +677,8 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
         consultancy = self.get_services(service_Category,data)
 
         serializer = GetSpecificCategoryServiceSearchDataSerializer(consultancy, many=True)
-        # data = {'data': serializer.data}
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = {'data': serializer.data}
+        return Response(data, status=status.HTTP_200_OK)
 
 
 

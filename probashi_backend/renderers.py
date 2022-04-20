@@ -18,15 +18,24 @@ class UserRenderer(renderers.JSONRenderer):
         if 'ErrorDetail' in str(data):
             response = json.dumps({'success': False, 'message': data})
         elif renderer_context['response'].status_code == 400:
-            response = json.dumps({'success': False, 'message': data})
+            # print('data 400:::::::::::',data)
+            response = json.dumps({'success': False, 'message': data}, ensure_ascii=False)
         elif renderer_context['response'].status_code == 401:
+            # print(data, type(data))
             response = json.dumps({'success': False, 'message': data})
         elif renderer_context['response'].status_code == 500:
             response = json.dumps({'success': False, 'message': data})
 
         else:
-            response = json.dumps({'success': True, 'data': data})
-        return response
+            
+            # if type(data) == dict:
+            print('response:::::::::',type(data))
+            response = {'success': True}
+            response.update(data)
+
+            # response = json.dumps({'success': True, 'data': data})
+        
+        return json.dumps(response)
 
         # import pdb
         # pdb.set_trace()

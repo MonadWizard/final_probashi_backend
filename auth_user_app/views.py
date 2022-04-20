@@ -79,7 +79,9 @@ class MailVerifyRequestView(views.APIView):
 
             Util.send_email(data)
 
-            resp_msg = {'success': True, 'data': data}
+            resp_msg = {'success': True}
+            resp_msg.update(data)
+
             return Response(resp_msg, status=status.HTTP_200_OK)
 
 
@@ -186,9 +188,13 @@ class LoginAPIView(generics.GenericAPIView):
     def post(self, request):
         
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
         
+        if serializer.is_valid():
+            # print('serializer.data:::::::::::', serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            # print('serializer.errors::::::::::::::', serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -211,7 +217,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             data = {'email_body': email_body, 'to_email': user.user_email,
                     'email_subject': 'Reset your passsword'}
             Util.send_email(data)
-        return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+        return Response({'message': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
 
 
 
@@ -257,8 +263,9 @@ class LogoutAPIView(generics.GenericAPIView):
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(refresh_token)
             token.blacklist()
-
-            return Response('logout success',status=status.HTTP_205_RESET_CONTENT)
+            context={'message':'Logged out Successfully'}
+            # context.update('logout success')
+            return Response(context,status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -409,7 +416,7 @@ class LoginVerificationCodeSend(views.APIView):
 
 # VerificationCodeSend also works for loging  
 class PhoneNumberLogin(views.APIView):
-    # renderer_classes = [UserRenderer]
+    renderer_classes = [UserRenderer]
     serializer_class = PhoneLoginSerializer
 
     def post(self, request):
@@ -428,9 +435,9 @@ class PhoneNumberLogin(views.APIView):
             
             return Response(serializer.data, status=status.HTTP_200_OK)
         if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone'])).exists():
-            return Response({"success":False,"message":"invalid or expired otp"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response("invalid or expired otp", status=status.HTTP_400_BAD_REQUEST)
         
-        return Response({"success":False,"message":"invalid phone number"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response("invalid phone number", status=status.HTTP_400_BAD_REQUEST)
 
 
 
