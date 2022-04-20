@@ -129,8 +129,7 @@ class ConsultancyTimeSchudileView(generics.ListCreateAPIView):
 
     def create(self, request):
         user = request.user
-        con_user = ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user.userid) &
-                                                        Q(consultancyid = request.data['consultancyid'])).exists()
+        con_user = ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user.userid)).exists()
         # print("con_user::::::::::::::::::", con_user)   
         if con_user == True:
             serializer = ConsultancyTimeSchudileSerializer(data=request.data)
@@ -254,7 +253,7 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
         user = request.user
         # print(":::::::::::", user.userid)
         consultancyTimeSchudile= ConsultancyTimeSchudile.objects.filter(id=request.data['ConsultancyTimeSchudile']).first()
-        # print(":::::::::::", consultancyTimeSchudile)
+        print(":::::::::::", consultancyTimeSchudile)
         if request.data['seekerid'] == user.userid and consultancyTimeSchudile != None:
             data = Consultancy_CREATE_and_GET_session(request, user)
             # print("status:::::::", data['res']['status'].lower())
