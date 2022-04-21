@@ -15,7 +15,7 @@ class UserRenderer(renderers.JSONRenderer):
         
         
         if 'ErrorDetail' in str(data):
-            err = list(list(data.values())[:1])[0]
+            # err = list(list(data.values())[:1])[0]
             # errr2 = list(data.items())[0][1]
             # err = str(err)
             # err2 = 
@@ -23,16 +23,16 @@ class UserRenderer(renderers.JSONRenderer):
             response = json.dumps({'success': False, 'message':data})
         elif renderer_context['response'].status_code == 400:
             # print('data 400:::::::::::',data)
-            err = list(list(data.values())[:1])[0]
+            # err = list(list(data.values())[:1])[0]
             response = json.dumps({'success': False, 'message': data})
         elif renderer_context['response'].status_code == 401:
-            err = list(list(data.values())[:1])[0]
+            # err = list(list(data.values())[:1])[0]
             # print('data 401:::::::::::',data)
 
             # print(data, type(data))
             response = json.dumps({'success': False, 'message': data})
         elif renderer_context['response'].status_code == 500:
-            err = list(list(data.values())[:1])[0]
+            # err = list(list(data.values())[:1])[0]
             response = json.dumps({'success': False, 'message': data})
 
         else:

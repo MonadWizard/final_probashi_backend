@@ -53,25 +53,28 @@ class BlogCommentView(views.APIView):
 
 class BlogReactionView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    renderer_classes = [UserRenderer]
+    # renderer_classes = [UserRenderer]
 
     def post(self,request):
 
         user = self.request.user
 
-        if Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid)).exists():
+        if Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid) & Q(userid__exact=request.data['userid'])).exists():
             if request.data['is_user_like'] == False and request.data['is_user_dislike'] == False:
                 # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
                 Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).update(is_user_like=False,is_user_dislike=False)
                 update_false = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values()
                 # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
-                # print('::::::::::', list(update_false))
-                return Response(list(update_false),status=status.HTTP_202_ACCEPTED)
+                print('::::::::::', list(update_false)[0])
+                context = {'success': True, 'data': list(update_false)[-1]}
+                # context.update(list(update_false))    
+                return Response(context,status=status.HTTP_202_ACCEPTED)
                 # return Response('user can like or dislike',status=status.HTTP_202_ACCEPTED)
 
             elif Blog_reaction.objects.filter(Q(is_user_like=request.data['is_user_like']) & 
                                                 Q(is_user_dislike=request.data['is_user_dislike'])).exists():
-                return Response('already react happend',status=status.HTTP_400_BAD_REQUEST)
+                context = {'success': False, 'message': 'already react happend'}
+                return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
             
             else:
@@ -79,7 +82,9 @@ class BlogReactionView(views.APIView):
 
                 if serializer.is_valid():
                     serializer.save()
-                    return Response(serializer.data ,status=status.HTTP_200_OK)
+                    context = {'success': True, 'data': serializer.data}
+                    # context.update(serializer.data)
+                    return Response(context ,status=status.HTTP_200_OK)
 
         
         elif request.data['userid'] == user.userid : 
@@ -87,8 +92,10 @@ class BlogReactionView(views.APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data ,status=status.HTTP_200_OK)
-        return Response('userid and token is invalid',status=status.HTTP_400_BAD_REQUEST)
+                context = {'success': True, 'data': serializer.data}
+                # context.update(serializer.data)
+                return Response(context ,status=status.HTTP_200_OK)
+        return Response({'success': False, 'message':'userid and token is invalid'},status=status.HTTP_400_BAD_REQUEST)
 
 
 class GetAllpostsSetPagination(PageNumberPagination):
@@ -223,7 +230,7 @@ class BlogSearch(views.APIView):
     def post(self, request):
         print("request data::::::",request.data)
 
-        
+
 
 
 
