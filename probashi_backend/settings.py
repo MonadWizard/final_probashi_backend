@@ -173,6 +173,7 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'userid',
     # 'ROTATE_REFRESH_TOKENS': True,
     # 'BLACKLIST_AFTER_ROTATION': True
+    
 }
 
 

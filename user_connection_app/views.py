@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from django.http import Http404
 from auth_user_app.models import User
 from .serializers import SerachUserSerializer
+from rest_framework import pagination
 from rest_framework.pagination import PageNumberPagination
 from user_profile_app.serializers import UserProfileViewSerializer, UserProfileWithConsultancyViewSerializer
 from .serializers import (UserFavouriteRequestSendSerializer, UserFavouriteRequestsSerializer,
@@ -16,7 +17,6 @@ from itertools import chain
 from django.db.models import F
 import datetime
 import json 
-from rest_framework.pagination import PageNumberPagination
 from probashi_backend.renderers import UserRenderer
 
 
@@ -61,10 +61,31 @@ class TakeMatchFriend(views.APIView):
 
 
 
-class GetMatchFriendSetPagination(PageNumberPagination):
-    page_size = 3
+class GetMatchFriendSetPagination(pagination.PageNumberPagination):
+    page_size = 5
     page_size_query_param = 'page_size'
     # max_page_size = 10000
+
+    # page_size_query_param = 'page_size'
+
+    def get_paginated_response(self, data):
+        next_url = self.get_next_link()
+        previous_url = self.get_previous_link()
+
+        if next_url is not None and previous_url is not None:
+            link = '<{next_url}>; rel="next", <{previous_url}>; rel="prev"'
+        elif next_url is not None:
+            link = '<{next_url}>; rel="next"'
+        elif previous_url is not None:
+            link = '<{previous_url}>; rel="prev"'
+        else:
+            link = ''
+
+        link = link.format(next_url=next_url, previous_url=previous_url)
+        print('link:::',{'Link': link, 'Count': self.page.paginator.count}) if link else {}
+        headers = {'Link': link, 'Count': self.page.paginator.count}
+        data = {'Link': link, 'Count': self.page.paginator.count, 'data': data}
+        return Response(data, headers=headers)
 
 class Friends_suggation(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
@@ -102,6 +123,17 @@ class Friends_suggation(views.APIView):
             
 # -------------------------paginator
 
+            # print(type(match_friend_data),"::::::::::::::::::::::", match_friend_data)
+
+            paginator = GetMatchFriendSetPagination()
+            page = paginator.paginate_queryset(match_friend_data, request)
+            if page is not None:
+                # print("is not none::::::::::::::::::::::", page)
+                return paginator.get_paginated_response(page)
+            
+            # print("::::::::::::::::::::::", page)
+
+            return Response(page)
 
 
 # ------------------------------------------------paginator

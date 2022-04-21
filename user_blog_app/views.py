@@ -109,6 +109,18 @@ class BlogPaginateListView(generics.ListAPIView):
 
 
 
+# specific blog share link.............
+
+
+
+
+
+
+
+
+
+
+
 
 class SpecificBlogReactionDetails(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
@@ -190,4 +202,21 @@ class BlogPaginateCommentListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Blog.objects.all().order_by('-userblog_publishdate')
+
+
+
+
+
+
+# user blog Search..............
+# select * from public.user_blog_app_blog
+# where userblog_tags @> '{"tag1"}';
+
+
+
+
+
+
+
+
 

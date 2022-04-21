@@ -1,4 +1,3 @@
-from email import charset
 from rest_framework import renderers
 import json
 
@@ -9,20 +8,33 @@ class UserRenderer(renderers.JSONRenderer):
     def render(self, data, accepted_media_type=None, renderer_context=None):
         response = ''
         
+        # print('data:::::::::',data)
+        # print('renderer:::::::::',renderer_context)
+        # print('accepted:::::::::',accepted_media_type)
+        # print('status:::::::::',renderer_context['response'].status_code )
+        
+        
         if 'ErrorDetail' in str(data):
-            response = json.dumps({'success': False, 'message': data})
+            err = list(list(data.values())[:1])[0]
+            # errr2 = list(data.items())[0][1]
+            # err = str(err)
+            print('data erroe:::::::::::',err)
+            response = json.dumps({'success': False, 'message':err})
         elif renderer_context['response'].status_code == 400:
-            response = json.dumps({'success': False, 'message': data})
+            # print('data 400:::::::::::',data)
+            err = list(list(data.values())[:1])[0]
+            response = json.dumps({'success': False, 'message': err})
         elif renderer_context['response'].status_code == 401:
+            err = list(list(data.values())[:1])[0]
+            # print('data 401:::::::::::',data)
+
             # print(data, type(data))
-            response = json.dumps({'success': False, 'message': data})
+            response = json.dumps({'success': False, 'message': err})
         elif renderer_context['response'].status_code == 500:
-            response = json.dumps({'success': False, 'message': data})
+            err = list(list(data.values())[:1])[0]
+            response = json.dumps({'success': False, 'message': err})
 
         else:
-            
-            # if type(data) == dict:
-            print('response:::::::::',type(data))
             response = {'success': True}
             response.update(data)
 
