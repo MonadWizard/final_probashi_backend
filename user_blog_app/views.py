@@ -212,7 +212,22 @@ class BlogPaginateCommentListView(generics.ListAPIView):
 # select * from public.user_blog_app_blog
 # where userblog_tags @> '{"tag1"}';
 
+class BlogSearch(views.APIView):
+    # permission_classes = [permissions.IsAuthenticated,]
+    renderer_classes = [UserRenderer]
 
+    # search Blog Tags
+        # give list of tags
+        # I use cursor.fatchall()
+        # give response as pagination  view 
+    def post(self, request):
+        print("request data::::::",request.data)
+
+        
+
+
+
+        return Response(request.data, status=status.HTTP_200_OK)
 
 
 

@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (BlogCreateView, BlogPaginateListView, 
                     BlogCommentView,BlogReactionView,
                     SpecificBlogReactionDetails,SpecificBlogCommentDetails,
-                    BlogPaginateReactionListView,BlogPaginateCommentListView)
+                    BlogPaginateReactionListView,BlogPaginateCommentListView,
+                    BlogSearch)
 
 
 
@@ -15,7 +16,7 @@ urlpatterns = [
     path('specific-blog-comments/', SpecificBlogCommentDetails.as_view(), name="SpecificBlogCommentDetails"),
     path('blog-reaction-list/', BlogPaginateReactionListView.as_view(), name="BlogPaginateReactionListView"),
     path('blog-comment-list/', BlogPaginateCommentListView.as_view(), name="BlogPaginateCommentListView"),
-
+    path('blog-search/', BlogSearch.as_view(), name="BlogSearch"),
     
 ]
 
