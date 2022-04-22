@@ -21,6 +21,8 @@ from auth_user_app.models import User
 from probashi_backend.renderers import UserRenderer
 import json
 from django.db import connection
+from rest_framework import pagination
+from rest_framework.pagination import PageNumberPagination
 
 
 
@@ -215,6 +217,9 @@ class BlogPaginateCommentListView(generics.ListAPIView):
 
 
 
+class GetBlogPagination(pagination.PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
 
 
 # user blog Search..............
@@ -249,7 +254,20 @@ class BlogSearch(views.APIView):
             result.append( dict( zip( columnNames , record ) ) )
 
         context = {'success': True, 'data': result}    
-        return Response(context, status=status.HTTP_200_OK)
+        
+        paginator = GetBlogPagination()
+        page = paginator.paginate_queryset(result, request)
+        if page is not None:
+            # print("is not none::::::::::::::::::::::", page)
+            return paginator.get_paginated_response(page)
+        
+        # print("::::::::::::::::::::::", page)
+
+        return Response(page)
+        
+        
+        
+        # return Response(context, status=status.HTTP_200_OK)
 
 
 
