@@ -124,15 +124,6 @@ class BlogPaginateListView(generics.ListAPIView):
 
 
 
-
-
-
-
-
-
-
-
-
 class SpecificBlogReactionDetails(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     # serializer_class = SpecificBlogReactionDetailsSerializers
@@ -263,7 +254,7 @@ class BlogSearch(views.APIView):
         
         # print("::::::::::::::::::::::", page)
 
-        return Response(page)
+        return Response(page, status=status.HTTP_200_OK)
         
         
         

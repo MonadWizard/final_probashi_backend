@@ -213,10 +213,12 @@ class UserExperienceCreate(views.APIView):
     renderer_classes = [UserRenderer]
 
     def post(self,request):
-        serializer = UserExperienceCreateSerializer(data=request.data)
+        print('data:::::', request.data)
+        serializer = UserExperienceCreateSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_200_OK)
+            context = {'data': serializer.data}
+            return Response(context,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -250,6 +252,7 @@ class UserExperienceUpdate(views.APIView):
 
         if serializer.is_valid():
             serializer.save()
+            
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -259,10 +262,11 @@ class UserEducationCreate(views.APIView):
     renderer_classes = [UserRenderer]
 
     def post(self,request):
-        serializer = UserEducationCreateSerializer(data=request.data)
+        serializer = UserEducationCreateSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_200_OK)
+            context = {'data': serializer.data}
+            return Response(context,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 

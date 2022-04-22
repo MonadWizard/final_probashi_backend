@@ -248,7 +248,6 @@ class AcceptFavouriteRequest(views.APIView):
     renderer_classes = [UserRenderer]
 
 
-
     def get_object(self,requestid):
         try:
             return UserFavoutireRequestSend.objects.get(id=requestid)
@@ -323,6 +322,27 @@ class FavouritesList(generics.ListAPIView):
 
 
 
+# user search API..............
+# Education  ,  Industry ,  Location ,  Type of service
+# Education serach from User_education models
+# Industry search from User.user_industry
+# Location(city,Country) search from User.user_location
+# Type of service search from ConsultancyCreate.consultant_service_category
 
+# class UserSearch(views.APIView):
+#     permission_classes = [permissions.IsAuthenticated,]
+#     renderer_classes = [UserRenderer]
 
+#     def get_queryset(self,userid):
+#         return User.objects.filter(userid=userid)
 
+#     def post(self,request):
+#         user = self.request.user
+#         if request.data['search_user_id'] != user.userid:
+#             if User.objects.filter(Q(userid__exact=request.data['search_user_id']) & Q(is_active=True)).exists():
+#                 search_user = self.get_queryset(request.data['search_user_id'])
+#                 serializer = UserSearchSerializer(search_user, many=True)
+#                 context = {"data":serializer.data}
+#                 return Response(context, status=status.HTTP_200_OK)
+#             return Response('Bad Request', status=status.HTTP_400_BAD_REQUEST)
+#         return Response('You can not search yourself', status=status.HTTP_400_BAD_REQUEST)
