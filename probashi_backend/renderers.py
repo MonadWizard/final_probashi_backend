@@ -8,7 +8,7 @@ class UserRenderer(renderers.JSONRenderer):
     def render(self, data, accepted_media_type=None, renderer_context=None):
         response = ''
         
-        print('data:::::::::', data)
+        # print('data:::::::::', data)
         # print('renderer:::::::::',renderer_context)
         # print('accepted:::::::::',accepted_media_type)
         # print('status:::::::::',renderer_context['response'].status_code )
@@ -19,7 +19,7 @@ class UserRenderer(renderers.JSONRenderer):
             # errr2 = list(data.items())[0][1]
             # err = str(err)
             # err2 = 
-            print('data erroe:::::::::::',data)
+            # print('data erroe:::::::::::',data)
             response = json.dumps({'success': False, 'message':data})
         elif renderer_context['response'].status_code == 400:
             # print('data 400:::::::::::',data)

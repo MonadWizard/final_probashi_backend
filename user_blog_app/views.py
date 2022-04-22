@@ -20,6 +20,8 @@ from django.db.models import Q
 from auth_user_app.models import User
 from probashi_backend.renderers import UserRenderer
 import json
+from django.db import connection
+
 
 
 
@@ -221,24 +223,37 @@ class BlogPaginateCommentListView(generics.ListAPIView):
 
 class BlogSearch(views.APIView):
     # permission_classes = [permissions.IsAuthenticated,]
-    renderer_classes = [UserRenderer]
+    # renderer_classes = [UserRenderer]
 
     # search Blog Tags
         # give list of tags
         # I use cursor.fatchall()
         # give response as pagination  view 
     def post(self, request):
-        print("request data::::::",request.data)
+        tags = request.data['tags']
+        print("request data::::::",type(tags))
+
+        query = "select * from public.user_blog_app_blog where userblog_tags @> '{" 
+        query += str(tags[::])[1:-1].replace("'", '"')
+        query += "}'; "
+        # print("query:::", query)
+
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            q_data_fatch_all = cursor.fetchall()
+
+        result = []
+        columnNames = [column[0] for column in cursor.description]
+
+        for record in q_data_fatch_all:
+            result.append( dict( zip( columnNames , record ) ) )
+
+        context = {'success': True, 'data': result}    
+        return Response(context, status=status.HTTP_200_OK)
 
 
 
-
-
-        return Response(request.data, status=status.HTTP_200_OK)
-
-
-
-
+################# need to be pagination..........
 
 
 

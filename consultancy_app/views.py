@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
-# from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
@@ -455,219 +454,456 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
     def get_services(self,consultant_service_category, data):
         try:
             if consultant_service_category == 'Education Service':
-                print("EDU:::::::::::", type(data['consultant_service_locationcountry']))
-                if data['educationService_degree'] != [] and data['consultant_service_locationcountry'] != '':
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(educationService_degree = data['educationService_degree']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-                elif data['educationService_degree'] == [] and data['consultant_service_locationcountry'] != '':
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-                elif data['consultant_service_locationcountry'] == '' and data['educationService_degree'] != []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            Q(educationService_degree = data['educationService_degree']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-                else:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )                                            
-            
-            
+                
+                consultant_service_locationcountry = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']))
+                educationService_degree = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(educationService_degree = data['educationService_degree']))
+                consultant_servicebudget_startrange = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']))
+                consultant_servicebudget_endrange = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+
+                # print("consultant_service_locationcountry::::::::", type(consultant_service_locationcountry))
+                
+                search = [consultant_service_locationcountry, educationService_degree, 
+                            consultant_servicebudget_startrange, consultant_servicebudget_endrange]
+
+                count = 1
+                search_data = consultant_service_locationcountry
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            
+                        else:
+                            search_data = i
+                
+                # print("search data:::::::::::::::",search_data)
+
+                return search_data
+
+
+#   string code...................
+
+
+
+# fltr = f"ConsultancyCreate.objects.filter(Q(consultant_service_category = {consultant_service_category} ) & "
+
+                # for d in data:
+                #     if data[d] == [] or data[d] == '' :
+                #         pass
+                #     else:
+                #         fltr += f"Q({d} = {data[d]} ) & "
+                # fltr = fltr[:-2]
+                # fltr += ")"
+                # # print("fltr::::::::::::", fltr)
+
+                # # res = exec(fltr)
+                
+
+
+# end string code...................
+
+
+
+        
             if consultant_service_category == 'Digital Service':
-                if data['digitalservice_type'] != []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                
+                both = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                             (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])))
+
+                is_userconsultant_personal = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal'])))
+                is_userconsultant_company = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company']))
+                digitalservice_type = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                             Q(digitalservice_type = data['digitalservice_type']) )
-                else:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) )
-            
+                
+
+                search = [is_userconsultant_personal, is_userconsultant_company, digitalservice_type]
+
+                count = 1
+                search_data = both
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            # print("search data:::::::::::::::",search_data)
+                        else:
+                            search_data = i
+
+                return search_data
+
+
+                
             
             if consultant_service_category == 'Immigration Consultancy Service':
                 
-                if data['consultant_service_locationcountry'] != '':
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                both = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                             (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-                else:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-            
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])))
+
+                is_userconsultant_personal = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal'])))
+                is_userconsultant_company = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company']))
+                
+                consultant_service_locationcountry = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']))
+
+
+                consultant_servicebudget_startrange__gt = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) )
+
+
+                consultant_servicebudget_endrange__lt = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+
+
+                search = [is_userconsultant_personal, is_userconsultant_company, consultant_service_locationcountry, 
+                        consultant_servicebudget_startrange__gt, consultant_servicebudget_endrange__lt]
+
+                count = 1
+                search_data = both
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            # print("search data:::::::::::::::",search_data)
+                        else:
+                            search_data = i
+
+                return search_data
+
 
             
             if consultant_service_category == 'Legal and Civil Service':
                 
-                if data['consultant_service_locationcountry'] != '' and data['legalcivilservice_required'] != [] and data['legalcivilservice_issue'] != [] :
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(legalcivilservice_required = data['legalcivilservice_required']) &
-                                                            Q(legalcivilservice_issue = data['legalcivilservice_issue']) )
-
-                elif data['consultant_service_locationcountry'] == '' and data['legalcivilservice_required'] != [] and data['legalcivilservice_issue'] != [] :
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(legalcivilservice_required = data['legalcivilservice_required']) &
-                                                            Q(legalcivilservice_issue = data['legalcivilservice_issue']) ))
-
-                elif data['consultant_service_locationcountry'] != '' and data['legalcivilservice_required'] == [] and data['legalcivilservice_issue'] != [] :
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(legalcivilservice_issue = data['legalcivilservice_issue']) )
-
-                elif data['consultant_service_locationcountry'] != '' and data['legalcivilservice_required'] != [] and data['legalcivilservice_issue'] == []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(legalcivilservice_required = data['legalcivilservice_required']) )
-
-                elif data['consultant_service_locationcountry'] == '' and data['legalcivilservice_required'] == [] and data['legalcivilservice_issue'] != []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(legalcivilservice_issue = data['legalcivilservice_issue']) )
-
-                elif data['consultant_service_locationcountry'] != '' and data['legalcivilservice_required'] == [] and data['legalcivilservice_issue'] == []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) )
-
-                elif data['consultant_service_locationcountry'] == '' and data['legalcivilservice_required'] != [] and data['legalcivilservice_issue'] == [] :
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(legalcivilservice_required = data['legalcivilservice_required']) )
-                else:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                both = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                             (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
                                                             Q(is_userconsultant_company = data['is_userconsultant_company'])))
+
+                is_userconsultant_personal = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal'])))
+                is_userconsultant_company = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company']))
+                
+                consultant_service_locationcountry = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']))
+
+                legalcivilservice_required = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(legalcivilservice_required = data['legalcivilservice_required']))
+                
+                legalcivilservice_issue = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(legalcivilservice_issue = data['legalcivilservice_issue']) )
+                
+                search = [is_userconsultant_personal, is_userconsultant_company, consultant_service_locationcountry, 
+                        legalcivilservice_required, legalcivilservice_issue]
+
+                count = 1
+                search_data = both
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            # print("search data:::::::::::::::",search_data)
+                        else:
+                            search_data = i
+
+                return search_data
+
+
+
 
 
             
             
             if consultant_service_category == 'Medical Consultancy Service':
-                if data['consultant_service_locationcountry'] != '' and data['medicalconsultancyservice_treatment_area'] != []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(medicalconsultancyservice_treatment_area = data['medicalconsultancyservice_treatment_area']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-                elif data['consultant_service_locationcountry'] == '' and data['medicalconsultancyservice_treatment_area'] != []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(medicalconsultancyservice_treatment_area = data['medicalconsultancyservice_treatment_area']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-                elif data['consultant_service_locationcountry'] != '' and data['medicalconsultancyservice_treatment_area'] == []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
-                else: 
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']) )
                 
+                both = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])))
+
+                is_userconsultant_personal = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal'])))
+                is_userconsultant_company = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company']))
+                
+                consultant_service_locationcountry = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']))
+
+                consultant_servicebudget_startrange__gt = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) )
+
+
+                consultant_servicebudget_endrange__lt = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+
+                medicalconsultancyservice_treatment_area = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                                            Q(medicalconsultancyservice_treatment_area = data['medicalconsultancyservice_treatment_area']))
+
+                search = [is_userconsultant_personal, is_userconsultant_company, consultant_service_locationcountry, 
+                        medicalconsultancyservice_treatment_area, consultant_servicebudget_startrange__gt, consultant_servicebudget_endrange__lt]
+
+
+                count = 1
+                search_data = both
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            # print("search data:::::::::::::::",search_data)
+                        else:
+                            search_data = i
+
+                return search_data
+                
+                
+        
             
             
             if consultant_service_category == 'Overseas Recruitment Service':
-                if data['consultant_service_locationcountry'] != '' and data['overseasrecruitmentservice_job_type'] != []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                
+                both = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                             (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(overseasrecruitmentservice_job_type = data['overseasrecruitmentservice_job_type']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
-                elif data['consultant_service_locationcountry'] == '' and data['overseasrecruitmentservice_job_type'] != []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(overseasrecruitmentservice_job_type = data['overseasrecruitmentservice_job_type']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])))
 
-                elif data['consultant_service_locationcountry'] != '' and data['overseasrecruitmentservice_job_type'] == []:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+                is_userconsultant_personal = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal'])))
+                is_userconsultant_company = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company']))
+                
+                consultant_service_locationcountry = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']))
 
-                else:
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) &
-                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+                consultant_servicebudget_startrange__gt = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_servicebudget_startrange__gt = data['consultant_servicebudget_startrange']) )
 
+
+                consultant_servicebudget_endrange__lt = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                                            Q(consultant_servicebudget_endrange__lt = data['consultant_servicebudget_endrange']))
+
+                overseasrecruitmentservice_job_type = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                                            Q(overseasrecruitmentservice_job_type = data['overseasrecruitmentservice_job_type']))
+                
+                search = [is_userconsultant_personal, is_userconsultant_company, consultant_service_locationcountry, 
+                        overseasrecruitmentservice_job_type, consultant_servicebudget_startrange__gt, consultant_servicebudget_endrange__lt]
+
+
+                count = 1
+                search_data = both
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            # print("search data:::::::::::::::",search_data)
+                        else:
+                            search_data = i
+
+                return search_data
+                
                 
             
 
 # ============================================================================================================
             
             if consultant_service_category == 'Property Management Service':
-                if (data['consultant_service_locationcountry'] != '' and data['propertymanagementservice_propertylocation'] != '' and  
-                        data['propertymanagementservice_type'] != [] and data['propertymanagementservice_need'] != []):
-                    return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                
+                both = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                             (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                            Q(propertymanagementservice_propertylocation= data['propertymanagementservice_propertylocation']) &
-                                                            Q(propertymanagementservice_type = data['propertymanagementservice_type']) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])))
+
+                is_userconsultant_personal = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal'])))
+                is_userconsultant_company = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company']))
+                
+                consultant_service_locationcountry = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']))
+                
+                propertymanagementservice_propertylocation = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(propertymanagementservice_propertylocation= data['propertymanagementservice_propertylocation']))
+
+                propertymanagementservice_type = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(propertymanagementservice_type = data['propertymanagementservice_type']) )
+
+                propertymanagementservice_need = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                             Q(propertymanagementservice_need= data['propertymanagementservice_need']) )
+                
+                
+                search = [is_userconsultant_personal, is_userconsultant_company, consultant_service_locationcountry, 
+                        propertymanagementservice_propertylocation, propertymanagementservice_type, propertymanagementservice_need]
+
+
+                count = 1
+                search_data = both
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            # print("search data:::::::::::::::",search_data)
+                        else:
+                            search_data = i
+
+                return search_data
                 
             
             
             if consultant_service_category == 'Tourism Service':
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                        (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                        Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                        Q(tourismservices = data['tourismservices']) )
-            
+                
+                both = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])))
+
+                is_userconsultant_personal = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal'])))
+                is_userconsultant_company = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company']))
+                
+                tourismservices = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(tourismservices = data['tourismservices']) )
+
+
+
+                search = [is_userconsultant_personal, is_userconsultant_company, tourismservices]
+
+
+                count = 1
+                search_data = both
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            # print("search data:::::::::::::::",search_data)
+                        else:
+                            search_data = i
+
+                return search_data
+                
             
             if consultant_service_category == 'Trade Facilitation Service':
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category )  &
-                                                        (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                        Q(is_userconsultant_company = data['is_userconsultant_company'])) & 
-                                                        Q(consultant_service_locationcountry= data['consultant_service_locationcountry']) &
-                                                        Q(tradefacilitationservice_type = data['tradefacilitationservice_type']) &
+                both = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])))
+
+                is_userconsultant_personal = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal'])))
+                is_userconsultant_company = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company']))
+                
+                consultant_service_locationcountry = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(consultant_service_locationcountry= data['consultant_service_locationcountry']))
+                
+                tradefacilitationservice_type = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                        Q(tradefacilitationservice_type = data['tradefacilitationservice_type']) )
+                
+                tradefacilitationservice_Purpose = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                         Q(tradefacilitationservice_Purpose = data['tradefacilitationservice_Purpose']) )
-            
+                
+                search = [is_userconsultant_personal, is_userconsultant_company, consultant_service_locationcountry,
+                            tradefacilitationservice_type, tradefacilitationservice_Purpose]
+
+
+                count = 1
+                search_data = both
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            # print("search data:::::::::::::::",search_data)
+                        else:
+                            search_data = i
+
+                return search_data
+
+
             
             if consultant_service_category == 'Training Service':
-                return ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
-                                                        (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
-                                                        Q(is_userconsultant_company = data['is_userconsultant_company'])) &
-                                                        Q(trainingservice_topic = data['trainingservice_topic']) &
+                
+                both = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal']) |
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company'])))
+
+                is_userconsultant_personal = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            (Q(is_userconsultant_personal = data['is_userconsultant_personal'])))
+                is_userconsultant_company = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                            Q(is_userconsultant_company = data['is_userconsultant_company']))
+                
+                trainingservice_topic = ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
+                                                        Q(trainingservice_topic = data['trainingservice_topic']) )
+                
+                trainingservice_duration =  ConsultancyCreate.objects.filter(Q(consultant_service_category = consultant_service_category ) &
                                                         Q(trainingservice_duration = data['trainingservice_duration']) )
+                
+
+                search = [is_userconsultant_personal, is_userconsultant_company,
+                            trainingservice_topic, trainingservice_duration]
+
+
+                count = 1
+                search_data = both
+                for i,d in zip(search,data) :
+                    # print(count, '::::::::i:::::::::::',type(i),data[d])
+                    if data[d] == '' or data[d] == []:
+                        pass
+                    else :
+                        count += 1
+                        
+                        if count > 1:
+                            search_data &= i
+                            # print("search data:::::::::::::::",search_data)
+                        else:
+                            search_data = i
+
+                return search_data
+                
         except User.DoesNotExist:
             raise Http404
 
