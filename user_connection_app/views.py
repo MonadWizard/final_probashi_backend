@@ -365,7 +365,7 @@ class UserSearchFilterPagination(pagination.PageNumberPagination):
 
 class UserSearchFilter(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
-    # renderer_classes = [UserRenderer]
+    renderer_classes = [UserRenderer]
 
     def get_user(self,data):
 
@@ -419,6 +419,7 @@ class UserSearchFilter(views.APIView):
         if page is not None:
             return paginator.get_paginated_response(page)
         
+        
 
         return Response(page, status=status.HTTP_200_OK)
 
@@ -427,7 +428,7 @@ class UserSearchFilter(views.APIView):
 
 class UserSearchField(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
-    # renderer_classes = [UserRenderer]
+    renderer_classes = [UserRenderer]
 
     def get_user(self,data):
 
@@ -435,7 +436,7 @@ class UserSearchField(views.APIView):
         
         search_data = User.objects.filter(user_fullname__contains=user_name)
 
-        print("search data:::::::::::::::",search_data)
+        # print("search data:::::::::::::::",search_data)
 
         return search_data
 
@@ -443,7 +444,7 @@ class UserSearchField(views.APIView):
         user = self.request.user
         data = request.data
 
-        print(":::::::::::::::::::::",request.data)
+        # print(":::::::::::::::::::::",request.data)
         search_user = self.get_user(data)
 
         serializer = UserSearchFieldSerializer(search_user, many=True)
