@@ -1,3 +1,4 @@
+from attr import field
 from rest_framework import serializers
 from auth_user_app.models import User
 from user_profile_app.models import User_education
@@ -31,6 +32,9 @@ class SerachUserSerializer(serializers.ModelSerializer):
                     'user_industry','user_currentdesignation','user_educationdata', 'user_consultancydata']
         
         # exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
+
+
+
 
 
 class UserFavouriteRequestSendSerializer(serializers.ModelSerializer):

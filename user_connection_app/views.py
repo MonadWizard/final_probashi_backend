@@ -1,4 +1,5 @@
 from multiprocessing import context
+from unittest import result
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -18,10 +19,10 @@ from django.db.models import F
 import datetime
 import json 
 from probashi_backend.renderers import UserRenderer
-
-
+from user_profile_app.models import User_education
+from consultancy_app.models import ConsultancyCreate
 from user_connection_app.utility import match_friends
-
+from itertools import chain
 
 class TakeMatchFriend(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -322,27 +323,101 @@ class FavouritesList(generics.ListAPIView):
 
 
 
-# user search API..............
-# Education  ,  Industry ,  Location ,  Type of service
-# Education serach from User_education models
-# Industry search from User.user_industry
-# Location(city,Country) search from User.user_location
-# Type of service search from ConsultancyCreate.consultant_service_category
+class UserSearchGetData(views.APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    # renderer_classes = [UserRenderer]
 
-# class UserSearch(views.APIView):
-#     permission_classes = [permissions.IsAuthenticated,]
-#     renderer_classes = [UserRenderer]
+    def get(self,request):
+        user = self.request.user
+        if User.objects.filter(userid=user.userid).exists():
+            education_data = set(User_education.objects.exclude(user_edu_degree__isnull=True).values_list('user_edu_degree', flat=True))
+            industry_data = set(User.objects.exclude(user_industry__isnull=True).values_list('user_industry', flat=True))
+            
+            residential_location = list(set(User.objects.exclude(user_residential_district__isnull=True).values_list('user_residential_district', flat=True)))
+            residential_location_data = ['Bangladesh,'+x for x in residential_location]
+            nonresidential_location = list(set(User.objects.exclude(user_nonresidential_city__isnull=True).values_list('user_nonresidential_country','user_nonresidential_city')))
+            for i in range(len(nonresidential_location)):
+                nonresidential_location[i] = nonresidential_location[i][0]+','+nonresidential_location[i][1]
+            location_data = residential_location_data + nonresidential_location
+            
+            service_type = set(ConsultancyCreate.objects.exclude(consultant_service_category__isnull=True).values_list('consultant_service_category', flat=True))
+            # print("location data:::::::::::::::::::",service_type)
+            
+            context = {"success": True, 
+                        "education_data":education_data,
+                        "industry_data":industry_data,
+                        "location_data":location_data,
+                        "service_type":service_type
+                        }
+            return Response(context, status=status.HTTP_200_OK)
+        err_context = {"success": False, "message": "User not found"}
+        return Response(err_context, status=status.HTTP_400_BAD_REQUEST)
 
-#     def get_queryset(self,userid):
-#         return User.objects.filter(userid=userid)
 
-#     def post(self,request):
-#         user = self.request.user
-#         if request.data['search_user_id'] != user.userid:
-#             if User.objects.filter(Q(userid__exact=request.data['search_user_id']) & Q(is_active=True)).exists():
-#                 search_user = self.get_queryset(request.data['search_user_id'])
-#                 serializer = UserSearchSerializer(search_user, many=True)
-#                 context = {"data":serializer.data}
-#                 return Response(context, status=status.HTTP_200_OK)
-#             return Response('Bad Request', status=status.HTTP_400_BAD_REQUEST)
-#         return Response('You can not search yourself', status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class UserSearchFilterPagination(pagination.PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
+
+
+class UserSearchFilter(views.APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    # renderer_classes = [UserRenderer]
+
+    def get_user(self,data):
+
+        education_data = data['education_data']
+        industry_data = data['industry_data']
+        service_type = data['service_type']
+        location_data = data['location_data']
+
+        location_city = []
+        for location in location_data:
+            city = location.split(",")[1]
+            location_city.append(city)
+
+        education_search_data = User_education.objects.filter(user_edu_degree__in=education_data).values('userid')
+        
+        industry_search_data = User.objects.filter(user_industry__in=industry_data).values('userid')
+
+        location_search_data_r = User.objects.filter(user_residential_district__in=location_city).values('userid')
+        
+        
+        location_search_data_nr = User.objects.filter(user_nonresidential_city__in=location_city).values('userid')
+        
+        location_search_data = list(chain(location_search_data_r, location_search_data_nr))
+
+
+        service_type_search_data = ConsultancyCreate.objects.filter(consultant_service_category__in=service_type).values('userid')
+
+
+        search = list(chain(education_search_data,industry_search_data,location_search_data,service_type_search_data))
+
+        search_data = set(val for dic in search for val in dic.values())
+
+        # print("search data:::::::::::::::",search_data)
+
+        return search_data
+
+    def post(self,request):
+        user = self.request.user
+        data = request.data
+        # print(request.data)
+        search_user = self.get_user(data)
+
+        details = User.objects.filter(userid__in=search_user).values(
+                            'userid', 'user_fullname','user_industry','user_geolocation',
+                            'user_photopath','is_consultant')
+        
+            
+        # context = {"success":True,"data":details}
+        paginator = UserSearchFilterPagination()
+        page = paginator.paginate_queryset(details, request)
+        if page is not None:
+            return paginator.get_paginated_response(page)
+        
+
+        return Response(page, status=status.HTTP_200_OK)
+        

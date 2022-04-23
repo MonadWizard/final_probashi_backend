@@ -3,12 +3,16 @@ from .views import (GetAllUserPaginationView, GetSpecificUserView,
                     FavouriteRequestSendView, FavouriteRequestsView,
                     AcceptFavouriteRequest, RejectFavouriteRequest,
                     FavouritesList, Friends_suggation,
-                    TakeMatchFriend)
+                    TakeMatchFriend, UserSearchGetData,UserSearchFilter)
 
 # from user_connection_app import views
 
 urlpatterns = [
     path('match-friend/', TakeMatchFriend.as_view(), name='match_friend'),
+    
+    path('user-search-filter-get/', UserSearchGetData.as_view(), name='UserSearchGetData'),
+    path('user-search-filter/',UserSearchFilter.as_view(), name='UserSearchFilter'),
+
     path('userSearch/', GetAllUserPaginationView.as_view(), name="GetAllUserPaginationView"),
     path('specificuser/<str:user_id>/', GetSpecificUserView.as_view(), name="GetSpecificUserView"),
     path('favourite-request-send/', FavouriteRequestSendView.as_view(), name="FavouriteRequestSendView"),
