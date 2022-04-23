@@ -23,7 +23,6 @@ from probashi_backend.renderers import UserRenderer
 from user_profile_app.models import User_education
 from consultancy_app.models import ConsultancyCreate
 from user_connection_app.utility import match_friends
-from itertools import chain
 
 class TakeMatchFriend(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -379,27 +378,30 @@ class UserSearchFilter(views.APIView):
             city = location.split(",")[1]
             location_city.append(city)
 
-        education_search_data = User_education.objects.filter(user_edu_degree__in=education_data).values('userid')
+        all_user = User.objects.filter(is_active=True).values('userid').distinct()
+
+        education_search_data = User_education.objects.filter(user_edu_degree__in=education_data).values('userid').distinct()
         
-        industry_search_data = User.objects.filter(user_industry__in=industry_data).values('userid')
+        industry_search_data = User.objects.filter(user_industry__in=industry_data).values('userid').distinct()
 
-        location_search_data_r = User.objects.filter(user_residential_district__in=location_city).values('userid')
+        location_search_data_r = User.objects.filter(user_residential_district__in=location_city).values('userid').distinct()
+        location_search_data_nr = User.objects.filter(user_nonresidential_city__in=location_city).values('userid').distinct()
+        location_search_data = location_search_data_r | location_search_data_nr
+
+        service_type_search_data = ConsultancyCreate.objects.filter(consultant_service_category__in=service_type).values('userid').distinct()
+
         
-        
-        location_search_data_nr = User.objects.filter(user_nonresidential_city__in=location_city).values('userid')
-        
-        location_search_data = list(chain(location_search_data_r, location_search_data_nr))
+        search = [education_search_data,industry_search_data,location_search_data,service_type_search_data]
 
-
-        service_type_search_data = ConsultancyCreate.objects.filter(consultant_service_category__in=service_type).values('userid')
-
-
-        search = list(chain(education_search_data,industry_search_data,location_search_data,service_type_search_data))
-
-        search_data = set(val for dic in search for val in dic.values())
-
-        # print("search data:::::::::::::::",search_data)
-
+        search_data = all_user.intersection(all_user)
+        for i,d in zip(search,data) :
+            # print(count, '::::::::i:::::::::::',type(i),data[d])
+            if data[d] == []:
+                pass
+            else :
+                search_data = all_user.intersection(i)
+                    
+        # print("search:::::::::::::::::::::::::::",search_data)
         return search_data
 
     def post(self,request):
@@ -407,6 +409,8 @@ class UserSearchFilter(views.APIView):
         data = request.data
         # print(request.data)
         search_user = self.get_user(data)
+
+        # print("search user:::::::::::::::::::",search_user)
 
         details = User.objects.filter(userid__in=search_user).values(
                             'userid', 'user_fullname','user_areaof_experience','user_geolocation',

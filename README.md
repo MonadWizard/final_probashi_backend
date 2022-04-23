@@ -1,7 +1,5 @@
-just update source code ..
+need to be
 
-basic logic change ..
+> > python manage.py makemigrations consultancy_app
 
-no migration needed..
-
-change
+> > python manage.py migrate user_connection_app

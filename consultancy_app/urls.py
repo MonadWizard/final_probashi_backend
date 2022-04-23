@@ -21,7 +21,11 @@ from .views import (ConsultancyCreateView,
                     Pro_Payment_cancle,
                     Consultancy_Payment_success,
                     Consultancy_Payment_fail,
-                    Consultancy_Payment_cancle)
+                    Consultancy_Payment_cancle,
+                    
+                    ServiceSearchGetData,
+                    ServiceSearchFilter,
+                    ServiceSearchField)
 
 
 
@@ -60,7 +64,8 @@ urlpatterns = [
     path('consultancy-fail/', Consultancy_Payment_fail, name="payment_fail"),
     path('consultancy-cancle/', Consultancy_Payment_cancle, name="payment_cancle"),
 
-
-
+    path('service-search-data/', ServiceSearchGetData.as_view(), name="ServiceSearchGetData"),
+    path('service-search-filter/', ServiceSearchFilter.as_view(), name="ServiceSearchFilter"),
+    path('service-search-field/', ServiceSearchField.as_view(), name="ServiceSearchField"),
 ]
 

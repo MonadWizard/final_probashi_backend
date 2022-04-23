@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
+from yaml import serialize
 from .models import (ConsultancyCreate, 
                     UserConsultAppointmentRequest,
                     ConsultancyTimeSchudile,
@@ -21,14 +22,16 @@ from .serializers import (ConsultancyCreateSerializer, ServiceCategorySerializer
                         AppointmentSeeker_MissingAppointmentReasonSerializer,
                         GetServicesSpecificCategorySerializer,
                         GetSpecificCategoryServiceSearchDataSerializer,
-                        ConsultancyPaymentSerializer,
+                        ConsultancyPaymentSerializer,ServiceSearchFilterSerializer
                         )
 from . sslcommerz_helper import (Pro_user_CREATE_and_GET_session ,
                                 Consultancy_CREATE_and_GET_session)
+from rest_framework import pagination
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from django.db.models import Q
 from auth_user_app.models import User
+from itertools import chain
 
 
 from probashi_backend.renderers import UserRenderer
@@ -203,12 +206,6 @@ class ALLScheduils_forConsultancyProvider(views.APIView):
         serializer = GetAllCategoryScheduleSerializer(consultancy, many=True)
         data = {'data' : serializer.data}
         return Response(data, status=status.HTTP_200_OK)
-
-
-
-
-
-
 
 
 
@@ -1016,4 +1013,128 @@ def Pro_Payment_fail(request):
 def Pro_Payment_cancle(request):
     print('::::::::::::::::::',request.data)
     return Response("cancle", status=status.HTTP_200_OK)
+
+
+
+
+class ServiceSearchGetData(views.APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    # renderer_classes = [UserRenderer]
+
+    def get(self,request):
+        user = self.request.user
+        if User.objects.filter(userid=user.userid).exists():
+            location_data = set(ConsultancyCreate.objects.exclude(consultant_service_locationcountry__isnull=True).values_list('consultant_service_locationcountry', flat=True))
+            service_type = set(ConsultancyCreate.objects.exclude(consultant_service_category__isnull=True).values_list('consultant_service_category', flat=True))
+            # print("location data:::::::::::::::::::",service_type)
+            
+            context = {"success": True, 
+                        "location_data":location_data,
+                        "service_type":service_type
+                        }
+            return Response(context, status=status.HTTP_200_OK)
+        err_context = {"success": False, "message": "User not found"}
+        return Response(err_context, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class ServiceSearchFilterPagination(pagination.PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+
+
+class ServiceSearchFilter(views.APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    renderer_classes = [UserRenderer]
+
+    def get_user(self,data):
+
+        location_data = data['location_data']
+        service_type = data['service_type']
+        
+        location_data_search_data = ConsultancyCreate.objects.filter(consultant_service_locationcountry__in=location_data)
+
+        service_type_search_data = ConsultancyCreate.objects.filter(consultant_service_category__in=service_type)
+
+        # print("location data:::::::::::::::::::",location_data_search_data)
+
+        # search = list(chain(location_data_search_data,service_type_search_data))
+        if location_data != [] and service_type != []:
+            search = location_data_search_data & service_type_search_data
+        elif location_data != [] and service_type == []:
+            search = location_data_search_data
+        elif location_data == [] and service_type != []:
+            search = service_type_search_data
+
+
+        # search_data = set(val for dic in search for val in dic.values())
+
+        print("search data:::::::::::::::",search)
+
+        return search
+
+    def post(self,request):
+        user = self.request.user
+        data = request.data
+        # print(request.data)
+        search_user = self.get_user(data)
+
+        # details = User.objects.filter(userid__in=search_user).values(
+        #                     'userid', 'user_fullname','user_areaof_experience','user_geolocation',
+        #                     'user_photopath','is_consultant')
+        
+        serializer = ServiceSearchFilterSerializer(search_user, many=True)
+        
+        # context = {"success":True,"data":details}
+        paginator = ServiceSearchFilterPagination()
+        page = paginator.paginate_queryset(serializer.data, request)
+        if page is not None:
+            return paginator.get_paginated_response(page)
+        
+        
+
+        return Response(page, status=status.HTTP_200_OK)
+
+
+class ServiceSearchField(views.APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    renderer_classes = [UserRenderer]
+
+    def get_user(self,data):
+
+        service_type = data['service_type']
+        
+        search_data = ConsultancyCreate.objects.filter(consultant_service_category__contains=service_type)
+
+        # print("search data:::::::::::::::",search_data)
+
+        return search_data
+
+    def post(self,request):
+        user = self.request.user
+        data = request.data
+
+        # print(":::::::::::::::::::::",request.data)
+        search_user = self.get_user(data)
+
+        serializer = ServiceSearchFilterSerializer(search_user, many=True)
+        # if serializer.is_valid():
+            # context = {"success":True,"data":serializer.data}
+            
+        paginator = ServiceSearchFilterPagination()
+        page = paginator.paginate_queryset(serializer.data, request)
+        if page is not None:
+            return paginator.get_paginated_response(page)
+        
+
+        return Response(page, status=status.HTTP_200_OK)
+    
+
+
+
+
+
+
+
 

@@ -65,6 +65,7 @@ class ConsultancyCreate(models.Model):
     consultant_bankaccount_branchnumber = models.CharField(max_length=200, blank=True, null=True)
     consultant_bankaccount_swiftcode = models.CharField(max_length=200, blank=True, null=True)
     consultant_bankaccount_routingnumber = models.CharField(max_length=200, blank=True, null=True)
+    consultant_created_at = models.DateTimeField(auto_now_add=True)
 
 
 
