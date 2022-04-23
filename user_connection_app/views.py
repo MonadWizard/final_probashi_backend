@@ -4,6 +4,7 @@ from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.http import Http404
+from yaml import serialize
 from auth_user_app.models import User
 from .serializers import SerachUserSerializer
 from rest_framework import pagination
@@ -11,7 +12,7 @@ from rest_framework.pagination import PageNumberPagination
 from user_profile_app.serializers import UserProfileViewSerializer, UserProfileWithConsultancyViewSerializer
 from .serializers import (UserFavouriteRequestSendSerializer, UserFavouriteRequestsSerializer,
                         AcceptFavouriteRequestSerializer,RejectFavouriteRequestSerializer,
-                        UserFavouriteListSerializer)
+                        UserFavouriteListSerializer,UserSearchFieldSerializer)
 from .models import UserFavoutireRequestSend, UserFavouriteList, FriendsSuggation
 from django.db.models import Q
 from itertools import chain
@@ -408,7 +409,7 @@ class UserSearchFilter(views.APIView):
         search_user = self.get_user(data)
 
         details = User.objects.filter(userid__in=search_user).values(
-                            'userid', 'user_fullname','user_industry','user_geolocation',
+                            'userid', 'user_fullname','user_areaof_experience','user_geolocation',
                             'user_photopath','is_consultant')
         
             
@@ -420,4 +421,47 @@ class UserSearchFilter(views.APIView):
         
 
         return Response(page, status=status.HTTP_200_OK)
+
+
+
+
+class UserSearchField(views.APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    # renderer_classes = [UserRenderer]
+
+    def get_user(self,data):
+
+        user_name = data['user_fullname']
         
+        search_data = User.objects.filter(user_fullname__contains=user_name)
+
+        print("search data:::::::::::::::",search_data)
+
+        return search_data
+
+    def post(self,request):
+        user = self.request.user
+        data = request.data
+
+        print(":::::::::::::::::::::",request.data)
+        search_user = self.get_user(data)
+
+        serializer = UserSearchFieldSerializer(search_user, many=True)
+        # if serializer.is_valid():
+            # context = {"success":True,"data":serializer.data}
+            
+        paginator = UserSearchFilterPagination()
+        page = paginator.paginate_queryset(serializer.data, request)
+        if page is not None:
+            return paginator.get_paginated_response(page)
+        
+
+        return Response(page, status=status.HTTP_200_OK)
+            
+        # else:
+        #     context = {"message":"User not found"}
+        #     return Response(context, status=status.HTTP_400_BAD_REQUEST)
+        
+    
+
+

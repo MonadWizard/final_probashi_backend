@@ -33,7 +33,13 @@ class SerachUserSerializer(serializers.ModelSerializer):
         
         # exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
 
-
+class UserSearchFieldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['userid', 'user_fullname','user_areaof_experience','user_geolocation',
+                            'user_photopath','is_consultant']
+        
+        # exclude = ['is_staff','is_superuser','password','groups', 'user_permissions']
 
 
 

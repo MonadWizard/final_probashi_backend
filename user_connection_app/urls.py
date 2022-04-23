@@ -3,13 +3,15 @@ from .views import (GetAllUserPaginationView, GetSpecificUserView,
                     FavouriteRequestSendView, FavouriteRequestsView,
                     AcceptFavouriteRequest, RejectFavouriteRequest,
                     FavouritesList, Friends_suggation,
-                    TakeMatchFriend, UserSearchGetData,UserSearchFilter)
+                    TakeMatchFriend, UserSearchGetData,UserSearchFilter,
+                    UserSearchField)
 
 # from user_connection_app import views
 
 urlpatterns = [
     path('match-friend/', TakeMatchFriend.as_view(), name='match_friend'),
     
+    path('user-search-field/', UserSearchField.as_view(), name='UserSearchField'),
     path('user-search-filter-get/', UserSearchGetData.as_view(), name='UserSearchGetData'),
     path('user-search-filter/',UserSearchFilter.as_view(), name='UserSearchFilter'),
 
