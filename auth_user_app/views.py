@@ -459,7 +459,7 @@ class PhoneNumberLogin(views.APIView):
         if PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone'])).exists():
             return Response("invalid or expired otp", status=status.HTTP_400_BAD_REQUEST)
         
-        return Response("invalid phone number", status=status.HTTP_400_BAD_REQUEST)
+        return Response("invalid phone number or otp code", status=status.HTTP_400_BAD_REQUEST)
 
 
 

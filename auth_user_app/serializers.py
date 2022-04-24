@@ -1,3 +1,4 @@
+from asyncio import exceptions
 from os import PRIO_PGRP
 from rest_framework import serializers
 from .models import User, PhoneOTP
@@ -88,26 +89,62 @@ class LoginSerializer(serializers.ModelSerializer):
         user_email = attrs.get('user_email', '')
         password = attrs.get('password', '')
         filtered_user_by_email = User.objects.filter(user_email=user_email).values('user_email')
-        user = auth.authenticate(user_email=user_email, password=password)
-
-        print("filtered_user_by_email::::::",filtered_user_by_email[0])
-        print("user_email::::::",user_email)
-        print("filtered_user_by_email[0].auth_provider::::::",str(filtered_user_by_email[0]['user_email']))
         
-        if filtered_user_by_email.exists() and str(filtered_user_by_email[0]['user_email']) != user_email:
-            raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_email[0]['user_email'].auth_provider)
+        user = None
+        try:
+            user = auth.authenticate(user_email=user_email, password=password)
+            
+        except:
+            if filtered_user_by_email.exists() and str(filtered_user_by_email[0]['user_email']) != user_email:
+                raise serializers.ValidationError(detail='Please continue your login using ' + filtered_user_by_email[0]['user_email'].auth_provider)
 
-        if not user:
-            raise AuthenticationFailed('Invalid credentials, try again')
-        if not user.is_active:
-            raise AuthenticationFailed('Account disabled, contact admin')
-        if not user.is_verified:
-            raise AuthenticationFailed('Email is not verified')
+            if not user:
+                # print(":::::::::::::Invalid credentials, try again")
+                raise serializers.ValidationError('Invalid credentials, try again')
+
+            if not user.is_active:
+                # print(":::::::::::::::::::Account disabled, contact admin")
+                raise serializers.ValidationError('Account disabled, contact admin')
+            if not user.is_verified:
+                # print(":::::::::::::::::::::Email is not verified")
+                raise serializers.ValidationError('Email is not verified')
+
+            if user is None:
+                raise serializers.ValidationError(
+                    'Invalid credentials')
+            else:
+                return attrs
+        # except:
+        #     raise serializers.ValidationError(
+        #         'except Invalid credentials')
 
         return {
-            'user_email': user.user_email,
-            'tokens': user.tokens
-        }
+                    'user_email': user.user_email,
+                    'tokens': user.tokens
+                }
+
+        # print("filtered_user_by_email::::::",filtered_user_by_email[0])
+        # print("user_email::::::",user_email)
+        # print("filtered_user_by_email[0].auth_provider::::::",str(filtered_user_by_email[0]['user_email']))
+        
+        # if filtered_user_by_email.exists() and str(filtered_user_by_email[0]['user_email']) != user_email:
+        #     raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_email[0]['user_email'].auth_provider)
+
+        # if not user:
+        #     print(":::::::::::::Invalid credentials, try again")
+        #     raise AuthenticationFailed('Invalid credentials, try again')
+
+        # if not user.is_active:
+        #     print(":::::::::::::::::::Account disabled, contact admin")
+        #     raise AuthenticationFailed('Account disabled, contact admin')
+        # if not user.is_verified:
+        #     print(":::::::::::::::::::::Email is not verified")
+        #     raise AuthenticationFailed('Email is not verified')
+
+        # return {
+        #     'user_email': user.user_email,
+        #     'tokens': user.tokens
+        # }
 
         return super().validate(attrs)
         # except Exception as e:
@@ -220,7 +257,10 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
         # print("user_callphone::::::",user_callphone)
         # password = attrs.get('password', '')
         filtered_user_by_user_callphone = User.objects.filter(user_callphone=user_callphone)
-        user = CustomerBackendForPhoneNumber.authenticate(user_callphone=user_callphone)
+        
+        user = None
+        try:
+            user = CustomerBackendForPhoneNumber.authenticate(user_callphone=user_callphone)
         # print("::::::::",user)
         # print("filtered_user_by_user_callphone::::::",filtered_user_by_user_callphone[0])
         # print("user_email::::::",type(user_email))
@@ -228,13 +268,18 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
 
         # if filtered_user_by_user_callphone.exists() and str(filtered_user_by_user_callphone[0]) != user_callphone:
         #     raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_user_callphone[0].auth_provider)
-
-        if not user:
-            raise AuthenticationFailed('Invalid credentials, try again')
-        if not user.is_active:
-            raise AuthenticationFailed('Account disabled, contact admin')
-        if not user.is_verified:
-            raise AuthenticationFailed('Email is not verified')
+        except:
+            if not user:
+                raise serializers.ValidationError('Invalid credentials, try again')
+            if not user.is_active:
+                raise serializers.ValidationError('Account disabled, contact admin')
+            if not user.is_verified:
+                raise serializers.ValidationError('Phone is not verified')
+            if user is None:
+                raise serializers.ValidationError(
+                    'Invalid credentials')
+            else:
+                return attrs
 
         return {
             'user_callphone': user.user_callphone,
