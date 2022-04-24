@@ -203,9 +203,9 @@ TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
-USE_L10N = False
+# USE_L10N = False
 
-USE_TZ = False
+USE_TZ = True
 
 
 

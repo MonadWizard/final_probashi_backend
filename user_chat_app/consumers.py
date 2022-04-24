@@ -49,9 +49,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
-                # 'message_time': str(datetime.datetime.now(datetime.timezone('Asia/Dhaka'))),
                 'message_time': str(datetime.datetime.now(datetime.timezone('Asia/Dhaka'))),
-
                 'is_text_message': True,
             }
 
