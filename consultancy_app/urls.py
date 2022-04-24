@@ -42,9 +42,9 @@ urlpatterns = [
     path('nottaking-scheduile/', NotTakingScheduil_forSpecificUser.as_view(), name="NotTakingScheduil_forEachService"),
     path('consultant-appointment-request/', AppointmentSeeker_ConsultantRequest.as_view(), name="AppointmentSeeker_ConsultantRequest"),
     
-    path('appointment-seeker-star-rating/<str:id>/', AppointmentSeeker_StarRating.as_view(), name="AppointmentSeeker_StarRating"),
-    path('consultant-provider-star-rating/<str:id>/', ConsultantProvider_StarRating.as_view(), name="ConsultantProvider_StarRating"),
-    path('appointment-missing-reason/<str:id>/', AppointmentSeeker_MissingAppointmentReason.as_view(), name="AppointmentSeeker_MissingAppointmentReason"),
+    path('appointment-seeker-star-rating/<str:ConsultancyTimeSchudile>/', AppointmentSeeker_StarRating.as_view(), name="AppointmentSeeker_StarRating"),
+    path('consultant-provider-star-rating/<str:ConsultancyTimeSchudile>/', ConsultantProvider_StarRating.as_view(), name="ConsultantProvider_StarRating"),
+    path('appointment-missing-reason/<str:ConsultancyTimeSchudile>/', AppointmentSeeker_MissingAppointmentReason.as_view(), name="AppointmentSeeker_MissingAppointmentReason"),
     
     path('pro/', BecomeProUser.as_view(), name="BecomeProUser"),
     

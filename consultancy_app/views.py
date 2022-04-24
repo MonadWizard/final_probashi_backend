@@ -132,7 +132,7 @@ class ConsultancyTimeSchudileView(generics.ListCreateAPIView):
     def create(self, request):
         user = request.user
         con_user = ConsultancyCreate.objects.filter(Q(userid=user.userid) & Q(id=request.data['consultancyid'])).exists()
-        print("con_user::::::::::::::::::", con_user)   
+        # print("con_user::::::::::::::::::", con_user)   
         if con_user == True:
             serializer = ConsultancyTimeSchudileSerializer(data=request.data)
             if serializer.is_valid():
@@ -368,13 +368,12 @@ class AppointmentSeeker_StarRating(generics.UpdateAPIView):
     # queryset = UserConsultAppointmentRequest.objects.all()
     serializer_class = AppointmentSeeker_StarRatingSerializer
     renderer_classes = [UserRenderer]
-
-    lookup_field = 'id'
+    lookup_field = 'ConsultancyTimeSchudile'
 
     def get_queryset(self):
         try:
             user = self.request.user
-            return UserConsultAppointmentRequest.objects.filter(seekerid=user.userid)
+            return UserConsultAppointmentRequest.objects.filter(Q(seekerid=user.userid) & Q(payment_status=True))
         except UserConsultAppointmentRequest.DoesNotExist:
             raise Http404
 
@@ -384,12 +383,12 @@ class ConsultantProvider_StarRating(generics.UpdateAPIView):
     serializer_class = ConsultantProvider_StarRatingSerializer
     renderer_classes = [UserRenderer]
 
-    lookup_field = 'id'
+    lookup_field = 'ConsultancyTimeSchudile'
 
     def get_queryset(self):
         try:
             user = self.request.user
-            return UserConsultAppointmentRequest.objects.filter(ConsultancyTimeSchudile__consultancyid__userid=user.userid)
+            return UserConsultAppointmentRequest.objects.filter(Q(ConsultancyTimeSchudile__consultancyid__userid=user.userid) & Q(payment_status=True))
         except UserConsultAppointmentRequest.DoesNotExist:
             raise Http404
 
@@ -401,12 +400,12 @@ class AppointmentSeeker_MissingAppointmentReason(generics.UpdateAPIView):
     serializer_class = AppointmentSeeker_MissingAppointmentReasonSerializer
     renderer_classes = [UserRenderer]
 
-    lookup_field = 'id'
+    lookup_field = 'ConsultancyTimeSchudile'
 
     def get_queryset(self):
         try:
             user = self.request.user
-            return UserConsultAppointmentRequest.objects.filter(seekerid=user)
+            return UserConsultAppointmentRequest.objects.filter(Q(seekerid=user.userid) & Q(payment_status=True))
         except UserConsultAppointmentRequest.DoesNotExist:
             raise Http404
 
