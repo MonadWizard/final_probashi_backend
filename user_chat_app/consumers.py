@@ -6,6 +6,7 @@ from django.db.models import Q
 from user_chat_app.db_utilities_async import get_previous_chat_data
 from user_chat_app.db_utilities_async import get_all_chat_data
 from user_chat_app.db_utilities_async import save_chat_data, save_chat_data_image
+from django.utils import timezone
 
 class DemoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -48,7 +49,9 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
+                # 'message_time': str(datetime.datetime.now(datetime.timezone('Asia/Dhaka'))),
                 'message_time': str(datetime.datetime.now(datetime.timezone('Asia/Dhaka'))),
+
                 'is_text_message': True,
             }
 

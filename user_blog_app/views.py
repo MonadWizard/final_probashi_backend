@@ -75,10 +75,11 @@ class BlogReactionView(views.APIView):
                 return Response(context,status=status.HTTP_202_ACCEPTED)
                 # return Response('user can like or dislike',status=status.HTTP_202_ACCEPTED)
 
-            elif Blog_reaction.objects.filter(Q(is_user_like=request.data['is_user_like']) & 
-                                                Q(is_user_dislike=request.data['is_user_dislike'])).exists():
-                context = {'success': False, 'message': 'already react happend'}
-                return Response(context,status=status.HTTP_400_BAD_REQUEST)
+
+            elif Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(is_user_like=request.data['is_user_like']) & 
+                                                    Q(is_user_dislike=request.data['is_user_dislike'])).exists():
+                    context = {'success': False, 'message': 'already react happend'}
+                    return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
             
             else:

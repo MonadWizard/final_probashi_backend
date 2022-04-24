@@ -91,7 +91,7 @@ class GetMatchFriendSetPagination(pagination.PageNumberPagination):
 class Friends_suggation(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class= UserFavouriteRequestsSerializer
-    pagination_class = GetMatchFriendSetPagination
+    # pagination_class = GetMatchFriendSetPagination
     # renderer_classes = [UserRenderer]
 
     def get(self,request):
@@ -123,18 +123,19 @@ class Friends_suggation(views.APIView):
                 match_friend_data.append(match_friend)
             
 # -------------------------paginator
-
+            context = {'success':True,'data':match_friend_data}
+            return Response(context, status=status.HTTP_200_OK)
             # print(type(match_friend_data),"::::::::::::::::::::::", match_friend_data)
 
-            paginator = GetMatchFriendSetPagination()
-            page = paginator.paginate_queryset(match_friend_data, request)
-            if page is not None:
-                # print("is not none::::::::::::::::::::::", page)
-                return paginator.get_paginated_response(page)
+            # paginator = GetMatchFriendSetPagination()
+            # page = paginator.paginate_queryset(match_friend_data, request)
+            # if page is not None:
+            #     # print("is not none::::::::::::::::::::::", page)
+            #     return paginator.get_paginated_response(page)
             
-            # print("::::::::::::::::::::::", page)
+            # # print("::::::::::::::::::::::", page)
 
-            return Response(page)
+            # return Response(page)
 
 
 # ------------------------------------------------paginator
