@@ -439,7 +439,10 @@ class UserSearchField(views.APIView):
 
         user_name = data['user_fullname']
         
-        search_data = User.objects.filter(user_fullname__contains=user_name)
+        search_data_fullname = User.objects.filter(user_fullname__contains=user_name)
+        search_data_username = User.objects.filter(user_username__contains=user_name)
+
+        search_data = (search_data_fullname | search_data_username).distinct()
 
         # print("search data:::::::::::::::",search_data)
 
