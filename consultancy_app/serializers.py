@@ -209,7 +209,9 @@ class ServiceSearchFilterSerializer(serializers.ModelSerializer):
     user_fullname = serializers.CharField(source='userid.user_fullname')
     class Meta:
         model = ConsultancyCreate
-        fields = ['consultant_service_category', 'consultant_service_locationcountry', 'consultant_created_at', 'user_fullname']
+        # fields = ['consultant_service_category', 'consultant_service_locationcountry', 'consultant_created_at', 'user_fullname']
+        fields = ['consultant_service_category', 'consultant_service_locationcountry', 'user_fullname']
+
 
 
 
