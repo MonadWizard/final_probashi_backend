@@ -14,7 +14,9 @@ from .views import  (MailVerifyRequestView,
                     PhoneNumberRegistration,
                     PhoneNumberLogin,
                     LoginVerificationCodeSend,
-                    PhoneUpdateRegisterView)
+                    PhoneUpdateRegisterView,
+                    
+                    UserNameUniqueStatus)
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -42,5 +44,6 @@ urlpatterns = [
     path('phone-number-login/', PhoneNumberLogin.as_view(), name='PhoneNumberLogin'),
     path('phone-update-register/<str:user_callphone>/', PhoneUpdateRegisterView.as_view(), name='PhoneUpdateRegisterView'),
 
+    path('username-unique-status/', UserNameUniqueStatus.as_view(), name='UserNameUniqueStatus'),
 
 ]

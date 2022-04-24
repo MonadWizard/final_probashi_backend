@@ -136,6 +136,28 @@ class MailVerificationStatus(views.APIView):
         except User.DoesNotExist:
             return Response("Email does not exists", status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+class UserNameUniqueStatus(views.APIView):
+    renderer_classes = [UserRenderer]
+    def post(self,request):
+        try:
+            user_username = User.objects.filter(user_username__exact=request.data['user_username']).exists()
+            # mail_verify = user_mail.values('is_verified')
+            # print(user_mail)
+            if user_username == True:
+                return Response({"user name exist": True}, status=status.HTTP_200_OK)
+            else:
+                return Response({"user name exist": False}, status=status.HTTP_200_OK)
+            # return Response('list(mail_verify)[0]', status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
 class UpdateRegisterView(views.APIView):
     renderer_classes = [UserRenderer]
 
