@@ -131,8 +131,8 @@ class ConsultancyTimeSchudileView(generics.ListCreateAPIView):
 
     def create(self, request):
         user = request.user
-        con_user = ConsultancyTimeSchudile.objects.filter(Q(consultancyid__userid=user.userid)).exists()
-        # print("con_user::::::::::::::::::", con_user)   
+        con_user = ConsultancyCreate.objects.filter(Q(userid=user.userid) & Q(id=request.data['consultancyid'])).exists()
+        print("con_user::::::::::::::::::", con_user)   
         if con_user == True:
             serializer = ConsultancyTimeSchudileSerializer(data=request.data)
             if serializer.is_valid():
