@@ -23,7 +23,9 @@ class DemoConsumer(AsyncWebsocketConsumer):
         data = dict(data)
         data_l = list(data.values())
         data_l = list(filter(None, data_l))
-        print("data_l::::::::::::::::::::::::", data_l)
+        # print("data_l::::::::::::::::::::::::", data_l)
+        # ttt = timezone.localtime(timezone.now())
+
 
         await self.send(text_data=json.dumps({
             'success': True,
@@ -49,7 +51,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
-                'message_time': str(datetime.datetime.now(datetime.timezone('Asia/Dhaka'))),
+                'message_time': str(timezone.localtime(timezone.now())),
                 'is_text_message': True,
             }
 
@@ -61,7 +63,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
                 # 'status': 'sent',
-                'message_time': str(datetime.datetime.now(datetime.timezone('Asia/Dhaka'))),
+                'message_time': str(timezone.localtime(timezone.now())),
                 "message-type": text_data_json['data'],
             }           
         
@@ -86,7 +88,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
-                'message_time': str(datetime.datetime.now(datetime.timezone.utc)),
+                'message_time': str(timezone.localtime(timezone.now())),
                 'is_image_message': True,
             }
 
@@ -98,7 +100,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'receiver': text_data_json['receiverid'],
                 'message': text_data_json['message'],
                 # 'status': 'sent',
-                'message_time': str(datetime.datetime.now(datetime.timezone.utc)),
+                'message_time': str(timezone.localtime(timezone.now())),
                 "message-type": text_data_json['data'],
             }           
         

@@ -1,6 +1,7 @@
 # from dataclasses import dataclass
 from django.db import connection, connections
 from asgiref.sync import sync_to_async
+from pytz import timezone
 from user_chat_app.utility import sql_array_to_object
 
 from user_chat_app.models import ChatTable
@@ -26,6 +27,8 @@ def save_chat_data(data):
     try:
         chat_table = ChatTable.objects.using('probashi_chat').get(user_1=data['sender'], user_2=data['receiver'])
         print('table name::', chat_table.table_name)
+
+        print('data::::::::::', data)
 
         print('table-found')
     except:
@@ -68,7 +71,7 @@ def save_chat_data(data):
 
     sql += ")"
 
-    # print('sql', sql)
+    print('::::::::::::::::sql', sql)
 
     try:
         with connections['probashi_chat'].cursor() as cursor:
@@ -89,7 +92,8 @@ def save_chat_data_image(data):
         chat_table = ChatTable.objects.using('probashi_chat').get(user_1=data['sender'], user_2=data['receiver'])
         print('table name::', chat_table.table_name)
 
-        print('table-found')
+
+        print('table-found....')
     except:
         table_title = create_chat_table(user_1=data['sender'], user_2=data['receiver'])
         chat_table = ChatTable.objects.using('probashi_chat').create(user_1=data['sender'], user_2=data['receiver'], table_name=table_title)
@@ -97,7 +101,7 @@ def save_chat_data_image(data):
         print('create-a-table')
 
     # print('chat table', chat_table)
-
+    
     # if 'type' in data :
     #     del data['type']
     # if 'message-type' in data :
@@ -157,14 +161,16 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
     try:
         chat_table = ChatTable.objects.using('probashi_chat').filter(user_1=userid, user_2=associated_user_id).order_by('-id')[0].table_name
         
-        sql = "SELECT * FROM " + str(chat_table) + " ORDER BY id DESC "
+        sql = "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'Asia/Dhaka' FROM " + str(chat_table) + " ORDER BY id DESC "
         sql += "OFFSET " + str(offset) + " ROWS "
-        sql += "FETCH NEXT 10 ROWS ONLY"
-
+        sql += "FETCH NEXT 10 ROWS ONLY "
+        
 
         with connections['probashi_chat'].cursor() as cursor:
+            # cursor.execute(f"SET timezone TO 'Asia/Dhaka'")
             cursor.execute(sql)
             result = cursor.fetchall()
+
 
             if result is None:
                 return data
@@ -172,12 +178,15 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
             fields = [field[0] for field in cursor.description]
             temp_data = []
 
+            
             for row in result:
                 d = sql_array_to_object(field_names=fields, values=row)
-                d['message_time'] = str(d['message_time'])
+                d['message_time'] = str(d['timezone'])+ str("+6:00")
+                del d['timezone']
                 temp_data.append(d)
+                # print('d:::::::::', d)
             
-            #         
+            # print('temp_data:::::::::', temp_data)        
             # data[associated_user_id] = temp_data
             data['type'] = 'previous message'
             data['chat'] = temp_data
@@ -185,7 +194,7 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
             
             
     except Exception as e:
-        print(e)
+        print('error', e)
         return data
     
     return data

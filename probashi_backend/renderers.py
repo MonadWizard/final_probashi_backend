@@ -1,6 +1,7 @@
 from rest_framework import renderers
 import json
 
+
 class UserRenderer(renderers.JSONRenderer):
 
     charset='utf-8'
@@ -19,7 +20,7 @@ class UserRenderer(renderers.JSONRenderer):
             # errr2 = list(data.items())[0][1]
             # err = str(err)
             # err2 = 
-            # print('data erroe:::::::::::',data)
+            print('data erroe:::::::::::',data)
             response = json.dumps({'success': False, 'message':data})
         elif renderer_context['response'].status_code == 400:
             # print('data 400:::::::::::',data)
@@ -31,6 +32,10 @@ class UserRenderer(renderers.JSONRenderer):
 
             # print(data, type(data))
             response = json.dumps({'success': False, 'message': data})
+
+        elif renderer_context['response'].status_code == 404:
+            response = json.dumps({'success': False, 'message': data})
+
         elif renderer_context['response'].status_code == 500:
             # err = list(list(data.values())[:1])[0]
             response = json.dumps({'success': False, 'message': data})

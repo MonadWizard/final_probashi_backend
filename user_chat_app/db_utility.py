@@ -17,9 +17,11 @@ def create_chat_table(user_1, user_2):
     sql += "is_audio_message BOOLEAN NOT NULL DEFAULT FALSE,"
     sql += "is_image_message BOOLEAN NOT NULL DEFAULT FALSE,"
     sql += "message TEXT NOT NULL,"
-    sql += "message_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP"
+    sql += "message_time TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Dhaka')"
     sql += ")"
 
+
+# timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
     # print(sql)
     
     with connections['probashi_chat'].cursor() as cursor:
@@ -32,6 +34,8 @@ def get_last_chat_data(user_1, user_2):
     
     sql = "SELECT * FROM " + str(table_title) + " ORDER BY id DESC LIMIT 1"
     
+    print('sql::::get last chat data::::::::',sql)
+
     with connections['probashi_chat'].cursor() as cursor:
         cursor.execute(sql)
         result = cursor.fetchone()
