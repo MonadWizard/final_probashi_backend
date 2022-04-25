@@ -64,32 +64,45 @@ class BlogReactionView(views.APIView):
         user = self.request.user
 
         if Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid) & Q(userid__exact=request.data['userid'])).exists():
-            if request.data['is_user_like'] == False and request.data['is_user_dislike'] == False:
-                # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
-                Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).update(is_user_like=False,is_user_dislike=False)
-                update_false = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values()
-                # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
-                print('::::::::::', list(update_false)[0])
-                context = {'success': True, 'data': list(update_false)[-1]}
-                # context.update(list(update_false))    
-                return Response(context,status=status.HTTP_202_ACCEPTED)
-                # return Response('user can like or dislike',status=status.HTTP_202_ACCEPTED)
-
-
-            elif Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(is_user_like=request.data['is_user_like']) & 
+            
+            if Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid) & Q(is_user_like=request.data['is_user_like']) & 
                                                     Q(is_user_dislike=request.data['is_user_dislike'])).exists():
                     context = {'success': False, 'message': 'already react happend'}
                     return Response(context,status=status.HTTP_400_BAD_REQUEST)
+            
+            
+            elif request.data['is_user_like'] == False and request.data['is_user_dislike'] == False:
+                # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
+                Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid)).update(is_user_like=False,is_user_dislike=False)
+                update_false = Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) &
+                                Q(userid__exact=user.userid) & Q(is_user_like=False) & Q (is_user_dislike=False)).values()
+                # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
+                # print('::::::::::', list(update_false)[0])
+                context = {'success': True, 'data': list(update_false)[-1]}
+                return Response(context,status=status.HTTP_202_ACCEPTED)
+
+
+            elif request.data['is_user_like'] == True and request.data['is_user_dislike'] == False:
+                Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid'])& Q(userid__exact=user.userid)).update(is_user_like=True,is_user_dislike=False)
+                update_true = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values()
+                context = {'success': True, 'data': list(update_true)[-1]}
+                return Response(context,status=status.HTTP_202_ACCEPTED)
+            
+            elif request.data['is_user_like'] == False and request.data['is_user_dislike'] == True:
+                Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid'])& Q(userid__exact=user.userid)).update(is_user_like=False,is_user_dislike=True)
+                update_false = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values()
+                context = {'success': True, 'data': list(update_false)[-1]}
+                return Response(context,status=status.HTTP_202_ACCEPTED)
 
             
-            else:
-                serializer = BlogReactionSerializer(data=request.data)
+            # else:
+            #     serializer = BlogReactionSerializer(data=request.data)
 
-                if serializer.is_valid():
-                    serializer.save()
-                    context = {'success': True, 'data': serializer.data}
-                    # context.update(serializer.data)
-                    return Response(context ,status=status.HTTP_200_OK)
+            #     if serializer.is_valid():
+            #         serializer.save()
+            #         context = {'success': True, 'data': serializer.data}
+            #         # context.update(serializer.data)
+            #         return Response(context ,status=status.HTTP_200_OK)
 
         
         elif request.data['userid'] == user.userid : 
