@@ -34,7 +34,7 @@ def get_last_chat_data(user_1, user_2):
     
     sql = "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'Asia/Dhaka' FROM " + str(table_title) + " ORDER BY id DESC LIMIT 1"
     
-    print('sql::::get last chat data::::::::',sql)
+    # print('sql::::get last chat data::::::::',sql)
 
     with connections['probashi_chat'].cursor() as cursor:
         cursor.execute(sql)
@@ -45,7 +45,7 @@ def get_last_chat_data(user_1, user_2):
         if result is None:
             return {}
     
-    print('result::::::', result)
+    # print('result::::::', result)
     
     fields = [field[0] for field in cursor.description]
 

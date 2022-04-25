@@ -8,6 +8,10 @@ from user_chat_app.db_utilities_async import get_all_chat_data
 from user_chat_app.db_utilities_async import save_chat_data, save_chat_data_image
 from django.utils import timezone
 
+import base64
+from pathlib import Path
+import os
+
 class DemoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['userid']
@@ -84,13 +88,44 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         
         elif text_data_json['data'] == 'image':
+
+            image_data_byte = str.encode(text_data_json['message'])
+            BASE_DIR = Path(__file__).resolve().parent.parent.parent
+            image_save_dir = f"{BASE_DIR}/ChatAppData/images"
+
+            if not os.path.exists(image_save_dir):
+                try:
+                    Path(f"{image_save_dir}").mkdir(parents=True, exist_ok=True)
+                    print('directory created')
+                except:
+                    print("can not build dir")
+            
+            current_time = datetime.datetime.now() 
+            current_time = current_time.strftime("%m%d%H%M%S%f")
+            image_name = current_time + '.png'
+            image_save_path = f"{image_save_dir}/{image_name}"
+            
+            try:
+                with open(f"{image_save_path}", "wb") as new_file:
+                    new_file.write(base64.decodebytes(image_data_byte))
+            except Exception as e:
+                print("can not save image", e)
+            
+            # print ("image path:::::::::::", image_save_path)
+
+            
+
+
+
             data = {
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
-                'message': text_data_json['message'],
+                'message': image_save_path,
                 'message_time': str(timezone.localtime(timezone.now())),
                 'is_image_message': True,
             }
+
+            # print("data:::::::::::", text_data_json['message'])
 
             await save_chat_data_image(data=data)
 
@@ -98,7 +133,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'type': 'single message',
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
-                'message': text_data_json['message'],
+                'message': image_save_path,
                 # 'status': 'sent',
                 'message_time': str(timezone.localtime(timezone.now())),
                 "message-type": text_data_json['data'],
