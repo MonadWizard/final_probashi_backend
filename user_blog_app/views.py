@@ -232,20 +232,16 @@ class GetBlogPagination(pagination.PageNumberPagination):
 # where userblog_tags @> '{"tag1"}';
 
 class BlogSearch(views.APIView):
-    # permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.IsAuthenticated,]
     # renderer_classes = [UserRenderer]
 
-    # search Blog Tags
-        # give list of tags
-        # I use cursor.fatchall()
-        # give response as pagination  view 
     def post(self, request):
         tags = request.data['tags']
-        print("request data::::::",type(tags))
+        # print("request data::::::",type(tags))
 
         query = "select * from public.user_blog_app_blog where userblog_tags @> '{" 
         query += str(tags[::])[1:-1].replace("'", '"')
-        query += "}'; "
+        query += "}' ORDER BY id DESC; "
         # print("query:::", query)
 
         with connection.cursor() as cursor:
@@ -258,25 +254,17 @@ class BlogSearch(views.APIView):
         for record in q_data_fatch_all:
             result.append( dict( zip( columnNames , record ) ) )
 
-        context = {'success': True, 'data': result}    
         
         paginator = GetBlogPagination()
-        page = paginator.paginate_queryset(result, request)
+        page = paginator.paginate_queryset([result][0], request)
+        # print("page:::", page)
         if page is not None:
-            # print("is not none::::::::::::::::::::::", page)
-            return paginator.get_paginated_response(page)
+            response = paginator.get_paginated_response(page)
+            response.data['success'] = True
+            return Response(response.data,status=status.HTTP_200_OK)
+        return Response({'success': False, 'message':'no data'},status=status.HTTP_400_BAD_REQUEST)
+        # return Response(page, status=status.HTTP_200_OK)
         
-        # print("::::::::::::::::::::::", page)
-
-        return Response(page, status=status.HTTP_200_OK)
-        
-        
-        
-        # return Response(context, status=status.HTTP_200_OK)
-
-
-
-################# need to be pagination..........
-
+    
 
 
