@@ -207,7 +207,13 @@ class InAppChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
 
 
+class InAppChangeOnlyPasswordSerializer(serializers.Serializer):
+    model = User
+    new_password = serializers.CharField(required=True)
 
+class InAppChangeOnlyEmailSerializer(serializers.Serializer):
+    model = User
+    user_email = serializers.EmailField(required=True)
 
 # ---------------------x-----------------------x----------------------------x----------
 

@@ -10,6 +10,8 @@ from .serializers import (RegisterSerializer,
                         LogoutSerializer, 
                         ViewUserSerializer,
                         InAppChangePasswordSerializer,
+                        InAppChangeOnlyEmailSerializer,
+                        InAppChangeOnlyPasswordSerializer,
                         PhoneOtpRegisterSerializer,
                         PhoneLoginSerializer,
                         userOTP)
@@ -305,7 +307,7 @@ class ViewUser(generics.ListAPIView):
 class InAppChangePassword(generics.UpdateAPIView):
     renderer_classes = [UserRenderer]
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = InAppChangePasswordSerializer
+    # serializer_class = InAppChangePasswordSerializer
     model = User
 
     def get_object(self, queryset=None):
@@ -314,23 +316,64 @@ class InAppChangePassword(generics.UpdateAPIView):
 
     def update(self, request):
         self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
+        print('request.data:', request.data)
+        if request.data['user_email'] != '' and request.data['new_password']   != '':
+            serializer = InAppChangePasswordSerializer(data=request.data)
+        if request.data['user_email'] == '' and request.data['new_password']   != '':
+            serializer = InAppChangeOnlyPasswordSerializer(data=request.data)
+        if request.data['user_email'] != '' and request.data['new_password']   == '':
+            serializer = InAppChangeOnlyEmailSerializer(data=request.data)
 
         if serializer.is_valid():
             print(request.data['old_password'])
             print('old password::::', self.object.check_password(request.data['old_password']))
             if not self.object.check_password(request.data['old_password']):
                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.user_email = request.data.get("user_email")
-            self.object.save()
-            # serializer.save()
-            response = {
+            
+            if request.data['old_password'] == request.data['new_password']:
+                return Response({"new_password": ["New password should not be same as old password."]}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if self.object.check_password(request.data['old_password']) and request.data['user_email'] != '' and request.data['new_password'] != '':
+                self.object.set_password(serializer.data.get("new_password"))
+                self.object.user_email = request.data.get("user_email")
+                self.object.save()
+
+                response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'email and Password updated successfully',
+                'data': serializer.data,
+                }
+
+            if self.object.check_password(request.data['old_password']) and request.data['new_password'] != '' and request.data['user_email'] == '' :            
+                self.object.set_password(serializer.data.get("new_password"))
+                self.object.save()
+
+                response = {
                 'status': 'success',
                 'code': status.HTTP_200_OK,
                 'message': 'Password updated successfully',
                 'data': serializer.data,
-            }
+                }
+            
+            if self.object.check_password(request.data['old_password']) and request.data['user_email'] != '' and request.data['new_password'] == '':
+                self.object.user_email = request.data.get("user_email")
+                self.object.save()
+
+                response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'email updated successfully',
+                'data': serializer.data,
+                }
+            
+            # # serializer.save()
+            # response = {
+            #     'status': 'success',
+            #     'code': status.HTTP_200_OK,
+            #     'message': 'Password updated successfully',
+            #     'data': serializer.data,
+            # }
 
             return Response(response)
 

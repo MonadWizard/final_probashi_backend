@@ -75,24 +75,25 @@ class BlogReactionView(views.APIView):
                 # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
                 Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid)).update(is_user_like=False,is_user_dislike=False)
                 update_false = Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) &
-                                Q(userid__exact=user.userid) & Q(is_user_like=False) & Q (is_user_dislike=False)).values()
+                                Q(userid__exact=user.userid) & Q(is_user_like=False) & Q (is_user_dislike=False)).values().order_by('-id')
                 # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
                 # print('::::::::::', list(update_false)[0])
-                context = {'success': True, 'data': list(update_false)[-1]}
-                return Response(context,status=status.HTTP_202_ACCEPTED)
+                context = {'success': True, 'data': update_false[0]}
+                print('::::::::::', context)
+                return Response(context,status=status.HTTP_200_OK)
 
 
             elif request.data['is_user_like'] == True and request.data['is_user_dislike'] == False:
                 Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid'])& Q(userid__exact=user.userid)).update(is_user_like=True,is_user_dislike=False)
-                update_true = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values()
-                context = {'success': True, 'data': list(update_true)[-1]}
-                return Response(context,status=status.HTTP_202_ACCEPTED)
+                update_true = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values().order_by('-id')
+                context = {'success': True, 'data': update_true[0]}
+                return Response(context,status=status.status.HTTP_200_OK)
             
             elif request.data['is_user_like'] == False and request.data['is_user_dislike'] == True:
                 Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid'])& Q(userid__exact=user.userid)).update(is_user_like=False,is_user_dislike=True)
-                update_false = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values()
-                context = {'success': True, 'data': list(update_false)[-1]}
-                return Response(context,status=status.HTTP_202_ACCEPTED)
+                update_false = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values().order_by('-id')
+                context = {'success': True, 'data': update_false[0]}
+                return Response(context,status=status.status.HTTP_200_OK)
 
             
             # else:
@@ -130,7 +131,7 @@ class BlogPaginateListView(generics.ListAPIView):
         return {'user': self.request.user}
 
     def get_queryset(self):
-        print('request.data', self.request.data)
+        # print('request.data', self.request.data)
         data = self.request.data['tags']
         if data == []:
             return Blog.objects.all().order_by('-userblog_publishdate')
