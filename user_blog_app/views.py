@@ -87,13 +87,13 @@ class BlogReactionView(views.APIView):
                 Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid'])& Q(userid__exact=user.userid)).update(is_user_like=True,is_user_dislike=False)
                 update_true = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values().order_by('-id')
                 context = {'success': True, 'data': update_true[0]}
-                return Response(context,status=status.status.HTTP_200_OK)
+                return Response(context,status=status.HTTP_200_OK)
             
             elif request.data['is_user_like'] == False and request.data['is_user_dislike'] == True:
                 Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid'])& Q(userid__exact=user.userid)).update(is_user_like=False,is_user_dislike=True)
                 update_false = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values().order_by('-id')
                 context = {'success': True, 'data': update_false[0]}
-                return Response(context,status=status.status.HTTP_200_OK)
+                return Response(context,status=status.HTTP_200_OK)
 
             
             # else:
