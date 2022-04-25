@@ -32,7 +32,7 @@ def create_chat_table(user_1, user_2):
 def get_last_chat_data(user_1, user_2):
     table_title = ChatTable.objects.using('probashi_chat').get(user_1=user_1, user_2=user_2).table_name
     
-    sql = "SELECT * FROM " + str(table_title) + " ORDER BY id DESC LIMIT 1"
+    sql = "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'Asia/Dhaka' FROM " + str(table_title) + " ORDER BY id DESC LIMIT 1"
     
     print('sql::::get last chat data::::::::',sql)
 
@@ -45,12 +45,15 @@ def get_last_chat_data(user_1, user_2):
         if result is None:
             return {}
     
+    print('result::::::', result)
+    
     fields = [field[0] for field in cursor.description]
 
     # print('fields::::::', fields)
 
     result = sql_array_to_object(values=result, field_names=fields)
-    result['message_time'] = str(result['message_time'])
+    result['message_time'] = str(result['timezone'] )+ str("+06:00")
+    del result['timezone']
     try:
         # print('sender::::::',result['sender'])
         sender_data = User.objects.filter(userid=result['sender']).values('userid', 'user_fullname',
