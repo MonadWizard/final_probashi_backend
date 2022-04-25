@@ -79,7 +79,7 @@ class BlogReactionView(views.APIView):
                 # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
                 # print('::::::::::', list(update_false)[0])
                 context = {'success': True, 'data': update_false[0]}
-                print('::::::::::', context)
+                # print('::::::::::', context)
                 return Response(context,status=status.HTTP_200_OK)
 
 
