@@ -12,6 +12,9 @@ import base64
 from pathlib import Path
 import os
 
+from django.conf import settings
+
+
 class DemoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['userid']
@@ -35,9 +38,9 @@ class DemoConsumer(AsyncWebsocketConsumer):
         # print("data_l::::::::::::::::::::::::", data_l)
 
         noti_data = await get_all_notifications(self.room_name)
-        data = dict(noti_data)
-        data_l = list(noti_data.values())
-        data_l = list(filter(None, noti_data))
+        # data = dict(noti_data)
+        # data_l = list(noti_data.values())
+        # data_l = list(filter(None, noti_data))
         print('noti data::::::::::::',noti_data)
 
 
@@ -45,7 +48,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             'success': True,
             'type': 'recent',
             'chat': data_l,
-            'notification': noti_data,
+            'notification': noti_data
         }))
 
     async def disconnect(self, close_code):
@@ -101,8 +104,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
         elif text_data_json['data'] == 'image':
 
             image_data_byte = str.encode(text_data_json['message'])
-            BASE_DIR = Path(__file__).resolve().parent.parent.parent
-            image_save_dir = f"{BASE_DIR}/ChatAppData/images"
+            image_media_root = settings.MEDIA_ROOT
+            image_save_dir = f"{image_media_root}/ChatAppData/images"
 
             if not os.path.exists(image_save_dir):
                 try:

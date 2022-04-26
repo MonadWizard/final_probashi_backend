@@ -4,6 +4,10 @@ from asgiref.sync import sync_to_async
 from pytz import timezone
 from user_chat_app.utility import sql_array_to_object
 
+import json
+
+from auth_user_app.models import User
+
 from user_chat_app.models import ChatTable
 from django.db.models import Q
 
@@ -208,12 +212,16 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
 # ===================================notification.................
 @sync_to_async
 def get_all_notifications(userid):
-    print('userid:::::::::', userid)
-
+    # print('userid:::::::::', userid)
     all_noti = Notification.objects.filter(userid=userid).order_by('is_notification_seen','-id').values()
-    # print('all_noti:::::::::', [all_noti][0])
-    
-    return [all_noti][0]
+    print('all_noti:::::::::', all_noti)
+    # data = list(Notification.objects.extra(select={'date':"to_char(<DATABASENAME>_<TableName>.created_at, 'YYYY-MM-DD hh:mi AM')"}).values_list('date', flat='true')
+
+    noti_data = json.dumps(list(all_noti),sort_keys=True)
+    # json_x = json.dumps(noti_data)
+    # json_mod_x = json.loads(noti_data) 
+
+    return noti_data
 
 
 
