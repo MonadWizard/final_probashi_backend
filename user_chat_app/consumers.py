@@ -4,7 +4,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.db.models import Q
 
 from user_chat_app.db_utilities_async import get_previous_chat_data
-from user_chat_app.db_utilities_async import get_all_chat_data
+from user_chat_app.db_utilities_async import get_all_chat_data, get_all_notifications
 from user_chat_app.db_utilities_async import save_chat_data, save_chat_data_image
 from django.utils import timezone
 
@@ -15,6 +15,11 @@ import os
 class DemoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['userid']
+
+        # print("userid:::::::",self.scope['url_route']['kwargs']['userid'])
+        # print("self.room_name:::::::",self.__dict__)
+
+        # need to be take no self message option....so need user2 from request data
 
         self.room_group_name = 'chat_' + self.room_name
         
@@ -28,13 +33,19 @@ class DemoConsumer(AsyncWebsocketConsumer):
         data_l = list(data.values())
         data_l = list(filter(None, data_l))
         # print("data_l::::::::::::::::::::::::", data_l)
-        # ttt = timezone.localtime(timezone.now())
+
+        noti_data = await get_all_notifications(self.room_name)
+        data = dict(noti_data)
+        data_l = list(noti_data.values())
+        data_l = list(filter(None, noti_data))
+        print('noti data::::::::::::',noti_data)
 
 
         await self.send(text_data=json.dumps({
             'success': True,
             'type': 'recent',
-            'data': data_l,
+            'chat': data_l,
+            'notification': noti_data,
         }))
 
     async def disconnect(self, close_code):
@@ -149,16 +160,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
 
             })
-
-
-
-
-
-
-
-
-
-
 
 
 

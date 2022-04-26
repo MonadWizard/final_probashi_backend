@@ -5,13 +5,17 @@ from pytz import timezone
 from user_chat_app.utility import sql_array_to_object
 
 from user_chat_app.models import ChatTable
+from django.db.models import Q
+
+from user_setting_other_app.models import Notification
 
 from user_chat_app.db_utility import create_chat_table
 from user_chat_app.db_utility import get_last_chat_data
 
 @sync_to_async
 def get_all_chat_data(userid):
-    chat_list = ChatTable.objects.using('probashi_chat').filter(user_1=userid).order_by('-id')
+
+    chat_list = ChatTable.objects.using('probashi_chat').filter(Q(user_1=userid) & ~Q(user_2 = userid)).order_by('-id')
     data = {}
     # print('chat list:::::::::',chat_list)
 
@@ -198,4 +202,23 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
         return data
     
     return data
+
+
+
+# ===================================notification.................
+@sync_to_async
+def get_all_notifications(userid):
+    print('userid:::::::::', userid)
+
+    all_noti = Notification.objects.filter(userid=userid).order_by('is_notification_seen','-id').values()
+    # print('all_noti:::::::::', [all_noti][0])
+    
+    return [all_noti][0]
+
+
+
+
+
+
+
 
