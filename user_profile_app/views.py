@@ -344,13 +344,13 @@ class UserProfileView(generics.ListAPIView):
                     complete_profile_persentage += 5
             #  experience
             if serializer.data[0]['user_experiencedata'] != []:
-                complete_profile_persentage += 20
+                complete_profile_persentage += 15
             #  education
             if serializer.data[0]['user_educationdata'] != []:
                 complete_profile_persentage += 20
             #  id verification
             if serializer.data[0]['user_idverificationdata'] != []:
-                complete_profile_persentage += 20
+                complete_profile_persentage += 25
 
 
             serializer.data[0]['profile_complete_percentage'] = complete_profile_persentage
@@ -407,13 +407,13 @@ class UserProfileView(generics.ListAPIView):
                     complete_profile_persentage += 5
             #  experience
             if serializer.data[0]['user_experiencedata'] != []:
-                complete_profile_persentage += 20
+                complete_profile_persentage += 15
             #  education
             if serializer.data[0]['user_educationdata'] != []:
                 complete_profile_persentage += 20
             #  id verification
             if serializer.data[0]['user_idverificationdata'] != []:
-                complete_profile_persentage += 20
+                complete_profile_persentage += 25
 
             if complete_profile_persentage == 100:
                 user = self.request.user
