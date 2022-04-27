@@ -22,7 +22,8 @@ from .serializers import (ConsultancyCreateSerializer, ServiceCategorySerializer
                         AppointmentSeeker_MissingAppointmentReasonSerializer,
                         GetServicesSpecificCategorySerializer,
                         GetSpecificCategoryServiceSearchDataSerializer,
-                        ConsultancyPaymentSerializer,ServiceSearchFilterSerializer
+                        ConsultancyPaymentSerializer,
+                        ServiceSearchFilterSerializer,
                         )
 from . sslcommerz_helper import (Pro_user_CREATE_and_GET_session ,
                                 Consultancy_CREATE_and_GET_session)
@@ -32,6 +33,7 @@ from rest_framework.decorators import api_view
 from django.db.models import Q
 from auth_user_app.models import User
 from itertools import chain
+
 
 
 from probashi_backend.renderers import UserRenderer
@@ -1100,43 +1102,43 @@ class ServiceSearchField(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
     renderer_classes = [UserRenderer]
 
-    # if consultancy then consultancy serializer
-    # if user then user serializer
-
-    def search_service(self,data):
-
-        service_type = data['service_field_data']
-        
-        search_data = ConsultancyCreate.objects.filter(consultant_service_category__contains=service_type)
-
-        # print("search data:::::::::::::::",search_data)
-
-        return search_data
-
     def post(self,request):
         user = self.request.user
-        data = request.data
-
-        # print(":::::::::::::::::::::",request.data)
-        search_service = self.get_user(data)
-
-        serializer = ServiceSearchFilterSerializer(search_service, many=True)
-        # if serializer.is_valid():
-            # context = {"success":True,"data":serializer.data}
+        data = request.data['service_field_data']
+        # print("::::data:::::::", data)
             
-        paginator = ServiceSearchFilterPagination()
-        page = paginator.paginate_queryset(serializer.data, request)
-        if page is not None:
-            return paginator.get_paginated_response(page)
-        
+        if c_user := ConsultancyCreate.objects.filter(Q(consultant_service_category__icontains=data) | 
+                                    Q(userid__user_fullname__icontains=data) |
+                                    Q(userid__user_username__icontains=data) ):
+            print("consultancy data:::::::::::::::::::",c_user)
+            serializer = ServiceSearchFilterSerializer(c_user, many=True)
+            # if serializer.is_valid():
+                # context = {"success":True,"data":serializer.data}
+                
+            paginator = ServiceSearchFilterPagination()
+            page = paginator.paginate_queryset(serializer.data, request)
+            if page is not None:
+                return paginator.get_paginated_response(page)
+            
+        # return Response(page, status=status.HTTP_200_OK)
+        return Response("Invalid Input", status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(page, status=status.HTTP_200_OK)
+
+
+
+class SpecificServiceDescription(views.APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    # renderer_classes = [UserRenderer]
+
+    def get(self,request,service_id):
+        # print("service id:::::::::::::::::::",service_id)
+        if consultancy_description := ConsultancyCreate.objects.filter(id=service_id).values(
+                            'id',  'consultant_service_category','consultant_name', 'consultant_service_locationcountry',
+                            'consultant_servicedescription', 'userid__user_fullname'):
+            # print("consultancy_description:::::::::::::::::::",consultancy_description)
+            
+            return Response(consultancy_description, status=status.HTTP_200_OK)
+        return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
     
-
-
-
-
-
-
 
 

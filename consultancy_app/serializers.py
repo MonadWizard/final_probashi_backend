@@ -181,7 +181,7 @@ class GetSpecificCategoryServiceSearchDataSerializer(serializers.ModelSerializer
 
     class Meta:
         model = ConsultancyCreate
-        fields = ['id', 'consultant_service_category','consultant_name', 'consultant_service_locationcountry', 'consultant_servicedescription','user_id']
+        fields = ['id', 'consultant_service_category','consultant_name', 'consultant_service_locationcountry','user_id']
         # fields = '__all__'
         
 
@@ -206,15 +206,11 @@ class ConsultancyPaymentSerializer(serializers.ModelSerializer):
 
 
 class ServiceSearchFilterSerializer(serializers.ModelSerializer):
-    user_fullname = serializers.CharField(source='userid.user_fullname')
+    user_id = serializers.CharField(source='userid.user_fullname')
     class Meta:
         model = ConsultancyCreate
-        fields = ['consultant_service_category', 'consultant_service_locationcountry', 'consultant_created_at', 'user_fullname']
+        fields = ['id', 'consultant_service_category','consultant_name', 'consultant_service_locationcountry','user_id']
         # fields = ['consultant_service_category', 'consultant_service_locationcountry', 'user_fullname']
-
-
-
-
 
 
 

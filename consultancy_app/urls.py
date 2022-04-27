@@ -25,7 +25,8 @@ from .views import (ConsultancyCreateView,
                     
                     ServiceSearchGetData,
                     ServiceSearchFilter,
-                    ServiceSearchField)
+                    ServiceSearchField,
+                    SpecificServiceDescription)
 
 
 
@@ -67,5 +68,7 @@ urlpatterns = [
     path('service-search-data/', ServiceSearchGetData.as_view(), name="ServiceSearchGetData"),
     path('service-search-filter/', ServiceSearchFilter.as_view(), name="ServiceSearchFilter"),
     path('service-search-field/', ServiceSearchField.as_view(), name="ServiceSearchField"),
+
+    path('service-description/<str:service_id>/', SpecificServiceDescription.as_view(), name="SpecificServiceDescription"),
 ]
 
