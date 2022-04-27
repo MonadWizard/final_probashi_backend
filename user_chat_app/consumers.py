@@ -2,6 +2,9 @@ import datetime
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.db.models import Q
+from user_setting_other_app.models import Notification
+from auth_user_app.models import User
+
 
 from user_chat_app.db_utilities_async import get_previous_chat_data
 from user_chat_app.db_utilities_async import get_all_chat_data, get_all_notifications
@@ -38,14 +41,16 @@ class DemoConsumer(AsyncWebsocketConsumer):
         # print("data_l::::::::::::::::::::::::", data_l)
 
 
-        # 1. get previous notifications (20 % need to be fix)
-        # 2. add notification to data
+        # 1. get previous notifications (ok)  [how much amount need]
+        # 2. add notification to data (ok)
+        # 3. view pagination notification   [how much amount need]
         # 3. update notification status
         # 4. delete notification data
         #  
         noti_data = await get_all_notifications(self.room_name)
+ 
 
-        print('noti data::::::::::::',noti_data)
+        # print('noti data::::::::::::',noti_data)
 
 
         await self.send(text_data=json.dumps({
@@ -173,8 +178,10 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
 
 
+
+# notification send.................................................
         # send notification data
-        elif text_data_json['data'] == 'notification':
+        elif text_data_json['data'] == 'post-notification':
             print('notification data::::::::::::',text_data_json)
             data = {
                 'sender': self.room_name,
@@ -189,7 +196,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             await save_notification_data(noti_data=data)
 
-            print('data::::::::::::',data)
+            # print('data::::::::::::',data)
 
             chat_data = {
                 'type': 'notification',

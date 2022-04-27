@@ -3,6 +3,7 @@ from django.db import connection, connections
 from asgiref.sync import sync_to_async
 from pytz import timezone
 from user_chat_app.utility import sql_array_to_object
+from auth_user_app.utils import Util
 
 import json
 
@@ -11,10 +12,13 @@ from auth_user_app.models import User
 from user_chat_app.models import ChatTable
 from django.db.models import Q
 
-from user_setting_other_app.models import Notification
+from user_setting_other_app.models import Notification, User_settings
 
 from user_chat_app.db_utility import create_chat_table
 from user_chat_app.db_utility import get_last_chat_data
+
+
+
 
 @sync_to_async
 def get_all_chat_data(userid):
@@ -213,27 +217,40 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
 @sync_to_async
 def get_all_notifications(userid):
     # print('userid:::::::::', userid)
-    all_noti = Notification.objects.filter(userid=userid).order_by('is_notification_seen','-id').values()
-    print('all_noti:::::::::', all_noti)
+    all_noti = Notification.objects.filter(receiverid=userid).order_by('is_notification_seen','-id').values()
+    # print('all_noti:::::::::', all_noti)
     # data = list(Notification.objects.extra(select={'date':"to_char(<DATABASENAME>_<TableName>.created_at, 'YYYY-MM-DD hh:mi AM')"}).values_list('date', flat='true')
 
     noti_data = json.dumps(list(all_noti),sort_keys=True, default=str)
-    # json_x = json.dumps(noti_data)
-    # json_mod_x = json.loads(noti_data) 
 
-    return noti_data
+    noti_data_json = json.loads(noti_data)
+    
+
+    return noti_data_json
 
 
 
 # =====================notification=================
 @sync_to_async
 def save_notification_data(noti_data):
-    print('noti-data:::::::::', noti_data)
+    # print('noti-data:::::::::', noti_data)
     userid_data = User.objects.get(userid=noti_data['sender'])
     recever_data = User.objects.get(userid=noti_data['receiver'])
     try:
         Notification.objects.create(userid=userid_data, receiverid= recever_data ,notification_title=noti_data['notification_title'], notification_description=noti_data['notification_description'], notification_date=noti_data['notification_date'], is_notification_seen=False, is_notification_delete=False)
         print('noti-saved')
+
+        if User_settings.objects.filter(Q(userid=recever_data.userid)& Q(user_mail_notification_enable=True)).exists():
+                    user_fullname = recever_data.user_fullname
+                    user_email = recever_data.user_email
+                    noti_title = noti_data['notification_title']
+                    email_body = f'''Hello,{user_fullname} \n You Have an notification about {noti_title}'''
+            
+                    data = {'email_body': email_body, 'to_email': user_email,
+                            'email_subject': 'Probashi Notification'}
+                    
+                    Util.send_email(data)
+
         return True
     except Exception as e:
         print(e)
