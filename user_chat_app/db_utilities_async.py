@@ -38,9 +38,9 @@ def get_all_chat_data(userid):
 def save_chat_data(data):
     try:
         chat_table = ChatTable.objects.using('probashi_chat').get(user_1=data['sender'], user_2=data['receiver'])
-        print('table name::', chat_table.table_name)
+        # print('table name::', chat_table.table_name)
 
-        print('data::::::::::', data)
+        # print('data::::::::::', data)
 
         print('table-found')
     except:
@@ -83,7 +83,7 @@ def save_chat_data(data):
 
     sql += ")"
 
-    print('::::::::::::::::sql', sql)
+    # print('::::::::::::::::sql', sql)
 
     try:
         with connections['probashi_chat'].cursor() as cursor:
@@ -102,7 +102,7 @@ def save_chat_data(data):
 def save_chat_data_image(data):
     try:
         chat_table = ChatTable.objects.using('probashi_chat').get(user_1=data['sender'], user_2=data['receiver'])
-        print('table name::', chat_table.table_name)
+        # print('table name::', chat_table.table_name)
 
 
         print('table-found....')
@@ -146,7 +146,7 @@ def save_chat_data_image(data):
 
     sql += ")"
 
-    print('sql:::::::::', sql)
+    # print('sql:::::::::', sql)
 
     try:
         with connections['probashi_chat'].cursor() as cursor:
@@ -155,7 +155,7 @@ def save_chat_data_image(data):
             return True
     except Exception as e:
         print(e)
-        print('error')
+        # print('error')
         return False
 
 

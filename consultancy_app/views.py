@@ -1069,7 +1069,7 @@ class ServiceSearchFilter(views.APIView):
 
         # search_data = set(val for dic in search for val in dic.values())
 
-        print("search data:::::::::::::::",search)
+        # print("search data:::::::::::::::",search)
 
         return search
 
@@ -1100,9 +1100,12 @@ class ServiceSearchField(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
     renderer_classes = [UserRenderer]
 
-    def get_user(self,data):
+    # if consultancy then consultancy serializer
+    # if user then user serializer
 
-        service_type = data['service_type']
+    def search_service(self,data):
+
+        service_type = data['service_field_data']
         
         search_data = ConsultancyCreate.objects.filter(consultant_service_category__contains=service_type)
 
@@ -1115,9 +1118,9 @@ class ServiceSearchField(views.APIView):
         data = request.data
 
         # print(":::::::::::::::::::::",request.data)
-        search_user = self.get_user(data)
+        search_service = self.get_user(data)
 
-        serializer = ServiceSearchFilterSerializer(search_user, many=True)
+        serializer = ServiceSearchFilterSerializer(search_service, many=True)
         # if serializer.is_valid():
             # context = {"success":True,"data":serializer.data}
             

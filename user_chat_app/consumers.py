@@ -128,7 +128,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             
             current_time = datetime.datetime.now() 
             current_time = current_time.strftime("%m%d%H%M%S%f")
-            image_name = current_time + '.png'
+            image_name = current_time +text_data_json['extention']
             image_save_path = f"{image_save_dir}/{image_name}"
             
             try:
@@ -182,7 +182,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 # notification send.................................................
         # send notification data
         elif text_data_json['data'] == 'post-notification':
-            print('notification data::::::::::::',text_data_json)
+            # print('notification data::::::::::::',text_data_json)
             data = {
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
