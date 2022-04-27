@@ -217,13 +217,28 @@ def get_all_notifications(userid):
     print('all_noti:::::::::', all_noti)
     # data = list(Notification.objects.extra(select={'date':"to_char(<DATABASENAME>_<TableName>.created_at, 'YYYY-MM-DD hh:mi AM')"}).values_list('date', flat='true')
 
-    noti_data = json.dumps(list(all_noti),sort_keys=True)
+    noti_data = json.dumps(list(all_noti),sort_keys=True, default=str)
     # json_x = json.dumps(noti_data)
     # json_mod_x = json.loads(noti_data) 
 
     return noti_data
 
 
+
+# =====================notification=================
+@sync_to_async
+def save_notification_data(noti_data):
+    print('noti-data:::::::::', noti_data)
+    userid_data = User.objects.get(userid=noti_data['sender'])
+    recever_data = User.objects.get(userid=noti_data['receiver'])
+    try:
+        Notification.objects.create(userid=userid_data, receiverid= recever_data ,notification_title=noti_data['notification_title'], notification_description=noti_data['notification_description'], notification_date=noti_data['notification_date'], is_notification_seen=False, is_notification_delete=False)
+        print('noti-saved')
+        return True
+    except Exception as e:
+        print(e)
+        return False
+    
 
 
 

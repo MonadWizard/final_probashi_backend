@@ -1,4 +1,5 @@
 from django.db import models
+from django.dispatch import receiver
 from auth_user_app.models import User
 
 # Create your models here.
@@ -101,6 +102,7 @@ class Facing_trouble(models.Model):
 
 class Notification(models.Model):
     userid = models.ForeignKey(User,related_name='notification_user', on_delete=models.DO_NOTHING)
+    receiverid = models.ForeignKey(User,related_name='notification_receiver', on_delete=models.DO_NOTHING)
     notification_title = models.CharField(max_length=255, blank=True, null=True)
     notification_description = models.TextField(blank=True, null=True)
     is_notification_seen = models.BooleanField(default=False)

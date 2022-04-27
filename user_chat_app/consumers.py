@@ -5,7 +5,7 @@ from django.db.models import Q
 
 from user_chat_app.db_utilities_async import get_previous_chat_data
 from user_chat_app.db_utilities_async import get_all_chat_data, get_all_notifications
-from user_chat_app.db_utilities_async import save_chat_data, save_chat_data_image
+from user_chat_app.db_utilities_async import save_chat_data, save_chat_data_image, save_notification_data
 from django.utils import timezone
 
 import base64
@@ -37,10 +37,14 @@ class DemoConsumer(AsyncWebsocketConsumer):
         data_l = list(filter(None, data_l))
         # print("data_l::::::::::::::::::::::::", data_l)
 
+
+        # 1. get previous notifications (20 % need to be fix)
+        # 2. add notification to data
+        # 3. update notification status
+        # 4. delete notification data
+        #  
         noti_data = await get_all_notifications(self.room_name)
-        # data = dict(noti_data)
-        # data_l = list(noti_data.values())
-        # data_l = list(filter(None, noti_data))
+
         print('noti data::::::::::::',noti_data)
 
 
@@ -75,6 +79,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             await save_chat_data(data=data)
 
+
             chat_data = {
                 'type': 'single message',
                 'sender': self.room_name,
@@ -95,6 +100,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
 
             })
+
+
 
 
 
@@ -164,6 +171,46 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             })
 
+
+
+        # send notification data
+        elif text_data_json['data'] == 'notification':
+            print('notification data::::::::::::',text_data_json)
+            data = {
+                'sender': self.room_name,
+                'receiver': text_data_json['receiverid'],
+                'notification_title': text_data_json['notification_title'],
+                'notification_description': text_data_json['notification_description'],
+                'notification_date': str(timezone.localtime(timezone.now())),
+
+            }
+
+            # Save to DataBase.................
+
+            await save_notification_data(noti_data=data)
+
+            print('data::::::::::::',data)
+
+            chat_data = {
+                'type': 'notification',
+                'sender': self.room_name,
+                'receiver': text_data_json['receiverid'],
+                'notification_title': text_data_json['notification_title'],
+                'notification_description': text_data_json['notification_description'],
+                'notification_date': str(timezone.localtime(timezone.now())),
+
+            }           
+        
+            self.room_name_temp = text_data_json['receiverid']
+            self.room_group_name_temp = 'chat_' + self.room_name_temp
+
+            await self.channel_layer.group_send(self.room_group_name_temp,{
+                'type': 'send_notification',
+                # 'data': data,
+                'data': chat_data,
+
+
+            })
 
 
 
