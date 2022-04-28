@@ -41,9 +41,9 @@ class DemoConsumer(AsyncWebsocketConsumer):
         # print("data_l::::::::::::::::::::::::", data_l)
 
 
-        # 1. get previous notifications (ok)  [how much amount need]
+        # 1. get previous notifications (ok)  [how much amount need, no need]
         # 2. add notification to data (ok)
-        # 3. view pagination notification   [how much amount need]
+        # 3. view pagination notification   [how much amount need, no need]
         # 3. update notification status
         # 4. delete notification data
         #  

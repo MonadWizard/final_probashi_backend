@@ -232,8 +232,13 @@ class NotTakingScheduil_forSpecificUser(views.APIView):
         consultancy = self.get_object(user_id)
 
         serializer = GetAllCategoryNotTakingScheduleSerializer(consultancy, many=True)
-        
 
+        for i in serializer.data:
+            # print(':::::::::::::::::',i['consultancy_timeschudiles'])
+            if i['consultancy_timeschudiles'] == []:
+                print('before:::::::::::::::::',i['consultancy_timeschudiles'])
+                i['consultancy_timeschudiles'] = None
+                print('after:::::::::::::::::',i['consultancy_timeschudiles'])
 
         data = {'data' : serializer.data}
         return Response(data, status=status.HTTP_200_OK)
