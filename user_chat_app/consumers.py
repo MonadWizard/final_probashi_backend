@@ -181,6 +181,42 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
 
 
+# get all notification.................................................
+
+        elif text_data_json['data'] == 'get-notification':
+            # print('notification data::::::::::::',text_data_json)
+            # data = {
+            #     'sender': self.room_name,
+            #     'receiver': text_data_json['receiverid'],
+                
+            # }
+            # Save to DataBase.................
+
+            noti_data = await get_all_notifications(self.room_name)
+
+
+            print('data::::::::::::',noti_data)
+
+            chat_data = {
+                'type': 'notification',
+                "data": noti_data,
+
+            }           
+        
+            self.room_name_temp = text_data_json['receiverid']
+            self.room_group_name_temp = 'chat_' + self.room_name_temp
+
+            await self.channel_layer.group_send(self.room_group_name_temp,{
+                'type': 'send_chat',
+                # 'data': data,
+                'data': chat_data,
+            })
+
+
+
+
+
+
 # notification send.................................................
         # send notification data
         elif text_data_json['data'] == 'post-notification':
