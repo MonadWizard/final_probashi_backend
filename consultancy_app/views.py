@@ -232,6 +232,9 @@ class NotTakingScheduil_forSpecificUser(views.APIView):
         consultancy = self.get_object(user_id)
 
         serializer = GetAllCategoryNotTakingScheduleSerializer(consultancy, many=True)
+        
+
+
         data = {'data' : serializer.data}
         return Response(data, status=status.HTTP_200_OK)
 
@@ -1128,16 +1131,16 @@ class ServiceSearchField(views.APIView):
 
 class SpecificServiceDescription(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
-    # renderer_classes = [UserRenderer]
+    renderer_classes = [UserRenderer]
 
     def get(self,request,service_id):
         # print("service id:::::::::::::::::::",service_id)
         if consultancy_description := ConsultancyCreate.objects.filter(id=service_id).values(
                             'id',  'consultant_service_category','consultant_name', 'consultant_service_locationcountry',
                             'consultant_servicedescription', 'userid__user_fullname'):
-            # print("consultancy_description:::::::::::::::::::",consultancy_description)
+            print("consultancy_description:::::::::::::::::::",consultancy_description)
             
-            return Response(consultancy_description, status=status.HTTP_200_OK)
+            return Response(consultancy_description[0], status=status.HTTP_200_OK)
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
     
 
