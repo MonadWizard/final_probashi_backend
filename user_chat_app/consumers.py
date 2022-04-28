@@ -198,7 +198,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             print('data::::::::::::',noti_data)
 
             chat_data = {
-                'type': 'notification',
+                'type': 'notification-list',
                 "data": noti_data,
 
             }           

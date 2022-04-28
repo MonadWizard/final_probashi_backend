@@ -182,16 +182,18 @@ class GetSpecificUserView(views.APIView):
             raise Http404
 
     def get(self, request, user_id, format=None):
+        user_id = user_id
         data = self.get_object(user_id)
+        print(":::userid:::::::::::::", data.userid)
         
         user = self.request.user
-        if User.objects.filter(Q(is_consultant=False) & Q(userid=user.userid)).exists():
+        if User.objects.filter(Q(is_consultant=False) & Q(userid=data.userid)).exists():
             serializer = UserProfileViewSerializer(data)
             context = {'data': serializer.data}
             # print(context)
             return Response(context, status=status.HTTP_200_OK)
         
-        elif User.objects.filter(Q(is_consultant=True) & Q(user_id=user.userid)).exists():
+        elif User.objects.filter(Q(is_consultant=True) & Q(user_id=data.userid)).exists():
             serializer = UserProfileWithConsultancyViewSerializer(data)
             context = {'data': serializer.data}
             # print(context)
