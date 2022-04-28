@@ -193,7 +193,7 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
             
             for row in result:
                 d = sql_array_to_object(field_names=fields, values=row)
-                d['message_time'] = str(d['timezone'])+ str("+6:00")
+                d['message_time'] = str(d['timezone'])+ str("+06:00")
                 del d['timezone']
                 temp_data.append(d)
                 # print('d:::::::::', d)
@@ -217,7 +217,7 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
 @sync_to_async
 def get_all_notifications(userid):
     # print('userid:::::::::', userid)
-    all_noti = Notification.objects.filter(receiverid=userid).order_by('is_notification_seen','-id').values()
+    all_noti = Notification.objects.filter(Q(receiverid=userid) & Q(is_notification_delete=False)).order_by('is_notification_seen','-id').values()
     # print('all_noti:::::::::', all_noti)
     # data = list(Notification.objects.extra(select={'date':"to_char(<DATABASENAME>_<TableName>.created_at, 'YYYY-MM-DD hh:mi AM')"}).values_list('date', flat='true')
 
@@ -258,7 +258,38 @@ def save_notification_data(noti_data):
     
 
 
+@sync_to_async
+def delete_notification_data(noti_data):
+    try:
+        # print('noti-data:::::::::', noti_data)
+        noti_id = noti_data['notification_id']
+        delete_status = noti_data['is_notification_delete']
+        # print('noti-id:::::::::', noti_id, delete_status)
+        Notification.objects.filter(id=noti_id).update(is_notification_delete=delete_status)
+        
+        return True
 
+    except Exception as e:
+        print(e)
+        return False
+
+
+
+
+@sync_to_async
+def seen_notification_data(noti_data):
+    try:
+        # print('noti-data:::::::::', noti_data)
+        noti_id = noti_data['notification_id']
+        seen_status = noti_data['is_notification_seen']
+        # print('noti-id:::::::::', noti_id, delete_status)
+        Notification.objects.filter(id=noti_id).update(is_notification_seen=seen_status)
+        
+        return True
+
+    except Exception as e:
+        print(e)
+        return False
 
 
 

@@ -8,7 +8,9 @@ from auth_user_app.models import User
 
 from user_chat_app.db_utilities_async import get_previous_chat_data
 from user_chat_app.db_utilities_async import get_all_chat_data, get_all_notifications
-from user_chat_app.db_utilities_async import save_chat_data, save_chat_data_image, save_notification_data
+from user_chat_app.db_utilities_async import (save_chat_data, save_chat_data_image, 
+                                            save_notification_data, delete_notification_data,
+                                            seen_notification_data)
 from django.utils import timezone
 
 import base64
@@ -48,7 +50,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
         # 4. delete notification data
         #  
         noti_data = await get_all_notifications(self.room_name)
- 
+
 
         # print('noti data::::::::::::',noti_data)
 
@@ -189,14 +191,12 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'notification_title': text_data_json['notification_title'],
                 'notification_description': text_data_json['notification_description'],
                 'notification_date': str(timezone.localtime(timezone.now())),
-
             }
-
             # Save to DataBase.................
 
             await save_notification_data(noti_data=data)
 
-            # print('data::::::::::::',data)
+            print('data::::::::::::',data)
 
             chat_data = {
                 'type': 'notification',
@@ -212,16 +212,87 @@ class DemoConsumer(AsyncWebsocketConsumer):
             self.room_group_name_temp = 'chat_' + self.room_name_temp
 
             await self.channel_layer.group_send(self.room_group_name_temp,{
-                'type': 'send_notification',
+                'type': 'send_chat',
                 # 'data': data,
                 'data': chat_data,
+            })
 
 
+# delete notification data ....................................
+
+        elif text_data_json['data'] == 'delete-notification':
+            # print('delete notification::::::::::::',text_data_json)
+            data = {
+                'sender': self.room_name,
+                'receiver': text_data_json['receiverid'],
+                'notification_id': text_data_json['notification_id'],
+                'is_notification_delete': text_data_json['is_notification_delete']
+            }
+            # update to DataBase.................
+
+            await delete_notification_data(noti_data=data)
+
+            # print('data::::::::::::',data)
+
+            chat_data = {
+                'type': 'notification',
+                'sender': self.room_name,
+                'receiver': text_data_json['receiverid'],
+                'notification_id': text_data_json['notification_id'],
+                'is_notification_delete': text_data_json['is_notification_delete']
+
+            }           
+        
+            self.room_name_temp = text_data_json['receiverid']
+            self.room_group_name_temp = 'chat_' + self.room_name_temp
+
+            await self.channel_layer.group_send(self.room_group_name_temp,{
+                'type': 'send_chat',
+                # 'data': data,
+                'data': chat_data,
+            })
+
+
+# notification seen.................................................
+
+        elif text_data_json['data'] == 'seen-notification':
+            # print('delete notification::::::::::::',text_data_json)
+            data = {
+                'sender': self.room_name,
+                'receiver': text_data_json['receiverid'],
+                'notification_id': text_data_json['notification_id'],
+                'is_notification_seen': text_data_json['is_notification_seen']
+            }
+            # update to DataBase.................
+
+            await seen_notification_data(noti_data=data)
+
+            # print('data::::::::::::',data)
+
+            chat_data = {
+                'type': 'notification',
+                'sender': self.room_name,
+                'receiver': text_data_json['receiverid'],
+                'notification_id': text_data_json['notification_id'],
+                'is_notification_seen': text_data_json['is_notification_seen']
+
+            }           
+        
+            self.room_name_temp = text_data_json['receiverid']
+            self.room_group_name_temp = 'chat_' + self.room_name_temp
+
+            await self.channel_layer.group_send(self.room_group_name_temp,{
+                'type': 'send_chat',
+                # 'data': data,
+                'data': chat_data,
             })
 
 
 
 
+
+
+# notification send end.................................................
 
         await self.channel_layer.group_send(self.room_group_name, {
             'type': 'send_chat',
