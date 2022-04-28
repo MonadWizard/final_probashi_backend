@@ -232,16 +232,19 @@ class DemoConsumer(AsyncWebsocketConsumer):
             }
             # update to DataBase.................
 
-            await delete_notification_data(noti_data=data)
+            noti_time = await delete_notification_data(noti_data=data)
 
-            # print('data::::::::::::',data)
+            # print ('data::::::::::::',noti_time)
+
+            # print('data::::::::::::',data)    
 
             chat_data = {
                 'type': 'notification',
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'notification_id': text_data_json['notification_id'],
-                'is_notification_delete': text_data_json['is_notification_delete']
+                'is_notification_delete': text_data_json['is_notification_delete'],
+                'notification_date': str(noti_time),
 
             }           
         
@@ -267,7 +270,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             }
             # update to DataBase.................
 
-            await seen_notification_data(noti_data=data)
+            noti_time = await seen_notification_data(noti_data=data)
 
             # print('data::::::::::::',data)
 
@@ -276,7 +279,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'sender': self.room_name,
                 'receiver': text_data_json['receiverid'],
                 'notification_id': text_data_json['notification_id'],
-                'is_notification_seen': text_data_json['is_notification_seen']
+                'is_notification_seen': text_data_json['is_notification_seen'],
+                'notification_date': str(noti_time)
 
             }           
         

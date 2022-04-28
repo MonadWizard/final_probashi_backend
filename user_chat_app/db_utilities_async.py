@@ -17,6 +17,8 @@ from user_setting_other_app.models import Notification, User_settings
 from user_chat_app.db_utility import create_chat_table
 from user_chat_app.db_utility import get_last_chat_data
 
+from datetime import datetime, timezone, timedelta
+import pytz
 
 
 
@@ -211,8 +213,6 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
     
     return data
 
-from datetime import datetime, timezone, timedelta
-import pytz
 
 
 # ===================================notification.................
@@ -268,13 +268,18 @@ def save_notification_data(noti_data):
 @sync_to_async
 def delete_notification_data(noti_data):
     try:
+        tz = pytz.timezone('Asia/Dhaka')
         # print('noti-data:::::::::', noti_data)
         noti_id = noti_data['notification_id']
         delete_status = noti_data['is_notification_delete']
         # print('noti-id:::::::::', noti_id, delete_status)
         Notification.objects.filter(id=noti_id).update(is_notification_delete=delete_status)
         
-        return True
+        time = Notification.objects.filter(id=noti_id).values('notification_date')
+        # print('noti-time:::::::::', noti_time[0])
+        # print('noti-time:::::::::', time[0]['notification_date'].replace(tzinfo=tz) + timedelta(hours=6))
+        noti_time = time[0]['notification_date'].replace(tzinfo=tz) + timedelta(hours=6)
+        return noti_time
 
     except Exception as e:
         print(e)
@@ -286,13 +291,17 @@ def delete_notification_data(noti_data):
 @sync_to_async
 def seen_notification_data(noti_data):
     try:
+
+        tz = pytz.timezone('Asia/Dhaka')
         # print('noti-data:::::::::', noti_data)
         noti_id = noti_data['notification_id']
         seen_status = noti_data['is_notification_seen']
         # print('noti-id:::::::::', noti_id, delete_status)
         Notification.objects.filter(id=noti_id).update(is_notification_seen=seen_status)
         
-        return True
+        time = Notification.objects.filter(id=noti_id).values('notification_date')
+        noti_time = time[0]['notification_date'].replace(tzinfo=tz) + timedelta(hours=6)
+        return noti_time
 
     except Exception as e:
         print(e)
