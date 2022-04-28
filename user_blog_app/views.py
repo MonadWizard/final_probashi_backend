@@ -132,8 +132,9 @@ class BlogPaginateListView(generics.ListAPIView):
 
     def get_queryset(self):
         # print('request.data', self.request.data)
-        data = self.request.data['tags']
-        if data == []:
+        data = [self.request.data['tags']]
+        # print('data:::::::', data)
+        if data == [""]:
             return Blog.objects.all().order_by('-userblog_publishdate')
         else:
             return Blog.objects.filter(userblog_tags__overlap=data).order_by('-userblog_publishdate')
