@@ -65,7 +65,7 @@ class GetAllServicesCategoryView(generics.ListAPIView):
 
 
 class GetSpecificCategoriesServiceSetPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 15
     # page_number = 1
     page_size_query_param = 'page_size'
     max_page_size = 10000
@@ -1049,7 +1049,7 @@ class ServiceSearchGetData(views.APIView):
 
 
 class ServiceSearchFilterPagination(pagination.PageNumberPagination):
-    page_size = 10
+    page_size = 15
     page_size_query_param = 'page_size'
 
 

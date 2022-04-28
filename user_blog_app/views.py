@@ -118,7 +118,7 @@ class BlogReactionView(views.APIView):
 
 
 class GetAllpostsSetPagination(PageNumberPagination):
-    page_size = 3
+    page_size = 15
 
 class BlogPaginateListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -191,7 +191,7 @@ class SpecificBlogCommentDetails(generics.ListAPIView):
 
 
 class GetAllpostsLikeSetPagination(PageNumberPagination):
-    page_size = 3
+    page_size = 15
 
 class BlogPaginateReactionListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -210,7 +210,7 @@ class BlogPaginateReactionListView(generics.ListAPIView):
 
 
 class GetAllpostsCommentSetPagination(PageNumberPagination):
-    page_size = 3
+    page_size = 15
 
 class BlogPaginateCommentListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -229,7 +229,7 @@ class BlogPaginateCommentListView(generics.ListAPIView):
 
 
 class GetBlogPagination(pagination.PageNumberPagination):
-    page_size = 3
+    page_size = 15
     page_size_query_param = 'page_size'
 
 

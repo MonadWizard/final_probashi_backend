@@ -63,7 +63,7 @@ class TakeMatchFriend(views.APIView):
 
 
 class GetMatchFriendSetPagination(pagination.PageNumberPagination):
-    page_size = 10
+    page_size = 15
     page_size_query_param = 'page_size'
     # max_page_size = 10000
 
@@ -159,7 +159,7 @@ class Friends_suggation(views.APIView):
 
 
 class GetAllusersSetPagination(PageNumberPagination):
-    page_size = 20
+    page_size = 15
     # page_size_query_param = 'users'
     max_page_size = 10000
 
@@ -359,7 +359,7 @@ class UserSearchGetData(views.APIView):
 
 
 class UserSearchFilterPagination(pagination.PageNumberPagination):
-    page_size = 3
+    page_size = 15
     page_size_query_param = 'page_size'
 
 
