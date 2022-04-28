@@ -1057,7 +1057,7 @@ class ServiceSearchFilter(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
     renderer_classes = [UserRenderer]
 
-    def get_user(self,data):
+    def get_service(self,data):
 
         location_data = data['location_data']
         service_type = data['service_type']
@@ -1076,6 +1076,9 @@ class ServiceSearchFilter(views.APIView):
         elif location_data == [] and service_type != []:
             search = service_type_search_data
 
+        else:
+            search = ConsultancyCreate.objects.all()
+
 
         # search_data = set(val for dic in search for val in dic.values())
 
@@ -1087,7 +1090,9 @@ class ServiceSearchFilter(views.APIView):
         user = self.request.user
         data = request.data
         # print(request.data)
-        search_user = self.get_user(data)
+        search_user = self.get_service(data)
+
+        # print("search user:::::::::::::::::::",search_user)
 
         # details = User.objects.filter(userid__in=search_user).values(
         #                     'userid', 'user_fullname','user_areaof_experience','user_geolocation',
