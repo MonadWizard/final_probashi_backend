@@ -211,14 +211,21 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
     
     return data
 
+from datetime import datetime, timezone, timedelta
+import pytz
 
 
 # ===================================notification.................
 @sync_to_async
 def get_all_notifications(userid):
     # print('userid:::::::::', userid)
-    all_noti = Notification.objects.filter(Q(receiverid=userid) & Q(is_notification_delete=False)).order_by('is_notification_seen','-id').values()
-    # print('all_noti:::::::::', all_noti)
+    tz = pytz.timezone('Asia/Dhaka')
+
+    all_noti = Notification.objects.filter(Q(receiverid=userid) & Q(is_notification_delete=False)).order_by('is_notification_seen','-id' ).values()
+    
+    for noti in all_noti:
+        noti['notification_date'] = noti['notification_date'].replace(tzinfo=tz) + timedelta(hours=6) 
+        
     # data = list(Notification.objects.extra(select={'date':"to_char(<DATABASENAME>_<TableName>.created_at, 'YYYY-MM-DD hh:mi AM')"}).values_list('date', flat='true')
 
     noti_data = json.dumps(list(all_noti),sort_keys=True, default=str)

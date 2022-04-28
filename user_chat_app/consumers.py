@@ -205,6 +205,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 'notification_title': text_data_json['notification_title'],
                 'notification_description': text_data_json['notification_description'],
                 'notification_date': str(timezone.localtime(timezone.now())),
+                "is_notification_delete": False,
+                "is_notification_seen": False,
 
             }           
         

@@ -186,13 +186,13 @@ class GetSpecificUserView(views.APIView):
         
         user = self.request.user
         if User.objects.filter(Q(is_consultant=False) & Q(userid=user.userid)).exists():
-            serializer = UserProfileWithConsultancyViewSerializer(data)
+            serializer = UserProfileViewSerializer(data)
             context = {'data': serializer.data}
             # print(context)
             return Response(context, status=status.HTTP_200_OK)
         
         elif User.objects.filter(Q(is_consultant=True) & Q(user_id=user.userid)).exists():
-            serializer = UserProfileViewSerializer(data)
+            serializer = UserProfileWithConsultancyViewSerializer(data)
             context = {'data': serializer.data}
             # print(context)
             return Response(context, status=status.HTTP_200_OK)
