@@ -1123,13 +1123,20 @@ class ServiceSearchField(views.APIView):
         if c_user := ConsultancyCreate.objects.filter(Q(consultant_service_category__icontains=data) | 
                                     Q(userid__user_fullname__icontains=data) |
                                     Q(userid__user_username__icontains=data) ):
-            print("consultancy data:::::::::::::::::::",c_user)
+            # print("consultancy data:::::::::::::::::::",c_user)
             serializer = ServiceSearchFilterSerializer(c_user, many=True)
             # if serializer.is_valid():
                 # context = {"success":True,"data":serializer.data}
                 
             paginator = ServiceSearchFilterPagination()
             page = paginator.paginate_queryset(serializer.data, request)
+            if page is not None:
+                return paginator.get_paginated_response(page)
+
+        else:
+            data = []
+            paginator = ServiceSearchFilterPagination()
+            page = paginator.paginate_queryset(data, request)
             if page is not None:
                 return paginator.get_paginated_response(page)
             
