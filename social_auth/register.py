@@ -23,6 +23,7 @@ def register_social_user(provider, user_email, user_fullname):
     filtered_user_by_email = User.objects.filter(user_email=user_email)
 
     if filtered_user_by_email.exists():
+        print("exist................", filtered_user_by_email[0].auth_provider)
 
         if provider == filtered_user_by_email[0].auth_provider:
             social_secret = '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'
@@ -35,8 +36,10 @@ def register_social_user(provider, user_email, user_fullname):
                 'tokens': registered_user.tokens()}
 
         else:
-            raise AuthenticationFailed(
-                detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
+            # raise AuthenticationFailed(
+            #     detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
+            return {
+                "fail" : f"'Please continue your login using ' {filtered_user_by_email[0].auth_provider}"}
 
     else:
         social_secret = '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'
