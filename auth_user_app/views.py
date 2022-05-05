@@ -2,6 +2,7 @@ from sre_constants import SUCCESS
 from django.http import HttpResponse, JsonResponse
 
 from rest_framework import generics, status, views, permissions
+from yaml import serialize
 from .serializers import (RegisterSerializer,
                         UpdateRegisterSerializer,
                         SetNewPasswordSerializer, 
@@ -14,7 +15,8 @@ from .serializers import (RegisterSerializer,
                         InAppChangeOnlyPasswordSerializer,
                         PhoneOtpRegisterSerializer,
                         PhoneLoginSerializer,
-                        userOTP)
+                        userOTP,
+                        RequestPasswordResetEmailSerializer)
 
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -222,58 +224,118 @@ class LoginAPIView(generics.GenericAPIView):
 
 
 
-class RequestPasswordResetEmail(generics.GenericAPIView):
+# post request with email  [OK]
+#   -> send random otp from  backend to specific email
+#   -> save  info to database for 5 minutes
+
+# post request with otp and email to verify email for reset password
+#   -> check otp and email in database
+#   -> if otp and email is correct then response userid for reset password
+
+# post request with userid and password to reset password 
+#   -> check userid in database
+#   -> if userid is correct then update password in database
+#   -> response success message and call logout api to logout user
+
+
+class RequestPasswordResetEmail(views.APIView):
     renderer_classes = [UserRenderer]
+    serializer_class = RequestPasswordResetEmailSerializer
 
     def post(self, request):
 
         user_email = request.data.get('user_email', '')
-        otp = request.data.get('otp', '')
+        otp = random.sample(range(0, 9), 4)
+        otp = ''.join(map(str, otp))
 
         if User.objects.filter(user_email=user_email).exists():
             user = User.objects.get(user_email=user_email)
-            
-            # print('otp:', otp)
-            
 
             email_body = f'''Hello,{user.user_fullname} \n code for reset password is {otp}'''
             
             data = {'email_body': email_body, 'to_email': user.user_email,
                     'email_subject': 'Reset your passsword'}
             Util.send_email(data)
-        return Response({'message': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+
+            serializerdata = {"user_callphone" : user_email,
+                    "otp" : otp,
+                    "updated_at" : timezone.now()+timezone.timedelta(minutes=25)}
+            # print('serializerdata:::::::::::::', serializerdata)
+            serializer = RequestPasswordResetEmailSerializer(data=serializerdata)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            return Response({'message': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Email does not exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+class VerifyForResetPasswordEmail(views.APIView):
+    renderer_classes = [UserRenderer]
+
+    def post(self, request):
+        # print('request.data:::::::::::::', request.data)
+        if User.objects.filter(user_email=request.data['user_email']).exists():
+            print("user email exist")
+            user_email = request.data['user_email']
+            otp = request.data['otp']
+            time = timezone.localtime()
+
+            if condition_data := PhoneOTP.objects.filter(Q(user_callphone=user_email) & Q(otp= otp) & Q(updated_at__gt=time) & Q(is_used=False)):
+                # print("condition_data:::::::::::::", condition_data)
+                condition_data.update(is_used=True)
+                PhoneOTP.objects.filter(updated_at__lt=time).delete()
+                user_id = User.objects.filter(user_email=user_email).values('userid')[0]['userid']
+                # print('user_id:::::::::::::', user_id)
+                context = {'user_id': user_id}
+                return Response(context, status=status.HTTP_200_OK)
+
+            else: 
+                return Response('OTP is not correct or expired', status=status.HTTP_400_BAD_REQUEST)
+        return Response("unregistered email address", status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
 
 
 
 class SetNewPasswordAPIView(generics.UpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    renderer_classes = [UserRenderer]
+    # permission_classes = [permissions.IsAuthenticated]
+    # renderer_classes = [UserRenderer]
     serializer_class = SetNewPasswordSerializer
     model = User
 
-    def get_object(self, queryset=None):
-        obj = self.request.user
+    def get_object(self,user_id, queryset=None):
+        # print('user_id:::::::::::::', user_id)
+        userid = User.objects.get(userid=user_id)
+        obj = userid
         return obj
 
     def update(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        user_id = request.data['userid']
+        self.object = self.get_object(user_id)
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():            
             self.object.set_password(serializer.data.get("new_password"))
             self.object.userid = request.data.get("userid")
             self.object.save()
-            # serializer.save()
-            response = {
-                'status': 'success',
-                'code': status.HTTP_200_OK,
-                'message': 'Password updated successfully',
-                'data': serializer.data,
+
+            context = {
+                'success': True,
+                'message': 'Password has been reset successfully'
             }
 
-            return Response(response)
-
-        return Response('Please reset password with proper way', status=status.HTTP_400_BAD_REQUEST)
+            return Response(context, status=status.HTTP_200_OK)
+        errcontext = {
+            'success': False,
+            'message': 'Please reset password with proper way'
+        }
+        return Response(errcontext, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutAPIView(generics.GenericAPIView):
@@ -325,8 +387,8 @@ class InAppChangePassword(generics.UpdateAPIView):
             serializer = InAppChangeOnlyEmailSerializer(data=request.data)
 
         if serializer.is_valid():
-            print(request.data['old_password'])
-            print('old password::::', self.object.check_password(request.data['old_password']))
+            # print(request.data['old_password'])
+            # print('old password::::', self.object.check_password(request.data['old_password']))
             if not self.object.check_password(request.data['old_password']):
                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
             

@@ -215,6 +215,13 @@ class InAppChangeOnlyEmailSerializer(serializers.Serializer):
     model = User
     user_email = serializers.EmailField(required=True)
 
+
+class RequestPasswordResetEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhoneOTP
+        fields = '__all__'
+
+
 # ---------------------x-----------------------x----------------------------x----------
 
 class userOTP(serializers.ModelSerializer):
