@@ -351,29 +351,41 @@ class SetNewPasswordAPIView(generics.UpdateAPIView):
 
     def get_object(self, user_id, queryset=None):
         # print('user_id:::::::::::::', user_id)
-        userid = User.objects.get(userid=user_id)
-        obj = userid
-        return obj
+        try:
+            userid = User.objects.get(userid=user_id)
+            obj = userid
+            return obj
+        except User.DoesNotExist:
+            obj = False
+            return obj
 
     def update(self, request, *args, **kwargs):
         user_id = request.data["userid"]
         self.object = self.get_object(user_id)
-        serializer = self.get_serializer(data=request.data)
+        print("self.object:::::::::::::", self.object)
 
-        if serializer.is_valid():
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.userid = request.data.get("userid")
-            self.object.save()
+        if self.object:
+            serializer = self.get_serializer(data=request.data)
 
-            context = {
-                "success": True,
-                "message": "Password has been reset successfully",
+            if serializer.is_valid():
+                self.object.set_password(serializer.data.get("new_password"))
+                self.object.userid = request.data.get("userid")
+                self.object.save()
+
+                context = {
+                    "success": True,
+                    "message": "Password has been reset successfully",
+                }
+
+                return Response(context, status=status.HTTP_200_OK)
+            errcontext = {
+                "success": False,
+                "message": "Please reset password with proper way",
             }
-
-            return Response(context, status=status.HTTP_200_OK)
+            return Response(errcontext, status=status.HTTP_400_BAD_REQUEST)
         errcontext = {
             "success": False,
-            "message": "Please reset password with proper way",
+            "message": "Please reset password with valid userid",
         }
         return Response(errcontext, status=status.HTTP_400_BAD_REQUEST)
 
