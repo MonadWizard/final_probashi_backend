@@ -293,7 +293,7 @@ class RequestPasswordResetEmail(views.APIView):
             serializerdata = {
                 "user_callphone": user_email,
                 "otp": otp,
-                "updated_at": timezone.now() + timezone.timedelta(minutes=25),
+                "updated_at": timezone.now() + timezone.timedelta(minutes=5),
             }
             # print('serializerdata:::::::::::::', serializerdata)
             serializer = RequestPasswordResetEmailSerializer(data=serializerdata)
