@@ -65,9 +65,13 @@ class MailVerifyRequestView(views.APIView):
         user_email = data["user_email"]
         password = data["password"]
 
-        if User.objects.filter(user_email=user_email).exists():
+        if auth := User.objects.filter(user_email=user_email).values("auth_provider"):
+            provider = auth[0]["auth_provider"]
             return Response(
-                {"success": False, "message": "Email already exists"},
+                {
+                    "success": False,
+                    "message": f"Email already register by {provider}",
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
         else:

@@ -1,7 +1,11 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from .serializers import GoogleSocialAuthSerializer, FacebookSocialAuthSerializer, LinkedinSocialAuthSerializer
+from .serializers import (
+    GoogleSocialAuthSerializer,
+    FacebookSocialAuthSerializer,
+    LinkedinSocialAuthSerializer,
+)
 
 # from .serializers import GoogleSocialAuthSerializer, TwitterAuthSerializer, FacebookSocialAuthSerializer
 from probashi_backend.renderers import UserRenderer
@@ -9,16 +13,17 @@ from auth_user_app.models import User
 from django.http import Http404
 from auth_user_app.utils import Util
 
+
 class GoogleSocialAuthView(GenericAPIView):
     # renderer_classes = [UserRenderer]
 
     serializer_class = GoogleSocialAuthSerializer
 
-        # POST with "auth_token" Send an idtoken as from google to get user information
+    # POST with "auth_token" Send an idtoken as from google to get user information
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = ((serializer.validated_data)['auth_token'])
+        data = (serializer.validated_data)["auth_token"]
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -27,30 +32,26 @@ class FacebookSocialAuthView(GenericAPIView):
     serializer_class = FacebookSocialAuthSerializer
     renderer_classes = [UserRenderer]
 
-
-#       POST with "auth_token" Send an access token as from facebook to get user information
+    #       POST with "auth_token" Send an access token as from facebook to get user information
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = ((serializer.validated_data)['auth_token'])
+        data = (serializer.validated_data)["auth_token"]
         return Response(data, status=status.HTTP_200_OK)
-
 
 
 class LinkedinSocialAuthView(GenericAPIView):
 
     serializer_class = LinkedinSocialAuthSerializer
-    renderer_classes = [UserRenderer]
+    # renderer_classes = [UserRenderer]
 
-
-#       POST with "auth_token" Send an access token as from facebook to get user information
+    #       POST with "auth_token" Send an access token as from facebook to get user information
     def post(self, request):
         # print("request.data:::",request.data)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = ((serializer.validated_data)['auth_token'])
+        data = (serializer.validated_data)["auth_token"]
         return Response(data, status=status.HTTP_200_OK)
-
 
 
 # class CompleteRegistrationSocialAuth(GenericAPIView):
@@ -87,7 +88,7 @@ class LinkedinSocialAuthView(GenericAPIView):
 #         # # asyncio.run(match_friends(userid))
 #         # # friend match call sync..........................................................
 #         # # match_friends(user_id=userid)
-        
+
 #         # # relativeLink = reverse('email-verify')
 #         # email_body = 'Hi '+fullname_pasport + \
 #         #     ' welcome to probashi.. \n'
@@ -97,20 +98,3 @@ class LinkedinSocialAuthView(GenericAPIView):
 
 #         # Util.send_email(data)
 #         return Response('user_data', status=status.HTTP_200_OK)
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

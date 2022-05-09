@@ -58,7 +58,7 @@ class Linkedin:
             headers["Accept"] = "*/*"
             resp_name = requests.get(url, headers=headers)
             resp_dict_name = resp_name.json()
-            print("resp_dict_name:::", resp_dict_name)
+            print("resp_dict_name:::---", resp_dict_name)
             resp_fullname = (
                 resp_dict_name["localizedFirstName"]
                 + " "
@@ -77,8 +77,8 @@ class Linkedin:
             print("resp:::", resp_dict_mail)
             # print(resp.status_code)
 
-            resp_data = {"name": resp_fullname, "email": resp_mail}
-            # print("resp_data:::",resp_data)
+            resp_data = {"name": resp_fullname, "email": resp_mail, "picture": None}
+            print("resp_data:::", resp_data)
             return resp_data
 
         except:

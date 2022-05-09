@@ -76,13 +76,19 @@ class LinkedinSocialAuthSerializer(serializers.Serializer):
     def validate_auth_token(self, auth_token):
         # print("user_data::::",auth_token)
         user_data = Linkedin.validate(auth_token)
+        # print("user_data::::", user_data["picture"])
 
         try:
             user_email = user_data["email"]
             user_fullname = user_data["name"]
+            user_image = user_data["picture"]
+            print("user_image::::", user_image)
             provider = "linkedin"
             return register_social_user(
-                provider=provider, user_email=user_email, user_fullname=user_fullname
+                provider=provider,
+                user_email=user_email,
+                user_fullname=user_fullname,
+                user_image=user_image,
             )
         except Exception as identifier:
 
