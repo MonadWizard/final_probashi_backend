@@ -4,14 +4,14 @@ from user_connection_app.models import FriendsSuggation
 import os
 import random
 from rest_framework.exceptions import AuthenticationFailed
-import datetime 
+import datetime
 from user_profile_app.models import User_socialaccount_and_about
 from user_setting_other_app.models import User_settings
 
 
 def generate_username(name):
 
-    username = "".join(name.split(' ')).lower()
+    username = "".join(name.split(" ")).lower()
     if not User.objects.filter(user_username=username).exists():
         return username
     else:
@@ -19,58 +19,65 @@ def generate_username(name):
         return generate_username(random_username)
 
 
-def register_social_user(provider, user_email, user_fullname):
+def register_social_user(provider, user_email, user_fullname, user_image):
     filtered_user_by_email = User.objects.filter(user_email=user_email)
 
     if filtered_user_by_email.exists():
         print("exist................", filtered_user_by_email[0].auth_provider)
 
         if provider == filtered_user_by_email[0].auth_provider:
-            social_secret = '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'
+            social_secret = "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"
             registered_user = authenticate(
-                user_email=user_email, password=social_secret)
+                user_email=user_email, password=social_secret
+            )
 
             return {
-                'user_fullname': registered_user.user_fullname,
-                'user_email': registered_user.user_email,
-                'tokens': registered_user.tokens()}
+                "user_fullname": registered_user.user_fullname,
+                "user_email": registered_user.user_email,
+                # "user_image": user_image,
+                "tokens": registered_user.tokens(),
+            }
 
         else:
             # raise AuthenticationFailed(
             #     detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
             return {
-                "fail" : f"'Please continue your login using ' {filtered_user_by_email[0].auth_provider}"}
+                "fail": f"'Please continue your login using ' {filtered_user_by_email[0].auth_provider}"
+            }
 
     else:
-        social_secret = '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'
+        social_secret = "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"
 
-        current_time = datetime.datetime.now() 
+        current_time = datetime.datetime.now()
         current_time = current_time.strftime("%m%d%H%M%S%f")
         userid = current_time
 
-
         user = {
             # 'username': generate_username(name), 'email': email,
-            'userid': userid,
-            'user_fullname': generate_username(user_fullname), 
-            'user_email': user_email,
-            'password': social_secret}
+            "userid": userid,
+            "user_fullname": generate_username(user_fullname),
+            "user_email": user_email,
+            "password": social_secret,
+        }
         user = User.objects.create_user(**user)
         user.is_verified = True
         user.auth_provider = provider
         user.save()
 
-        User_socialaccount_and_about.objects.create(userid=User.objects.get(userid=userid), )
-        User_settings.objects.create(userid=User.objects.get(userid=userid), )
-        FriendsSuggation.objects.create(user=User.objects.get(userid=userid), )              # friend suggation .................
+        User_socialaccount_and_about.objects.create(
+            userid=User.objects.get(userid=userid),
+        )
+        User_settings.objects.create(
+            userid=User.objects.get(userid=userid),
+        )
+        FriendsSuggation.objects.create(
+            user=User.objects.get(userid=userid),
+        )  # friend suggation .................
 
-
-
-
-        new_user = authenticate(
-            user_email=user_email, password=social_secret)
+        new_user = authenticate(user_email=user_email, password=social_secret)
         return {
-            'user_email': new_user.user_email,
-            'user_fullname': new_user.user_fullname,
-            'tokens': new_user.tokens()
+            "user_email": new_user.user_email,
+            "user_fullname": new_user.user_fullname,
+            "user_image": user_image,
+            "tokens": new_user.tokens(),
         }
