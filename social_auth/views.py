@@ -43,7 +43,7 @@ class FacebookSocialAuthView(GenericAPIView):
 class LinkedinSocialAuthView(GenericAPIView):
 
     serializer_class = LinkedinSocialAuthSerializer
-    # renderer_classes = [UserRenderer]
+    renderer_classes = [UserRenderer]
 
     #       POST with "auth_token" Send an access token as from facebook to get user information
     def post(self, request):
