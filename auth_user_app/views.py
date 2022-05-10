@@ -386,59 +386,65 @@ class InAppChangePassword(generics.UpdateAPIView):
 
     def update(self, request):
         self.object = self.get_object()
-        print("request.data:", request.data)
+
         serializer = None
         if request.data["user_email"] != "" or request.data["new_password"] != "":
+            print("in if")
             serializer = UserEmailandPasswordChangeSerializer(data=request.data)
+            print("serializer:", serializer.is_valid())
+            print("serializer.data:", serializer.data)
 
-        if serializer != None and serializer.is_valid():
+            if serializer != None or serializer.is_valid():
+                print("in 2nd if")
 
-            if not (
-                User.objects.filter(user_email=request.data["user_email"]).exists()
-                or request.data["user_email"] == ""
-            ):
+                if not (
+                    User.objects.filter(user_email=request.data["user_email"]).exists()
+                    or request.data["user_email"] == ""
+                ):
 
-                return Response(
-                    {"wrong email": ["Wrong email address."]},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+                    return Response(
+                        {"wrong email": ["Wrong email address."]},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
-            if request.data["old_password"] == request.data["new_password"]:
-                return Response(
-                    {
-                        "new_password": [
-                            "New password should not be same as old password."
-                        ]
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+                if request.data["old_password"] == request.data["new_password"]:
+                    return Response(
+                        {
+                            "new_password": [
+                                "New password should not be same as old password."
+                            ]
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
-            if not self.object.check_password(request.data["old_password"]):
-                return Response(
-                    {"old_password": ["Wrong password."]},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+                if not self.object.check_password(request.data["old_password"]):
+                    return Response(
+                        {"old_password": ["Wrong password."]},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
-            if self.object.check_password(request.data["old_password"]) and (
-                request.data["user_email"] != "" or request.data["new_password"] != ""
-            ):
-                self.object.set_password(serializer.data.get("new_password"))
+                if self.object.check_password(request.data["old_password"]) and (
+                    request.data["user_email"] != ""
+                    or request.data["new_password"] != ""
+                ):
+                    self.object.set_password(serializer.data.get("new_password"))
 
-                if request.data["user_email"] != "":
-                    self.object.user_email = request.data.get("user_email")
-                self.object.save()
+                    if request.data["user_email"] != "":
+                        self.object.user_email = request.data.get("user_email")
+                    self.object.save()
 
-                response = {
-                    "status": "success",
-                    "code": status.HTTP_200_OK,
-                    "message": "email and Password updated successfully",
-                    "data": serializer.data,
-                }
+                    response = {
+                        "status": "success",
+                        "code": status.HTTP_200_OK,
+                        "message": "email and Password updated successfully",
+                        "data": serializer.data,
+                    }
 
-            return Response(response)
+                return Response(response)
 
         return Response(
-            "Please change password with proper way", status=status.HTTP_400_BAD_REQUEST
+            "Please change password with proper way!",
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
 
