@@ -7,7 +7,6 @@ from .views import  (MailVerifyRequestView,
                     LoginAPIView,
                     RequestPasswordResetEmail,
                     VerifyForResetPasswordEmail,
-                    ViewUser, 
                     MailVerificationStatus,
                     InAppChangePassword,
                     
@@ -38,7 +37,6 @@ urlpatterns = [
     path('verify-reset-email/', VerifyForResetPasswordEmail.as_view(),name="verify-reset-email"),
     # path('password-reset/<uidb64>/<token>/',PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
     path('password-reset-complete/', SetNewPasswordAPIView.as_view(),name='password-reset-complete'),
-    path('userinfo/', ViewUser.as_view(), name="user-data"),
     path('app/change-password/', InAppChangePassword.as_view(), name='InAppChangePassword'),
 
     path('phone-verification-otp/', RegistrationVerificationCodeSend.as_view(), name='VerificationCodeSend'),

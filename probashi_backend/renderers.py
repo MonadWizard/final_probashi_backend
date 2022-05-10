@@ -1,51 +1,48 @@
+import re
 from rest_framework import renderers
 import json
 
 
 class UserRenderer(renderers.JSONRenderer):
+    def string_error(self, data):
+        complete_error = ""
+        if "ErrorDetail" in str(data):
+            for key, value in data.items():
+                single_err = json.dumps(value)
+                single_err = re.sub("[^A-Za-z0-9]+", " ", single_err).strip()
+                complete_error = complete_error + single_err
+            return complete_error
+        else:
+            print("type::::", type(data), "data::::", data)
+            return data
 
-    charset='utf-8'
+    charset = "utf-8"
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
-        response = ''
-        
-        # print('data:::::::::', data)
-        # print('renderer:::::::::',renderer_context)
-        # print('accepted:::::::::',accepted_media_type)
-        # print('status:::::::::',renderer_context['response'].status_code )
-        
-        
-        if 'ErrorDetail' in str(data):
-            # err = list(list(data.values())[:1])[0]
-            # errr2 = list(data.items())[0][1]
-            # err = str(err)
-            # err2 = 
-            print('data erroe:::::::::::',data)
-            response = json.dumps({'success': False, 'message':data})
-        elif renderer_context['response'].status_code == 400:
-            # print('data 400:::::::::::',data)
-            # err = list(list(data.values())[:1])[0]
-            response = json.dumps({'success': False, 'message': data})
-        elif renderer_context['response'].status_code == 401:
-            # err = list(list(data.values())[:1])[0]
-            # print('data 401:::::::::::',data)
+        response = ""
 
-            # print(data, type(data))
-            response = json.dumps({'success': False, 'message': data})
+        complete_error = self.string_error(data)
+        if "ErrorDetail" in str(data):
+            response = json.dumps({"success": False, "message": complete_error})
+        elif renderer_context["response"].status_code == 400:
+            print("400:::::::", complete_error)
+            response = json.dumps({"success": False, "message": complete_error})
+        elif renderer_context["response"].status_code == 401:
 
-        elif renderer_context['response'].status_code == 404:
-            response = json.dumps({'success': False, 'message': data})
+            response = json.dumps({"success": False, "message": complete_error})
 
-        elif renderer_context['response'].status_code == 500:
-            # err = list(list(data.values())[:1])[0]
-            response = json.dumps({'success': False, 'message': data})
+        elif renderer_context["response"].status_code == 404:
+            response = json.dumps({"success": False, "message": complete_error})
+
+        elif renderer_context["response"].status_code == 500:
+            response = json.dumps({"success": False, "message": complete_error})
 
         else:
-            response = {'success': True}
+            response = {"success": True}
             response.update(data)
 
             # response = json.dumps({'success': True, 'data': data})
-        
+
             return json.dumps(response)
         return response
 
@@ -53,16 +50,3 @@ class UserRenderer(renderers.JSONRenderer):
         # pdb.set_trace()
 
         # return super.render(data, accepted_media_type=accepted_media_type, renderer_context=renderer_context)
-
-
-
-
-
-
-
-
-
-
-
-
-

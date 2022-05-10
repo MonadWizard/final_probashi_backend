@@ -1,5 +1,3 @@
-from asyncio import exceptions
-from os import PRIO_PGRP
 from rest_framework import serializers
 from .models import User, PhoneOTP
 from django.contrib import auth
@@ -8,11 +6,17 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from drf_extra_fields.fields import Base64ImageField
 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
+from django.utils.encoding import (
+    smart_str,
+    force_str,
+    smart_bytes,
+    DjangoUnicodeDecodeError,
+)
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from .customAuth import CustomerBackendForPhoneNumber
 
+import time
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -21,10 +25,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     # default_error_messages = {
     #     'email': 'The email should only contain alphanumeric characters'}
-    
+
     class Meta:
         model = User
-        fields = ['userid','user_email', 'user_fullname', 'password']
+        fields = ["userid", "user_email", "user_fullname", "password"]
 
     # def validate(self, attrs):
     #     # userid = attrs.get('userid', '')
@@ -36,119 +40,100 @@ class RegisterSerializer(serializers.ModelSerializer):
     #     # if not fullname.isalnum():
     #     #     raise serializers.ValidationError(
     #     #         self.default_error_messages)
-        
+
     #     return attrs
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
 
-
 class UpdateRegisterSerializer(serializers.ModelSerializer):
-    user_photopath=Base64ImageField() # From DRF Extra Fields
+    user_photopath = Base64ImageField()  # From DRF Extra Fields
+
     class Meta:
         model = User
-        fields = ['user_fullname', 
-                'user_username', 'user_gender',
-                'user_dob','user_photopath',
-                'user_device_typeserial',
-                'user_geolocation',
-                'user_residential_district',
-                'user_nonresidential_country',
-                'user_nonresidential_city',
-                'user_durationyear_abroad']
-    
+        fields = [
+            "user_fullname",
+            "user_username",
+            "user_gender",
+            "user_dob",
+            "user_photopath",
+            "user_device_typeserial",
+            "user_geolocation",
+            "user_residential_district",
+            "user_nonresidential_country",
+            "user_nonresidential_city",
+            "user_durationyear_abroad",
+        ]
+
     def create(self, validated_data):
-        user_photopath=validated_data.pop('user_photopath')
+        user_photopath = validated_data.pop("user_photopath")
         return User.objects.create(user_photopath=user_photopath)
 
 
 class LoginSerializer(serializers.ModelSerializer):
     user_email = serializers.EmailField(max_length=255, min_length=3)
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
-    # user_fullname = serializers.CharField(
-    #     max_length=255, min_length=3, read_only=True)
 
     tokens = serializers.SerializerMethodField()
 
     def get_tokens(self, obj):
-        user = User.objects.get(user_email=obj['user_email'])
+        user = User.objects.get(user_email=obj["user_email"])
 
-        return {
-            'refresh': user.tokens()['refresh'],
-            'access': user.tokens()['access']
-        }
+        return {"refresh": user.tokens()["refresh"], "access": user.tokens()["access"]}
 
     class Meta:
         model = User
-        fields = ['user_email', 'password', 'tokens']
+        fields = ["user_email", "password", "tokens"]
 
     def validate(self, attrs):
-
-        # try:
-        user_email = attrs.get('user_email', '')
-        password = attrs.get('password', '')
-        filtered_user_by_email = User.objects.filter(user_email=user_email).values('user_email')
-        
-        user = None
+        # start = time.time()  # start time..............................
+        user_email = attrs.get("user_email", "")
+        password = attrs.get("password", "")
         try:
+            user = User.objects.get(user_email=user_email)
+            filtered_user_by_email = user.user_email
+            print("filtered_user_by_email", user.auth_provider)
+            user = None
+        except User.DoesNotExist:
+            raise AuthenticationFailed("User does not exist")
+
+        # end1 = time.time()  # end time..............................1
+        # print("end time filter 1 is:", end1 - start)
+
+        # start2 = time.time()  # end time..............................2
+        try:
+
             user = auth.authenticate(user_email=user_email, password=password)
-            
+
         except:
-            if filtered_user_by_email.exists() and str(filtered_user_by_email[0]['user_email']) != user_email:
-                raise serializers.ValidationError(detail='Please continue your login using ' + filtered_user_by_email[0]['user_email'].auth_provider)
+            if filtered_user_by_email != user_email:
+                raise serializers.ValidationError(
+                    detail="Please continue your login using " + user.auth_provider
+                )
 
             if not user:
                 # print(":::::::::::::Invalid credentials, try again")
-                raise serializers.ValidationError('Invalid credentials, try again')
+                raise serializers.ValidationError("Invalid credentials, try again")
 
             if not user.is_active:
                 # print(":::::::::::::::::::Account disabled, contact admin")
-                raise serializers.ValidationError('Account disabled, contact admin')
+                raise serializers.ValidationError("Account disabled, contact admin")
             if not user.is_verified:
                 # print(":::::::::::::::::::::Email is not verified")
-                raise serializers.ValidationError('Email is not verified')
+                raise serializers.ValidationError("Email is not verified")
 
             if user is None:
-                raise serializers.ValidationError(
-                    'Invalid credentials')
+                raise serializers.ValidationError("Invalid credentials")
             else:
                 return attrs
-        # except:
-        #     raise serializers.ValidationError(
-        #         'except Invalid credentials')
 
-        return {
-                    'user_email': user.user_email,
-                    'tokens': user.tokens
-                }
+        # end2 = time.time()  # end time..............................3
+        # print("end time filter 2 is:", end2 - start2)
 
-        # print("filtered_user_by_email::::::",filtered_user_by_email[0])
-        # print("user_email::::::",user_email)
-        # print("filtered_user_by_email[0].auth_provider::::::",str(filtered_user_by_email[0]['user_email']))
-        
-        # if filtered_user_by_email.exists() and str(filtered_user_by_email[0]['user_email']) != user_email:
-        #     raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_email[0]['user_email'].auth_provider)
+        return {"user_email": user.user_email, "tokens": user.tokens}
 
-        # if not user:
-        #     print(":::::::::::::Invalid credentials, try again")
-        #     raise AuthenticationFailed('Invalid credentials, try again')
-
-        # if not user.is_active:
-        #     print(":::::::::::::::::::Account disabled, contact admin")
-        #     raise AuthenticationFailed('Account disabled, contact admin')
-        # if not user.is_verified:
-        #     print(":::::::::::::::::::::Email is not verified")
-        #     raise AuthenticationFailed('Email is not verified')
-
-        # return {
-        #     'user_email': user.user_email,
-        #     'tokens': user.tokens
-        # }
-
-        return super().validate(attrs)
-        # except Exception as e:
-        #     raise AuthenticationFailed(str(e))
+        # return super().validate(attrs)
 
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
@@ -158,7 +143,7 @@ class ResetPasswordEmailRequestSerializer(serializers.Serializer):
 
     class Meta:
         model = User
-        fields = ['user_email']
+        fields = ["user_email"]
 
 
 class SetNewPasswordSerializer(serializers.Serializer):
@@ -168,19 +153,14 @@ class SetNewPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
 
 
-
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
 
-
-    default_error_message = {
-        'bad_token': ('Token is expired or invalid')
-    }
+    default_error_message = {"bad_token": ("Token is expired or invalid")}
 
     def validate(self, attrs):
 
-        self.token = attrs['refresh']
-        # print("refresh::::::",self.token)
+        self.token = attrs["refresh"]
         return attrs
 
     def save(self, **kwargs):
@@ -189,15 +169,14 @@ class LogoutSerializer(serializers.Serializer):
             RefreshToken(self.token).blacklist()
 
         except TokenError:
-            # self.fail(self.default_error_message)
-            self.fail('bad_token')
+            self.fail("bad_token")
 
 
-class ViewUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=User
-        fields='__all__'
+class UserEmailandPasswordChangeSerializer(serializers.Serializer):
+    model = User
 
+    user_email = serializers.EmailField(required=False)
+    new_password = serializers.CharField(required=False)
 
 
 class InAppChangePasswordSerializer(serializers.Serializer):
@@ -211,6 +190,7 @@ class InAppChangeOnlyPasswordSerializer(serializers.Serializer):
     model = User
     new_password = serializers.CharField(required=True)
 
+
 class InAppChangeOnlyEmailSerializer(serializers.Serializer):
     model = User
     user_email = serializers.EmailField(required=True)
@@ -219,15 +199,17 @@ class InAppChangeOnlyEmailSerializer(serializers.Serializer):
 class RequestPasswordResetEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhoneOTP
-        fields = '__all__'
+        fields = "__all__"
 
 
 # ---------------------x-----------------------x----------------------------x----------
 
+
 class userOTP(serializers.ModelSerializer):
     class Meta:
         model = PhoneOTP
-        fields = '__all__'
+        fields = "__all__"
+
 
 class PhoneOtpRegisterSerializer(serializers.ModelSerializer):
     # password = serializers.CharField(max_length=68, min_length=6, write_only=True)
@@ -235,14 +217,11 @@ class PhoneOtpRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['userid','user_callphone', 'user_fullname']
+        fields = ["userid", "user_callphone", "user_fullname"]
 
     def create(self, validated_data):
         # print("validated_data:::::",validated_data)
         return User.objects.create_user_phone(**validated_data)
-
-
-
 
 
 class PhoneLoginSerializer(serializers.ModelSerializer):
@@ -254,26 +233,27 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
     tokens = serializers.SerializerMethodField()
 
     def get_tokens(self, obj):
-        user = User.objects.get(user_callphone=obj['user_callphone'])
+        user = User.objects.get(user_callphone=obj["user_callphone"])
 
-        return {
-            'refresh': user.tokens()['refresh'],
-            'access': user.tokens()['access']
-        }
+        return {"refresh": user.tokens()["refresh"], "access": user.tokens()["access"]}
 
     class Meta:
         model = User
-        fields = ['user_callphone', 'tokens']
+        fields = ["user_callphone", "tokens"]
 
     def validate(self, attrs):
-        user_callphone = attrs.get('user_callphone', '')
+        user_callphone = attrs.get("user_callphone", "")
         # print("user_callphone::::::",user_callphone)
         # password = attrs.get('password', '')
-        filtered_user_by_user_callphone = User.objects.filter(user_callphone=user_callphone)
-        
+        filtered_user_by_user_callphone = User.objects.filter(
+            user_callphone=user_callphone
+        )
+
         user = None
         try:
-            user = CustomerBackendForPhoneNumber.authenticate(user_callphone=user_callphone)
+            user = CustomerBackendForPhoneNumber.authenticate(
+                user_callphone=user_callphone
+            )
         # print("::::::::",user)
         # print("filtered_user_by_user_callphone::::::",filtered_user_by_user_callphone[0])
         # print("user_email::::::",type(user_email))
@@ -283,24 +263,14 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
         #     raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_user_callphone[0].auth_provider)
         except:
             if not user:
-                raise serializers.ValidationError('Invalid credentials, try again')
+                raise serializers.ValidationError("Invalid credentials, try again")
             if not user.is_active:
-                raise serializers.ValidationError('Account disabled, contact admin')
+                raise serializers.ValidationError("Account disabled, contact admin")
             if not user.is_verified:
-                raise serializers.ValidationError('Phone is not verified')
+                raise serializers.ValidationError("Phone is not verified")
             if user is None:
-                raise serializers.ValidationError(
-                    'Invalid credentials')
+                raise serializers.ValidationError("Invalid credentials")
             else:
                 return attrs
 
-        return {
-            'user_callphone': user.user_callphone,
-            'tokens': user.tokens
-        }
-
-
-
-
-
-
+        return {"user_callphone": user.user_callphone, "tokens": user.tokens}

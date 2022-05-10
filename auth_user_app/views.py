@@ -1,16 +1,12 @@
-from sre_constants import SUCCESS
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 
 from rest_framework import generics, status, views, permissions
-from yaml import serialize
 from .serializers import (
     RegisterSerializer,
     UpdateRegisterSerializer,
     SetNewPasswordSerializer,
-    ResetPasswordEmailRequestSerializer,
     LoginSerializer,
     LogoutSerializer,
-    ViewUserSerializer,
     InAppChangePasswordSerializer,
     InAppChangeOnlyEmailSerializer,
     InAppChangeOnlyPasswordSerializer,
@@ -18,11 +14,11 @@ from .serializers import (
     PhoneLoginSerializer,
     userOTP,
     RequestPasswordResetEmailSerializer,
+    UserEmailandPasswordChangeSerializer,
 )
 
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
 
@@ -35,38 +31,28 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 import jwt
 from django.conf import settings
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import (
-    smart_str,
-    force_str,
-    smart_bytes,
-    DjangoUnicodeDecodeError,
-)
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponsePermanentRedirect
-import os
+
 import datetime
 from django.db.models import Q
 import random
 from django.utils import timezone
-from user_connection_app.utility import match_friends
-
 from probashi_backend.renderers import UserRenderer
-import json
 
 
 class MailVerifyRequestView(views.APIView):
-    # renderer_classes = [UserRenderer]
-
     def post(self, request):
         data = request.data
         user_fullname = data["user_fullname"]
         user_email = data["user_email"]
         password = data["password"]
 
-        if auth := User.objects.filter(user_email=user_email).values("auth_provider"):
-            provider = auth[0]["auth_provider"]
+        try:
+            # User.objects.get(user_email=user_email)
+            provider = User.objects.get(user_email=user_email).auth_provider
+            print("user already exists")
             return Response(
                 {
                     "success": False,
@@ -74,8 +60,7 @@ class MailVerifyRequestView(views.APIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        else:
-            # Token passing
+        except User.DoesNotExist:
             payload = {
                 "user_email": user_email,
                 "user_fullname": user_fullname,
@@ -102,7 +87,6 @@ class MailVerifyRequestView(views.APIView):
                 "to_email": user_email,
                 "email_subject": "Verify your email",
             }
-            # print('data:', data)
 
             Util.send_email(data)
 
@@ -124,15 +108,14 @@ class VerifyEmail(views.APIView):
                 token, settings.SECRET_KEY, algorithms=["HS256"]
             )
 
-            current_time = datetime.datetime.now()
-            current_time = current_time.strftime("%m%d%H%M%S%f")
+            # current_time = datetime.datetime.now()
+            current_time = datetime.datetime.now().strftime("%m%d%H%M%S%f")
 
             userid = current_time
             verified_mail_payload["userid"] = userid
 
             serializer = self.serializer_class(data=verified_mail_payload)
             serializer.is_valid(raise_exception=True)
-
             serializer.save()
 
             User_socialaccount_and_about.objects.create(
@@ -143,7 +126,7 @@ class VerifyEmail(views.APIView):
             )
             FriendsSuggation.objects.create(
                 user=User.objects.get(userid=userid),
-            )  # friend suggation .................
+            )
 
             html = "<html><body>Verification Success. It's time for complete registration.</body></html>"
             return HttpResponse(html)
@@ -160,18 +143,15 @@ class MailVerificationStatus(views.APIView):
 
     def get(self, request):
         try:
-            user_mail = (
-                User.objects.filter(user_email__exact=request.data["user_email"])
-                .values("is_verified")
-                .exists()
-            )
-            # mail_verify = user_mail.values('is_verified')
-            # print(user_mail)
+
+            user_mail = User.objects.get(
+                user_email__exact=request.data["user_email"]
+            ).is_verified
+
             if user_mail == True:
                 return Response({"is_verified": True}, status=status.HTTP_200_OK)
             else:
                 return Response({"is_verified": False}, status=status.HTTP_200_OK)
-            # return Response('list(mail_verify)[0]', status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response("Email does not exists", status=status.HTTP_400_BAD_REQUEST)
 
@@ -181,18 +161,18 @@ class UserNameUniqueStatus(views.APIView):
 
     def post(self, request):
         try:
-            user_username = User.objects.filter(
+            user_username = User.objects.get(
                 user_username__exact=request.data["user_username"]
-            ).exists()
-            # mail_verify = user_mail.values('is_verified')
-            # print(user_mail)
-            if user_username == True:
+            )
+
+            if user_username:
                 return Response({"user name exist": True}, status=status.HTTP_200_OK)
             else:
                 return Response({"user name exist": False}, status=status.HTTP_200_OK)
-            # return Response('list(mail_verify)[0]', status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response(
+                {"user name exist": False}, status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class UpdateRegisterView(views.APIView):
@@ -220,23 +200,12 @@ class UpdateRegisterView(views.APIView):
         serializer.save()
         user_data = serializer.data
 
-        userid = User.objects.filter(user_email=user_email.user_email).values("userid")[
-            0
-        ]["userid"]
-        # print('userid::::::::::::', userid)
-        # call friend match table asynchronously
-        # asyncio.run(match_friends(userid))
-        # friend match call sync..........................................................
-        # match_friends(user_id=userid)
-
-        # relativeLink = reverse('email-verify')
         email_body = "Hi " + fullname_pasport + " welcome to probashi.. \n"
         data = {
             "email_body": email_body,
             "to_email": user_email,
             "email_subject": "welcome to probashi",
         }
-        # print('data:::::::::', data)
 
         Util.send_email(data)
         return Response(user_data, status=status.HTTP_200_OK)
@@ -251,29 +220,13 @@ class LoginAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
-            # print('serializer.data:::::::::::', serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            # print('serializer.errors::::::::::::::', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# post request with email  [OK]
-#   -> send random otp from  backend to specific email
-#   -> save  info to database for 5 minutes
-
-# post request with otp and email to verify email for reset password
-#   -> check otp and email in database
-#   -> if otp and email is correct then response userid for reset password
-
-# post request with userid and password to reset password
-#   -> check userid in database
-#   -> if userid is correct then update password in database
-#   -> response success message and call logout api to logout user
-
-
 class RequestPasswordResetEmail(views.APIView):
-    renderer_classes = [UserRenderer]
+    # renderer_classes = [UserRenderer]
     serializer_class = RequestPasswordResetEmailSerializer
 
     def post(self, request):
@@ -282,7 +235,7 @@ class RequestPasswordResetEmail(views.APIView):
         otp = random.sample(range(0, 9), 4)
         otp = "".join(map(str, otp))
 
-        if User.objects.filter(user_email=user_email).exists():
+        try:
             user = User.objects.get(user_email=user_email)
 
             email_body = f"""Hello,{user.user_fullname} \n Welcome back to probashi, your code for reset password is {otp}"""
@@ -299,25 +252,34 @@ class RequestPasswordResetEmail(views.APIView):
                 "otp": otp,
                 "updated_at": timezone.now() + timezone.timedelta(minutes=5),
             }
-            # print('serializerdata:::::::::::::', serializerdata)
             serializer = RequestPasswordResetEmailSerializer(data=serializerdata)
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
             return Response(
-                {"message": "We have sent you a code to reset your password"},
+                {
+                    "success": True,
+                    "message": "We have sent you a code to reset your password",
+                },
                 status=status.HTTP_200_OK,
             )
-        return Response("Email does not exists", status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Email Does not exists",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class VerifyForResetPasswordEmail(views.APIView):
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        # print('request.data:::::::::::::', request.data)
-        if User.objects.filter(user_email=request.data["user_email"]).exists():
-            print("user email exist")
+        try:
+            User.objects.get(user_email=request.data["user_email"])
+            # print("user email exist")
             user_email = request.data["user_email"]
             otp = request.data["otp"]
             time = timezone.localtime()
@@ -328,45 +290,46 @@ class VerifyForResetPasswordEmail(views.APIView):
                 & Q(updated_at__gt=time)
                 & Q(is_used=False)
             ):
-                # print("condition_data:::::::::::::", condition_data)
+                # print("condition_data:", condition_data)
                 condition_data.update(is_used=True)
-                PhoneOTP.objects.filter(updated_at__lt=time).delete()
-                user_id = User.objects.filter(user_email=user_email).values("userid")[
-                    0
-                ]["userid"]
-                # print('user_id:::::::::::::', user_id)
-                context = {"user_id": user_id}
-                return Response(context, status=status.HTTP_200_OK)
+                try:
+                    PhoneOTP.objects.filter(updated_at__lt=time).delete()
+                    user_id = User.objects.get(user_email=user_email).userid
+                    # print("user id:", user_id)
+                    context = {"user_id": user_id}
+                    return Response(context, status=status.HTTP_200_OK)
+                except Exception as e:
+                    # print(e)
+                    return Response(
+                        "OTP is not correct or expired...",
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
             else:
                 return Response(
                     "OTP is not correct or expired", status=status.HTTP_400_BAD_REQUEST
                 )
-        return Response(
-            "unregistered email address", status=status.HTTP_400_BAD_REQUEST
-        )
+        except:
+            return Response(
+                "unregistered email address", status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class SetNewPasswordAPIView(generics.UpdateAPIView):
-    # permission_classes = [permissions.IsAuthenticated]
-    # renderer_classes = [UserRenderer]
+
     serializer_class = SetNewPasswordSerializer
     model = User
 
     def get_object(self, user_id, queryset=None):
-        # print('user_id:::::::::::::', user_id)
         try:
-            userid = User.objects.get(userid=user_id)
-            obj = userid
-            return obj
+            return User.objects.get(userid=user_id)
+
         except User.DoesNotExist:
-            obj = False
-            return obj
+            return None
 
     def update(self, request, *args, **kwargs):
         user_id = request.data["userid"]
         self.object = self.get_object(user_id)
-        print("self.object:::::::::::::", self.object)
 
         if self.object:
             serializer = self.get_serializer(data=request.data)
@@ -412,20 +375,9 @@ class LogoutAPIView(generics.GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class ViewUser(generics.ListAPIView):
-    renderer_classes = [UserRenderer]
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = ViewUserSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return User.objects.filter(userid=user.userid)
-
-
 class InAppChangePassword(generics.UpdateAPIView):
     renderer_classes = [UserRenderer]
     permission_classes = [permissions.IsAuthenticated]
-    # serializer_class = InAppChangePasswordSerializer
     model = User
 
     def get_object(self, queryset=None):
@@ -435,19 +387,19 @@ class InAppChangePassword(generics.UpdateAPIView):
     def update(self, request):
         self.object = self.get_object()
         print("request.data:", request.data)
-        if request.data["user_email"] != "" and request.data["new_password"] != "":
-            serializer = InAppChangePasswordSerializer(data=request.data)
-        if request.data["user_email"] == "" and request.data["new_password"] != "":
-            serializer = InAppChangeOnlyPasswordSerializer(data=request.data)
-        if request.data["user_email"] != "" and request.data["new_password"] == "":
-            serializer = InAppChangeOnlyEmailSerializer(data=request.data)
+        serializer = None
+        if request.data["user_email"] != "" or request.data["new_password"] != "":
+            serializer = UserEmailandPasswordChangeSerializer(data=request.data)
 
-        if serializer.is_valid():
-            # print(request.data['old_password'])
-            # print('old password::::', self.object.check_password(request.data['old_password']))
-            if not self.object.check_password(request.data["old_password"]):
+        if serializer != None:
+
+            if not (
+                User.objects.filter(user_email=request.data["user_email"]).exists()
+                or request.data["user_email"] == ""
+            ):
+
                 return Response(
-                    {"old_password": ["Wrong password."]},
+                    {"wrong email": ["Wrong email address."]},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
@@ -461,13 +413,19 @@ class InAppChangePassword(generics.UpdateAPIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            if (
-                self.object.check_password(request.data["old_password"])
-                and request.data["user_email"] != ""
-                and request.data["new_password"] != ""
+            if not self.object.check_password(request.data["old_password"]):
+                return Response(
+                    {"old_password": ["Wrong password."]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            if self.object.check_password(request.data["old_password"]) and (
+                request.data["user_email"] != "" or request.data["new_password"] != ""
             ):
                 self.object.set_password(serializer.data.get("new_password"))
-                self.object.user_email = request.data.get("user_email")
+
+                if request.data["user_email"] != "":
+                    self.object.user_email = request.data.get("user_email")
                 self.object.save()
 
                 response = {
@@ -476,44 +434,6 @@ class InAppChangePassword(generics.UpdateAPIView):
                     "message": "email and Password updated successfully",
                     "data": serializer.data,
                 }
-
-            if (
-                self.object.check_password(request.data["old_password"])
-                and request.data["new_password"] != ""
-                and request.data["user_email"] == ""
-            ):
-                self.object.set_password(serializer.data.get("new_password"))
-                self.object.save()
-
-                response = {
-                    "status": "success",
-                    "code": status.HTTP_200_OK,
-                    "message": "Password updated successfully",
-                    "data": serializer.data,
-                }
-
-            if (
-                self.object.check_password(request.data["old_password"])
-                and request.data["user_email"] != ""
-                and request.data["new_password"] == ""
-            ):
-                self.object.user_email = request.data.get("user_email")
-                self.object.save()
-
-                response = {
-                    "status": "success",
-                    "code": status.HTTP_200_OK,
-                    "message": "email updated successfully",
-                    "data": serializer.data,
-                }
-
-            # # serializer.save()
-            # response = {
-            #     'status': 'success',
-            #     'code': status.HTTP_200_OK,
-            #     'message': 'Password updated successfully',
-            #     'data': serializer.data,
-            # }
 
             return Response(response)
 
@@ -530,17 +450,16 @@ class RegistrationVerificationCodeSend(views.APIView):
     serializer_class = userOTP
 
     def post(self, request):
-        if User.objects.filter(user_callphone=request.data["user_callphone"]).exists():
+        try:
+            User.objects.get(user_callphone=request.data["user_callphone"])
             return Response(
                 {
                     "success": False,
-                    "message": {
-                        "user_callphone": "This phone number is already registered."
-                    },
+                    "message": "This phone number is already registered.",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        else:
+        except:
             data = request.data
             user_fullname = data["user_fullname"]
             user_callphone = data["user_callphone"]
@@ -549,14 +468,12 @@ class RegistrationVerificationCodeSend(views.APIView):
             otp = "".join(map(str, otp))
             data["otp"] = otp
             data["updated_at"] = timezone.now() + timezone.timedelta(minutes=5)
-            # print('::::::', data['updated_at'])
 
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
             data = {f"""প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}"""}
-            # print('data:', data)
 
             send = SendMessage.send_message(user_callphone, data)
             res_data = {"success": True, "data": serializer.data, "send-message": send}
@@ -572,11 +489,9 @@ class PhoneNumberRegistration(views.APIView):
         current_time = current_time.strftime("%m%d%H%M%S%f")
         userid = current_time
         request.data["userid"] = userid
-        # request.data["password"]= userid
 
         time = timezone.localtime()
-        # print('time:::', time)
-        # print("Phone OTP::::::::::::", PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists())
+
         if PhoneOTP.objects.filter(
             Q(user_callphone=request.data["user_callphone"])
             & Q(otp=request.data["otp"])
@@ -597,7 +512,7 @@ class PhoneNumberRegistration(views.APIView):
 
             FriendsSuggation.objects.create(
                 user=User.objects.get(userid=userid),
-            )  # friend suggation .................
+            )
 
             succ_resp = {"success": True, "data": "user registered successfully"}
             return Response(succ_resp, status=status.HTTP_200_OK)
@@ -610,21 +525,17 @@ class LoginVerificationCodeSend(views.APIView):
     serializer_class = userOTP
 
     def post(self, request):
-        if User.objects.filter(user_callphone=request.data["user_callphone"]).exists():
+        try:
+            user = User.objects.get(user_callphone=request.data["user_callphone"])
             data = request.data
 
             user_callphone = data["user_callphone"]
-            # password = data['password']
             otp = random.sample(range(0, 9), 4)
             otp = "".join(map(str, otp))
             data["otp"] = otp
-            user_fullname = (
-                User.objects.filter(user_callphone=user_callphone)
-                .values("user_fullname")
-                .first()
-            )
-            user_fullname = user_fullname["user_fullname"]
-            data["user_fullname"] = user_fullname
+            user_fullname = user.user_fullname
+
+            data["user_fullname"] = user.user_fullname
             data["updated_at"] = timezone.now() + timezone.timedelta(minutes=5)
 
             serializer = self.serializer_class(data=request.data)
@@ -632,19 +543,20 @@ class LoginVerificationCodeSend(views.APIView):
             serializer.save()
 
             data = {f"""প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}"""}
-            # print('data:', data)
 
             send = SendMessage.send_message(user_callphone, data)
-
-            res_data = {"success": True, "data": serializer.data, "send-message": send}
+            res_data = {
+                "success": True,
+                "data": serializer.data,
+                "send-message": send,
+            }
             return Response(res_data, status=status.HTTP_200_OK)
-        else:
+        except Exception as e:
+            print(e)
             return Response(
                 {
                     "success": False,
-                    "message": {
-                        "user_callphone": "This phone number is not valid or registered."
-                    },
+                    "user_callphone": "This phone number is not valid or registered.",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -656,11 +568,8 @@ class PhoneNumberLogin(views.APIView):
     serializer_class = PhoneLoginSerializer
 
     def post(self, request):
-        # print('request.data:', request.data)
 
         time = timezone.localtime()
-        # print('time:::', time)
-        # print('time:::', PhoneOTP.objects.filter(Q(user_callphone=request.data['user_callphone']) & Q(otp=request.data['otp']) & Q(updated_at__gt=time)).exists())
         if PhoneOTP.objects.filter(
             Q(user_callphone=request.data["user_callphone"])
             & Q(otp=request.data["otp"])
@@ -686,6 +595,7 @@ class PhoneNumberLogin(views.APIView):
 
 
 class PhoneUpdateRegisterView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
     renderer_classes = [UserRenderer]
 
     def get_object(self, user_callphone):
@@ -710,14 +620,11 @@ class PhoneUpdateRegisterView(views.APIView):
         serializer.save()
         user_data = serializer.data
 
-        userid = User.objects.filter(
-            user_callphone=user_callphone.user_callphone
-        ).values("userid")[0]["userid"]
-        print("userid::::::::::::", userid)
-        # friend match call sync..........................................................
-        # match_friends(user_id=userid)
+        # userid = User.objects.filter(
+        #     user_callphone=user_callphone.user_callphone
+        # ).values("userid")[0]["userid"]
+        # print("userid::::::::::::", userid)
 
-        # relativeLink = reverse('email-verify')
         email_body = "Hi " + fullname_pasport + " welcome to probashi.. \n"
         data = {
             "email_body": email_body,
