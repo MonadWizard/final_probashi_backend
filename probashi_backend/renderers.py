@@ -23,6 +23,7 @@ class UserRenderer(renderers.JSONRenderer):
 
         complete_error = self.string_error(data)
         if "ErrorDetail" in str(data):
+
             response = json.dumps({"success": False, "message": complete_error})
         elif renderer_context["response"].status_code == 400:
             print("400:::::::", complete_error)

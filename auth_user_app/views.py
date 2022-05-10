@@ -391,7 +391,7 @@ class InAppChangePassword(generics.UpdateAPIView):
         if request.data["user_email"] != "" or request.data["new_password"] != "":
             serializer = UserEmailandPasswordChangeSerializer(data=request.data)
 
-        if serializer != None:
+        if serializer != None and serializer.is_valid():
 
             if not (
                 User.objects.filter(user_email=request.data["user_email"]).exists()
