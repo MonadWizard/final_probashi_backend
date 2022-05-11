@@ -12,38 +12,16 @@ from .models import (
 from auth_user_app.models import User
 import PyPDF2
 import io
-from user_connection_app.serializers import (
-    UserEducationSerializer,
-    SerachUserSerializer,
-)
-
-
-# class UserDataConsultancySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['user_industry', 'user_geolocation']
 
 
 class ServiceCategorySerializer(serializers.ModelSerializer):
-    # user_educationdata = UserEducationSerializer(many=True, read_only=True)
-    # user_education = SerachUserSerializer(many=True, read_only=True)
-    # user_data = UserDataConsultancySerializer(many=True, read_only=True)
-    # user_educationdata = serializers.CharField(source="userid.user_fullname")
 
     class Meta:
         model = ConsultancyCreate
-        # fields = [ 'id','userid', 'user_education', 'consultant_name']
         fields = [
             "consultant_service_category",
         ]
 
-
-class GetServicesSpecificCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ConsultancyCreate
-        # fields = [ 'id','userid', 'user_education', 'consultant_name']
-        # fields = ['consultant_service_category',]
-        fields = "__all__"
 
 
 class PDFBase64File(Base64FileField):
@@ -78,12 +56,9 @@ class GetAllCategoryScheduleSerializer(serializers.ModelSerializer):
     consultancy_timeschudiles = ConsultancyTimeSchudileSerializer(
         source="consultancy_timeschudile", many=True, read_only=True
     )
-    # consultancy_id = serializers.CharField(source='consultancyid.id')
-    # consultancy_name = serializers.CharField(source='consultancyid.consultant_name')
 
     class Meta:
         model = ConsultancyCreate
-        # fields = '__all__'
         fields = [
             "id",
             "consultant_name",
@@ -112,12 +87,9 @@ class GetAllCategoryNotTakingScheduleSerializer(serializers.ModelSerializer):
     consultancy_timeschudiles = ConsultancyTimeSchudileNotTakenSerializer(
         source="consultancy_timeschudile", many=True, read_only=True
     )
-    # consultancy_id = serializers.CharField(source='consultancyid.id')
-    # consultancy_name = serializers.CharField(source='consultancyid.consultant_name')
 
     class Meta:
         model = ConsultancyCreate
-        # fields = '__all__'
         fields = [
             "id",
             "consultant_name",
@@ -194,18 +166,6 @@ class GetSpecificCategoryServiceSearchDataSerializer(serializers.ModelSerializer
             "consultant_service_locationcountry",
             "user_id",
         ]
-        # fields = '__all__'
-
-
-# ------------------------------------------------- pro user start------------------------------------------------------
-
-# class BecomeProUserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-# fields = ['is_pro_user']
-
-
-# ------------------------------------------------- pro user end------------------------------------------------------
 
 
 class ConsultancyPaymentSerializer(serializers.ModelSerializer):
@@ -226,4 +186,3 @@ class ServiceSearchFilterSerializer(serializers.ModelSerializer):
             "consultant_service_locationcountry",
             "user_id",
         ]
-        # fields = ['consultant_service_category', 'consultant_service_locationcountry', 'user_fullname']

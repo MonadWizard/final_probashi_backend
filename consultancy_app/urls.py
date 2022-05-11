@@ -10,7 +10,6 @@ from .views import (
     AppointmentSeeker_StarRating,
     ConsultantProvider_StarRating,
     AppointmentSeeker_MissingAppointmentReason,
-    GetServicesSpecificCategoryData,
     SpecificServicesSchedules,
     GetSpecificCategoryServiceSearchData,
     BecomeProUser,
@@ -89,12 +88,10 @@ urlpatterns = [
         name="AppointmentSeeker_MissingAppointmentReason",
     ),
     path("pro/", BecomeProUser.as_view(), name="BecomeProUser"),
-    # not used
-    path(
-        "services/<str:consultant_service_category>/",
-        GetServicesSpecificCategoryData.as_view(),
-        name="GetServicesSpecificCategoryData",
-    ),
+    
+    
+
+
     # payment
     # path('validity/', ValidityWithIPN.as_view(), name="payment_success"),
     # pro user success fail cancle redirect URL
