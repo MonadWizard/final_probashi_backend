@@ -104,8 +104,6 @@ class UserSettingsOptionViewSerializer(serializers.ModelSerializer):
         fields = ["user_mail_notification_enable", "user_monthly_newsleter_enable"]
 
 
-# -----------------------------x--------------------------x--------------------------------x---------------------
-
 
 class EducationServiceDataSerializer(serializers.ModelSerializer):
     class Meta:

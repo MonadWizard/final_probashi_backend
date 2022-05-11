@@ -1,12 +1,8 @@
-from multiprocessing import context
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
 from django.http import Http404
 from .models import StaticSettingData, Notification, User_settings
-from auth_user_app.models import User
 from .serializers import (
     UserIndustryDataSerializer,
     UserAreaOfExperienceDataSerializer,
@@ -35,15 +31,11 @@ from .serializers import (
 )
 from auth_user_app.utils import Util
 from django.db.models import Q
-from django.db.models import F
 
 from probashi_backend.renderers import UserRenderer
 
 
 class CreateOtherRowsInStaticTableView(generics.ListCreateAPIView):
-    # permission_classes = [permissions.IsAuthenticated,]
-
-    # permission_classes = [permissions.IsAuthenticated,]
     queryset = StaticSettingData.objects.all()
     serializer_class = CreateOtherRowsInStatictableSerializer
     renderer_classes = [UserRenderer]
@@ -58,7 +50,7 @@ class UserIndustryDataView(generics.ListCreateAPIView):
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = UserIndustryDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -85,7 +77,7 @@ class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = UserAreaOfExperienceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -98,7 +90,7 @@ class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = UserAreaOfExperienceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -112,7 +104,7 @@ class UserInterestedAreaDataView(generics.ListCreateAPIView):
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = UserInterestedAreaDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -125,7 +117,7 @@ class UserInterestedAreaDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = UserInterestedAreaDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -139,7 +131,7 @@ class UserGoalDataView(generics.ListCreateAPIView):
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = UserGoalDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -148,7 +140,7 @@ class UserGoalDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = UserGoalDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -164,7 +156,7 @@ class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = ConsultancyServiceCategoryDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -177,7 +169,7 @@ class ConsultancyServiceCategoryDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = ConsultancyServiceCategoryDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -191,7 +183,7 @@ class BlogTagDataView(generics.ListCreateAPIView):
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = BlogTagDataSerializers(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -200,14 +192,11 @@ class BlogTagDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = BlogTagDataSerializers(queryset, many=True)
-        # context = {"data":serializer.data}
+        serializer = self.serializer_class(queryset, many=True)
         tags = []
         for data in serializer.data:
             data["blog_tags_data"] = data["blog_tags_data"].split(",")
-            # print(data['blog_tags_data'])
             tags += data["blog_tags_data"]
-        # print(tags)
         context = {"data": tags}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -221,7 +210,7 @@ class UserEducationDataView(generics.ListCreateAPIView):
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = UserEducationDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -232,7 +221,7 @@ class UserEducationDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = UserEducationDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -241,24 +230,16 @@ class FatchingTrubleView(generics.CreateAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    # queryset = StaticSettingData.objects.filter(fatching_truble__isnull=False)
     serializer_class = FacingtroubleSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = FacingtroubleSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        # print(serializer.errors)
-        # errorcontext = {'fatching_truble': serializer.errors['fatching_truble'][0]}
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # def list(self, request):
-    #     queryset = self.get_queryset()
-    #     serializer = FacingtroubleSerializer(queryset, many=True)
-    #     context = {"data":serializer.data}
-    #     return Response(context, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class FaqView(generics.ListAPIView):
@@ -271,7 +252,7 @@ class FaqView(generics.ListAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = FaqSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -286,7 +267,7 @@ class privacypolicyView(generics.ListAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = privacypolicySerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -295,14 +276,13 @@ class NotificationView(generics.ListCreateAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    # queryset = Notification.objects.filter(user_id=request.user)
-    # serializer_class= notificationSerializer
+    serializer_class = notificationSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
         user = request.user
         if request.data["userid"] == user.userid:
-            serializer = notificationSerializer(data=request.data)
+            serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 serializer.save()
 
@@ -328,7 +308,6 @@ class NotificationView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        # print("::::::::",user.userid)
         return Notification.objects.filter(
             Q(userid=user.userid) & Q(is_notification_delete=False)
         )
@@ -337,18 +316,16 @@ class NotificationView(generics.ListCreateAPIView):
         user = request.user
         if request.data["userid"] == user.userid:
             queryset = self.get_queryset()
-            serializer = notificationSerializer(queryset, many=True)
+            serializer = self.serializer_class(queryset, many=True)
             context = {"data": serializer.data}
             return Response(context, status=status.HTTP_200_OK)
         else:
             return Response("Invalid user", status=status.HTTP_400_BAD_REQUEST)
 
 
-# need to remove 30 days previous notification from table
-
-
 class updateNotificationStatusView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = updateNotificationStatusSerializer
     renderer_classes = [UserRenderer]
 
     def get_notification(self, notificationid):
@@ -357,16 +334,9 @@ class updateNotificationStatusView(views.APIView):
         except Notification.DoesNotExist:
             raise Http404
 
-    # def get(self,request,notificationid):
-    #     notificationid = self.get_notification(notificationid)
-    #     serializer = updateNotificationStatusSerializer(notificationid)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
-
     def put(self, request, notificationid):
         notificationid = self.get_notification(notificationid)
-        serializer = updateNotificationStatusSerializer(
-            notificationid, data=request.data
-        )
+        serializer = self.serializer_class(notificationid, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -376,6 +346,7 @@ class updateNotificationStatusView(views.APIView):
 
 class DeleteNotificationView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = DeleteNotificationSerializer
     renderer_classes = [UserRenderer]
 
     def get_notification(self, notificationid):
@@ -384,14 +355,9 @@ class DeleteNotificationView(views.APIView):
         except Notification.DoesNotExist:
             raise Http404
 
-    # def get(self,request,notificationid):
-    #     notificationid = self.get_notification(notificationid)
-    #     serializer = updateNotificationStatusSerializer(notificationid)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
-
     def put(self, request, notificationid):
         notificationid = self.get_notification(notificationid)
-        serializer = DeleteNotificationSerializer(notificationid, data=request.data)
+        serializer = self.serializer_class(notificationid, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -401,6 +367,7 @@ class DeleteNotificationView(views.APIView):
 
 class UserSettingsOptionView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UserSettingsOptionViewSerializer
     renderer_classes = [UserRenderer]
 
     def get_user(self, userid):
@@ -411,20 +378,17 @@ class UserSettingsOptionView(views.APIView):
 
     def get(self, request, userid):
         userid = self.get_user(userid)
-        serializer = UserSettingsOptionViewSerializer(userid)
+        serializer = self.serializer_class(userid)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, userid):
         userid = self.get_user(userid)
-        serializer = UserSettingsOptionViewSerializer(userid, data=request.data)
+        serializer = self.serializer_class(userid, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# ---------------------------------x----------------------------x-------------------------
 
 
 class SpecificConsultancyData(views.APIView):
@@ -435,14 +399,12 @@ class SpecificConsultancyData(views.APIView):
 
     def get(self, request):
         param = request.query_params.get("service")
-        # print( "request.data::::::::",param)
         if param == "Digital Service":
             print("Digital Service", param)
             data0 = StaticSettingData.objects.filter(
                 Q(digitalservice_type__isnull=False)
             ).values_list("digitalservice_type")
 
-            # print("data::::::::",data)
             data = {
                 "subcategory1": [item[0] for item in data0],
                 "subcategory2": [],
@@ -521,13 +483,11 @@ class SpecificConsultancyData(views.APIView):
                 Q(propertymanagementservice_need__isnull=False)
             ).values_list("propertymanagementservice_need")
 
-            # print('data=====', [item[0] for item in data0])
             data = {
                 "subcategory1": [item[0] for item in data0],
                 "subcategory2": [item[0] for item in data1],
                 "subcategory3": [item[0] for item in data2],
             }
-            # print(data)
             resp = {"data": data}
             return Response(resp, status=status.HTTP_200_OK)
 
@@ -552,7 +512,6 @@ class SpecificConsultancyData(views.APIView):
                 Q(tradefacilitationservice_Purpose__isnull=False)
             ).values_list("tradefacilitationservice_Purpose")
 
-            # print('data::::::::::::',data)
             data = {
                 "subcategory1": [item[0] for item in data0],
                 "subcategory2": [item[0] for item in data1],
@@ -561,7 +520,6 @@ class SpecificConsultancyData(views.APIView):
             resp = {"data": data}
             return Response(resp, status=status.HTTP_200_OK)
 
-        #
         elif param == "Training Service":
             data0 = StaticSettingData.objects.filter(
                 Q(trainingservice_topic__isnull=False)
@@ -586,11 +544,11 @@ class EducationServiceDataView(generics.ListCreateAPIView):
         permissions.IsAuthenticated,
     ]
     queryset = StaticSettingData.objects.filter(educationService_degree__isnull=False)
-    # serializer_class= EducationServiceDataSerializer
+    serializer_class = EducationServiceDataSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = EducationServiceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -598,9 +556,8 @@ class EducationServiceDataView(generics.ListCreateAPIView):
         return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request):
-        # print( "request.data::::::::",request.query_params.get('service'))
         queryset = self.get_queryset()
-        serializer = EducationServiceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -612,11 +569,11 @@ class OverseasRecruitmentServiceDataView(generics.ListCreateAPIView):
     queryset = StaticSettingData.objects.filter(
         overseasrecruitmentservice_job_type__isnull=False
     )
-    # serializer_class= EducationServiceDataSerializer
+    serializer_class = OverseasRecruitmentServiceDataSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = OverseasRecruitmentServiceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -625,7 +582,7 @@ class OverseasRecruitmentServiceDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = OverseasRecruitmentServiceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -637,11 +594,11 @@ class MedicalConsultancyServiceDataView(generics.ListCreateAPIView):
     queryset = StaticSettingData.objects.filter(
         medicalconsultancyservice_treatment_area__isnull=False
     )
-    # serializer_class= EducationServiceDataSerializer
+    serializer_class = MedicalConsultancyServiceDataSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = MedicalConsultancyServiceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -650,7 +607,7 @@ class MedicalConsultancyServiceDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = MedicalConsultancyServiceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -663,11 +620,11 @@ class LegalCivilServiceDataView(generics.ListCreateAPIView):
         Q(legalcivilservice_required__isnull=False)
         | Q(legalcivilservice_issue__isnull=False)
     )
-    # serializer_class= EducationServiceDataSerializer
+    serializer_class = LegalCivilServiceDataSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = LegalCivilServiceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -676,7 +633,7 @@ class LegalCivilServiceDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = LegalCivilServiceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -690,11 +647,11 @@ class PropertyManagementServiceDataView(generics.ListCreateAPIView):
         | Q(propertymanagementservice_type__isnull=False)
         | Q(propertymanagementservice_need__isnull=False)
     )
-    # serializer_class= EducationServiceDataSerializer
+    serializer_class = PropertyManagementServiceDataSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = PropertyManagementServiceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -703,7 +660,7 @@ class PropertyManagementServiceDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = PropertyManagementServiceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -713,11 +670,11 @@ class TourismServiceDataView(generics.ListCreateAPIView):
         permissions.IsAuthenticated,
     ]
     queryset = StaticSettingData.objects.filter(Q(tourismservices__isnull=False))
-    # serializer_class= EducationServiceDataSerializer
+    serializer_class = TourismServiceDataSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = TourismServiceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -726,7 +683,7 @@ class TourismServiceDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = TourismServiceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -739,11 +696,11 @@ class TrainingServiceDataView(generics.ListCreateAPIView):
         Q(trainingservice_topic__isnull=False)
         | Q(trainingservice_duration__isnull=False)
     )
-    # serializer_class= EducationServiceDataSerializer
+    serializer_class = TrainingServiceDataSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = TrainingServiceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -752,7 +709,7 @@ class TrainingServiceDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = TrainingServiceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -762,11 +719,11 @@ class DigitalServiceDataView(generics.ListCreateAPIView):
         permissions.IsAuthenticated,
     ]
     queryset = StaticSettingData.objects.filter(Q(digitalservice_type__isnull=False))
-    # serializer_class= EducationServiceDataSerializer
+    serializer_class = DigitalServiceDataSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = DigitalServiceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -775,7 +732,7 @@ class DigitalServiceDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = DigitalServiceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -788,11 +745,11 @@ class TradeFacilitationServiceDataView(generics.ListCreateAPIView):
         Q(tradefacilitationservice_type__isnull=False)
         | Q(tradefacilitationservice_Purpose__isnull=False)
     )
-    # serializer_class= EducationServiceDataSerializer
+    serializer_class = TradeFacilitationServiceDataSerializer
     renderer_classes = [UserRenderer]
 
     def post(self, request):
-        serializer = TradeFacilitationServiceDataSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -801,16 +758,6 @@ class TradeFacilitationServiceDataView(generics.ListCreateAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = TradeFacilitationServiceDataSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
-
-
-"""
-'digitalservice_type', 'educationService_degree', 
-'legalcivilservice_required', 'legalcivilservice_issue',
-'medicalconsultancyservice_treatment_area', 'overseasrecruitmentservice_job_type',
-'propertymanagementservice_propertylocation','propertymanagementservice_type','propertymanagementservice_need',
-'tourismservices','tradefacilitationservice_type', 'tradefacilitationservice_Purpose',
-'trainingservice_topic', 'trainingservice_duration'
-"""
