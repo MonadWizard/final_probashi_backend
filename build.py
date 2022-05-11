@@ -1,7 +1,7 @@
 import os
 import py_compile
 from pathlib import Path
-from os import walk,remove
+from os import walk, remove
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,18 +28,11 @@ except:
 
 f = []
 for (dirpath, dirnames, filenames) in walk(build_path):
-    f.extend(map(lambda filename:(dirpath)+'/'+filename,filenames))
+    f.extend(map(lambda filename: (dirpath) + "/" + filename, filenames))
 
-f=sorted(f)
+f = sorted(f)
 
 for i in f:
     if i.endswith(".py"):
-        py_compile.compile(f'{i}', f'{i}c')
+        py_compile.compile(f"{i}", f"{i}c")
         remove(i)
-
-
-
-
-
-
-

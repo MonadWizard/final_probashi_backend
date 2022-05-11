@@ -2,9 +2,13 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import (ConsultancyCreate, UserConsultAppointmentRequest,
-                    ConsultancyTimeSchudile, ProUserPayment,
-                    ConsultancyPayment)
+from .models import (
+    ConsultancyCreate,
+    UserConsultAppointmentRequest,
+    ConsultancyTimeSchudile,
+    ProUserPayment,
+    ConsultancyPayment,
+)
 
 
 admin.site.register(ConsultancyCreate)

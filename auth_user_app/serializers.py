@@ -277,14 +277,6 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
 
 
 class takeVarifiedEmailSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = mailVerify
         fields = "__all__"
-
-
-
-
-
-
-

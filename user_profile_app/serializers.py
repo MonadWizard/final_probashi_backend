@@ -1,5 +1,3 @@
-from dataclasses import field
-from pyexpat import model
 from rest_framework import serializers
 from auth_user_app.models import User
 from .models import (
@@ -143,13 +141,7 @@ class UserProfileViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        # fields = ['userid' ,'user_fullname', 'user_photopath', 'is_consultant',
-        #         'user_industry','user_geolocation','user_created_at',
-        #         'user_interested_area','user_goal','user_industry_experienceyear',
-        #         'user_areaof_experience','user_industry',
-        #         'user_socialaboutdata','user_experiencedata', 'user_educationdata', 'user_idverificationdata']
-        # fields = '__all__'
-        # depth = 3
+        
         exclude = ["is_staff", "is_superuser", "password", "groups", "user_permissions"]
 
 
@@ -170,11 +162,4 @@ class UserProfileWithConsultancyViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        # fields = ['userid' ,'user_fullname', 'user_photopath', 'is_consultant',
-        #         'user_industry','user_geolocation','user_created_at',
-        #         'user_interested_area','user_goal','user_industry_experienceyear',
-        #         'user_areaof_experience','user_industry',
-        #         'user_socialaboutdata','user_experiencedata', 'user_educationdata', 'user_idverificationdata']
-        # fields = '__all__'
-        # depth = 3
         exclude = ["is_staff", "is_superuser", "password", "groups", "user_permissions"]

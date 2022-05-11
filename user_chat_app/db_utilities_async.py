@@ -21,11 +21,14 @@ from datetime import datetime, timezone, timedelta
 import pytz
 
 
-
 @sync_to_async
 def get_all_chat_data(userid):
 
-    chat_list = ChatTable.objects.using('probashi_chat').filter(Q(user_1=userid) & ~Q(user_2 = userid)).order_by('-id')
+    chat_list = (
+        ChatTable.objects.using("probashi_chat")
+        .filter(Q(user_1=userid) & ~Q(user_2=userid))
+        .order_by("-id")
+    )
     data = {}
     # print('chat list:::::::::',chat_list)
 
@@ -36,20 +39,27 @@ def get_all_chat_data(userid):
         # print('data::::::::::',data)
     return data
 
+
 @sync_to_async
 def save_chat_data(data):
     try:
-        chat_table = ChatTable.objects.using('probashi_chat').get(user_1=data['sender'], user_2=data['receiver'])
+        chat_table = ChatTable.objects.using("probashi_chat").get(
+            user_1=data["sender"], user_2=data["receiver"]
+        )
         # print('table name::', chat_table.table_name)
 
         # print('data::::::::::', data)
 
-        print('table-found')
+        print("table-found")
     except:
-        table_title = create_chat_table(user_1=data['sender'], user_2=data['receiver'])
-        chat_table = ChatTable.objects.using('probashi_chat').create(user_1=data['sender'], user_2=data['receiver'], table_name=table_title)
-        chat_table = ChatTable.objects.using('probashi_chat').create(user_1=data['receiver'], user_2=data['sender'], table_name=table_title)
-        print('create-a-table')
+        table_title = create_chat_table(user_1=data["sender"], user_2=data["receiver"])
+        chat_table = ChatTable.objects.using("probashi_chat").create(
+            user_1=data["sender"], user_2=data["receiver"], table_name=table_title
+        )
+        chat_table = ChatTable.objects.using("probashi_chat").create(
+            user_1=data["receiver"], user_2=data["sender"], table_name=table_title
+        )
+        print("create-a-table")
 
     # print('chat table', chat_table)
 
@@ -59,28 +69,28 @@ def save_chat_data(data):
     #     del data['message-type']
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
-    
+
     index = 1
     for key in data.keys():
         sql += str(key)
-        
+
         if index != len(data.keys()):
-            sql += ','
-        
+            sql += ","
+
         index += 1
-    
+
     sql += ") VALUES ("
-    
+
     index = 1
     for value in data.values():
         if type(value) == str:
-                value = value.replace("'", "''")
+            value = value.replace("'", "''")
 
-        sql += "'" + str(value) + "'"        
+        sql += "'" + str(value) + "'"
 
         if index != len(data.values()):
-            sql += ','
-        
+            sql += ","
+
         index += 1
 
     sql += ")"
@@ -88,62 +98,68 @@ def save_chat_data(data):
     # print('::::::::::::::::sql', sql)
 
     try:
-        with connections['probashi_chat'].cursor() as cursor:
+        with connections["probashi_chat"].cursor() as cursor:
             cursor.execute(sql)
 
             return True
     except Exception as e:
         print(e)
-        print('error')
+        print("error")
         return False
 
 
 # image data save. ..............................................
 
+
 @sync_to_async
 def save_chat_data_image(data):
     try:
-        chat_table = ChatTable.objects.using('probashi_chat').get(user_1=data['sender'], user_2=data['receiver'])
+        chat_table = ChatTable.objects.using("probashi_chat").get(
+            user_1=data["sender"], user_2=data["receiver"]
+        )
         # print('table name::', chat_table.table_name)
 
-
-        print('table-found....')
+        print("table-found....")
     except:
-        table_title = create_chat_table(user_1=data['sender'], user_2=data['receiver'])
-        chat_table = ChatTable.objects.using('probashi_chat').create(user_1=data['sender'], user_2=data['receiver'], table_name=table_title)
-        chat_table = ChatTable.objects.using('probashi_chat').create(user_1=data['receiver'], user_2=data['sender'], table_name=table_title)
-        print('create-a-table')
+        table_title = create_chat_table(user_1=data["sender"], user_2=data["receiver"])
+        chat_table = ChatTable.objects.using("probashi_chat").create(
+            user_1=data["sender"], user_2=data["receiver"], table_name=table_title
+        )
+        chat_table = ChatTable.objects.using("probashi_chat").create(
+            user_1=data["receiver"], user_2=data["sender"], table_name=table_title
+        )
+        print("create-a-table")
 
     # print('chat table', chat_table)
-    
+
     # if 'type' in data :
     #     del data['type']
     # if 'message-type' in data :
     #     del data['message-type']
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
-    
+
     index = 1
     for key in data.keys():
         sql += str(key)
-        
+
         if index != len(data.keys()):
-            sql += ','
-        
+            sql += ","
+
         index += 1
-    
+
     sql += ") VALUES ("
-    
+
     index = 1
     for value in data.values():
         if type(value) == str:
-                value = value.replace("'", "''")
+            value = value.replace("'", "''")
 
-        sql += "'" + str(value) + "'"        
+        sql += "'" + str(value) + "'"
 
         if index != len(data.values()):
-            sql += ','
-        
+            sql += ","
+
         index += 1
 
     sql += ")"
@@ -151,7 +167,7 @@ def save_chat_data_image(data):
     # print('sql:::::::::', sql)
 
     try:
-        with connections['probashi_chat'].cursor() as cursor:
+        with connections["probashi_chat"].cursor() as cursor:
             cursor.execute(sql)
 
             return True
@@ -161,30 +177,34 @@ def save_chat_data_image(data):
         return False
 
 
-
-
-
 @sync_to_async
 def get_previous_chat_data(userid, associated_user_id, chat_id):
-    # off_set = 
-    
+    # off_set =
+
     limit = int(chat_id)
     offset = limit - 10
     data = {}
 
     try:
-        chat_table = ChatTable.objects.using('probashi_chat').filter(user_1=userid, user_2=associated_user_id).order_by('-id')[0].table_name
-        
-        sql = "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'Asia/Dhaka' FROM " + str(chat_table) + " ORDER BY id DESC "
+        chat_table = (
+            ChatTable.objects.using("probashi_chat")
+            .filter(user_1=userid, user_2=associated_user_id)
+            .order_by("-id")[0]
+            .table_name
+        )
+
+        sql = (
+            "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'Asia/Dhaka' FROM "
+            + str(chat_table)
+            + " ORDER BY id DESC "
+        )
         sql += "OFFSET " + str(offset) + " ROWS "
         sql += "FETCH NEXT 10 ROWS ONLY "
-        
 
-        with connections['probashi_chat'].cursor() as cursor:
+        with connections["probashi_chat"].cursor() as cursor:
             # cursor.execute(f"SET timezone TO 'Asia/Dhaka'")
             cursor.execute(sql)
             result = cursor.fetchall()
-
 
             if result is None:
                 return data
@@ -192,120 +212,131 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
             fields = [field[0] for field in cursor.description]
             temp_data = []
 
-            
             for row in result:
                 d = sql_array_to_object(field_names=fields, values=row)
-                d['message_time'] = str(d['timezone'])+ str("+06:00")
-                del d['timezone']
+                d["message_time"] = str(d["timezone"]) + str("+06:00")
+                del d["timezone"]
                 temp_data.append(d)
                 # print('d:::::::::', d)
-            
-            # print('temp_data:::::::::', temp_data)        
-            # data[associated_user_id] = temp_data
-            data['type'] = 'previous message'
-            data['chat'] = temp_data
-            
-            
-            
-    except Exception as e:
-        print('error', e)
-        return data
-    
-    return data
 
+            # print('temp_data:::::::::', temp_data)
+            # data[associated_user_id] = temp_data
+            data["type"] = "previous message"
+            data["chat"] = temp_data
+
+    except Exception as e:
+        print("error", e)
+        return data
+
+    return data
 
 
 # ===================================notification.................
 @sync_to_async
 def get_all_notifications(userid):
     # print('userid:::::::::', userid)
-    tz = pytz.timezone('Asia/Dhaka')
+    tz = pytz.timezone("Asia/Dhaka")
 
-    all_noti = Notification.objects.filter(Q(receiverid=userid) & Q(is_notification_delete=False)).order_by('is_notification_seen','-id' ).values()
-    
+    all_noti = (
+        Notification.objects.filter(
+            Q(receiverid=userid) & Q(is_notification_delete=False)
+        )
+        .order_by("is_notification_seen", "-id")
+        .values()
+    )
+
     for noti in all_noti:
-        noti['notification_date'] = noti['notification_date'].replace(tzinfo=tz) + timedelta(hours=6) 
-        
+        noti["notification_date"] = noti["notification_date"].replace(
+            tzinfo=tz
+        ) + timedelta(hours=6)
+
     # data = list(Notification.objects.extra(select={'date':"to_char(<DATABASENAME>_<TableName>.created_at, 'YYYY-MM-DD hh:mi AM')"}).values_list('date', flat='true')
 
-    noti_data = json.dumps(list(all_noti),sort_keys=True, default=str)
+    noti_data = json.dumps(list(all_noti), sort_keys=True, default=str)
 
     noti_data_json = json.loads(noti_data)
-    
 
     return noti_data_json
-
 
 
 # =====================notification=================
 @sync_to_async
 def save_notification_data(noti_data):
     # print('noti-data:::::::::', noti_data)
-    userid_data = User.objects.get(userid=noti_data['sender'])
-    recever_data = User.objects.get(userid=noti_data['receiver'])
+    userid_data = User.objects.get(userid=noti_data["sender"])
+    recever_data = User.objects.get(userid=noti_data["receiver"])
     try:
-        Notification.objects.create(userid=userid_data, receiverid= recever_data ,notification_title=noti_data['notification_title'], notification_description=noti_data['notification_description'], notification_date=noti_data['notification_date'], is_notification_seen=False, is_notification_delete=False)
-        print('noti-saved')
+        Notification.objects.create(
+            userid=userid_data,
+            receiverid=recever_data,
+            notification_title=noti_data["notification_title"],
+            notification_description=noti_data["notification_description"],
+            notification_date=noti_data["notification_date"],
+            is_notification_seen=False,
+            is_notification_delete=False,
+        )
+        print("noti-saved")
 
-        if User_settings.objects.filter(Q(userid=recever_data.userid)& Q(user_mail_notification_enable=True)).exists():
-                    user_fullname = recever_data.user_fullname
-                    user_email = recever_data.user_email
-                    noti_title = noti_data['notification_title']
-                    email_body = f'''Hello,{user_fullname} \n You Have an notification about {noti_title}'''
-            
-                    data = {'email_body': email_body, 'to_email': user_email,
-                            'email_subject': 'Probashi Notification'}
-                    
-                    Util.send_email(data)
+        if User_settings.objects.filter(
+            Q(userid=recever_data.userid) & Q(user_mail_notification_enable=True)
+        ).exists():
+            user_fullname = recever_data.user_fullname
+            user_email = recever_data.user_email
+            noti_title = noti_data["notification_title"]
+            email_body = f"""Hello,{user_fullname} \n You Have an notification about {noti_title}"""
+
+            data = {
+                "email_body": email_body,
+                "to_email": user_email,
+                "email_subject": "Probashi Notification",
+            }
+
+            Util.send_email(data)
 
         return True
     except Exception as e:
         print(e)
         return False
-    
 
 
 @sync_to_async
 def delete_notification_data(noti_data):
     try:
-        tz = pytz.timezone('Asia/Dhaka')
+        tz = pytz.timezone("Asia/Dhaka")
         # print('noti-data:::::::::', noti_data)
-        noti_id = noti_data['notification_id']
-        delete_status = noti_data['is_notification_delete']
+        noti_id = noti_data["notification_id"]
+        delete_status = noti_data["is_notification_delete"]
         # print('noti-id:::::::::', noti_id, delete_status)
-        Notification.objects.filter(id=noti_id).update(is_notification_delete=delete_status)
-        
-        time = Notification.objects.filter(id=noti_id).values('notification_date')
+        Notification.objects.filter(id=noti_id).update(
+            is_notification_delete=delete_status
+        )
+
+        time = Notification.objects.filter(id=noti_id).values("notification_date")
         # print('noti-time:::::::::', noti_time[0])
         # print('noti-time:::::::::', time[0]['notification_date'].replace(tzinfo=tz) + timedelta(hours=6))
-        noti_time = time[0]['notification_date'].replace(tzinfo=tz) + timedelta(hours=6)
+        noti_time = time[0]["notification_date"].replace(tzinfo=tz) + timedelta(hours=6)
         return noti_time
 
     except Exception as e:
         print(e)
         return False
-
-
 
 
 @sync_to_async
 def seen_notification_data(noti_data):
     try:
 
-        tz = pytz.timezone('Asia/Dhaka')
+        tz = pytz.timezone("Asia/Dhaka")
         # print('noti-data:::::::::', noti_data)
-        noti_id = noti_data['notification_id']
-        seen_status = noti_data['is_notification_seen']
+        noti_id = noti_data["notification_id"]
+        seen_status = noti_data["is_notification_seen"]
         # print('noti-id:::::::::', noti_id, delete_status)
         Notification.objects.filter(id=noti_id).update(is_notification_seen=seen_status)
-        
-        time = Notification.objects.filter(id=noti_id).values('notification_date')
-        noti_time = time[0]['notification_date'].replace(tzinfo=tz) + timedelta(hours=6)
+
+        time = Notification.objects.filter(id=noti_id).values("notification_date")
+        noti_time = time[0]["notification_date"].replace(tzinfo=tz) + timedelta(hours=6)
         return noti_time
 
     except Exception as e:
         print(e)
         return False
-
-
-

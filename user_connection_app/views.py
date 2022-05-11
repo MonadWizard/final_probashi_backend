@@ -1,10 +1,6 @@
-from multiprocessing import context
-from unittest import result
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from django.http import Http404
-from yaml import serialize
 from auth_user_app.models import User
 from .serializers import SerachUserSerializer
 from rest_framework import pagination
@@ -25,73 +21,25 @@ from .models import UserFavoutireRequestSend, UserFavouriteList, FriendsSuggatio
 from django.db.models import Q
 from itertools import chain
 from django.db.models import F
-import datetime
-import json
 from probashi_backend.renderers import UserRenderer
 from user_profile_app.models import User_education
 from consultancy_app.models import ConsultancyCreate
 from user_connection_app.utility import match_friends
+import itertools
 
 
 class TakeMatchFriend(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    # renderer_classes = [UserRenderer]
 
     def get(self, request):
         user = request.user
-        # print('user:::::',user.userid)
         match_friends(user_id=user.userid)
         return Response("matching prepaired", status=status.HTTP_200_OK)
-
-
-# @api_view(['GET'])
-# def take_match_friend(request):
-#     # country
-#     # city
-#     # print("user", request.user)
-#     print("::::::::::",request.user.userid)
-#     permissions.IsAuthenticated.has_permission(request, request.user)
-
-
-#     from user_connection_app.utility import match_friends
-
-
-#     print(datetime.datetime.now())
-#     match_friends(user_id="0409143135542106")
-#     print(datetime.datetime.now())
-#     match_friends(user_id="0409143232003081")
-#     print(datetime.datetime.now())
-
-#     return Response({
-#         'message': 'Successfully matched friends'
-#     })
 
 
 class GetMatchFriendSetPagination(pagination.PageNumberPagination):
     page_size = 15
     page_size_query_param = "page_size"
-    # max_page_size = 10000
-
-    # page_size_query_param = 'page_size'
-
-    # def get_paginated_response(self, data):
-    #     next_url = self.get_next_link()
-    #     previous_url = self.get_previous_link()
-
-    #     if next_url is not None and previous_url is not None:
-    #         link = '<{next_url}>; rel="next", <{previous_url}>; rel="prev"'
-    #     elif next_url is not None:
-    #         link = '<{next_url}>; rel="next"'
-    #     elif previous_url is not None:
-    #         link = '<{previous_url}>; rel="prev"'
-    #     else:
-    #         link = ''
-
-    #     link = link.format(next_url=next_url, previous_url=previous_url)
-    #     # print('link:::',{'Link': link, 'Count': self.page.paginator.count}) if link else {}
-    #     headers = {'Link': link, 'Count': self.page.paginator.count} if link else {}
-    #     data = {'Link': link, 'Count': self.page.paginator.count, 'data': data}
-    #     return Response(data, headers=headers)
 
 
 class Friends_suggation(views.APIView):
@@ -99,82 +47,49 @@ class Friends_suggation(views.APIView):
         permissions.IsAuthenticated,
     ]
     serializer_class = UserFavouriteRequestsSerializer
-    # pagination_class = GetMatchFriendSetPagination
-    # renderer_classes = [UserRenderer]
 
     def get(self, request):
         user = request.user.userid
-        # print('user:::::',user)
-        match_all = FriendsSuggation.objects.filter(user=user).values(
-            "location", "goals", "interest"
-        )[0]
-        match_12 = FriendsSuggation.objects.filter(user=user).values(
-            "location", "goals"
-        )[0]
-        match_13 = FriendsSuggation.objects.filter(user=user).values(
-            "location", "interest"
-        )[0]
-        match_23 = FriendsSuggation.objects.filter(user=user).values(
-            "goals", "interest"
-        )[0]
-        match_1 = FriendsSuggation.objects.filter(user=user).values("location")[0]
-        match_2 = FriendsSuggation.objects.filter(user=user).values("goals")[0]
-        match_3 = FriendsSuggation.objects.filter(user=user).values("interest")[0]
 
         try:
-            match_friend_all = set.intersection(*[set(x) for x in match_all.values()])
-            match_friend_12 = set.intersection(*[set(x) for x in match_12.values()])
-            match_friend_13 = set.intersection(*[set(x) for x in match_13.values()])
-            match_friend_23 = set.intersection(*[set(x) for x in match_23.values()])
-            match_friend_1 = set.intersection(*[set(x) for x in match_1.values()])
-            match_friend_2 = set.intersection(*[set(x) for x in match_2.values()])
-            match_friend_3 = set.intersection(*[set(x) for x in match_3.values()])
+            user_data = FriendsSuggation.objects.filter(user=user)
+        except:
+            user_data = None
+        match_all = user_data.values("location", "goals", "interest")[0]
+        match_12 = user_data.values("location", "goals")[0]
+        match_13 = user_data.values("location", "interest")[0]
+        match_23 = user_data.values("goals", "interest")[0]
+        match_1 = user_data.values("location")[0]
+        match_2 = user_data.values("goals")[0]
+        match_3 = user_data.values("interest")[0]
 
-            # print("match friend all:::::::",match_friend_all)
-
-            match_friend_id = set(
-                chain(
-                    match_friend_all,
-                    match_friend_12,
-                    match_friend_13,
-                    match_friend_23,
-                    match_friend_1,
-                    match_friend_2,
-                    match_friend_3,
-                )
-            )
-            match_friend_data = []
-            for mf in match_friend_id:
-                match_friend = User.objects.filter(userid=mf).values(
+        try:
+            match_marge = {
+                **match_all,
+                **match_12,
+                **match_13,
+                **match_23,
+                **match_1,
+                **match_2,
+                **match_3,
+            }
+            match_friend_all = [list(set(x)) for x in match_marge.values() if x != []]
+            match_friend_all = list(itertools.chain.from_iterable(match_friend_all))
+            match_friend_data = [
+                User.objects.filter(userid=x).values(
                     "userid",
                     "user_fullname",
                     "user_areaof_experience",
                     "user_photopath",
                     "is_consultant",
                 )[0]
-                match_friend_data.append(match_friend)
-
-            # -------------------------paginator
+                for x in match_friend_all
+            ]
             context = {"success": True, "data": match_friend_data}
             return Response(context, status=status.HTTP_200_OK)
-            # print(type(match_friend_data),"::::::::::::::::::::::", match_friend_data)
-
-            # paginator = GetMatchFriendSetPagination()
-            # page = paginator.paginate_queryset(match_friend_data, request)
-            # if page is not None:
-            #     # print("is not none::::::::::::::::::::::", page)
-            #     return paginator.get_paginated_response(page)
-
-            # # print("::::::::::::::::::::::", page)
-
-            # return Response(page)
-
-            # ------------------------------------------------paginator
-            context = {"success": True, "data": match_friend_data}
-            return Response(context)
 
         except Exception as e:
-            # print("error:::::",e)
+            # print("error:::::", e)
             return Response(
                 {"success": False, "message": "No match found"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -183,7 +98,6 @@ class Friends_suggation(views.APIView):
 
 class GetAllusersSetPagination(PageNumberPagination):
     page_size = 15
-    # page_size_query_param = 'users'
     max_page_size = 10000
 
 
@@ -198,6 +112,7 @@ class GetAllUserPaginationView(generics.ListAPIView):
 class GetSpecificUserView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     renderer_classes = [UserRenderer]
+    serializer_class = UserProfileViewSerializer
 
     def get_object(self, user_id):
         try:
@@ -208,19 +123,14 @@ class GetSpecificUserView(views.APIView):
     def get(self, request, user_id, format=None):
         user_id = user_id
         data = self.get_object(user_id)
-        # print(":::userid:::::::::::::", data.userid)
 
-        user = self.request.user
         if User.objects.filter(Q(is_consultant=False) & Q(userid=data.userid)).exists():
-            serializer = UserProfileViewSerializer(data)
+            serializer = self.serializer_class(data)
             context = {"data": serializer.data}
-            # print(context)
             return Response(context, status=status.HTTP_200_OK)
-
         elif User.objects.filter(
             Q(is_consultant=True) & Q(userid=data.userid)
         ).exists():
-            print("consultant:::::::::::::::")
             serializer = UserProfileWithConsultancyViewSerializer(data)
             context = {"data": serializer.data}
             # print(context)
@@ -255,12 +165,12 @@ class FavouriteRequestSendView(generics.CreateAPIView):
                 return Response(
                     "You are Already Friend", status=status.HTTP_400_BAD_REQUEST
                 )
-
             else:
-                serializer = UserFavouriteRequestSendSerializer(data=request.data)
+                serializer = self.serializer_class(data=request.data)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
+
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
 
@@ -282,7 +192,7 @@ class FavouriteRequestsView(generics.ListAPIView):
 
     def list(self, request, format=None):
         queryset = self.get_queryset()
-        serializer = UserFavouriteRequestsSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
 
@@ -290,6 +200,7 @@ class FavouriteRequestsView(generics.ListAPIView):
 class AcceptFavouriteRequest(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     renderer_classes = [UserRenderer]
+    serializer_class = AcceptFavouriteRequestSerializer
 
     def get_object(self, requestid):
         try:
@@ -298,22 +209,19 @@ class AcceptFavouriteRequest(views.APIView):
             raise Http404
 
     def put(self, request, requestid):
-
         user = self.request.user
+
         if request.data["is_favourite_accept"] == True:
             if UserFavoutireRequestSend.objects.filter(
                 Q(favourite_request_to__exact=user.userid)
                 & Q(id__exact=requestid)
                 & Q(is_favourite_accept=False)
             ).exists():
-
                 requested_data = self.get_object(requestid)
                 follow_acceptuser = requested_data.favourite_request_to
                 follow_requesteduser = requested_data.userid
-
-                serializer = AcceptFavouriteRequestSerializer(
-                    requested_data, data=request.data
-                )
+                serializer = self.serializer_class(requested_data, data=request.data)
+                
                 if serializer.is_valid():
                     serializer.save()
                     UserFavouriteList.objects.create(
@@ -322,7 +230,6 @@ class AcceptFavouriteRequest(views.APIView):
                     UserFavouriteList.objects.create(
                         userid=follow_requesteduser, favourite_userid=follow_acceptuser
                     )
-
                     UserFavoutireRequestSend.objects.filter(
                         Q(userid__exact=follow_acceptuser)
                         & Q(favourite_request_to__exact=follow_requesteduser)
@@ -334,6 +241,7 @@ class AcceptFavouriteRequest(views.APIView):
 class RejectFavouriteRequest(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     renderer_classes = [UserRenderer]
+    serializer_class = RejectFavouriteRequestSerializer
 
     def get_object(self, requestid):
         try:
@@ -350,9 +258,7 @@ class RejectFavouriteRequest(views.APIView):
                 & Q(is_favourite_reject=False)
             ).exists():
                 requested_data = self.get_object(requestid)
-                serializer = RejectFavouriteRequestSerializer(
-                    requested_data, data=request.data
-                )
+                serializer = self.serializer_class(requested_data, data=request.data)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -363,7 +269,7 @@ class FavouritesList(generics.ListAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    # serializer_class= UserFavouriteListSerializer
+    serializer_class = UserFavouriteListSerializer
     renderer_classes = [UserRenderer]
 
     def get_queryset(self):
@@ -371,19 +277,16 @@ class FavouritesList(generics.ListAPIView):
         return UserFavouriteList.objects.filter(userid=user.userid)
 
     def list(self, request):
-
         queryset = self.get_queryset()
-        serializer = UserFavouriteListSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         context = {"data": serializer.data}
         return Response(context, status=status.HTTP_200_OK)
-        # return Response('Bad Request', status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserSearchGetData(views.APIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    # renderer_classes = [UserRenderer]
 
     def get(self, request):
         user = self.request.user
@@ -398,7 +301,6 @@ class UserSearchGetData(views.APIView):
                     "user_industry", flat=True
                 )
             )
-
             residential_location = list(
                 set(
                     User.objects.exclude(
@@ -423,14 +325,11 @@ class UserSearchGetData(views.APIView):
                     nonresidential_location[i][0] + "," + nonresidential_location[i][1]
                 )
             location_data = residential_location_data + nonresidential_location
-
             service_type = set(
                 ConsultancyCreate.objects.exclude(
                     consultant_service_category__isnull=True
                 ).values_list("consultant_service_category", flat=True)
             )
-            # print("location data:::::::::::::::::::",service_type)
-
             context = {
                 "success": True,
                 "education_data": education_data,
@@ -455,43 +354,31 @@ class UserSearchFilter(views.APIView):
     renderer_classes = [UserRenderer]
 
     def get_user(self, data):
-
         education_data = data["education_data"]
         industry_data = data["industry_data"]
         service_type = data["service_type"]
         location_data = data["location_data"]
-
         location_city = []
+
         for location in location_data:
             city = location.split(",")[1]
             location_city.append(city)
-
-        all_user = User.objects.filter(is_active=True).values("userid").distinct()
-
+        
         education_search_data = (
             User_education.objects.filter(user_edu_degree__in=education_data)
             .values("userid")
             .distinct()
         )
-
-        industry_search_data = (
-            User.objects.filter(user_industry__in=industry_data)
+        user_filter_data = (
+            User.objects.filter(
+                Q(user_industry__in=industry_data)
+                | Q(user_residential_district__in=location_city)
+                | Q(user_nonresidential_city__in=location_city)
+                | Q(is_active=True)
+            )
             .values("userid")
             .distinct()
         )
-
-        location_search_data_r = (
-            User.objects.filter(user_residential_district__in=location_city)
-            .values("userid")
-            .distinct()
-        )
-        location_search_data_nr = (
-            User.objects.filter(user_nonresidential_city__in=location_city)
-            .values("userid")
-            .distinct()
-        )
-        location_search_data = location_search_data_r | location_search_data_nr
-
         service_type_search_data = (
             ConsultancyCreate.objects.filter(
                 consultant_service_category__in=service_type
@@ -499,32 +386,22 @@ class UserSearchFilter(views.APIView):
             .values("userid")
             .distinct()
         )
-
-        search = [
-            education_search_data,
-            industry_search_data,
-            location_search_data,
-            service_type_search_data,
+        search = list(
+            chain(
+                education_search_data,
+                user_filter_data,
+                service_type_search_data,
+            )
+        )
+        search_data = [
+            value for item in search for key, value in item.items() if key == "userid"
         ]
-
-        search_data = all_user.intersection(all_user)
-        for i, d in zip(search, data):
-            # print(count, '::::::::i:::::::::::',type(i),data[d])
-            if data[d] == []:
-                pass
-            else:
-                search_data = all_user.intersection(i)
-
-        # print("search:::::::::::::::::::::::::::",search_data)
         return search_data
 
     def post(self, request):
-        user = self.request.user
         data = request.data
         # print(request.data)
         search_user = self.get_user(data)
-
-        # print("search user:::::::::::::::::::",search_user)
 
         details = User.objects.filter(userid__in=search_user).values(
             "userid",
@@ -534,8 +411,6 @@ class UserSearchFilter(views.APIView):
             "user_photopath",
             "is_consultant",
         )
-
-        # context = {"success":True,"data":details}
         paginator = UserSearchFilterPagination()
         page = paginator.paginate_queryset(details, request)
         if page is not None:
@@ -551,36 +426,19 @@ class UserSearchField(views.APIView):
     renderer_classes = [UserRenderer]
 
     def get_user(self, data):
-
         user_name = data["user_fullname"]
-
-        search_data_fullname = User.objects.filter(user_fullname__contains=user_name)
-        search_data_username = User.objects.filter(user_username__contains=user_name)
-
-        search_data = (search_data_fullname | search_data_username).distinct()
-
-        # print("search data:::::::::::::::",search_data)
-
+        search_data = User.objects.filter(
+            Q(user_fullname__contains=user_name) | Q(user_username__contains=user_name)
+        )
         return search_data
 
     def post(self, request):
         user = self.request.user
         data = request.data
-
-        # print(":::::::::::::::::::::",request.data)
         search_user = self.get_user(data)
-
         serializer = UserSearchFieldSerializer(search_user, many=True)
-        # if serializer.is_valid():
-        # context = {"success":True,"data":serializer.data}
-
         paginator = UserSearchFilterPagination()
         page = paginator.paginate_queryset(serializer.data, request)
         if page is not None:
             return paginator.get_paginated_response(page)
-
         return Response(page, status=status.HTTP_200_OK)
-
-        # else:
-        #     context = {"message":"User not found"}
-        #     return Response(context, status=status.HTTP_400_BAD_REQUEST)
