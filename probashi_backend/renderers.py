@@ -13,7 +13,7 @@ class UserRenderer(renderers.JSONRenderer):
                 complete_error = complete_error + single_err
             return complete_error
         else:
-            print("type::::", type(data), "data::::", data)
+            # print("type::::", type(data), "data::::", data)
             return data
 
     charset = "utf-8"
