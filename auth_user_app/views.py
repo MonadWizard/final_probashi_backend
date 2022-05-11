@@ -397,15 +397,15 @@ class InAppChangePassword(generics.UpdateAPIView):
             if serializer != None or serializer.is_valid():
                 print("in 2nd if")
 
-                if not (
-                    User.objects.filter(user_email=request.data["user_email"]).exists()
-                    or request.data["user_email"] == ""
-                ):
+                # if not (
+                #     User.objects.filter(user_email=request.data["user_email"]).exists()
+                #     or request.data["user_email"] == ""
+                # ):
 
-                    return Response(
-                        {"wrong email": ["Wrong email address."]},
-                        status=status.HTTP_400_BAD_REQUEST,
-                    )
+                #     return Response(
+                #         {"wrong email": ["Wrong email address."]},
+                #         status=status.HTTP_400_BAD_REQUEST,
+                #     )
 
                 if request.data["old_password"] == request.data["new_password"]:
                     return Response(
