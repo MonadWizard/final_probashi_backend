@@ -1,124 +1,129 @@
-from multiprocessing import context
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import permissions
-from django.http import Http404
-from .serializers import (BlogCreateSerializer, BlogCommentSerializer,
-                            BlogReactionSerializer,
-                            BlogPaginateListViewSerializer, 
-                            BlogHomePageReactionSerializer,
-                            SpecificBlogReactionDetailsSerializers,
-                            SpecificBlogCommentDetailsSerializer,
-                            AllBlogReactionCountSerializer,
-                            AllBlogCommentSerializer)
+from .serializers import (
+    BlogCreateSerializer,
+    BlogCommentSerializer,
+    BlogReactionSerializer,
+    BlogPaginateListViewSerializer,
+    SpecificBlogReactionDetailsSerializers,
+    SpecificBlogCommentDetailsSerializer,
+    AllBlogReactionCountSerializer,
+    AllBlogCommentSerializer,
+)
 from .models import Blog, Blog_reaction, Blog_comment
 from rest_framework.pagination import PageNumberPagination
 
 from django.db.models import Q
-from auth_user_app.models import User
 from probashi_backend.renderers import UserRenderer
-import json
-from django.db import connection
 from rest_framework import pagination
 from rest_framework.pagination import PageNumberPagination
-
-
-
+from .helper import *
 
 
 class BlogCreateView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     renderer_classes = [UserRenderer]
+    serializer_class = BlogCreateSerializer
 
-    def post(self,request):
-        serializer = BlogCreateSerializer(data=request.data)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BlogCommentView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     renderer_classes = [UserRenderer]
+    serializer_class = BlogCommentSerializer
 
-    def post(self,request):
-        # print('user:::::::',request.user.userid)
-        if request.data['userid'] == request.user.userid:
-            serializer = BlogCommentSerializer(data=request.data)
+    def post(self, request):
+        if request.data["userid"] == request.user.userid:
+            serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data,status=status.HTTP_200_OK)
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response('Userid and Token is invalid',status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                "Userid and Token is invalid", status=status.HTTP_400_BAD_REQUEST
+            )
+
 
 class BlogReactionView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    # renderer_classes = [UserRenderer]
+    serializer_class = BlogReactionSerializer
 
-    def post(self,request):
-
+    def post(self, request):
         user = self.request.user
+        blog_data = filter_blog_list(request.data["blogid"])
+        user_data = filter_user_list(request.data["userid"])
+        auth_user_data = filter_auth_user_list(user.userid)
+        is_like_data = filter_is_like_data(request.data["is_user_like"])
+        is_dislike_data = filter_is_dislike_data(request.data["is_user_dislike"])
 
-        if Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid) & Q(userid__exact=request.data['userid'])).exists():
-            
-            if Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid) & Q(is_user_like=request.data['is_user_like']) & 
-                                                    Q(is_user_dislike=request.data['is_user_dislike'])).exists():
-                    context = {'success': False, 'message': 'already react happend'}
-                    return Response(context,status=status.HTTP_400_BAD_REQUEST)
-            
-            
-            elif request.data['is_user_like'] == False and request.data['is_user_dislike'] == False:
-                # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
-                Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) & Q(userid__exact=user.userid)).update(is_user_like=False,is_user_dislike=False)
-                update_false = Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid']) &
-                                Q(userid__exact=user.userid) & Q(is_user_like=False) & Q (is_user_dislike=False)).values().order_by('-id')
-                # Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).delete()
-                # print('::::::::::', list(update_false)[0])
-                context = {'success': True, 'data': update_false[0]}
-                # print('::::::::::', context)
-                return Response(context,status=status.HTTP_200_OK)
+        if blog_data & user_data & auth_user_data:
+            if blog_data & user_data & is_like_data & is_dislike_data:
+                context = {"success": False, "message": "already react happend..."}
+                return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
+            elif (
+                request.data["is_user_like"] == False
+                and request.data["is_user_dislike"] == False
+            ):
+                (blog_data & user_data).update(
+                    is_user_like=False, is_user_dislike=False
+                )
+                update_false = (
+                    (blog_data & auth_user_data & is_like_data & is_dislike_data)
+                    .values()
+                    .order_by("-id")
+                )
+                context = {"success": True, "data": update_false[0]}
+                return Response(context, status=status.HTTP_200_OK)
 
-            elif request.data['is_user_like'] == True and request.data['is_user_dislike'] == False:
-                Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid'])& Q(userid__exact=user.userid)).update(is_user_like=True,is_user_dislike=False)
-                update_true = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values().order_by('-id')
-                context = {'success': True, 'data': update_true[0]}
-                return Response(context,status=status.HTTP_200_OK)
-            
-            elif request.data['is_user_like'] == False and request.data['is_user_dislike'] == True:
-                Blog_reaction.objects.filter(Q(blogid__exact=request.data['blogid'])& Q(userid__exact=user.userid)).update(is_user_like=False,is_user_dislike=True)
-                update_false = Blog_reaction.objects.filter(blogid__exact=request.data['blogid']).values().order_by('-id')
-                context = {'success': True, 'data': update_false[0]}
-                return Response(context,status=status.HTTP_200_OK)
+            elif (
+                request.data["is_user_like"] == True
+                and request.data["is_user_dislike"] == False
+            ):
+                (blog_data & auth_user_data).update(
+                    is_user_like=True, is_user_dislike=False
+                )
 
-            
-            # else:
-            #     serializer = BlogReactionSerializer(data=request.data)
+                update_true = blog_data.values().order_by("-id")
+                context = {"success": True, "data": update_true[0]}
+                return Response(context, status=status.HTTP_200_OK)
 
-            #     if serializer.is_valid():
-            #         serializer.save()
-            #         context = {'success': True, 'data': serializer.data}
-            #         # context.update(serializer.data)
-            #         return Response(context ,status=status.HTTP_200_OK)
+            elif (
+                request.data["is_user_like"] == False
+                and request.data["is_user_dislike"] == True
+            ):
+                (blog_data & auth_user_data).update(
+                    is_user_like=False, is_user_dislike=True
+                )
 
-        
-        elif request.data['userid'] == user.userid : 
-            serializer = BlogReactionSerializer(data=request.data)
+                update_false = blog_data.values().order_by("-id")
+                context = {"success": True, "data": update_false[0]}
+                return Response(context, status=status.HTTP_200_OK)
+
+        elif request.data["userid"] == user.userid:
+            serializer = self.serializer_class(data=request.data)
 
             if serializer.is_valid():
                 serializer.save()
-                context = {'success': True, 'data': serializer.data}
-                # context.update(serializer.data)
-                return Response(context ,status=status.HTTP_200_OK)
-        return Response({'success': False, 'message':'userid and token is invalid'},status=status.HTTP_400_BAD_REQUEST)
+                context = {"success": True, "data": serializer.data}
+                return Response(context, status=status.HTTP_200_OK)
+        return Response(
+            {"success": False, "message": "userid and token is invalid"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class GetAllpostsSetPagination(PageNumberPagination):
     page_size = 15
+
 
 class BlogPaginateListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -128,40 +133,35 @@ class BlogPaginateListView(generics.ListAPIView):
     renderer_classes = [UserRenderer]
 
     def get_serializer_context(self):
-        return {'user': self.request.user}
+        return {"user": self.request.user}
 
     def get_queryset(self):
-        # print('request.data', self.request.data)
-        data = [self.request.data['tags']]
-        # print('data:::::::', data)
+        data = [self.request.data["tags"]]
         if data == [""]:
-            return Blog.objects.all().order_by('-userblog_publishdate')
+            return Blog.objects.all().order_by("-userblog_publishdate")
         else:
-            return Blog.objects.filter(userblog_tags__overlap=data).order_by('-userblog_publishdate')
-
-
-
-# specific blog share link.............
-
+            return Blog.objects.filter(userblog_tags__overlap=data).order_by(
+                "-userblog_publishdate"
+            )
 
 
 class SpecificBlogReactionDetails(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
-    # serializer_class = SpecificBlogReactionDetailsSerializers
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    serializer_class = SpecificBlogReactionDetailsSerializers
     renderer_classes = [UserRenderer]
-    
+
     def get_queryset(self):
-            user = self.request.user
-            blog_id = self.request.query_params.get('id')
-            # print("blog_id:::", blog_id)
-            return Blog_reaction.objects.filter(blogid=blog_id)
+        blog_id = self.request.query_params.get("id")
+        return Blog_reaction.objects.filter(blogid=blog_id)
 
     def list(self, request):
         userid = request.user.userid
-        # print("user::::", userid)
         queryset = self.get_queryset()
-        # print("queryset:::", queryset)
-        serializer = SpecificBlogReactionDetailsSerializers(queryset,context={'userid':userid}, many=True)
+        serializer = self.serializer_class(
+            queryset, context={"userid": userid}, many=True
+        )
         try:
             context = {"data": serializer.data[0]}
         except IndexError:
@@ -169,20 +169,21 @@ class SpecificBlogReactionDetails(generics.ListAPIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
-
 class SpecificBlogCommentDetails(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
-    # serializer_class = SpecificBlogReactionDetailsSerializers
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
     renderer_classes = [UserRenderer]
-    
+    serializer_class = SpecificBlogCommentDetailsSerializer
+
     def get_queryset(self):
-            user = self.request.user
-            blog_id = self.request.query_params.get('id')
-            return Blog_comment.objects.filter(Q(userid=user.userid) & Q(blogid=blog_id))
+        user = self.request.user
+        blog_id = self.request.query_params.get("id")
+        return Blog_comment.objects.filter(Q(userid=user.userid) & Q(blogid=blog_id))
 
     def list(self, request):
         queryset = self.get_queryset()
-        serializer = SpecificBlogCommentDetailsSerializer(queryset, many=True)
+        serializer = self.serializer_class(queryset, many=True)
         try:
             context = {"data": serializer.data}
         except IndexError:
@@ -190,9 +191,9 @@ class SpecificBlogCommentDetails(generics.ListAPIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
-
 class GetAllpostsLikeSetPagination(PageNumberPagination):
     page_size = 15
+
 
 class BlogPaginateReactionListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -202,16 +203,15 @@ class BlogPaginateReactionListView(generics.ListAPIView):
     renderer_classes = [UserRenderer]
 
     def get_serializer_context(self):
-        return {'user': self.request.user}
+        return {"user": self.request.user}
 
     def get_queryset(self):
-        return Blog.objects.all().order_by('-userblog_publishdate')
-
-
+        return Blog.objects.all().order_by("-userblog_publishdate")
 
 
 class GetAllpostsCommentSetPagination(PageNumberPagination):
     page_size = 15
+
 
 class BlogPaginateCommentListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -221,57 +221,7 @@ class BlogPaginateCommentListView(generics.ListAPIView):
     renderer_classes = [UserRenderer]
 
     def get_serializer_context(self):
-        return {'user': self.request.user}
+        return {"user": self.request.user}
 
     def get_queryset(self):
-        return Blog.objects.all().order_by('-userblog_publishdate')
-
-
-
-
-class GetBlogPagination(pagination.PageNumberPagination):
-    page_size = 15
-    page_size_query_param = 'page_size'
-
-
-# user blog Search..............
-# select * from public.user_blog_app_blog
-# where userblog_tags @> '{"tag1"}';
-
-class BlogSearch(views.APIView):
-    permission_classes = [permissions.IsAuthenticated,]
-    # renderer_classes = [UserRenderer]
-
-    def post(self, request):
-        tags = request.data['tags']
-        # print("request data::::::",type(tags))
-
-        query = "select * from public.user_blog_app_blog where userblog_tags @> '{" 
-        query += str(tags[::])[1:-1].replace("'", '"')
-        query += "}' ORDER BY id DESC; "
-        # print("query:::", query)
-
-        with connection.cursor() as cursor:
-            cursor.execute(query)
-            q_data_fatch_all = cursor.fetchall()
-
-        result = []
-        columnNames = [column[0] for column in cursor.description]
-
-        for record in q_data_fatch_all:
-            result.append( dict( zip( columnNames , record ) ) )
-
-        
-        paginator = GetBlogPagination()
-        page = paginator.paginate_queryset([result][0], request)
-        # print("page:::", page)
-        if page is not None:
-            response = paginator.get_paginated_response(page)
-            response.data['success'] = True
-            return Response(response.data,status=status.HTTP_200_OK)
-        return Response({'success': False, 'message':'no data'},status=status.HTTP_400_BAD_REQUEST)
-        # return Response(page, status=status.HTTP_200_OK)
-        
-    
-
-
+        return Blog.objects.all().order_by("-userblog_publishdate")

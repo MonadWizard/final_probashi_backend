@@ -159,22 +159,18 @@ class MailVerificationStatus(views.APIView):
 
 
 class UserNameUniqueStatus(views.APIView):
-    renderer_classes = [UserRenderer]
+    # renderer_classes = [UserRenderer]
 
     def post(self, request):
         try:
-            user_username = User.objects.get(
-                user_username__exact=request.data["user_username"]
+            User.objects.get(user_username__exact=request.data["user_username"])
+            return Response(
+                {"success": True, "message": "Username Already exist"},
+                status=status.HTTP_200_OK,
             )
 
-            if user_username:
-                return Response({"user name exist": True}, status=status.HTTP_200_OK)
-            else:
-                return Response({"user name exist": False}, status=status.HTTP_200_OK)
         except:
-            return Response(
-                {"user name exist": False}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UpdateRegisterView(views.APIView):
@@ -377,8 +373,8 @@ class LogoutAPIView(generics.GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-
 # -----------------------------------x ---------------------------x----------------------
+
 
 class ChangeEmailVerifyAPIView(views.APIView):
     renderer_classes = [UserRenderer]

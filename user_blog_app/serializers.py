@@ -32,14 +32,7 @@ class BlogReactionSerializer(serializers.ModelSerializer):
         
 
 
-
-
-class BlogHomePageReactionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Blog_reaction
-        fields = '__all__'
-        
+    
     
     
 class BlogHomePageCommentSerializer(serializers.ModelSerializer):
