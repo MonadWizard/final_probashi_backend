@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 
 from rest_framework import generics, status, views, permissions
+from yaml import serialize
 from .serializers import (
     RegisterSerializer,
     UpdateRegisterSerializer,
@@ -15,6 +16,7 @@ from .serializers import (
     userOTP,
     RequestPasswordResetEmailSerializer,
     UserEmailandPasswordChangeSerializer,
+    takeVarifiedEmailSerializer,
 )
 
 from rest_framework.response import Response
@@ -23,7 +25,7 @@ from rest_framework import permissions
 from django.http import Http404
 
 from user_setting_other_app.models import User_settings
-from .models import User, PhoneOTP
+from .models import User, PhoneOTP, mailVerify
 from user_connection_app.models import FriendsSuggation
 from user_profile_app.models import User_socialaccount_and_about
 from .utils import Util, SendMessage
@@ -375,6 +377,131 @@ class LogoutAPIView(generics.GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+
+# -----------------------------------x ---------------------------x----------------------
+
+class ChangeEmailVerifyAPIView(views.APIView):
+    renderer_classes = [UserRenderer]
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        user_email = request.data["user_email"]
+        auth_user = request.user
+
+        try:
+            user = User.objects.get(user_email=user_email)
+            provider = user.auth_provider
+            print("user already exists")
+            return Response(
+                {
+                    "success": False,
+                    "message": f"Email already register by {provider}",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except:
+            payload = {
+                "user_id": auth_user.userid,
+                "user_email": user_email,
+                "exp": datetime.datetime.utcnow()
+                + datetime.timedelta(minutes=30, seconds=00),
+                "iat": datetime.datetime.utcnow(),
+            }
+            token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+
+            current_site = get_current_site(request).domain
+            relativeLink = reverse("change-email-response")
+            absurl = "http://" + current_site + relativeLink + "?token=" + str(token)
+
+            print("absurl::", absurl)
+
+            email_body = (
+                "Hi "
+                + auth_user.user_fullname
+                + " Use the link below to verify and change your email \n"
+                + absurl
+            )
+
+            data = {
+                "email_body": email_body,
+                "to_email": user_email,
+                "email_subject": "Verify your email",
+            }
+
+            Util.send_email(data)
+
+            resp_msg = {"success": True}
+            resp_msg.update(data)
+
+            return Response(resp_msg, status=status.HTTP_200_OK)
+
+
+class change_email_responseView(views.APIView):
+    serialize_class = takeVarifiedEmailSerializer
+
+    def get(self, request):
+        token = request.GET.get("token")
+
+        try:
+            verified_mail_payload = jwt.decode(
+                token, settings.SECRET_KEY, algorithms=["HS256"]
+            )
+
+            print("verified_mail_payload:", verified_mail_payload)
+
+            """
+            {'user_email': 'demotest.monad@gmail.com', 'exp': 1652248458, 'iat': 1652246658}
+            """
+
+            serializerdata = {
+                "user_id": verified_mail_payload["user_id"],
+                "user_email": verified_mail_payload["user_email"],
+                "updated_at": timezone.now() + timezone.timedelta(minutes=5),
+                "is_used": False,
+            }
+
+            serializer = takeVarifiedEmailSerializer(data=serializerdata)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            html = "<html><body>Verification Success. It's time for use new mail after complete probashi app processes</body></html>"
+            return HttpResponse(html)
+        except jwt.ExpiredSignatureError:
+            html = "<html><body>Activation Expired.</body></html>"
+            return HttpResponse(html)
+        except jwt.exceptions.DecodeError:
+            html = "<html><body>Invalid token.</body></html>"
+            return HttpResponse(html)
+
+
+class CheckChangableEmailView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        user = request.user
+
+        req_email = request.data["user_email"]
+        print("req_email:", req_email)
+
+        try:
+            expected_email = mailVerify.objects.filter(user_email=req_email).values()
+
+            # print("expected_email:", expected_email)
+
+            mailVerify.objects.filter(updated_at__lt=timezone.now()).delete()
+
+            if (
+                user.userid == expected_email[0]["user_id"]
+                and expected_email[0]["updated_at"] >= timezone.now()
+            ):
+                return Response({"mail found": True}, status=status.HTTP_200_OK)
+            return Response({"mail found": False}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            print("e:", e)
+            return Response({"mail found": False}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class InAppChangePassword(generics.UpdateAPIView):
     renderer_classes = [UserRenderer]
     permission_classes = [permissions.IsAuthenticated]
@@ -389,15 +516,11 @@ class InAppChangePassword(generics.UpdateAPIView):
 
         serializer = None
         if request.data["user_email"] != "" or request.data["new_password"] != "":
-            print("in if")
             serializer = UserEmailandPasswordChangeSerializer(data=request.data)
             print("serializer:", serializer.is_valid())
             print("serializer.data:", serializer.data)
 
             if serializer != None or serializer.is_valid():
-                print("in 2nd if")
-
-
 
                 if request.data["old_password"] == request.data["new_password"]:
                     return Response(
@@ -423,6 +546,10 @@ class InAppChangePassword(generics.UpdateAPIView):
 
                     if request.data["user_email"] != "":
                         self.object.user_email = request.data.get("user_email")
+                        mailVerify.objects.filter(
+                            user_email=request.data["user_email"]
+                        ).delete()
+
                     self.object.save()
 
                     response = {

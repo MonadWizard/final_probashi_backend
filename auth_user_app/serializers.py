@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, PhoneOTP
+from .models import User, PhoneOTP, mailVerify
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
@@ -274,3 +274,17 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
                 return attrs
 
         return {"user_callphone": user.user_callphone, "tokens": user.tokens}
+
+
+class takeVarifiedEmailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mailVerify
+        fields = "__all__"
+
+
+
+
+
+
+

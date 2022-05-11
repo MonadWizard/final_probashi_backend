@@ -133,6 +133,14 @@ class PhoneOTP(models.Model):
         return self.otp
 
 
+class mailVerify(models.Model):
+    user_id = models.CharField(max_length=30, db_index=True)
+    user_email = models.EmailField(max_length=255, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField()
+    # is_used = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.user_email
 
 

@@ -16,7 +16,11 @@ from .views import  (MailVerifyRequestView,
                     LoginVerificationCodeSend,
                     PhoneUpdateRegisterView,
                     
-                    UserNameUniqueStatus)
+                    UserNameUniqueStatus,
+                    
+                    ChangeEmailVerifyAPIView,
+                    change_email_responseView,
+                    CheckChangableEmailView)
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -37,6 +41,10 @@ urlpatterns = [
     path('verify-reset-email/', VerifyForResetPasswordEmail.as_view(),name="verify-reset-email"),
     # path('password-reset/<uidb64>/<token>/',PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
     path('password-reset-complete/', SetNewPasswordAPIView.as_view(),name='password-reset-complete'),
+    
+    path('change-email-verify/', ChangeEmailVerifyAPIView.as_view(),name="ChangeEmailVerifyAPIView"),
+    path('change-email-response/', change_email_responseView.as_view(),name="change-email-response"),
+    path('check-changeable-email/', CheckChangableEmailView.as_view(),name="CheckChangableEmailView"),
     path('app/change-password/', InAppChangePassword.as_view(), name='InAppChangePassword'),
 
     path('phone-verification-otp/', RegistrationVerificationCodeSend.as_view(), name='VerificationCodeSend'),
