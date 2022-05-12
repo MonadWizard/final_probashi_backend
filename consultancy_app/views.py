@@ -435,10 +435,8 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         pass
                     else:
                         count += 1
-
                         if count > 1:
                             search_data &= i
-
                         else:
                             search_data = i
 
@@ -481,7 +479,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         pass
                     else:
                         count += 1
-
                         if count > 1:
                             search_data &= i
                         else:
@@ -498,7 +495,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         | Q(is_userconsultant_company=data["is_userconsultant_company"])
                     )
                 )
-
                 is_userconsultant_personal = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & (Q(is_userconsultant_personal=data["is_userconsultant_personal"]))
@@ -516,7 +512,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         ]
                     )
                 )
-
                 consultant_servicebudget_startrange__gt = (
                     ConsultancyCreate.objects.filter(
                         Q(consultant_service_category=consultant_service_category)
@@ -527,7 +522,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         )
                     )
                 )
-
                 consultant_servicebudget_endrange__lt = (
                     ConsultancyCreate.objects.filter(
                         Q(consultant_service_category=consultant_service_category)
@@ -538,7 +532,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         )
                     )
                 )
-
                 search = [
                     is_userconsultant_personal,
                     is_userconsultant_company,
@@ -554,12 +547,10 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         pass
                     else:
                         count += 1
-
                         if count > 1:
                             search_data &= i
                         else:
                             search_data = i
-
                 return search_data
 
             if consultant_service_category == "Legal and Civil Service":
@@ -580,7 +571,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                     Q(consultant_service_category=consultant_service_category)
                     & Q(is_userconsultant_company=data["is_userconsultant_company"])
                 )
-
                 consultant_service_locationcountry = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -589,12 +579,10 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         ]
                     )
                 )
-
                 legalcivilservice_required = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(legalcivilservice_required=data["legalcivilservice_required"])
                 )
-
                 legalcivilservice_issue = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(legalcivilservice_issue=data["legalcivilservice_issue"])
@@ -615,7 +603,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         pass
                     else:
                         count += 1
-
                         if count > 1:
                             search_data &= i
                         else:
@@ -632,7 +619,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         | Q(is_userconsultant_company=data["is_userconsultant_company"])
                     )
                 )
-
                 is_userconsultant_personal = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & (Q(is_userconsultant_personal=data["is_userconsultant_personal"]))
@@ -641,7 +627,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                     Q(consultant_service_category=consultant_service_category)
                     & Q(is_userconsultant_company=data["is_userconsultant_company"])
                 )
-
                 consultant_service_locationcountry = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -650,7 +635,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         ]
                     )
                 )
-
                 consultant_servicebudget_startrange__gt = (
                     ConsultancyCreate.objects.filter(
                         Q(consultant_service_category=consultant_service_category)
@@ -661,7 +645,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         )
                     )
                 )
-
                 consultant_servicebudget_endrange__lt = (
                     ConsultancyCreate.objects.filter(
                         Q(consultant_service_category=consultant_service_category)
@@ -672,7 +655,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         )
                     )
                 )
-
                 medicalconsultancyservice_treatment_area = (
                     ConsultancyCreate.objects.filter(
                         Q(consultant_service_category=consultant_service_category)
@@ -700,7 +682,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         pass
                     else:
                         count += 1
-
                         if count > 1:
                             search_data &= i
                         else:
@@ -717,7 +698,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         | Q(is_userconsultant_company=data["is_userconsultant_company"])
                     )
                 )
-
                 is_userconsultant_personal = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & (Q(is_userconsultant_personal=data["is_userconsultant_personal"]))
@@ -726,7 +706,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                     Q(consultant_service_category=consultant_service_category)
                     & Q(is_userconsultant_company=data["is_userconsultant_company"])
                 )
-
                 consultant_service_locationcountry = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -735,7 +714,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         ]
                     )
                 )
-
                 consultant_servicebudget_startrange__gt = (
                     ConsultancyCreate.objects.filter(
                         Q(consultant_service_category=consultant_service_category)
@@ -746,7 +724,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         )
                     )
                 )
-
                 consultant_servicebudget_endrange__lt = (
                     ConsultancyCreate.objects.filter(
                         Q(consultant_service_category=consultant_service_category)
@@ -757,7 +734,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         )
                     )
                 )
-
                 overseasrecruitmentservice_job_type = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -783,7 +759,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         pass
                     else:
                         count += 1
-
                         if count > 1:
                             search_data &= i
                         else:
@@ -800,7 +775,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         | Q(is_userconsultant_company=data["is_userconsultant_company"])
                     )
                 )
-
                 is_userconsultant_personal = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & (Q(is_userconsultant_personal=data["is_userconsultant_personal"]))
@@ -809,7 +783,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                     Q(consultant_service_category=consultant_service_category)
                     & Q(is_userconsultant_company=data["is_userconsultant_company"])
                 )
-
                 consultant_service_locationcountry = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -818,7 +791,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         ]
                     )
                 )
-
                 propertymanagementservice_propertylocation = (
                     ConsultancyCreate.objects.filter(
                         Q(consultant_service_category=consultant_service_category)
@@ -829,7 +801,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         )
                     )
                 )
-
                 propertymanagementservice_type = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -838,7 +809,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         ]
                     )
                 )
-
                 propertymanagementservice_need = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -847,7 +817,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         ]
                     )
                 )
-
                 search = [
                     is_userconsultant_personal,
                     is_userconsultant_company,
@@ -864,7 +833,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         pass
                     else:
                         count += 1
-
                         if count > 1:
                             search_data &= i
                         else:
@@ -873,7 +841,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                 return search_data
 
             if consultant_service_category == "Tourism Service":
-
                 both = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & (
@@ -881,7 +848,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         | Q(is_userconsultant_company=data["is_userconsultant_company"])
                     )
                 )
-
                 is_userconsultant_personal = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & (Q(is_userconsultant_personal=data["is_userconsultant_personal"]))
@@ -890,7 +856,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                     Q(consultant_service_category=consultant_service_category)
                     & Q(is_userconsultant_company=data["is_userconsultant_company"])
                 )
-
                 tourismservices = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(tourismservices=data["tourismservices"])
@@ -901,7 +866,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                     is_userconsultant_company,
                     tourismservices,
                 ]
-
                 count = 1
                 search_data = both
                 for i, d in zip(search, data):
@@ -910,7 +874,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         pass
                     else:
                         count += 1
-
                         if count > 1:
                             search_data &= i
                         else:
@@ -926,7 +889,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         | Q(is_userconsultant_company=data["is_userconsultant_company"])
                     )
                 )
-
                 is_userconsultant_personal = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & (Q(is_userconsultant_personal=data["is_userconsultant_personal"]))
@@ -935,7 +897,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                     Q(consultant_service_category=consultant_service_category)
                     & Q(is_userconsultant_company=data["is_userconsultant_company"])
                 )
-
                 consultant_service_locationcountry = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -944,7 +905,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         ]
                     )
                 )
-
                 tradefacilitationservice_type = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -953,7 +913,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         ]
                     )
                 )
-
                 tradefacilitationservice_Purpose = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & Q(
@@ -978,7 +937,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         pass
                     else:
                         count += 1
-
                         if count > 1:
                             search_data &= i
                         else:
@@ -995,7 +953,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
                         | Q(is_userconsultant_company=data["is_userconsultant_company"])
                     )
                 )
-
                 is_userconsultant_personal = ConsultancyCreate.objects.filter(
                     Q(consultant_service_category=consultant_service_category)
                     & (Q(is_userconsultant_personal=data["is_userconsultant_personal"]))

@@ -100,23 +100,6 @@ class UserExperienceCreateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UserExperienceUpdatSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User_experience
-        fields = [
-            "id",
-            "user_designation",
-            "user_companyname",
-            "user_responsibilities",
-            "userexperience_startdate",
-            "userexperience_enddate",
-        ]
-
-        def update(self, instance, validated_data):
-            validated_data.pop("id", None)
-            return super().update(self, instance, validated_data)
-
-
 class UserEducationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_education
@@ -141,7 +124,7 @@ class UserProfileViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        
+        # fields = "__all__"
         exclude = ["is_staff", "is_superuser", "password", "groups", "user_permissions"]
 
 

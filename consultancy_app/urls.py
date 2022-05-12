@@ -89,12 +89,8 @@ urlpatterns = [
     ),
     path("pro/", BecomeProUser.as_view(), name="BecomeProUser"),
     
-    
-
-
     # payment
-    # path('validity/', ValidityWithIPN.as_view(), name="payment_success"),
-    # pro user success fail cancle redirect URL
+
     path("pro-success/", Pro_Payment_success.as_view(), name="payment_success"),
     path("pro-fail/", Pro_Payment_fail, name="payment_fail"),
     path("pro-cancle/", Pro_Payment_cancle, name="payment_cancle"),
