@@ -16,13 +16,13 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
         print("user_data::::", user_data)
         try:
             user_data["sub"]
-        except:
+        except Exception as e:
             raise serializers.ValidationError(
                 "The token is invalid or expired. Please login again......"
             )
             # 329344095888-ogps4aif4e5l9mb6o0b23cv2gmqijoug.apps.googleusercontent.com    # probashi's
         googleClientID = (
-            "484261068183-vddlkf5r9oqm72stpkqvbpq874sv98a5.apps.googleusercontent.com"
+            "187084527164-a5mg5g9dh6k6022uo1elhciaea49lm2e.apps.googleusercontent.com"
         )
         # print("user_data['aud']::::",user_data)
         if user_data["aud"] != googleClientID:

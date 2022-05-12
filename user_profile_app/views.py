@@ -280,34 +280,11 @@ class UserProfileView(generics.ListAPIView):
             or data["user_socialaboutdata"].get("user_linkedinaccount")
             or data["user_socialaboutdata"].get("user_website")
         ) and (
-            int(len(data["user_socialaboutdata"].get("user_fbaccount")))
-            > 2
-            or int(
-                len(
-                    data["user_socialaboutdata"].get(
-                        "user_twitteraccount"
-                    )
-                )
-            )
-            > 2
-            or int(
-                len(
-                    data["user_socialaboutdata"].get(
-                        "user_instagramaccount"
-                    )
-                )
-            )
-            > 2
-            or int(
-                len(
-                    data["user_socialaboutdata"].get(
-                        "user_linkedinaccount"
-                    )
-                )
-            )
-            > 2
-            or int(len(data["user_socialaboutdata"].get("user_website")))
-            > 2
+            int(len(data["user_socialaboutdata"].get("user_fbaccount"))) > 2
+            or int(len(data["user_socialaboutdata"].get("user_twitteraccount"))) > 2
+            or int(len(data["user_socialaboutdata"].get("user_instagramaccount"))) > 2
+            or int(len(data["user_socialaboutdata"].get("user_linkedinaccount"))) > 2
+            or int(len(data["user_socialaboutdata"].get("user_website"))) > 2
         ):
             complete_profile_persentage += 5
         #  contact link
@@ -316,28 +293,9 @@ class UserProfileView(generics.ListAPIView):
             or data["user_socialaboutdata"].get("user_viber_account")
             or data["user_socialaboutdata"].get("user_immo_account")
         ) and (
-            int(
-                len(
-                    data["user_socialaboutdata"].get(
-                        "user_whatsapp_account"
-                    )
-                )
-            )
-            > 2
-            or int(
-                len(
-                    data["user_socialaboutdata"].get(
-                        "user_viber_account"
-                    )
-                )
-            )
-            > 2
-            or int(
-                len(
-                    data["user_socialaboutdata"].get("user_immo_account")
-                )
-            )
-            > 2
+            int(len(data["user_socialaboutdata"].get("user_whatsapp_account"))) > 2
+            or int(len(data["user_socialaboutdata"].get("user_viber_account"))) > 2
+            or int(len(data["user_socialaboutdata"].get("user_immo_account"))) > 2
         ):
 
             complete_profile_persentage += 5
@@ -357,20 +315,24 @@ class UserProfileView(generics.ListAPIView):
 
         dic_serializer = dict(data)
         dic_serializer["profile_complete_percentage"] = complete_profile_persentage
-        context = {"data": dic_serializer}
+        context = {"data": [dic_serializer]}
         return context
-
-    
 
     def list(self, request):
 
         user = self.get_user()
         if user.is_consultant:
             serializer = UserProfileWithConsultancyViewSerializer(user)
-            return Response( self.get_profile_persentage(serializer.data, user), status=status.HTTP_200_OK)
+            print(type(serializer.data))
+
+            return Response(
+                self.get_profile_persentage(serializer.data, user),
+                status=status.HTTP_200_OK,
+            )
 
         else:
             serializer = UserProfileViewSerializer(user)
-            return Response(self.get_profile_persentage(serializer.data, user)
-                , status=status.HTTP_200_OK)
-
+            return Response(
+                self.get_profile_persentage(serializer.data, user),
+                status=status.HTTP_200_OK,
+            )
