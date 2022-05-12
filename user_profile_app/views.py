@@ -308,9 +308,10 @@ class UserProfileView(generics.ListAPIView):
         #  id verification
         if data["user_idverificationdata"] != []:
             complete_profile_persentage += 25
-
+        print("complete profile percentage:", complete_profile_persentage)
         if complete_profile_persentage == 100:
-            user.user_profile_status = True
+            print("profile is 100")
+            user.is_consultant = True
             user.save()
 
         dic_serializer = dict(data)
