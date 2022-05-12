@@ -92,7 +92,7 @@ class RejectFavouriteRequestSerializer(serializers.ModelSerializer):
 
 
 class UserFavouriteListSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="userid.userid")
+    username = serializers.CharField(source="userid.user_fullname")
     favourite_user_id = serializers.CharField(source="favourite_userid.userid")
     favourite_user_name = serializers.CharField(source="favourite_userid.user_fullname")
     favourite_user_photo = serializers.ImageField(
