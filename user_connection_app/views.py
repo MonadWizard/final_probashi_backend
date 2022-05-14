@@ -26,6 +26,7 @@ from user_profile_app.models import User_education
 from consultancy_app.models import ConsultancyCreate
 from user_connection_app.utility import match_friends
 import itertools
+from .helper_filter import *
 
 
 class TakeMatchFriend(views.APIView):
@@ -221,7 +222,7 @@ class AcceptFavouriteRequest(views.APIView):
                 follow_acceptuser = requested_data.favourite_request_to
                 follow_requesteduser = requested_data.userid
                 serializer = self.serializer_class(requested_data, data=request.data)
-                
+
                 if serializer.is_valid():
                     serializer.save()
                     UserFavouriteList.objects.create(
@@ -291,6 +292,7 @@ class UserSearchGetData(views.APIView):
     def get(self, request):
         user = self.request.user
         if User.objects.filter(userid=user.userid).exists():
+
             education_data = set(
                 User_education.objects.exclude(
                     user_edu_degree__isnull=True
@@ -308,8 +310,9 @@ class UserSearchGetData(views.APIView):
                     ).values_list("user_residential_district", flat=True)
                 )
             )
+            print("residential location:::::::::", residential_location)
             residential_location_data = [
-                "Bangladesh," + x for x in residential_location
+                "Bangladesh," + x for x in residential_location if x != ""
             ]
             nonresidential_location = list(
                 set(
@@ -358,49 +361,69 @@ class UserSearchFilter(views.APIView):
         industry_data = data["industry_data"]
         service_type = data["service_type"]
         location_data = data["location_data"]
-        location_city = []
+        location_city_r = []
+        location_city_nr = []
+
+        all_user = User.objects.filter(is_active=True).values("userid")
 
         for location in location_data:
-            city = location.split(",")[1]
-            location_city.append(city)
-        
-        education_search_data = (
-            User_education.objects.filter(user_edu_degree__in=education_data)
-            .values("userid")
-            .distinct()
+            if location.split(",")[0] == "Bangladesh":
+                location_city_r.append(location.split(",")[1])
+            else:
+                location_city_nr.append(location.split(",")[1])
+
+        if data["education_data"] != []:
+            education_queryset = User_education.objects.all().values("userid")
+            education_queryset = filterby_userEduDegree(
+                education_queryset, education_data
+            ).values("userid")
+        else:
+            education_queryset = None
+
+        user_queryset = User.objects.all().values("userid")
+        user_queryset = filterby_userIndustry(user_queryset, industry_data).values(
+            "userid"
         )
-        user_filter_data = (
-            User.objects.filter(
-                Q(user_industry__in=industry_data)
-                | Q(user_residential_district__in=location_city)
-                | Q(user_nonresidential_city__in=location_city)
-                | Q(is_active=True)
-            )
-            .values("userid")
-            .distinct()
-        )
-        service_type_search_data = (
-            ConsultancyCreate.objects.filter(
-                consultant_service_category__in=service_type
-            )
-            .values("userid")
-            .distinct()
-        )
-        search = list(
-            chain(
-                education_search_data,
-                user_filter_data,
-                service_type_search_data,
-            )
-        )
-        search_data = [
-            value for item in search for key, value in item.items() if key == "userid"
-        ]
-        return search_data
+        user_queryset = filterby_residentialDistrict(
+            user_queryset, location_city_r
+        ).values("userid")
+
+        user_queryset = filterby_nonresidentialCity(
+            user_queryset, location_city_nr
+        ).values("userid")
+
+        if data["service_type"] != []:
+            service_queryset = ConsultancyCreate.objects.all().values("userid")
+            service_queryset = filterby_consultantServiceCategory(
+                service_queryset, service_type
+            ).values("userid")
+        else:
+            service_queryset = None
+
+        try:
+            if service_queryset and education_queryset:
+                print(" service and edu exist")
+                search_data = all_user.intersection(
+                    user_queryset, education_queryset, service_queryset
+                )
+                return search_data
+            if education_queryset and not service_queryset:
+                print(" edu exist")
+                search_data = all_user.intersection(user_queryset, education_queryset)
+                return search_data
+            if service_queryset and not education_queryset:
+                print(" service exist")
+                search_data = all_user.intersection(user_queryset, service_queryset)
+                return search_data
+            else:
+                print("all user data")
+                return all_user.intersection(user_queryset)
+
+        except:
+            return []
 
     def post(self, request):
         data = request.data
-        # print(request.data)
         search_user = self.get_user(data)
 
         details = User.objects.filter(userid__in=search_user).values(

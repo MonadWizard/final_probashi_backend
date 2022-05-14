@@ -409,7 +409,7 @@ class ChangeEmailVerifyAPIView(views.APIView):
             relativeLink = reverse("change-email-response")
             absurl = "http://" + current_site + relativeLink + "?token=" + str(token)
 
-            print("absurl::", absurl)
+            # print("absurl::", absurl)
 
             email_body = (
                 "Hi "
@@ -443,7 +443,7 @@ class change_email_responseView(views.APIView):
                 token, settings.SECRET_KEY, algorithms=["HS256"]
             )
 
-            print("verified_mail_payload:", verified_mail_payload)
+            # print("verified_mail_payload:", verified_mail_payload)
 
             """
             {'user_email': 'demotest.monad@gmail.com', 'exp': 1652248458, 'iat': 1652246658}
@@ -480,15 +480,15 @@ class CheckChangableEmailView(views.APIView):
         print("req_email:", req_email)
 
         try:
-            expected_email = mailVerify.objects.filter(user_email=req_email).values()
+            expected_email = mailVerify.objects.get(user_email=req_email)
 
             # print("expected_email:", expected_email)
 
             mailVerify.objects.filter(updated_at__lt=timezone.now()).delete()
 
             if (
-                user.userid == expected_email[0]["user_id"]
-                and expected_email[0]["updated_at"] >= timezone.now()
+                user.userid == expected_email.user_id
+                and expected_email.updated_at >= timezone.now()
             ):
                 return Response({"mail found": True}, status=status.HTTP_200_OK)
             return Response({"mail found": False}, status=status.HTTP_400_BAD_REQUEST)
