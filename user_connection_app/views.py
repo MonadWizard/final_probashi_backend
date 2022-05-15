@@ -451,7 +451,8 @@ class UserSearchField(views.APIView):
     def get_user(self, data):
         user_name = data["user_fullname"]
         search_data = User.objects.filter(
-            Q(user_fullname__contains=user_name) | Q(user_username__contains=user_name)
+            Q(user_fullname__icontains=user_name)
+            | Q(user_username__icontains=user_name)
         )
         return search_data
 
