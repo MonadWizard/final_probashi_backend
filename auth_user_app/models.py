@@ -143,7 +143,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class PhoneOTP(models.Model):
-    user_callphone = models.CharField(max_length=30, db_index=True)
+    user_callphone = models.CharField(max_length=200, db_index=True)
     otp = models.CharField(max_length=4, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField()

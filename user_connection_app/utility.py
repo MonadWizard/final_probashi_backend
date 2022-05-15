@@ -23,7 +23,10 @@ def insert_user(friendsuggestion, rest_user, user):
         # friendsuggestion.location = "{" + str(user.userid) + "}"
         print("friendsuggation:::::::", friendsuggestion.location)
     else:
-        friendsuggestion.location.append(user.userid)
+        if (user.user_residential_district == rest_user.user_residential_district) or (
+            user.user_nonresidential_country == rest_user.user_nonresidential_country
+        ):
+            friendsuggestion.location.append(rest_user.userid)
 
     # if friendsuggestion.location is None:
     #     friendsuggestion.location = "{" + str(user.userid) + "}"
@@ -36,25 +39,16 @@ def insert_user(friendsuggestion, rest_user, user):
         friendsuggestion.goals = []
         friendsuggestion.goals.append(user.userid)
     else:
-        friendsuggestion.goals.append(user.userid)
+        if set(user_goals) & set(rest_user_goals):
+            friendsuggestion.goals.append(rest_user.userid)
 
     if friendsuggestion.interest is None:
         # friendsuggestion.interest = "{" + str(user.userid) + "}"
         friendsuggestion.interest = []
         friendsuggestion.interest.append(user.userid)
     else:
-        friendsuggestion.interest.append(user.userid)
-
-    if (user.user_residential_district == rest_user.user_residential_district) or (
-        user.user_nonresidential_country == rest_user.user_nonresidential_country
-    ):
-        friendsuggestion.location.append(rest_user.userid)
-
-    if set(user_interested_area) & set(rest_user_interested_area):
-        friendsuggestion.interest.append(rest_user.userid)
-
-    if set(user_goals) & set(rest_user_goals):
-        friendsuggestion.goals.append(rest_user.userid)
+        if set(user_interested_area) & set(rest_user_interested_area):
+            friendsuggestion.interest.append(rest_user.userid)
 
     friendsuggestion.save()
 
@@ -81,7 +75,7 @@ def insert_user(friendsuggestion, rest_user, user):
 # @sync_to_async
 def match_friends(user_id):
     user = User.objects.get(userid=user_id)
-    print("user:::::::::::::::::::::", user)
+    print("userid:::::::::::::::::::::", user.userid)
 
     print("user goal:::::::::::::::::::::", (user.user_goal))
     user_goal = user.user_goal if user.user_goal else []
