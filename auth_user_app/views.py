@@ -529,11 +529,7 @@ class InAppChangePassword(generics.UpdateAPIView):
 
                 if request.data["old_password"] == request.data["new_password"]:
                     return Response(
-                        {
-                            "new_password": [
-                                "New password should not be same as old password."
-                            ]
-                        },
+                        "New password should not be same as old password.",
                         status=status.HTTP_400_BAD_REQUEST,
                     )
 
