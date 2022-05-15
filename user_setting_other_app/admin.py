@@ -1,6 +1,12 @@
 from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
-from .models import StaticSettingData, PromoCodeData, User_settings, Notification
+from .models import (
+    StaticSettingData,
+    PromoCodeData,
+    User_settings,
+    Notification,
+    Facing_trouble,
+)
 from .resource import (
     PromoCodeDataPropertyAdminResource,
     StaticSettingDataPropertyAdminResource,
@@ -26,3 +32,4 @@ class StaticSettingAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 admin.site.register(User_settings)
 admin.site.register(Notification)
+admin.site.register(Facing_trouble)

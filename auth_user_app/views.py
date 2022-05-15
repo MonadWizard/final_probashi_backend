@@ -716,7 +716,7 @@ class PhoneNumberLogin(views.APIView):
 
 
 class PhoneUpdateRegisterView(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     renderer_classes = [UserRenderer]
 
     def get_object(self, user_callphone):
