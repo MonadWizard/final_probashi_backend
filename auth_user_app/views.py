@@ -233,8 +233,11 @@ class RequestPasswordResetEmail(views.APIView):
         otp = random.sample(range(0, 9), 4)
         otp = "".join(map(str, otp))
 
+        print("otp:", user_email)
+
         try:
             user = User.objects.get(user_email=user_email)
+            print("user::::::::", user)
 
             email_body = f"""Hello,{user.user_fullname} \n Welcome back to probashi, your code for reset password is {otp}"""
 
@@ -261,7 +264,8 @@ class RequestPasswordResetEmail(views.APIView):
                 },
                 status=status.HTTP_200_OK,
             )
-        except:
+        except Exception as e:
+            print("e:", e)
             return Response(
                 {
                     "success": False,
@@ -408,6 +412,8 @@ class ChangeEmailVerifyAPIView(views.APIView):
             current_site = get_current_site(request).domain
             relativeLink = reverse("change-email-response")
             absurl = "http://" + current_site + relativeLink + "?token=" + str(token)
+
+            print("absurl:", absurl)
 
             # print("absurl::", absurl)
 
