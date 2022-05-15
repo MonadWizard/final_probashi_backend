@@ -155,7 +155,7 @@ class FavouriteRequestSendView(generics.CreateAPIView):
                 & Q(favourite_request_to__exact=request.data["favourite_request_to"])
             ).exists():
                 return Response(
-                    "You can not send request to same user",
+                    "You already send request to this user",
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 

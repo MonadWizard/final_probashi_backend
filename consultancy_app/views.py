@@ -267,9 +267,12 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
 class Consultancy_Payment_success(views.APIView):
     def post(self, request):
         tran_id = request.data["tran_id"]
+        # print("train id:::::::::::::", request.data)
         try:
-            consultancy_data = ConsultancyPayment.objects.get(tran_id=tran_id)
-            consultancy_sheduleid = consultancy_data.consultancy_sheduleid
+            consultancy_data = ConsultancyPayment.objects.filter(
+                tran_id=tran_id
+            ).values("userid", "consultancy_sheduleid")
+            consultancy_sheduleid = consultancy_data[0]["consultancy_sheduleid"]
             ConsultancyTimeSchudile.objects.filter(id=consultancy_sheduleid).update(
                 is_consultancy_take=True
             )
@@ -310,19 +313,20 @@ class Consultancy_Payment_success(views.APIView):
                 risk_title=request.data["risk_title"],
             )
             return Response("success", status=status.HTTP_200_OK)
-        except:
+        except Exception as e:
+            # print("error::::::", e)
             return Response("fail", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
 def Consultancy_Payment_fail(request):
-
-    return Response("Fail", status=status.HTTP_400_BAD_REQUEST)
+    # print("::::::::::::::::::", request.data)
+    return Response("Fail....", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
 def Consultancy_Payment_cancle(request):
-    # print('::::::::::::::::::',request.data)
+    # print("::::::::::::::::::", request.data)
     return Response("cancle", status=status.HTTP_200_OK)
 
 

@@ -111,7 +111,6 @@ def Consultancy_CREATE_and_GET_session(request, user):
         country = f"{user.user_nonresidential_country}"
         city = f"{user.user_nonresidential_city}"
 
-    # print('::::::::::::::::::',phone)
     post_body = {}
     post_body["store_id"] = "mworg624bb703abfce"
     post_body["store_passwd"] = "mworg624bb703abfce@ssl"
@@ -142,7 +141,6 @@ def Consultancy_CREATE_and_GET_session(request, user):
     # print("::::::::::::::::::::::::",post_body)
     sslcommerz_api_url = "https://sandbox.sslcommerz.com/gwprocess/v4/api.php"
     res = requests.post(sslcommerz_api_url, post_body)
-    # print("::::::::", res)
     resp = {"res": res.json(), "post_body": post_body}
     # print('resp::::::::::', resp)
     return resp
