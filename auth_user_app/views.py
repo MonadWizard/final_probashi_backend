@@ -52,6 +52,7 @@ class MailVerifyRequestView(views.APIView):
         password = data["password"]
 
         try:
+
             # User.objects.get(user_email=user_email)
             provider = User.objects.get(user_email=user_email).auth_provider
             print("user already exists")
@@ -229,24 +230,33 @@ class RequestPasswordResetEmail(views.APIView):
 
     def post(self, request):
 
-        user_email = request.data.get("user_email", "")
+        change_email = request.data.get("change_email", "")
+        user_id = request.data.get("user_id", "")
         otp = random.sample(range(0, 9), 4)
         otp = "".join(map(str, otp))
 
         try:
-            user = User.objects.get(user_email=user_email)
-
+            user = User.objects.get(user_email=change_email)
+            return Response(
+                {
+                    "success": False,
+                    "message": "Email already exists",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except:
+            user = User.objects.get(userid=user_id)
             email_body = f"""Hello,{user.user_fullname} \n Welcome back to probashi, your code for reset password is {otp}"""
 
             data = {
                 "email_body": email_body,
-                "to_email": user.user_email,
+                "to_email": change_email,
                 "email_subject": "Reset your passsword",
             }
             Util.send_email(data)
 
             serializerdata = {
-                "user_callphone": user_email,
+                "user_callphone": change_email,
                 "otp": otp,
                 "updated_at": timezone.now() + timezone.timedelta(minutes=5),
             }
@@ -260,14 +270,6 @@ class RequestPasswordResetEmail(views.APIView):
                     "message": "We have sent you a code to reset your password",
                 },
                 status=status.HTTP_200_OK,
-            )
-        except:
-            return Response(
-                {
-                    "success": False,
-                    "message": "Email Does not exists",
-                },
-                status=status.HTTP_400_BAD_REQUEST,
             )
 
 
