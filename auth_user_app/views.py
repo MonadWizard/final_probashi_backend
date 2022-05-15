@@ -413,7 +413,7 @@ class ChangeEmailVerifyAPIView(views.APIView):
             relativeLink = reverse("change-email-response")
             absurl = "http://" + current_site + relativeLink + "?token=" + str(token)
 
-            print("absurl:", absurl)
+            # print("absurl:", absurl)
 
             # print("absurl::", absurl)
 
@@ -464,6 +464,9 @@ class change_email_responseView(views.APIView):
 
             serializer = takeVarifiedEmailSerializer(data=serializerdata)
             serializer.is_valid(raise_exception=True)
+            mailVerify.objects.filter(
+                user_email=verified_mail_payload["user_email"]
+            ).delete()
             serializer.save()
 
             html = "<html><body>Verification Success. It's time for use new mail after complete probashi app processes</body></html>"
