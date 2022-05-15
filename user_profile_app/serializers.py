@@ -45,7 +45,7 @@ class UserEditPrifileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            "user_fullname_passport",
+            "user_fullname",
             "user_username",
             "user_gender",
             "user_dob",
@@ -56,7 +56,7 @@ class UserEditPrifileSerializer(serializers.ModelSerializer):
 class UserEditPrifileWithoutImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["user_fullname_passport", "user_username", "user_gender", "user_dob"]
+        fields = ["user_fullname", "user_username", "user_gender", "user_dob"]
 
 
 class UserInterestedAreaSerializer(serializers.ModelSerializer):

@@ -106,6 +106,9 @@ class UserEditProfile(views.APIView):
     def put(self, request, userid):
         userid = self.get_user(userid)
 
+        # request.data["user_fullname"] = request.data["user_fullname_passport"]
+        # del request.data["user_fullname_passport"]
+
         if request.data["user_photopath"] == "":
             serializer = UserEditPrifileWithoutImageSerializer(
                 userid, data=request.data

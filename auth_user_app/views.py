@@ -190,8 +190,8 @@ class UpdateRegisterView(views.APIView):
     def put(self, request, user_email):
         # print('request.data:', request.data)
         user_email = self.get_object(user_email)
-        request.data["user_fullname"] = request.data["user_fullname_passport"]
-        del request.data["user_fullname_passport"]
+        # request.data["user_fullname"] = request.data["user_fullname_passport"]
+        # del request.data["user_fullname_passport"]
         fullname_pasport = request.data["user_fullname"]
         serializer = UpdateRegisterSerializer(user_email, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -731,8 +731,8 @@ class PhoneUpdateRegisterView(views.APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, user_callphone):
-        request.data["user_fullname"] = request.data["user_fullname_passport"]
-        del request.data["user_fullname_passport"]
+        # request.data["user_fullname"] = request.data["user_fullname_passport"]
+        # del request.data["user_fullname_passport"]
 
         user_callphone = self.get_object(user_callphone)
         fullname_pasport = request.data["user_fullname"]

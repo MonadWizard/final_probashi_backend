@@ -95,7 +95,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_device_typeserial = models.CharField(
         max_length=30, blank=True, null=True, db_index=True
     )
-    user_fullname_passport = models.CharField(max_length=200, blank=True, null=True)
+    # user_fullname_passport = models.CharField(max_length=200, blank=True, null=True)
     user_username = models.CharField(max_length=100, unique=True, blank=True, null=True)
     user_gender = models.CharField(max_length=20, blank=True, null=True)
     user_dob = models.DateField(blank=True, null=True)
