@@ -23,6 +23,7 @@ from .views import (
     ServiceSearchFilter,
     ServiceSearchField,
     SpecificServiceDescription,
+    ConsultancyInfo
 )
 
 
@@ -120,4 +121,6 @@ urlpatterns = [
         SpecificServiceDescription.as_view(),
         name="SpecificServiceDescription",
     ),
+    path("consultancy-info/",ConsultancyInfo.as_view(),name="ConsultancyInfo"),
+
 ]

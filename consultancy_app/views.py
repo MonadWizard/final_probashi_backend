@@ -808,11 +808,20 @@ class SpecificServiceDescription(views.APIView):
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
 
 
+class ConsultancyInfo(views.APIView):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    # renderer_classes = [UserRenderer]
 
+    def get(self, request):
+        consultancy_id = request.query_params.get("id")
 
-
-
-
-
-
-
+        if consultancy := ConsultancyCreate.objects.filter(id=consultancy_id):
+            context = {"success": True, "consultancy": consultancy.values().first()}
+            return Response(context, status=status.HTTP_200_OK)
+        err_context = {"success": False, "message": "invalid consultancy id"}
+        return Response(
+            err_context,
+            status=status.HTTP_400_BAD_REQUEST,
+        )
