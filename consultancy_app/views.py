@@ -806,3 +806,13 @@ class SpecificServiceDescription(views.APIView):
 
             return Response(consultancy_description[0], status=status.HTTP_200_OK)
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+

@@ -129,7 +129,7 @@ class PromoCodeData(models.Model):
 
 
 class User_settings(models.Model):
-    userid = models.OneToOneField(User, on_delete=models.DO_NOTHING)
+    userid = models.OneToOneField(User, on_delete=models.CASCADE)
     user_mail_notification_enable = models.BooleanField(default=True)
     user_monthly_newsleter_enable = models.BooleanField(default=True)
     user_reward_point = models.IntegerField(default=0)
@@ -137,7 +137,7 @@ class User_settings(models.Model):
 
 
 class Facing_trouble(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_problem_message = models.TextField(blank=True, null=True)
     user_problem_photo_path = models.ImageField(
         upload_to="probashi_app/facing_trouble", blank=True, null=True
@@ -146,10 +146,10 @@ class Facing_trouble(models.Model):
 
 class Notification(models.Model):
     userid = models.ForeignKey(
-        User, related_name="notification_user", on_delete=models.DO_NOTHING
+        User, related_name="notification_user", on_delete=models.CASCADE
     )
     receiverid = models.ForeignKey(
-        User, related_name="notification_receiver", on_delete=models.DO_NOTHING
+        User, related_name="notification_receiver", on_delete=models.CASCADE
     )
     notification_title = models.CharField(max_length=255, blank=True, null=True)
     notification_description = models.TextField(blank=True, null=True)

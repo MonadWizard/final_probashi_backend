@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 class Blog(models.Model):
     userid = models.ForeignKey(
-        User, related_name="user_blog", on_delete=models.DO_NOTHING
+        User, related_name="user_blog", on_delete=models.CASCADE
     )
     userblog_title = models.CharField(max_length=200, blank=True, null=True)
     userblog_discription = models.TextField(blank=True, null=True)
@@ -21,10 +21,10 @@ class Blog(models.Model):
 
 class Blog_comment(models.Model):
     userid = models.ForeignKey(
-        User, related_name="user_comment", on_delete=models.DO_NOTHING
+        User, related_name="user_comment", on_delete=models.CASCADE
     )
     blogid = models.ForeignKey(
-        Blog, related_name="blog_comment", on_delete=models.DO_NOTHING
+        Blog, related_name="blog_comment", on_delete=models.CASCADE
     )
     blogcomment = models.TextField(blank=True, null=True)
     blogcomment_publisherlocation = models.CharField(
@@ -34,10 +34,10 @@ class Blog_comment(models.Model):
 
 class Blog_reaction(models.Model):
     userid = models.ForeignKey(
-        User, related_name="user_reaction", on_delete=models.DO_NOTHING
+        User, related_name="user_reaction", on_delete=models.CASCADE
     )
     blogid = models.ForeignKey(
-        Blog, related_name="blog_reaction", on_delete=models.DO_NOTHING
+        Blog, related_name="blog_reaction", on_delete=models.CASCADE
     )
     is_user_like = models.BooleanField(default=False)
     is_user_dislike = models.BooleanField(default=False)

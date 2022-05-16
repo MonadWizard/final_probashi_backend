@@ -4,7 +4,7 @@ from auth_user_app.models import User
 
 class User_socialaccount_and_about(models.Model):
     userid = models.OneToOneField(
-        User, related_name="user_socialaboutdata", on_delete=models.DO_NOTHING
+        User, related_name="user_socialaboutdata", on_delete=models.CASCADE
     )
     user_about = models.TextField(blank=True, null=True)
     user_fbaccount = models.CharField(max_length=200, blank=True, null=True)
@@ -26,7 +26,7 @@ class User_socialaccount_and_about(models.Model):
 
 class User_experience(models.Model):
     userid = models.ForeignKey(
-        User, related_name="user_experiencedata", on_delete=models.DO_NOTHING
+        User, related_name="user_experiencedata", on_delete=models.CASCADE
     )
     user_designation = models.CharField(max_length=200, blank=True, null=True)
     user_companyname = models.CharField(max_length=200, blank=True, null=True)
@@ -37,7 +37,7 @@ class User_experience(models.Model):
 
 class User_education(models.Model):
     userid = models.ForeignKey(
-        User, related_name="user_educationdata", on_delete=models.DO_NOTHING
+        User, related_name="user_educationdata", on_delete=models.CASCADE
     )
     user_edu_degree = models.CharField(max_length=200, blank=True, null=True)
     user_edu_institutename = models.CharField(max_length=200, blank=True, null=True)
@@ -50,7 +50,7 @@ class User_education(models.Model):
 
 class User_idverification(models.Model):
     userid = models.ForeignKey(
-        User, related_name="user_idverificationdata", on_delete=models.DO_NOTHING
+        User, related_name="user_idverificationdata", on_delete=models.CASCADE
     )
     is_user_permanent_resident = models.BooleanField(default=False)
     user_verify_id_type = models.CharField(max_length=200, blank=True, null=True)

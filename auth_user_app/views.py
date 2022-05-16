@@ -520,6 +520,7 @@ class InAppChangePassword(generics.UpdateAPIView):
         self.object = self.get_object()
 
         serializer = None
+        
         if request.data["user_email"] != "" or request.data["new_password"] != "":
             serializer = UserEmailandPasswordChangeSerializer(data=request.data)
             print("serializer:", serializer.is_valid())
@@ -535,7 +536,7 @@ class InAppChangePassword(generics.UpdateAPIView):
 
                 if not self.object.check_password(request.data["old_password"]):
                     return Response(
-                        {"old_password": ["Wrong password."]},
+                        "Wrong password.",
                         status=status.HTTP_400_BAD_REQUEST,
                     )
 
@@ -543,7 +544,8 @@ class InAppChangePassword(generics.UpdateAPIView):
                     request.data["user_email"] != ""
                     or request.data["new_password"] != ""
                 ):
-                    self.object.set_password(serializer.data.get("new_password"))
+                    if request.data["new_password"] != "":
+                        self.object.set_password(serializer.data.get("new_password"))
 
                     if request.data["user_email"] != "":
                         self.object.user_email = request.data.get("user_email")
@@ -761,3 +763,18 @@ class PhoneUpdateRegisterView(views.APIView):
 
         # Util.send_email(data)
         return Response(user_data, status=status.HTTP_200_OK)
+
+
+class DeleteUserView(views.APIView):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+
+    def post(self, request):
+        user = self.request.user
+        try:
+            User.objects.get(userid=user.userid)
+            User.is_active == False
+            return Response("Success", status=status.HTTP_200_OK)
+        except:
+            return Response("User not found", status=status.HTTP_400_BAD_REQUEST)

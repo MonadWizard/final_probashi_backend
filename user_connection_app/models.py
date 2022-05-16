@@ -5,10 +5,10 @@ from django.contrib.postgres.fields import ArrayField
 
 class UserFavoutireRequestSend(models.Model):
     userid = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, related_name="user_data"
+        User, on_delete=models.CASCADE, related_name="user_data"
     )
     favourite_request_to = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, related_name="connection_request_to"
+        User, on_delete=models.CASCADE, related_name="connection_request_to"
     )
     is_favourite_accept = models.BooleanField(default=False)
     is_favourite_reject = models.BooleanField(default=False)
@@ -17,10 +17,10 @@ class UserFavoutireRequestSend(models.Model):
 
 class UserFavouriteList(models.Model):
     userid = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, related_name="login_user_data"
+        User, on_delete=models.CASCADE, related_name="login_user_data"
     )
     favourite_userid = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, related_name="friend_user_data"
+        User, on_delete=models.CASCADE, related_name="friend_user_data"
     )
     is_unread = models.BooleanField(default=False)
     is_Report = models.BooleanField(default=False)

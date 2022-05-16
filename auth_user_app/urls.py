@@ -19,6 +19,7 @@ from .views import (
     ChangeEmailVerifyAPIView,
     change_email_responseView,
     CheckChangableEmailView,
+    DeleteUserView
 )
 
 from rest_framework_simplejwt.views import (
@@ -106,4 +107,7 @@ urlpatterns = [
         UserNameUniqueStatus.as_view(),
         name="UserNameUniqueStatus",
     ),
+
+    path("delete-user", DeleteUserView.as_view(), name="delete-user"),
+
 ]

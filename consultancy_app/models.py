@@ -7,7 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 
 class ConsultancyCreate(models.Model):
     userid = models.ForeignKey(
-        User, related_name="user_consultancydata", on_delete=models.DO_NOTHING
+        User, related_name="user_consultancydata", on_delete=models.CASCADE
     )
     is_userconsultant_personal = models.BooleanField(default=False)
     is_userconsultant_company = models.BooleanField(default=False)
@@ -134,7 +134,7 @@ class ConsultancyTimeSchudile(models.Model):
     consultancyid = models.ForeignKey(
         ConsultancyCreate,
         related_name="consultancy_timeschudile",
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
     )
     consultancy_timeschudile_startdate = models.DateField(blank=True, null=True)
     consultancy_starttime = models.TimeField(blank=True, null=True)
@@ -147,10 +147,10 @@ class ConsultancyTimeSchudile(models.Model):
 
 
 class UserConsultAppointmentRequest(models.Model):
-    seekerid = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    # consultancy_id = models.ForeignKey(ConsultancyCreate, on_delete=models.DO_NOTHING)
+    seekerid = models.ForeignKey(User, on_delete=models.CASCADE)
+    # consultancy_id = models.ForeignKey(ConsultancyCreate, on_delete=models.CASCADE)
     ConsultancyTimeSchudile = models.ForeignKey(
-        ConsultancyTimeSchudile, on_delete=models.DO_NOTHING
+        ConsultancyTimeSchudile, on_delete=models.CASCADE
     )
     appointment_request_datetime = models.DateTimeField(auto_now_add=True)
     # appointment_seeker_requested_datetime = models.DateTimeField()
@@ -177,7 +177,7 @@ class UserConsultAppointmentRequest(models.Model):
 
 
 class ProUserPayment(models.Model):
-    userid = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    userid = models.ForeignKey(User, on_delete=models.CASCADE)
     tran_id = models.CharField(max_length=200, blank=True, null=True)
     val_id = models.CharField(max_length=200, blank=True, null=True)
     amount = models.CharField(max_length=200, blank=True, null=True)
@@ -212,9 +212,9 @@ class ProUserPayment(models.Model):
 
 
 class ConsultancyPayment(models.Model):
-    userid = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    userid = models.ForeignKey(User, on_delete=models.CASCADE)
     consultancy_sheduleid = models.ForeignKey(
-        ConsultancyTimeSchudile, on_delete=models.DO_NOTHING
+        ConsultancyTimeSchudile, on_delete=models.CASCADE
     )
     tran_id = models.CharField(max_length=200, blank=True, null=True)
     val_id = models.CharField(max_length=200, blank=True, null=True)
