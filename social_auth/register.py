@@ -23,27 +23,33 @@ def register_social_user(provider, user_email, user_fullname, user_image):
     filtered_user_by_email = User.objects.filter(user_email=user_email)
 
     if filtered_user_by_email.exists():
-        print("exist................", filtered_user_by_email[0].auth_provider)
+        # print("exist................", filtered_user_by_email[0].auth_provider)
+        if filtered_user_by_email[0].is_active == True:
+            if provider == filtered_user_by_email[0].auth_provider:
+                social_secret = "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"
+                registered_user = authenticate(
+                    user_email=user_email, password=social_secret
+                )
 
-        if provider == filtered_user_by_email[0].auth_provider:
-            social_secret = "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"
-            registered_user = authenticate(
-                user_email=user_email, password=social_secret
-            )
+                return {
+                    "user_fullname": registered_user.user_fullname,
+                    "user_email": registered_user.user_email,
+                    # "user_image": user_image,
+                    "tokens": registered_user.tokens(),
+                }
 
-            return {
-                "user_fullname": registered_user.user_fullname,
-                "user_email": registered_user.user_email,
-                # "user_image": user_image,
-                "tokens": registered_user.tokens(),
-            }
-
+            else:
+                # raise AuthenticationFailed(
+                #     detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
+                return {
+                    "fail": f"'Please continue your login using ' {filtered_user_by_email[0].auth_provider}"
+                }
         else:
-            # raise AuthenticationFailed(
-            #     detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
-            return {
-                "fail": f"'Please continue your login using ' {filtered_user_by_email[0].auth_provider}"
-            }
+                # raise AuthenticationFailed(
+                #     detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
+                return {
+                    "fail": f"'inactive user ' {filtered_user_by_email[0].auth_provider}"
+                }
 
     else:
         social_secret = "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"

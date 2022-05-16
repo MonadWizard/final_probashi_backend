@@ -234,8 +234,11 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
 
     def get_tokens(self, obj):
         user = User.objects.get(user_callphone=obj["user_callphone"])
-
-        return {"refresh": user.tokens()["refresh"], "access": user.tokens()["access"]}
+        if user.is_active:
+            return {
+                "refresh": user.tokens()["refresh"],
+                "access": user.tokens()["access"],
+            }
 
     class Meta:
         model = User
@@ -254,13 +257,7 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
             user = CustomerBackendForPhoneNumber.authenticate(
                 user_callphone=user_callphone
             )
-        # print("::::::::",user)
-        # print("filtered_user_by_user_callphone::::::",filtered_user_by_user_callphone[0])
-        # print("user_email::::::",type(user_email))
-        # print("filtered_user_by_user_callphone[0].auth_provider::::::",str(filtered_user_by_user_callphone[0]) != user_email)
 
-        # if filtered_user_by_user_callphone.exists() and str(filtered_user_by_user_callphone[0]) != user_callphone:
-        #     raise AuthenticationFailed(detail='Please continue your login using ' + filtered_user_by_user_callphone[0].auth_provider)
         except:
             if not user:
                 raise serializers.ValidationError("Invalid credentials, try again")

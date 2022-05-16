@@ -520,7 +520,7 @@ class InAppChangePassword(generics.UpdateAPIView):
         self.object = self.get_object()
 
         serializer = None
-        
+
         if request.data["user_email"] != "" or request.data["new_password"] != "":
             serializer = UserEmailandPasswordChangeSerializer(data=request.data)
             print("serializer:", serializer.is_valid())
@@ -657,28 +657,35 @@ class LoginVerificationCodeSend(views.APIView):
             user = User.objects.get(user_callphone=request.data["user_callphone"])
             data = request.data
 
-            user_callphone = data["user_callphone"]
-            otp = random.sample(range(0, 9), 4)
-            otp = "".join(map(str, otp))
-            data["otp"] = otp
-            user_fullname = user.user_fullname
+            if user.is_active:
 
-            data["user_fullname"] = user.user_fullname
-            data["updated_at"] = timezone.now() + timezone.timedelta(minutes=5)
+                user_callphone = data["user_callphone"]
+                otp = random.sample(range(0, 9), 4)
+                otp = "".join(map(str, otp))
+                data["otp"] = otp
+                user_fullname = user.user_fullname
 
-            serializer = self.serializer_class(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+                data["user_fullname"] = user.user_fullname
+                data["updated_at"] = timezone.now() + timezone.timedelta(minutes=5)
 
-            data = {f"""প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}"""}
+                serializer = self.serializer_class(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
 
-            send = SendMessage.send_message(user_callphone, data)
-            res_data = {
-                "success": True,
-                "data": serializer.data,
-                "send-message": send,
-            }
-            return Response(res_data, status=status.HTTP_200_OK)
+                data = {f"""প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}"""}
+
+                send = SendMessage.send_message(user_callphone, data)
+                res_data = {
+                    "success": True,
+                    "data": serializer.data,
+                    "send-message": send,
+                }
+                return Response(res_data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"success": False, "message": "Your account is inactive"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         except Exception as e:
             print(e)
             return Response(
@@ -770,11 +777,12 @@ class DeleteUserView(views.APIView):
         permissions.IsAuthenticated,
     ]
 
-    def post(self, request):
+    def get(self, request):
         user = self.request.user
         try:
-            User.objects.get(userid=user.userid)
-            User.is_active == False
+            User.objects.filter(userid=user.userid).update(is_active=False)
+
+            print("user deleted", User.is_active)
             return Response("Success", status=status.HTTP_200_OK)
         except:
             return Response("User not found", status=status.HTTP_400_BAD_REQUEST)

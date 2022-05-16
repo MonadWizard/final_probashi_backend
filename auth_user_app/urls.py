@@ -108,6 +108,6 @@ urlpatterns = [
         name="UserNameUniqueStatus",
     ),
 
-    path("delete-user", DeleteUserView.as_view(), name="delete-user"),
+    path("delete-user/", DeleteUserView.as_view(), name="delete-user"),
 
 ]
