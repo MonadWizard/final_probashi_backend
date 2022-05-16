@@ -75,6 +75,10 @@ class ConsultancyCreateView(generics.ListCreateAPIView):
             serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 serializer.save()
+
+                user.is_consultant = True
+                user.save()
+
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(

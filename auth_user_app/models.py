@@ -80,6 +80,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_consultant = models.BooleanField(default=False)
+    is_complete = models.BooleanField(default=False)
     user_created_at = models.DateTimeField(auto_now_add=True)
 
     is_pro_user = models.BooleanField(default=False)  # work with payment

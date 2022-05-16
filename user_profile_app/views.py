@@ -314,7 +314,7 @@ class UserProfileView(generics.ListAPIView):
         print("complete profile percentage:", complete_profile_persentage)
         if complete_profile_persentage == 100:
             print("profile is 100")
-            user.is_consultant = True
+            user.is_complete = True
             user.save()
 
         dic_serializer = dict(data)
@@ -325,7 +325,7 @@ class UserProfileView(generics.ListAPIView):
     def list(self, request):
 
         user = self.get_user()
-        if user.is_consultant:
+        if user.is_complete:
             serializer = UserProfileWithConsultancyViewSerializer(user)
             print(type(serializer.data))
 
