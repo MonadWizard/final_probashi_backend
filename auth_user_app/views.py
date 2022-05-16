@@ -776,13 +776,16 @@ class DeleteUserView(views.APIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
+    renderer_classes = [UserRenderer]
 
     def get(self, request):
         user = self.request.user
         try:
             User.objects.filter(userid=user.userid).update(is_active=False)
 
-            print("user deleted", User.is_active)
-            return Response("Success", status=status.HTTP_200_OK)
+            # print("user deleted", User.is_active)
+            return Response({"user": "User delete Success"}, status=status.HTTP_200_OK)
         except:
-            return Response("User not found", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"user": "User not found"}, status=status.HTTP_400_BAD_REQUEST
+            )
