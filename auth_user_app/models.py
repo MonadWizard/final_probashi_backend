@@ -153,7 +153,7 @@ class PhoneOTP(models.Model):
     is_used = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.otp
+        return str(self.otp) if self.otp else "otp is none"
 
 
 class mailVerify(models.Model):
@@ -164,4 +164,4 @@ class mailVerify(models.Model):
     # is_used = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user_email
+        return str(self.user_email) if self.user_email else "user_email is none"

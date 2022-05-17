@@ -21,7 +21,7 @@ class User_socialaccount_and_about(models.Model):
     user_immo_visibility = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
-        return str(self.userid)
+        return str(self.userid) if self.userid else "userid is none"
 
 
 class User_experience(models.Model):
@@ -45,7 +45,7 @@ class User_education(models.Model):
     user_edu_enddate = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return self.userid.user_email
+        return str(self.userid.user_email) if self.userid.user_email else "user email is none"
 
 
 class User_idverification(models.Model):

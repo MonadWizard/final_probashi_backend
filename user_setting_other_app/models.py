@@ -125,7 +125,7 @@ class PromoCodeData(models.Model):
     # verbose_name_plural = 'promo_code_data'
 
     def __str__(self):
-        return self.promo_code
+        return str(self.promo_code) if self.promo_code else "No Data"
 
 
 class User_settings(models.Model):
@@ -158,4 +158,4 @@ class Notification(models.Model):
     is_notification_delete = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.notification_title
+        return str(self.notification_title) if self.notification_title else "No Data"

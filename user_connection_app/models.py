@@ -27,7 +27,7 @@ class UserFavouriteList(models.Model):
     is_unmatch = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.userid.user_fullname
+        return str(self.userid.user_fullname) if self.userid else "user_fullname is none"
 
 
 # -------------------X----------------------------friend matching-------------------------------X-----------------
@@ -40,4 +40,4 @@ class FriendsSuggation(models.Model):
     interest = ArrayField(models.CharField(max_length=200), blank=True, null=True)
 
     def __str__(self):
-        return str(self.user)
+        return str(self.user) if self.user else "user is none"
