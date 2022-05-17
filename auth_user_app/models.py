@@ -136,7 +136,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return str(self.user_fullname)
+        if self.user_fullname:
+            return str(self.user_fullname)
+        return "user_fullname is none"
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)
