@@ -6,7 +6,7 @@ from rest_framework_simplejwt.token_blacklist.admin import OutstandingTokenAdmin
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ["user_fullname", "user_email", "user_created_at"]
+    list_display = ["user_fullname", "user_created_at"]
 
 
 admin.site.register(User, UserAdmin)
