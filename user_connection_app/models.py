@@ -4,9 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class UserFavoutireRequestSend(models.Model):
-    userid = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="user_data"
-    )
+    userid = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_data")
     favourite_request_to = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="connection_request_to"
     )
@@ -27,7 +25,9 @@ class UserFavouriteList(models.Model):
     is_unmatch = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.userid.user_fullname) if self.userid else "user_fullname is none"
+        return (
+            str(self.userid.user_fullname) if self.userid else "user_fullname is none"
+        )
 
 
 # -------------------X----------------------------friend matching-------------------------------X-----------------
