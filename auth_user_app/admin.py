@@ -6,10 +6,12 @@ from rest_framework_simplejwt.token_blacklist.admin import OutstandingTokenAdmin
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ["user_fullname", "user_created_at"]
+    list_display = ["user_fullname", "user_email", "user_callphone", "user_created_at"]
 
 
 admin.site.register(User, UserAdmin)
+# admin.site.register(User)
+
 
 # FOR REMOVE USER WITH THEIR OUTSTANDING TOKENS
 class NewOutstandingTokenAdmin(OutstandingTokenAdmin):
