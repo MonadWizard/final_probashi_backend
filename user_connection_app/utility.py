@@ -16,8 +16,14 @@ def match_friends(user_id):
     )
     queryset = User.objects.filter(
         (
-            Q(user_residential_district=user.user_residential_district)
-            | Q(user_nonresidential_city=user.user_nonresidential_city)
+            (
+                Q(user_residential_district=user.user_residential_district)
+                & Q(user_residential_district__isnull=False)
+            )
+            | (
+                Q(user_nonresidential_city=user.user_nonresidential_city)
+                & Q(user_nonresidential_city__isnull=False)
+            )
             | Q(user_goal__contains=user_goal)
             | Q(user_interested_area__contains=user_interested_area)
         )
@@ -75,27 +81,30 @@ def match_friends(user_id):
         ):
             if friendsuggestion.location is None:
                 friendsuggestion.location = []
-
-            friendsuggestion.location.append(user.userid)
-            user_friendsuggestion.location.append(rest_user.userid)
+            if user.userid not in friendsuggestion.location:
+                friendsuggestion.location.append(user.userid)
+            if rest_user.userid not in user_friendsuggestion.location:
+                user_friendsuggestion.location.append(rest_user.userid)
 
         if rest_user.user_goal is not None and set(user_goal) & set(
             rest_user.user_goal
         ):
             if friendsuggestion.goals is None:
                 friendsuggestion.goals = []
-
-            friendsuggestion.goals.append(user.userid)
-            user_friendsuggestion.goals.append(rest_user.userid)
+            if user.userid not in friendsuggestion.goals:
+                friendsuggestion.goals.append(user.userid)
+            if rest_user.userid not in user_friendsuggestion.goals:
+                user_friendsuggestion.goals.append(rest_user.userid)
 
         if rest_user.user_interested_area is not None and set(
             user_interested_area
         ) & set(rest_user.user_interested_area):
             if friendsuggestion.interest is None:
                 friendsuggestion.interest = []
-
-            friendsuggestion.interest.append(user.userid)
-            user_friendsuggestion.interest.append(rest_user.userid)
+            if user.userid not in friendsuggestion.interest:
+                friendsuggestion.interest.append(user.userid)
+            if rest_user.userid not in user_friendsuggestion.interest:
+                user_friendsuggestion.interest.append(rest_user.userid)
 
         friendsuggestion.save()
 
