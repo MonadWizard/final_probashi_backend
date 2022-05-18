@@ -38,6 +38,16 @@ class FriendsSuggation(models.Model):
     location = ArrayField(models.CharField(max_length=200), blank=True, null=True)
     goals = ArrayField(models.CharField(max_length=200), blank=True, null=True)
     interest = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    durationyear_abroad = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    current_location_durationyear = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    industry = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    areaof_experience = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    industry_experienceyear = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    serviceholder = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    selfemployed = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    currentdesignation = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    company_name = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    office_address = ArrayField(models.CharField(max_length=200), blank=True, null=True)
 
     def __str__(self):
         return str(self.user) if self.user else "user is none"
