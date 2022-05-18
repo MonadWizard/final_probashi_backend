@@ -114,7 +114,10 @@ class DemoConsumer(AsyncWebsocketConsumer):
             }
 
             table_status = await save_chat_data(data=data)
-            print("table_status::::::::::::", table_status)
+            # print("table_status::::::::::::", table_status)
+
+            self.room_name_temp = text_data_json["receiverid"]
+            self.room_group_name_temp = "chat_" + self.room_name_temp
 
             if table_status == "exist":
                 userid = self.room_name
@@ -123,7 +126,19 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 data = dict(data)
                 data_l = list(data.values())
                 data_l = list(filter(None, data_l))
-                chat_data = data_l
+                # chat_data = data_l
+                self.room_group_name_2 = "chat_" + self.room_name
+
+                await self.channel_layer.group_send(
+                    self.room_group_name_2,
+                    {
+                        "type": "send_chat",
+                        # 'data': data,
+                        "data": data_l,
+                    },
+                )
+
+                # print("chat_data::::::::::::::::::::::::", chat_data)
 
             chat_data = {
                 "type": "single message",
@@ -134,9 +149,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 "message_time": str(timezone.localtime(timezone.now())),
                 "message-type": text_data_json["data"],
             }
-
-            self.room_name_temp = text_data_json["receiverid"]
-            self.room_group_name_temp = "chat_" + self.room_name_temp
 
             await self.channel_layer.group_send(
                 self.room_group_name_temp,
