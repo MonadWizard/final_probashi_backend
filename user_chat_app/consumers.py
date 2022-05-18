@@ -104,6 +104,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             chat_data = data
 
         elif text_data_json["data"] == "text":
+
             data = {
                 "sender": self.room_name,
                 "receiver": text_data_json["receiverid"],
@@ -113,7 +114,16 @@ class DemoConsumer(AsyncWebsocketConsumer):
             }
 
             table_status = await save_chat_data(data=data)
-            print('table_status::::::::::::',table_status)
+            print("table_status::::::::::::", table_status)
+
+            if table_status == "exist":
+                userid = self.room_name
+                limit = 1
+                data = await get_all_chat_data(userid, limit)
+                data = dict(data)
+                data_l = list(data.values())
+                data_l = list(filter(None, data_l))
+                chat_data = data_l
 
             chat_data = {
                 "type": "single message",

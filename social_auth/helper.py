@@ -7,12 +7,12 @@ class Google:
     @staticmethod
     def validate(auth_token):
 
-        print("auth token", auth_token)
+        # print("auth token", auth_token)
         try:
             idinfo = id_token.verify_oauth2_token(
                 auth_token, google_auth_request.Request()
             )
-            print("idinfo::::", idinfo)
+            # print("idinfo::::", idinfo)
 
             if "accounts.google.com" in idinfo["iss"]:
                 return idinfo
