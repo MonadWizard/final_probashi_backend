@@ -40,19 +40,14 @@ class DemoConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         # get previous data
-        data = await get_all_chat_data(self.room_name)
+        limit = 1
+        data = await get_all_chat_data(self.room_name, limit)
         # print('last message::::::::::::',data)
         data = dict(data)
         data_l = list(data.values())
         data_l = list(filter(None, data_l))
         # print("data_l::::::::::::::::::::::::", data_l)
 
-        # 1. get previous notifications (ok)  [how much amount need, no need]
-        # 2. add notification to data (ok)
-        # 3. view pagination notification   [how much amount need, no need]
-        # 3. update notification status
-        # 4. delete notification data
-        #
         noti_data = await get_all_notifications(self.room_name)
 
         # print('noti data::::::::::::',noti_data)
@@ -81,6 +76,24 @@ class DemoConsumer(AsyncWebsocketConsumer):
         if text_data_json["data"] == "friend_match":
             userid = self.room_name
             await match_friends(user_id=userid)
+
+        elif text_data_json["data"] == "paginate_recent_chat":
+            userid = self.room_name
+            limit = int(text_data_json["page"])
+            data = await get_all_chat_data(userid, limit)
+            data = dict(data)
+            data_l = list(data.values())
+            data_l = list(filter(None, data_l))
+            # await self.send(
+            #     text_data=json.dumps(
+            #         {
+            #             "success": True,
+            #             "type": "recent",
+            #             "chat": data_l,
+            #         }
+            #     )
+            # )
+            chat_data = data_l
 
         elif text_data_json["data"] == "reload_previous_chat":
             data = await get_previous_chat_data(

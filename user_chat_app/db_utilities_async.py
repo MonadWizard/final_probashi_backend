@@ -22,12 +22,13 @@ import pytz
 
 
 @sync_to_async
-def get_all_chat_data(userid):
+def get_all_chat_data(userid, limit):
 
+    limit = limit or 1
     chat_list = (
         ChatTable.objects.using("probashi_chat")
         .filter(Q(user_1=userid) & ~Q(user_2=userid))
-        .order_by("-id")
+        .order_by("-id")[(limit - 1) * 2 : (limit * 2)]
     )
     data = {}
     # print('chat list:::::::::',chat_list)
@@ -42,6 +43,8 @@ def get_all_chat_data(userid):
 
 @sync_to_async
 def save_chat_data(data):
+
+    table_status = ""
     try:
         chat_table = ChatTable.objects.using("probashi_chat").get(
             user_1=data["sender"], user_2=data["receiver"]
@@ -49,7 +52,7 @@ def save_chat_data(data):
         # print('table name::', chat_table.table_name)
 
         # print('data::::::::::', data)
-
+        table_status = "exist"
         print("table-found")
     except:
         table_title = create_chat_table(user_1=data["sender"], user_2=data["receiver"])
@@ -59,6 +62,7 @@ def save_chat_data(data):
         chat_table = ChatTable.objects.using("probashi_chat").create(
             user_1=data["receiver"], user_2=data["sender"], table_name=table_title
         )
+        table_status = "new"
         print("create-a-table")
 
     # print('chat table', chat_table)

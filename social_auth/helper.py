@@ -6,6 +6,8 @@ class Google:
     # validate method Queries the Google oAUTH2 api to fetch the user info
     @staticmethod
     def validate(auth_token):
+
+        print("auth token", auth_token)
         try:
             idinfo = id_token.verify_oauth2_token(
                 auth_token, google_auth_request.Request()

@@ -26,7 +26,7 @@ def register_social_user(provider, user_email, user_fullname, user_image):
         # print("exist................", filtered_user_by_email[0].auth_provider)
         if filtered_user_by_email[0].is_active == True:
             if provider == filtered_user_by_email[0].auth_provider:
-                social_secret = "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"
+                social_secret = "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"
                 registered_user = authenticate(
                     user_email=user_email, password=social_secret
                 )
@@ -52,7 +52,7 @@ def register_social_user(provider, user_email, user_fullname, user_image):
                 }
 
     else:
-        social_secret = "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"
+        social_secret = "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"
 
         current_time = datetime.datetime.now()
         current_time = current_time.strftime("%m%d%H%M%S%f")
