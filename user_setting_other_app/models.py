@@ -1,6 +1,8 @@
 from django.db import models
 from django.dispatch import receiver
 from auth_user_app.models import User
+from django.contrib.postgres.fields import ArrayField
+
 
 # Create your models here.
 
@@ -78,6 +80,8 @@ class StaticSettingData(models.Model):
     tradefacilitationservice_Purpose = models.CharField(
         max_length=200, blank=True, null=True
     )
+    # country_name = models.CharField(max_length=200, blank=True, null=True)
+    # state_name = ArrayField(models.CharField(max_length=200), blank=True, null=True)
 
     def __str__(self):
         if (

@@ -34,47 +34,36 @@ def match_friends(user_id):
                 "userid"
             )
         )
-        |
-        (
+        | (
             Q(user_durationyear_abroad=user.user_durationyear_abroad)
             & Q(user_durationyear_abroad__isnull=False)
         )
-        |
-        (
-            Q(user_current_location_durationyear=user.user_current_location_durationyear)
+        | (
+            Q(
+                user_current_location_durationyear=user.user_current_location_durationyear
+            )
             & Q(user_current_location_durationyear__isnull=False)
         )
-        |
-        (
-            Q(user_industry=user.user_industry)
-            & Q(user_industry__isnull=False)
-        )
-        |
-        (
+        | (Q(user_industry=user.user_industry) & Q(user_industry__isnull=False))
+        | (
             Q(user_areaof_experience=user.user_areaof_experience)
             & Q(user_areaof_experience__isnull=False)
         )
-        |
-        (
+        | (
             Q(user_industry_experienceyear=user.user_industry_experienceyear)
             & Q(user_industry_experienceyear__isnull=False)
         )
-        |
-        Q(is_user_serviceholder=user.user_industry_experienceyear)
-        |
-        Q(is_user_selfemployed=user.is_user_selfemployed)
-        |
-        (
+        | Q(is_user_serviceholder=user.user_industry_experienceyear)
+        | Q(is_user_selfemployed=user.is_user_selfemployed)
+        | (
             Q(user_currentdesignation=user.user_currentdesignation)
             & Q(user_currentdesignation__isnull=False)
         )
-        |
-        (
+        | (
             Q(user_company_name=user.user_company_name)
             & Q(user_company_name__isnull=False)
         )
-        |
-        (
+        | (
             Q(user_office_address=user.user_office_address)
             & Q(user_office_address__isnull=False)
         )
@@ -97,10 +86,39 @@ def match_friends(user_id):
     if user_friendsuggestion.interest is None:
         user_friendsuggestion.interest = []
 
+    if user_friendsuggestion.durationyear_abroad is None:
+        user_friendsuggestion.durationyear_abroad = []
+
+    if user_friendsuggestion.current_location_durationyear is None:
+        user_friendsuggestion.current_location_durationyear = []
+
+    if user_friendsuggestion.industry is None:
+        user_friendsuggestion.industry = []
+
+    if user_friendsuggestion.areaof_experience is None:
+        user_friendsuggestion.areaof_experience = []
+
+    if user_friendsuggestion.industry_experienceyear is None:
+        user_friendsuggestion.industry_experienceyear = []
+
+    if user_friendsuggestion.serviceholder is None:
+        user_friendsuggestion.serviceholder = []
+
+    if user_friendsuggestion.selfemployed is None:
+        user_friendsuggestion.selfemployed = []
+
+    if user_friendsuggestion.currentdesignation is None:
+        user_friendsuggestion.currentdesignation = []
+
+    if user_friendsuggestion.company_name is None:
+        user_friendsuggestion.company_name = []
+
+    if user_friendsuggestion.office_address is None:
+        user_friendsuggestion.office_address = []
+
     for rest_user in rest_users:
         try:
-            friendsuggestion = FriendsSuggation.objects.get(
-                user=rest_user.userid)
+            friendsuggestion = FriendsSuggation.objects.get(user=rest_user.userid)
         except:
             friendsuggestion = FriendsSuggation.objects.create(user=rest_user)
 
@@ -108,10 +126,12 @@ def match_friends(user_id):
         # then update this field in friendsuggestion
 
         if (
-            rest_user.user_residential_district is not None and rest_user.user_residential_district != ""
+            rest_user.user_residential_district is not None
+            and rest_user.user_residential_district != ""
             and rest_user.user_residential_district == user.user_residential_district
         ) or (
-            rest_user.user_nonresidential_city is not None and rest_user.user_nonresidential_city != ""
+            rest_user.user_nonresidential_city is not None
+            and rest_user.user_nonresidential_city != ""
             and rest_user.user_nonresidential_city == user.user_nonresidential_city
         ):
             if friendsuggestion.location is None:
@@ -141,26 +161,41 @@ def match_friends(user_id):
             if rest_user.userid not in user_friendsuggestion.interest:
                 user_friendsuggestion.interest.append(rest_user.userid)
 
-        if rest_user.user_durationyear_abroad is not None and rest_user.user_durationyear_abroad != "" and rest_user.user_durationyear_abroad == user.user_durationyear_abroad:
+        if (
+            rest_user.user_durationyear_abroad is not None
+            and rest_user.user_durationyear_abroad != ""
+            and rest_user.user_durationyear_abroad == user.user_durationyear_abroad
+        ):
             if friendsuggestion.durationyear_abroad is None:
                 friendsuggestion.durationyear_abroad = []
             if user.userid not in friendsuggestion.durationyear_abroad:
                 friendsuggestion.durationyear_abroad.append(user.userid)
             if rest_user.userid not in user_friendsuggestion.durationyear_abroad:
-                user_friendsuggestion.durationyear_abroad.append(
-                    rest_user.userid)
+                user_friendsuggestion.durationyear_abroad.append(rest_user.userid)
 
-        if rest_user.user_current_location_durationyear is not None and rest_user.user_current_location_durationyear != "" and rest_user.user_current_location_durationyear == user.user_current_location_durationyear:
+        if (
+            rest_user.user_current_location_durationyear is not None
+            and rest_user.user_current_location_durationyear != ""
+            and rest_user.user_current_location_durationyear
+            == user.user_current_location_durationyear
+        ):
             if friendsuggestion.current_location_durationyear is None:
                 friendsuggestion.current_location_durationyear = []
             if user.userid not in friendsuggestion.current_location_durationyear:
-                friendsuggestion.current_location_durationyear.append(
-                    user.userid)
-            if rest_user.userid not in user_friendsuggestion.current_location_durationyear:
+                friendsuggestion.current_location_durationyear.append(user.userid)
+            if (
+                rest_user.userid
+                not in user_friendsuggestion.current_location_durationyear
+            ):
                 user_friendsuggestion.current_location_durationyear.append(
-                    rest_user.userid)
+                    rest_user.userid
+                )
 
-        if rest_user.user_industry is not None and rest_user.user_industry != "" and rest_user.user_industry == user.user_industry:
+        if (
+            rest_user.user_industry is not None
+            and rest_user.user_industry != ""
+            and rest_user.user_industry == user.user_industry
+        ):
             if friendsuggestion.industry is None:
                 friendsuggestion.industry = []
             if user.userid not in friendsuggestion.industry:
@@ -168,23 +203,30 @@ def match_friends(user_id):
             if rest_user.userid not in user_friendsuggestion.industry:
                 user_friendsuggestion.industry.append(rest_user.userid)
 
-        if rest_user.user_areaof_experience is not None and rest_user.user_areaof_experience != "" and rest_user.user_areaof_experience == user.user_areaof_experience:
+        if (
+            rest_user.user_areaof_experience is not None
+            and rest_user.user_areaof_experience != ""
+            and rest_user.user_areaof_experience == user.user_areaof_experience
+        ):
             if friendsuggestion.areaof_experience is None:
                 friendsuggestion.areaof_experience = []
             if user.userid not in friendsuggestion.areaof_experience:
                 friendsuggestion.areaof_experience.append(user.userid)
             if rest_user.userid not in user_friendsuggestion.areaof_experience:
-                user_friendsuggestion.areaof_experience.append(
-                    rest_user.userid)
+                user_friendsuggestion.areaof_experience.append(rest_user.userid)
 
-        if rest_user.user_industry_experienceyear is not None and rest_user.user_industry_experienceyear != "" and rest_user.user_industry_experienceyear == user.user_industry_experienceyear:
+        if (
+            rest_user.user_industry_experienceyear is not None
+            and rest_user.user_industry_experienceyear != ""
+            and rest_user.user_industry_experienceyear
+            == user.user_industry_experienceyear
+        ):
             if friendsuggestion.industry_experienceyear is None:
                 friendsuggestion.industry_experienceyear = []
             if user.userid not in friendsuggestion.industry_experienceyear:
                 friendsuggestion.industry_experienceyear.append(user.userid)
             if rest_user.userid not in user_friendsuggestion.industry_experienceyear:
-                user_friendsuggestion.industry_experienceyear.append(
-                    rest_user.userid)
+                user_friendsuggestion.industry_experienceyear.append(rest_user.userid)
 
         if rest_user.is_user_serviceholder == user.is_user_serviceholder:
             if friendsuggestion.serviceholder is None:
@@ -202,16 +244,23 @@ def match_friends(user_id):
             if rest_user.userid not in user_friendsuggestion.selfemployed:
                 user_friendsuggestion.selfemployed.append(rest_user.userid)
 
-        if rest_user.user_currentdesignation is not None and rest_user.user_currentdesignation != "" and rest_user.user_currentdesignation == user.user_currentdesignation:
+        if (
+            rest_user.user_currentdesignation is not None
+            and rest_user.user_currentdesignation != ""
+            and rest_user.user_currentdesignation == user.user_currentdesignation
+        ):
             if friendsuggestion.currentdesignation is None:
                 friendsuggestion.currentdesignation = []
             if user.userid not in friendsuggestion.currentdesignation:
                 friendsuggestion.currentdesignation.append(user.userid)
             if rest_user.userid not in user_friendsuggestion.currentdesignation:
-                user_friendsuggestion.currentdesignation.append(
-                    rest_user.userid)
+                user_friendsuggestion.currentdesignation.append(rest_user.userid)
 
-        if rest_user.user_company_name is not None and rest_user.user_company_name != "" and rest_user.user_company_name == user.user_company_name:
+        if (
+            rest_user.user_company_name is not None
+            and rest_user.user_company_name != ""
+            and rest_user.user_company_name == user.user_company_name
+        ):
             if friendsuggestion.company_name is None:
                 friendsuggestion.company_name = []
             if user.userid not in friendsuggestion.company_name:
@@ -219,7 +268,11 @@ def match_friends(user_id):
             if rest_user.userid not in user_friendsuggestion.company_name:
                 user_friendsuggestion.company_name.append(rest_user.userid)
 
-        if rest_user.user_office_address is not None and rest_user.user_office_address != "" and rest_user.user_office_address == user.user_office_address:
+        if (
+            rest_user.user_office_address is not None
+            and rest_user.user_office_address != ""
+            and rest_user.user_office_address == user.user_office_address
+        ):
             if friendsuggestion.office_address is None:
                 friendsuggestion.office_address = []
             if user.userid not in friendsuggestion.office_address:
