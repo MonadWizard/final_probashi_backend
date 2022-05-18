@@ -163,6 +163,77 @@ class FavouriteRequestSendView(generics.CreateAPIView):
     serializer_class = UserFavouriteRequestSendSerializer
     renderer_classes = [UserRenderer]
 
+    def delete_match_user(self, from_user, to_user):
+        try:
+            friends_suggation_obj = FriendsSuggation.objects.get(user__userid=from_user)
+        except:
+            friends_suggation_obj = None
+
+        if friends_suggation_obj:
+            if (
+                friends_suggation_obj.location
+                and to_user in friends_suggation_obj.location
+            ):
+                friends_suggation_obj.location.remove(to_user)
+            if friends_suggation_obj.goals and to_user in friends_suggation_obj.goals:
+                friends_suggation_obj.goals.remove(to_user)
+            if (
+                friends_suggation_obj.interest
+                and to_user in friends_suggation_obj.interest
+            ):
+                friends_suggation_obj.interest.remove(to_user)
+            if (
+                friends_suggation_obj.durationyear_abroad
+                and to_user in friends_suggation_obj.durationyear_abroad
+            ):
+                friends_suggation_obj.durationyear_abroad.remove(to_user)
+            if (
+                friends_suggation_obj.current_location_durationyear
+                and to_user in friends_suggation_obj.current_location_durationyear
+            ):
+                friends_suggation_obj.current_location_durationyear.remove(to_user)
+            if (
+                friends_suggation_obj.industry
+                and to_user in friends_suggation_obj.industry
+            ):
+                friends_suggation_obj.industry.remove(to_user)
+            if (
+                friends_suggation_obj.areaof_experience
+                and to_user in friends_suggation_obj.areaof_experience
+            ):
+                friends_suggation_obj.areaof_experience.remove(to_user)
+            if (
+                friends_suggation_obj.industry_experienceyear
+                and to_user in friends_suggation_obj.industry_experienceyear
+            ):
+                friends_suggation_obj.industry_experienceyear.remove(to_user)
+            if (
+                friends_suggation_obj.serviceholder
+                and to_user in friends_suggation_obj.serviceholder
+            ):
+                friends_suggation_obj.serviceholder.remove(to_user)
+            if (
+                friends_suggation_obj.selfemployed
+                and to_user in friends_suggation_obj.selfemployed
+            ):
+                friends_suggation_obj.selfemployed.remove(to_user)
+            if (
+                friends_suggation_obj.currentdesignation
+                and to_user in friends_suggation_obj.currentdesignation
+            ):
+                friends_suggation_obj.currentdesignation.remove(to_user)
+            if (
+                friends_suggation_obj.company_name
+                and to_user in friends_suggation_obj.company_name
+            ):
+                friends_suggation_obj.company_name.remove(to_user)
+            if (
+                friends_suggation_obj.office_address
+                and to_user in friends_suggation_obj.office_address
+            ):
+                friends_suggation_obj.office_address.remove(to_user)
+            friends_suggation_obj.save()
+
     def create(self, request):
         user = self.request.user
         if request.data["userid"] == user.userid:
@@ -186,6 +257,12 @@ class FavouriteRequestSendView(generics.CreateAPIView):
                 serializer = self.serializer_class(data=request.data)
                 if serializer.is_valid():
                     serializer.save()
+                    self.delete_match_user(
+                        user.userid, request.data["favourite_request_to"]
+                    )
+                    self.delete_match_user(
+                        request.data["favourite_request_to"], user.userid
+                    )
                     return Response(serializer.data, status=status.HTTP_200_OK)
 
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -372,7 +449,7 @@ class UserSearchFilter(views.APIView):
     ]
     renderer_classes = [UserRenderer]
 
-    def get_user(self, data):
+    def get_user(self, data, user):
         education_data = data["education_data"]
         industry_data = data["industry_data"]
         service_type = data["service_type"]
@@ -380,7 +457,9 @@ class UserSearchFilter(views.APIView):
         location_city_r = []
         location_city_nr = []
 
-        all_user = User.objects.filter(is_active=True).values("userid")
+        all_user = User.objects.filter(
+            ~Q(userid=user.userid) & ~Q(is_staff=True) & Q(is_active=True)
+        ).values("userid")
 
         for location in location_data:
             if location.split(",")[0] == "Bangladesh":
@@ -418,29 +497,30 @@ class UserSearchFilter(views.APIView):
 
         try:
             if service_queryset and education_queryset:
-                print(" service and edu exist")
+                # print(" service and edu exist")
                 search_data = all_user.intersection(
                     user_queryset, education_queryset, service_queryset
                 )
                 return search_data
             if education_queryset and not service_queryset:
-                print(" edu exist")
+                # print(" edu exist")
                 search_data = all_user.intersection(user_queryset, education_queryset)
                 return search_data
             if service_queryset and not education_queryset:
-                print(" service exist")
+                # print(" service exist")
                 search_data = all_user.intersection(user_queryset, service_queryset)
                 return search_data
             else:
-                print("all user data")
+                # print("all user data")
                 return all_user.intersection(user_queryset)
 
         except:
             return []
 
     def post(self, request):
+        user = self.request.user
         data = request.data
-        search_user = self.get_user(data)
+        search_user = self.get_user(data, user)
 
         details = User.objects.filter(userid__in=search_user).values(
             "userid",
@@ -464,18 +544,22 @@ class UserSearchField(views.APIView):
     ]
     renderer_classes = [UserRenderer]
 
-    def get_user(self, data):
+    def get_user(self, data, user):
         user_name = data["user_fullname"]
         search_data = User.objects.filter(
-            Q(user_fullname__icontains=user_name)
-            | Q(user_username__icontains=user_name)
+            ~Q(userid=user.userid)
+            & ~Q(is_staff=True)
+            & (
+                Q(user_fullname__icontains=user_name)
+                | Q(user_username__icontains=user_name)
+            )
         )
         return search_data
 
     def post(self, request):
         user = self.request.user
         data = request.data
-        search_user = self.get_user(data)
+        search_user = self.get_user(data, user)
         serializer = UserSearchFieldSerializer(search_user, many=True)
         paginator = UserSearchFilterPagination()
         page = paginator.paginate_queryset(serializer.data, request)

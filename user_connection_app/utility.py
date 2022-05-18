@@ -29,6 +29,7 @@ def match_friends(user_id):
         )
         & ~Q(userid=user_id)
         & Q(is_active=True)
+        & ~Q(is_staff=True)
         & ~Q(
             userid__in=UserFavouriteList.objects.filter(userid=user.userid).values(
                 "userid"
