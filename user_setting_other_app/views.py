@@ -771,19 +771,10 @@ class GetCityView(generics.ListCreateAPIView):
     serializer_class = GetCitySerializer
     renderer_classes = [UserRenderer]
 
-    # def post(self, request):
-    #     serializer = self.serializer_class(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-    #     errorcontext = {"user_goal_data": serializer.errors["user_goal_data"][0]}
-    #     return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
-
     def list(self, request):
         country = self.request.query_params.get("country")
         citys_object = StaticSettingData.objects.filter(
             Q(country_name__isnull=False) & Q(country_name__iexact=country)
         )
-        serializer = self.serializer_class(citys_object, many=True)
-        context = {"data": serializer.data}
-        return Response(context, status=status.HTTP_200_OK)
+        serializer = self.serializer_class(citys_object[0])
+        return Response(serializer.data, status=status.HTTP_200_OK)
