@@ -57,21 +57,6 @@ class Friends_suggation(views.APIView):
         except:
             user_data = None
 
-        match_all = user_data.values(
-            "location",
-            "goals",
-            "interest",
-            "durationyear_abroad",
-            "current_location_durationyear",
-            "industry",
-            "areaof_experience",
-            "industry_experienceyear",
-            "serviceholder",
-            "selfemployed",
-            "currentdesignation",
-            "company_name",
-            "office_address",
-        )[0]
         # match_12 = user_data.values("location", "goals")[0]
         # match_13 = user_data.values("location", "interest")[0]
         # match_23 = user_data.values("goals", "interest")[0]
@@ -79,7 +64,22 @@ class Friends_suggation(views.APIView):
         # match_2 = user_data.values("goals")[0]
         # match_3 = user_data.values("interest")[0]
 
-        try:
+        if user_data is not None:
+            match_all = user_data.values(
+                "location",
+                "goals",
+                "interest",
+                "durationyear_abroad",
+                "current_location_durationyear",
+                "industry",
+                "areaof_experience",
+                "industry_experienceyear",
+                "serviceholder",
+                "selfemployed",
+                "currentdesignation",
+                "company_name",
+                "office_address",
+            )[0]
             # match_marge = {
             #     **match_all,
             #     # **match_12,
@@ -90,13 +90,13 @@ class Friends_suggation(views.APIView):
             #     # **match_3,
             # }
             # print("match marge", match_all)
-            match_friend_all = [list(set(x)) for x in match_all.values() if x != []]
+            match_friend_all = [list(set(x)) for x in match_all.values() if x != None]
             # print("match friend all", match_friend_all)
 
             match_friend_all = list(
                 set(itertools.chain.from_iterable(match_friend_all))
             )
-            print("match_friend_all", match_friend_all)
+            # print("match_friend_all", match_friend_all)
             match_friend_data = [
                 User.objects.filter(userid=x).values(
                     "userid",
@@ -110,10 +110,10 @@ class Friends_suggation(views.APIView):
             context = {"success": True, "data": match_friend_data}
             return Response(context, status=status.HTTP_200_OK)
 
-        except Exception as e:
-            print("error:::::", e)
+        else:
+            # print("error:::::", user_data)
             return Response(
-                {"success": False, "message": e},
+                {"success": False, "message": "No match found!"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
