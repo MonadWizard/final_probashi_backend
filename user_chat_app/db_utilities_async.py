@@ -105,11 +105,11 @@ def save_chat_data(data):
         with connections["probashi_chat"].cursor() as cursor:
             cursor.execute(sql)
 
-            return True
+            return table_status
     except Exception as e:
         print(e)
         print("error")
-        return False
+        return table_status
 
 
 # image data save. ..............................................

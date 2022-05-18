@@ -112,7 +112,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 "is_text_message": True,
             }
 
-            await save_chat_data(data=data)
+            table_status = await save_chat_data(data=data)
+            print('table_status::::::::::::',table_status)
 
             chat_data = {
                 "type": "single message",

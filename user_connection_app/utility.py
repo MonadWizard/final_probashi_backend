@@ -54,7 +54,7 @@ def match_friends(user_id):
             Q(user_industry_experienceyear=user.user_industry_experienceyear)
             & Q(user_industry_experienceyear__isnull=False)
         )
-        | Q(is_user_serviceholder=user.user_industry_experienceyear)
+        | Q(is_user_serviceholder=user.is_user_serviceholder)
         | Q(is_user_selfemployed=user.is_user_selfemployed)
         | (
             Q(user_currentdesignation__iexact=user.user_currentdesignation)
