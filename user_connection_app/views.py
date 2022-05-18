@@ -56,24 +56,40 @@ class Friends_suggation(views.APIView):
             user_data = FriendsSuggation.objects.filter(user=user)
         except:
             user_data = None
-        match_all = user_data.values("location", "goals", "interest")[0]
-        match_12 = user_data.values("location", "goals")[0]
-        match_13 = user_data.values("location", "interest")[0]
-        match_23 = user_data.values("goals", "interest")[0]
-        match_1 = user_data.values("location")[0]
-        match_2 = user_data.values("goals")[0]
-        match_3 = user_data.values("interest")[0]
+        match_all = user_data.values(
+            "location",
+            "goals",
+            "interest",
+            "durationyear_abroad",
+            "current_location_durationyear",
+            "industry",
+            "areaof_experience",
+            "industry_experienceyear",
+            "serviceholder",
+            "selfemployed",
+            "currentdesignation",
+            "company_name",
+            "office_address",
+        )[0]
+        # match_12 = user_data.values("location", "goals")[0]
+        # match_13 = user_data.values("location", "interest")[0]
+        # match_23 = user_data.values("goals", "interest")[0]
+        # match_1 = user_data.values("location")[0]
+        # match_2 = user_data.values("goals")[0]
+        # match_3 = user_data.values("interest")[0]
 
         try:
             match_marge = {
                 **match_all,
-                **match_12,
-                **match_13,
-                **match_23,
-                **match_1,
-                **match_2,
-                **match_3,
+                # **match_12,
+                # **match_13,
+                # **match_23,
+                # **match_1,
+                # **match_2,
+                # **match_3,
             }
+            match_friend_all = [list(set(x)) for x in match_marge.values() if x != []]
+
             match_friend_all = [list(set(x)) for x in match_marge.values() if x != []]
             match_friend_all = list(itertools.chain.from_iterable(match_friend_all))
             match_friend_data = [
