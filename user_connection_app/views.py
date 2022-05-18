@@ -73,7 +73,7 @@ class Friends_suggation(views.APIView):
                 "company_name",
                 "office_address",
             )[0]
-            
+
             match_friend_all = [list(set(x)) for x in match_all.values() if x != None]
 
             match_friend_all = list(
