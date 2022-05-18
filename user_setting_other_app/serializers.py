@@ -104,7 +104,6 @@ class UserSettingsOptionViewSerializer(serializers.ModelSerializer):
         fields = ["user_mail_notification_enable", "user_monthly_newsleter_enable"]
 
 
-
 class EducationServiceDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaticSettingData
@@ -161,3 +160,9 @@ class TradeFacilitationServiceDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaticSettingData
         fields = ["tradefacilitationservice_type", "tradefacilitationservice_Purpose"]
+
+
+class GetCitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StaticSettingData
+        fields = ["state_name"]

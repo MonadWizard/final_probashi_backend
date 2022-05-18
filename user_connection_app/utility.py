@@ -17,11 +17,11 @@ def match_friends(user_id):
     queryset = User.objects.filter(
         (
             (
-                Q(user_residential_district=user.user_residential_district)
+                Q(user_residential_district__iexact=user.user_residential_district)
                 & Q(user_residential_district__isnull=False)
             )
             | (
-                Q(user_nonresidential_city=user.user_nonresidential_city)
+                Q(user_nonresidential_city__iexact=user.user_nonresidential_city)
                 & Q(user_nonresidential_city__isnull=False)
             )
             | Q(user_goal__contains=user_goal)
@@ -56,15 +56,15 @@ def match_friends(user_id):
         | Q(is_user_serviceholder=user.user_industry_experienceyear)
         | Q(is_user_selfemployed=user.is_user_selfemployed)
         | (
-            Q(user_currentdesignation=user.user_currentdesignation)
+            Q(user_currentdesignation__iexact=user.user_currentdesignation)
             & Q(user_currentdesignation__isnull=False)
         )
         | (
-            Q(user_company_name=user.user_company_name)
+            Q(user_company_name__iexact=user.user_company_name)
             & Q(user_company_name__isnull=False)
         )
         | (
-            Q(user_office_address=user.user_office_address)
+            Q(user_office_address__iexact=user.user_office_address)
             & Q(user_office_address__isnull=False)
         )
     )

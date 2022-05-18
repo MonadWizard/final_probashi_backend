@@ -80,8 +80,8 @@ class StaticSettingData(models.Model):
     tradefacilitationservice_Purpose = models.CharField(
         max_length=200, blank=True, null=True
     )
-    # country_name = models.CharField(max_length=200, blank=True, null=True)
-    # state_name = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    country_name = models.CharField(max_length=200, blank=True, null=True)
+    state_name = ArrayField(models.CharField(max_length=200), blank=True, null=True)
 
     def __str__(self):
         if (

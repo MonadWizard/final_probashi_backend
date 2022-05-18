@@ -25,6 +25,7 @@ from .views import (
     DigitalServiceDataView,
     TradeFacilitationServiceDataView,
     SpecificConsultancyData,
+    GetCityView,
 )
 
 
@@ -130,4 +131,5 @@ urlpatterns = [
         TradeFacilitationServiceDataView.as_view(),
         name="TradeFacilitationServiceDataView",
     ),
+    path("city-get/", GetCityView.as_view(), name="city-get"),
 ]
