@@ -56,6 +56,7 @@ class Friends_suggation(views.APIView):
             user_data = FriendsSuggation.objects.filter(user=user)
         except:
             user_data = None
+
         match_all = user_data.values(
             "location",
             "goals",
@@ -79,19 +80,23 @@ class Friends_suggation(views.APIView):
         # match_3 = user_data.values("interest")[0]
 
         try:
-            match_marge = {
-                **match_all,
-                # **match_12,
-                # **match_13,
-                # **match_23,
-                # **match_1,
-                # **match_2,
-                # **match_3,
-            }
-            match_friend_all = [list(set(x)) for x in match_marge.values() if x != []]
+            # match_marge = {
+            #     **match_all,
+            #     # **match_12,
+            #     # **match_13,
+            #     # **match_23,
+            #     # **match_1,
+            #     # **match_2,
+            #     # **match_3,
+            # }
+            # print("match marge", match_all)
+            match_friend_all = [list(set(x)) for x in match_all.values() if x != []]
+            # print("match friend all", match_friend_all)
 
-            match_friend_all = [list(set(x)) for x in match_marge.values() if x != []]
-            match_friend_all = list(itertools.chain.from_iterable(match_friend_all))
+            match_friend_all = list(
+                set(itertools.chain.from_iterable(match_friend_all))
+            )
+            print("match_friend_all", match_friend_all)
             match_friend_data = [
                 User.objects.filter(userid=x).values(
                     "userid",
@@ -106,9 +111,9 @@ class Friends_suggation(views.APIView):
             return Response(context, status=status.HTTP_200_OK)
 
         except Exception as e:
-            # print("error:::::", e)
+            print("error:::::", e)
             return Response(
-                {"success": False, "message": "No match found"},
+                {"success": False, "message": e},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
