@@ -13,38 +13,16 @@ def get_or_create_friend_suggestion(user):
     suggestion.location = [] if suggestion.location is None else suggestion.location
     suggestion.goals = [] if suggestion.goals is None else suggestion.goals
     suggestion.interest = [] if suggestion.interest is None else suggestion.interest
-    suggestion.durationyear_abroad = (
-        [] if suggestion.durationyear_abroad is None else suggestion.durationyear_abroad
-    )
-    suggestion.current_location_durationyear = (
-        []
-        if suggestion.current_location_durationyear is None
-        else suggestion.current_location_durationyear
-    )
+    suggestion.durationyear_abroad = [] if suggestion.durationyear_abroad is None else suggestion.durationyear_abroad
+    suggestion.current_location_durationyear = [] if suggestion.current_location_durationyear is None else suggestion.current_location_durationyear
     suggestion.industry = [] if suggestion.industry is None else suggestion.industry
-    suggestion.areaof_experience = (
-        [] if suggestion.areaof_experience is None else suggestion.areaof_experience
-    )
-    suggestion.industry_experienceyear = (
-        []
-        if suggestion.industry_experienceyear is None
-        else suggestion.industry_experienceyear
-    )
-    suggestion.serviceholder = (
-        [] if suggestion.serviceholder is None else suggestion.serviceholder
-    )
-    suggestion.selfemployed = (
-        [] if suggestion.selfemployed is None else suggestion.selfemployed
-    )
-    suggestion.currentdesignation = (
-        [] if suggestion.currentdesignation is None else suggestion.currentdesignation
-    )
-    suggestion.company_name = (
-        [] if suggestion.company_name is None else suggestion.company_name
-    )
-    suggestion.office_address = (
-        [] if suggestion.office_address is None else suggestion.office_address
-    )
+    suggestion.areaof_experience = [] if suggestion.areaof_experience is None else suggestion.areaof_experience
+    suggestion.industry_experienceyear = [] if suggestion.industry_experienceyear is None else suggestion.industry_experienceyear
+    suggestion.serviceholder = [] if suggestion.serviceholder is None else suggestion.serviceholder
+    suggestion.selfemployed = [] if suggestion.selfemployed is None else suggestion.selfemployed
+    suggestion.currentdesignation = [] if suggestion.currentdesignation is None else suggestion.currentdesignation
+    suggestion.company_name = [] if suggestion.company_name is None else suggestion.company_name
+    suggestion.office_address = [] if suggestion.office_address is None else suggestion.office_address
 
     return suggestion
 
@@ -182,145 +160,91 @@ def match_friends(user_id):
 
     user_friendsuggestion = get_or_create_friend_suggestion(user)
 
+    attributes = [
+        {
+            "attribute": "user_residential_district",
+            "type": "string",
+            "friend_suggestion_attribute": "location",
+        },
+        {
+            "attribute": "user_nonresidential_city",
+            "type": "string",
+            "friend_suggestion_attribute": "location",
+        },
+        {
+            "attribute": "user_goal",
+            "type": "list",
+            "friend_suggestion_attribute": "goals",
+        },
+        {
+            "attribute": "user_interested_area",
+            "type": "list",
+            "friend_suggestion_attribute": "interest",
+        },
+        {
+            "attribute": "user_durationyear_abroad",
+            "type": "string",
+            "friend_suggestion_attribute": "durationyear_abroad",
+        },
+        {
+            "attribute": "user_current_location_durationyear",
+            "type": "string",
+            "friend_suggestion_attribute": "current_location_durationyear",
+        },
+        {
+            "attribute": "user_industry",
+            "type": "string",
+            "friend_suggestion_attribute": "industry",
+        },
+        {
+            "attribute": "user_areaof_experience",
+            "type": "string",
+            "friend_suggestion_attribute": "areaof_experience",
+        },
+        {
+            "attribute": "user_industry_experienceyear",
+            "type": "string",
+            "friend_suggestion_attribute": "industry_experienceyear",
+        },
+        {
+            "attribute": "is_user_serviceholder",
+            "type": "bool",
+            "friend_suggestion_attribute": "serviceholder",
+        },
+        {
+            "attribute": "is_user_selfemployed",
+            "type": "bool",
+            "friend_suggestion_attribute": "selfemployed",
+        },
+        {
+            "attribute": "user_currentdesignation",
+            "type": "string",
+            "friend_suggestion_attribute": "currentdesignation",
+        },
+        {
+            "attribute": "user_company_name",
+            "type": "string",
+            "friend_suggestion_attribute": "company_name",
+        },
+        {
+            "attribute": "user_office_address",
+            "type": "string",
+            "friend_suggestion_attribute": "office_address",
+        }
+    ]
+
     for rest_user in rest_users:
         friendsuggestion = get_or_create_friend_suggestion(rest_user)
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_residential_district",
-            "location",
-            "string",
-        )
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_nonresidential_city",
-            "location",
-            "string",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_goal",
-            "goals",
-            "list",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_interested_area",
-            "interest",
-            "list",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_durationyear_abroad",
-            "durationyear_abroad",
-            "string",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_current_location_durationyear",
-            "current_location_durationyear",
-            "string",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_industry",
-            "industry",
-            "string",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_areaof_experience",
-            "areaof_experience",
-            "string",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_industry_experienceyear",
-            "industry_experienceyear",
-            "string",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "is_user_serviceholder",
-            "serviceholder",
-            "bool",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "is_user_selfemployed",
-            "selfemployed",
-            "bool",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_currentdesignation",
-            "currentdesignation",
-            "string",
-        )
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_company_name",
-            "company_name",
-            "string",
-        )
-
-        update_friendsuggestion(
-            user,
-            rest_user,
-            user_friendsuggestion,
-            friendsuggestion,
-            "user_office_address",
-            "office_address",
-            "string",
-        )
+        for attribute in attributes:
+            update_friendsuggestion(
+                user,
+                rest_user,
+                user_friendsuggestion,
+                friendsuggestion,
+                attribute["attribute"],
+                attribute["friend_suggestion_attribute"],
+                attribute["type"],
+            )
 
         friendsuggestion.save()
 
