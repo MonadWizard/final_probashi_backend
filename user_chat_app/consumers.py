@@ -84,16 +84,16 @@ class DemoConsumer(AsyncWebsocketConsumer):
             data = dict(data)
             data_l = list(data.values())
             data_l = list(filter(None, data_l))
-            # await self.send(
-            #     text_data=json.dumps(
-            #         {
-            #             "success": True,
-            #             "type": "recent",
-            #             "chat": data_l,
-            #         }
-            #     )
-            # )
-            chat_data = data_l
+            await self.send(
+                text_data=json.dumps(
+                    {
+                        "success": True,
+                        "type": "all_recent",
+                        "chat": data_l,
+                    }
+                )
+            )
+            # chat_data = data_l
 
         elif text_data_json["data"] == "reload_previous_chat":
             data = await get_previous_chat_data(
@@ -118,7 +118,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             self.room_name_temp = text_data_json["receiverid"]
             self.room_group_name_temp = "chat_" + self.room_name_temp
-
+            # exist       new
             if table_status == "new":
                 userid = self.room_name
                 limit = 1
@@ -126,6 +126,12 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 data = dict(data)
                 data_l = list(data.values())
                 data_l = list(filter(None, data_l))
+
+                recent_data = {
+                    "type": "latest_recent",
+                    "chat": data_l,
+                }
+
                 # chat_data = data_l
                 self.room_group_name_2 = "chat_" + self.room_name
 
@@ -134,7 +140,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                     {
                         "type": "send_chat",
                         # 'data': data,
-                        "data": data_l,
+                        "data": recent_data,
                     },
                 )
 
@@ -199,7 +205,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             table_status = await save_chat_data_image(data=data)
 
-# recent chat............................................................
+            # recent chat............................................................
 
             self.room_name_temp = text_data_json["receiverid"]
             self.room_group_name_temp = "chat_" + self.room_name_temp
@@ -211,6 +217,10 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 data = dict(data)
                 data_l = list(data.values())
                 data_l = list(filter(None, data_l))
+                recent_data = {
+                    "type": "latest_recent",
+                    "chat": data_l,
+                }
                 # chat_data = data_l
                 self.room_group_name_2 = "chat_" + self.room_name
 
@@ -219,10 +229,9 @@ class DemoConsumer(AsyncWebsocketConsumer):
                     {
                         "type": "send_chat",
                         # 'data': data,
-                        "data": data_l,
+                        "data": recent_data,
                     },
                 )
-
 
             chat_data = {
                 "type": "single message",

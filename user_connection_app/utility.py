@@ -7,9 +7,7 @@ from asgiref.sync import sync_to_async
 @sync_to_async
 def match_friends(user_id):
     user = User.objects.get(userid=user_id)
-    # print("userid:::::::::::::::::::::", user.userid)
 
-    # print("user goal:::::::::::::::::::::", (user.user_goal))
     user_goal = user.user_goal if user.user_goal else []
     user_interested_area = (
         user.user_interested_area if user.user_interested_area else []
