@@ -21,11 +21,29 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
                 "The token is invalid or expired. Please login again......"
             )
             # 329344095888-ogps4aif4e5l9mb6o0b23cv2gmqijoug.apps.googleusercontent.com    # probashi's
-        googleClientID = (
+        googleClientID_web = (
             "187084527164-a5mg5g9dh6k6022uo1elhciaea49lm2e.apps.googleusercontent.com"
         )
+        googleClientID_android = (
+            "187084527164-2ten6tf1pf9sshiah762aghuhofj2lc8.apps.googleusercontent.com"
+        )
+        googleClientID_iso = (
+            "187084527164-tma96b5qiakd594kf2u5mjt61vvnfoe4.apps.googleusercontent.com"
+        )
+
+        google_client = [
+            "187084527164-a5mg5g9dh6k6022uo1elhciaea49lm2e.apps.googleusercontent.com",
+            "187084527164-2ten6tf1pf9sshiah762aghuhofj2lc8.apps.googleusercontent.com",
+            "187084527164-tma96b5qiakd594kf2u5mjt61vvnfoe4.apps.googleusercontent.com",
+        ]
+
         # print("user_data['aud']::::",user_data)
-        if user_data["aud"] != googleClientID:
+        if (
+            user_data["aud"] != googleClientID_web
+            and user_data["aud"] != googleClientID_android
+            and user_data["aud"] != googleClientID_iso
+        ):
+            print("user_data['aud']::::", user_data["aud"])
             raise AuthenticationFailed("oops, who are you?")
         userid = user_data["sub"]
         user_email = user_data["email"]

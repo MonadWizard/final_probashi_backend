@@ -7,7 +7,6 @@ from .serializers import (
     LinkedinSocialAuthSerializer,
 )
 
-# from .serializers import GoogleSocialAuthSerializer, TwitterAuthSerializer, FacebookSocialAuthSerializer
 from probashi_backend.renderers import UserRenderer
 from auth_user_app.models import User
 from django.http import Http404
