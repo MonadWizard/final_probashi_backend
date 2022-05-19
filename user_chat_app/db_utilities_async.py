@@ -28,7 +28,7 @@ def get_all_chat_data(userid, limit):
     chat_list = (
         ChatTable.objects.using("probashi_chat")
         .filter(Q(user_1=userid) & ~Q(user_2=userid))
-        .order_by("-id")[(limit - 1) * 2 : (limit * 2)]
+        .order_by("-id")[(limit - 1) * 20 : (limit * 20)]
     )
     data = {}
     # print('chat list:::::::::',chat_list)
@@ -43,7 +43,6 @@ def get_all_chat_data(userid, limit):
 
 @sync_to_async
 def save_chat_data(data):
-
     table_status = ""
     try:
         chat_table = ChatTable.objects.using("probashi_chat").get(
@@ -107,8 +106,8 @@ def save_chat_data(data):
 
             return table_status
     except Exception as e:
-        print(e)
-        print("error")
+        # print(e)
+        # print("error")
         return table_status
 
 
@@ -117,12 +116,13 @@ def save_chat_data(data):
 
 @sync_to_async
 def save_chat_data_image(data):
+    table_status = ""
     try:
         chat_table = ChatTable.objects.using("probashi_chat").get(
             user_1=data["sender"], user_2=data["receiver"]
         )
         # print('table name::', chat_table.table_name)
-
+        table_status = "exist"
         print("table-found....")
     except:
         table_title = create_chat_table(user_1=data["sender"], user_2=data["receiver"])
@@ -132,6 +132,7 @@ def save_chat_data_image(data):
         chat_table = ChatTable.objects.using("probashi_chat").create(
             user_1=data["receiver"], user_2=data["sender"], table_name=table_title
         )
+        table_status = "new"
         print("create-a-table")
 
     # print('chat table', chat_table)
@@ -173,12 +174,11 @@ def save_chat_data_image(data):
     try:
         with connections["probashi_chat"].cursor() as cursor:
             cursor.execute(sql)
-
-            return True
+            return table_status
     except Exception as e:
-        print(e)
+        # print(e)
         # print('error')
-        return False
+        return table_status
 
 
 @sync_to_async

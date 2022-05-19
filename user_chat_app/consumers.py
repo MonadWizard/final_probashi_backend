@@ -119,7 +119,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             self.room_name_temp = text_data_json["receiverid"]
             self.room_group_name_temp = "chat_" + self.room_name_temp
 
-            if table_status == "exist":
+            if table_status == "new":
                 userid = self.room_name
                 limit = 1
                 data = await get_all_chat_data(userid, limit)
@@ -197,7 +197,32 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             # print("data:::::::::::", text_data_json['message'])
 
-            await save_chat_data_image(data=data)
+            table_status = await save_chat_data_image(data=data)
+
+# recent chat............................................................
+
+            self.room_name_temp = text_data_json["receiverid"]
+            self.room_group_name_temp = "chat_" + self.room_name_temp
+
+            if table_status == "new":
+                userid = self.room_name
+                limit = 1
+                data = await get_all_chat_data(userid, limit)
+                data = dict(data)
+                data_l = list(data.values())
+                data_l = list(filter(None, data_l))
+                # chat_data = data_l
+                self.room_group_name_2 = "chat_" + self.room_name
+
+                await self.channel_layer.group_send(
+                    self.room_group_name_2,
+                    {
+                        "type": "send_chat",
+                        # 'data': data,
+                        "data": data_l,
+                    },
+                )
+
 
             chat_data = {
                 "type": "single message",
