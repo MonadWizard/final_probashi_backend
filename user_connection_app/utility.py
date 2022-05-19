@@ -4,17 +4,69 @@ from django.db.models import Q
 from asgiref.sync import sync_to_async
 
 
+def get_or_create_friend_suggestion(user):
+    try:
+        suggestion = FriendsSuggation.objects.get(user=user.userid)
+    except:
+        suggestion = FriendsSuggation.objects.create(user=user)
+
+    suggestion.location = [] if suggestion.location is None else suggestion.location
+    suggestion.goals = [] if suggestion.goals is None else suggestion.goals
+    suggestion.interest = [] if suggestion.interest is None else suggestion.interest
+    suggestion.durationyear_abroad = [] if suggestion.durationyear_abroad is None else suggestion.durationyear_abroad
+    suggestion.current_location_durationyear = [] if suggestion.current_location_durationyear is None else suggestion.current_location_durationyear
+    suggestion.industry = [] if suggestion.industry is None else suggestion.industry
+    suggestion.areaof_experience = [] if suggestion.areaof_experience is None else suggestion.areaof_experience
+    suggestion.industry_experienceyear = [] if suggestion.industry_experienceyear is None else suggestion.industry_experienceyear
+    suggestion.serviceholder = [] if suggestion.serviceholder is None else suggestion.serviceholder
+    suggestion.selfemployed = [] if suggestion.selfemployed is None else suggestion.selfemployed
+    suggestion.currentdesignation = [] if suggestion.currentdesignation is None else suggestion.currentdesignation
+    suggestion.company_name = [] if suggestion.company_name is None else suggestion.company_name
+    suggestion.office_address = [] if suggestion.office_address is None else suggestion.office_address
+    
+    return suggestion
+
+def append_item_in_list(user_obj,rest_obj, user_friend_suggestion_obj, rest_friend_suggestion_obj, friend_suggestion_attribute):
+
+    rest_values = getattr(rest_friend_suggestion_obj, friend_suggestion_attribute)
+    user_values = getattr(user_friend_suggestion_obj, friend_suggestion_attribute)
+
+    if user_obj.userid not in rest_values:
+        rest_values.append(user_obj.userid)
+
+    if (rest_obj.userid not in user_values):
+        user_values.append(rest_obj.userid)
+
+def update_friendsuggestion(user_obj,rest_obj, user_friend_suggestion_obj, rest_friend_suggestion_obj, user_attribute, friend_suggestion_attribute, type):
+    if type == 'string':
+        if (
+            getattr(rest_obj, user_attribute) is not None
+            and getattr(rest_obj, user_attribute) != ""
+            and getattr(rest_obj, user_attribute) == getattr(user_obj, user_attribute)
+            ):
+            append_item_in_list(user_obj,rest_obj, user_friend_suggestion_obj, rest_friend_suggestion_obj, friend_suggestion_attribute)
+    
+    elif type == 'list':
+        if (getattr(rest_obj, user_attribute) is not None
+            and (set(getattr(rest_obj, user_attribute)) & set(getattr(user_obj, user_attribute)))):
+
+            append_item_in_list(user_obj,rest_obj, user_friend_suggestion_obj, rest_friend_suggestion_obj, friend_suggestion_attribute)
+    
+    elif type == 'bool':
+        if getattr(rest_obj, user_attribute) == getattr(user_obj, user_attribute):
+            append_item_in_list(user_obj,rest_obj, user_friend_suggestion_obj, rest_friend_suggestion_obj, friend_suggestion_attribute)
+    else:
+        pass
+            
+
 @sync_to_async
 def match_friends(user_id):
     user = User.objects.get(userid=user_id)
-    # print("userid:::::::::::::::::::::", user.userid)
-
-    # print("user goal:::::::::::::::::::::", (user.user_goal))
     user_goal = user.user_goal if user.user_goal else []
     user_interested_area = (
         user.user_interested_area if user.user_interested_area else []
     )
-    queryset = User.objects.filter(
+    rest_users = User.objects.filter(
         (
             (
                 Q(user_residential_district__iexact=user.user_residential_district)
@@ -69,217 +121,176 @@ def match_friends(user_id):
             & Q(user_office_address__isnull=False)
         )
     )
-    print("rest_users:::::::::::::::::::::", queryset)
-    rest_users = queryset.filter(~Q(userid=user_id))
-    print("rest user:::::::::::", rest_users)
 
-    try:
-        user_friendsuggestion = FriendsSuggation.objects.get(user=user.userid)
-    except:
-        user_friendsuggestion = FriendsSuggation.objects.create(user=user)
-
-    if user_friendsuggestion.location is None:
-        user_friendsuggestion.location = []
-
-    if user_friendsuggestion.goals is None:
-        user_friendsuggestion.goals = []
-
-    if user_friendsuggestion.interest is None:
-        user_friendsuggestion.interest = []
-
-    if user_friendsuggestion.durationyear_abroad is None:
-        user_friendsuggestion.durationyear_abroad = []
-
-    if user_friendsuggestion.current_location_durationyear is None:
-        user_friendsuggestion.current_location_durationyear = []
-
-    if user_friendsuggestion.industry is None:
-        user_friendsuggestion.industry = []
-
-    if user_friendsuggestion.areaof_experience is None:
-        user_friendsuggestion.areaof_experience = []
-
-    if user_friendsuggestion.industry_experienceyear is None:
-        user_friendsuggestion.industry_experienceyear = []
-
-    if user_friendsuggestion.serviceholder is None:
-        user_friendsuggestion.serviceholder = []
-
-    if user_friendsuggestion.selfemployed is None:
-        user_friendsuggestion.selfemployed = []
-
-    if user_friendsuggestion.currentdesignation is None:
-        user_friendsuggestion.currentdesignation = []
-
-    if user_friendsuggestion.company_name is None:
-        user_friendsuggestion.company_name = []
-
-    if user_friendsuggestion.office_address is None:
-        user_friendsuggestion.office_address = []
+    user_friendsuggestion = get_or_create_friend_suggestion(user)
 
     for rest_user in rest_users:
-        try:
-            friendsuggestion = FriendsSuggation.objects.get(user=rest_user.userid)
-        except:
-            friendsuggestion = FriendsSuggation.objects.create(user=rest_user)
+        friendsuggestion = get_or_create_friend_suggestion(rest_user)
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_residential_district", "location", 'string')
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_nonresidential_city", "location", 'string')
+        # if (
+        #     rest_user.user_residential_district is not None
+        #     and rest_user.user_residential_district != ""
+        #     and rest_user.user_residential_district == user.user_residential_district
+        # ) or (
+        #     rest_user.user_nonresidential_city is not None
+        #     and rest_user.user_nonresidential_city != ""
+        #     and rest_user.user_nonresidential_city == user.user_nonresidential_city
+        # ):
+        #     if user.userid not in friendsuggestion.location:
+        #         friendsuggestion.location.append(user.userid)
 
-        # if rest-user's residential districti is not null and same with user
-        # then update this field in friendsuggestion
+        #     if rest_user.userid not in user_friendsuggestion.location:
+        #         user_friendsuggestion.location.append(rest_user.userid)
 
-        if (
-            rest_user.user_residential_district is not None
-            and rest_user.user_residential_district != ""
-            and rest_user.user_residential_district == user.user_residential_district
-        ) or (
-            rest_user.user_nonresidential_city is not None
-            and rest_user.user_nonresidential_city != ""
-            and rest_user.user_nonresidential_city == user.user_nonresidential_city
-        ):
-            if friendsuggestion.location is None:
-                friendsuggestion.location = []
-            if user.userid not in friendsuggestion.location:
-                friendsuggestion.location.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.location:
-                user_friendsuggestion.location.append(rest_user.userid)
+        # if rest_user.user_goal is not None and set(user_goal) & set(
+        #     rest_user.user_goal
+        # ):
+        #     if user.userid not in friendsuggestion.goals:
+        #         friendsuggestion.goals.append(user.userid)
 
-        if rest_user.user_goal is not None and set(user_goal) & set(
-            rest_user.user_goal
-        ):
-            if friendsuggestion.goals is None:
-                friendsuggestion.goals = []
-            if user.userid not in friendsuggestion.goals:
-                friendsuggestion.goals.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.goals:
-                user_friendsuggestion.goals.append(rest_user.userid)
+        #     if rest_user.userid not in user_friendsuggestion.goals:
+        #         user_friendsuggestion.goals.append(rest_user.userid)
 
-        if rest_user.user_interested_area is not None and set(
-            user_interested_area
-        ) & set(rest_user.user_interested_area):
-            if friendsuggestion.interest is None:
-                friendsuggestion.interest = []
-            if user.userid not in friendsuggestion.interest:
-                friendsuggestion.interest.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.interest:
-                user_friendsuggestion.interest.append(rest_user.userid)
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_goal", "goals", 'list')
 
-        if (
-            rest_user.user_durationyear_abroad is not None
-            and rest_user.user_durationyear_abroad != ""
-            and rest_user.user_durationyear_abroad == user.user_durationyear_abroad
-        ):
-            if friendsuggestion.durationyear_abroad is None:
-                friendsuggestion.durationyear_abroad = []
-            if user.userid not in friendsuggestion.durationyear_abroad:
-                friendsuggestion.durationyear_abroad.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.durationyear_abroad:
-                user_friendsuggestion.durationyear_abroad.append(rest_user.userid)
+        # if rest_user.user_interested_area is not None and set(
+        #     user_interested_area
+        # ) & set(rest_user.user_interested_area):
+        #     if user.userid not in friendsuggestion.interest:
+        #         friendsuggestion.interest.append(user.userid)
 
-        if (
-            rest_user.user_current_location_durationyear is not None
-            and rest_user.user_current_location_durationyear != ""
-            and rest_user.user_current_location_durationyear
-            == user.user_current_location_durationyear
-        ):
-            if friendsuggestion.current_location_durationyear is None:
-                friendsuggestion.current_location_durationyear = []
-            if user.userid not in friendsuggestion.current_location_durationyear:
-                friendsuggestion.current_location_durationyear.append(user.userid)
-            if (
-                rest_user.userid
-                not in user_friendsuggestion.current_location_durationyear
-            ):
-                user_friendsuggestion.current_location_durationyear.append(
-                    rest_user.userid
-                )
+        #     if rest_user.userid not in user_friendsuggestion.interest:
+        #         user_friendsuggestion.interest.append(rest_user.userid)
 
-        if (
-            rest_user.user_industry is not None
-            and rest_user.user_industry != ""
-            and rest_user.user_industry == user.user_industry
-        ):
-            if friendsuggestion.industry is None:
-                friendsuggestion.industry = []
-            if user.userid not in friendsuggestion.industry:
-                friendsuggestion.industry.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.industry:
-                user_friendsuggestion.industry.append(rest_user.userid)
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_interested_area", "interest", 'list')
 
-        if (
-            rest_user.user_areaof_experience is not None
-            and rest_user.user_areaof_experience != ""
-            and rest_user.user_areaof_experience == user.user_areaof_experience
-        ):
-            if friendsuggestion.areaof_experience is None:
-                friendsuggestion.areaof_experience = []
-            if user.userid not in friendsuggestion.areaof_experience:
-                friendsuggestion.areaof_experience.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.areaof_experience:
-                user_friendsuggestion.areaof_experience.append(rest_user.userid)
+        # if (
+        #     rest_user.user_durationyear_abroad is not None
+        #     and rest_user.user_durationyear_abroad != ""
+        #     and rest_user.user_durationyear_abroad == user.user_durationyear_abroad
+        # ):
+        #     if user.userid not in friendsuggestion.durationyear_abroad:
+        #         friendsuggestion.durationyear_abroad.append(user.userid)
 
-        if (
-            rest_user.user_industry_experienceyear is not None
-            and rest_user.user_industry_experienceyear != ""
-            and rest_user.user_industry_experienceyear
-            == user.user_industry_experienceyear
-        ):
-            if friendsuggestion.industry_experienceyear is None:
-                friendsuggestion.industry_experienceyear = []
-            if user.userid not in friendsuggestion.industry_experienceyear:
-                friendsuggestion.industry_experienceyear.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.industry_experienceyear:
-                user_friendsuggestion.industry_experienceyear.append(rest_user.userid)
+        #     if rest_user.userid not in user_friendsuggestion.durationyear_abroad:
+        #         user_friendsuggestion.durationyear_abroad.append(
+        #             rest_user.userid)
 
-        if rest_user.is_user_serviceholder == user.is_user_serviceholder:
-            if friendsuggestion.serviceholder is None:
-                friendsuggestion.serviceholder = []
-            if user.userid not in friendsuggestion.serviceholder:
-                friendsuggestion.serviceholder.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.serviceholder:
-                user_friendsuggestion.serviceholder.append(rest_user.userid)
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_durationyear_abroad", "durationyear_abroad", 'string')
 
-        if rest_user.is_user_selfemployed == user.is_user_selfemployed:
-            if friendsuggestion.selfemployed is None:
-                friendsuggestion.selfemployed = []
-            if user.userid not in friendsuggestion.selfemployed:
-                friendsuggestion.selfemployed.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.selfemployed:
-                user_friendsuggestion.selfemployed.append(rest_user.userid)
+        # if (
+        #     rest_user.user_current_location_durationyear is not None
+        #     and rest_user.user_current_location_durationyear != ""
+        #     and rest_user.user_current_location_durationyear
+        #     == user.user_current_location_durationyear
+        # ):
+        #     if user.userid not in friendsuggestion.current_location_durationyear:
+        #         friendsuggestion.current_location_durationyear.append(
+        #             user.userid)
 
-        if (
-            rest_user.user_currentdesignation is not None
-            and rest_user.user_currentdesignation != ""
-            and rest_user.user_currentdesignation == user.user_currentdesignation
-        ):
-            if friendsuggestion.currentdesignation is None:
-                friendsuggestion.currentdesignation = []
-            if user.userid not in friendsuggestion.currentdesignation:
-                friendsuggestion.currentdesignation.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.currentdesignation:
-                user_friendsuggestion.currentdesignation.append(rest_user.userid)
+        #     if (
+        #         rest_user.userid
+        #         not in user_friendsuggestion.current_location_durationyear
+        #     ):
+        #         user_friendsuggestion.current_location_durationyear.append(
+        #             rest_user.userid)
 
-        if (
-            rest_user.user_company_name is not None
-            and rest_user.user_company_name != ""
-            and rest_user.user_company_name == user.user_company_name
-        ):
-            if friendsuggestion.company_name is None:
-                friendsuggestion.company_name = []
-            if user.userid not in friendsuggestion.company_name:
-                friendsuggestion.company_name.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.company_name:
-                user_friendsuggestion.company_name.append(rest_user.userid)
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_current_location_durationyear", "current_location_durationyear", 'string')
 
-        if (
-            rest_user.user_office_address is not None
-            and rest_user.user_office_address != ""
-            and rest_user.user_office_address == user.user_office_address
-        ):
-            if friendsuggestion.office_address is None:
-                friendsuggestion.office_address = []
-            if user.userid not in friendsuggestion.office_address:
-                friendsuggestion.office_address.append(user.userid)
-            if rest_user.userid not in user_friendsuggestion.office_address:
-                user_friendsuggestion.office_address.append(rest_user.userid)
+        # if (
+        #     rest_user.user_industry is not None
+        #     and rest_user.user_industry != ""
+        #     and rest_user.user_industry == user.user_industry
+        # ):
+        #     if user.userid not in friendsuggestion.industry:
+        #         friendsuggestion.industry.append(user.userid)
+            
+        #     if rest_user.userid not in user_friendsuggestion.industry:
+        #         user_friendsuggestion.industry.append(rest_user.userid)
+        
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_industry", 'industry', 'string')
+
+        # if (
+        #     rest_user.user_areaof_experience is not None
+        #     and rest_user.user_areaof_experience != ""
+        #     and rest_user.user_areaof_experience == user.user_areaof_experience
+        # ):
+        #     if user.userid not in friendsuggestion.areaof_experience:
+        #         friendsuggestion.areaof_experience.append(user.userid)
+            
+        #     if rest_user.userid not in user_friendsuggestion.areaof_experience:
+        #         user_friendsuggestion.areaof_experience.append(
+        #             rest_user.userid)
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_areaof_experience", 'areaof_experience', 'string')
+        # if (
+        #     rest_user.user_industry_experienceyear is not None
+        #     and rest_user.user_industry_experienceyear != ""
+        #     and rest_user.user_industry_experienceyear
+        #     == user.user_industry_experienceyear
+        # ):
+        #     if user.userid not in friendsuggestion.industry_experienceyear:
+        #         friendsuggestion.industry_experienceyear.append(user.userid)
+            
+        #     if rest_user.userid not in user_friendsuggestion.industry_experienceyear:
+        #         user_friendsuggestion.industry_experienceyear.append(
+        #             rest_user.userid)
+
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_industry_experienceyear", 'industry_experienceyear', 'string')
+
+        # if rest_user.is_user_serviceholder == user.is_user_serviceholder:
+        #     if user.userid not in friendsuggestion.serviceholder:
+        #         friendsuggestion.serviceholder.append(user.userid)
+
+        #     if rest_user.userid not in user_friendsuggestion.serviceholder:
+        #         user_friendsuggestion.serviceholder.append(rest_user.userid)
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "is_user_serviceholder", 'serviceholder', 'bool')
+
+        # if rest_user.is_user_selfemployed == user.is_user_selfemployed:
+        #     if user.userid not in friendsuggestion.selfemployed:
+        #         friendsuggestion.selfemployed.append(user.userid)
+
+        #     if rest_user.userid not in user_friendsuggestion.selfemployed:
+        #         user_friendsuggestion.selfemployed.append(rest_user.userid)
+
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "is_user_selfemployed", 'selfemployed', 'bool')
+
+        # if (
+        #     rest_user.user_currentdesignation is not None
+        #     and rest_user.user_currentdesignation != ""
+        #     and rest_user.user_currentdesignation == user.user_currentdesignation
+        # ):
+        #     if user.userid not in friendsuggestion.currentdesignation:
+        #         friendsuggestion.currentdesignation.append(user.userid)
+            
+        #     if rest_user.userid not in user_friendsuggestion.currentdesignation:
+        #         user_friendsuggestion.currentdesignation.append(
+        #             rest_user.userid)
+
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_currentdesignation", 'currentdesignation', 'string')
+
+        # if (
+        #     rest_user.user_company_name is not None
+        #     and rest_user.user_company_name != ""
+        #     and rest_user.user_company_name == user.user_company_name
+        # ):
+        #     if user.userid not in friendsuggestion.company_name:
+        #         friendsuggestion.company_name.append(user.userid)
+        #     if rest_user.userid not in user_friendsuggestion.company_name:
+        #         user_friendsuggestion.company_name.append(rest_user.userid)
+
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_company_name", 'company_name', 'string')
+
+        # if (
+        #     rest_user.user_office_address is not None
+        #     and rest_user.user_office_address != ""
+        #     and rest_user.user_office_address == user.user_office_address
+        # ):
+        #     if user.userid not in friendsuggestion.office_address:
+        #         friendsuggestion.office_address.append(user.userid)
+        #     if rest_user.userid not in user_friendsuggestion.office_address:
+        #         user_friendsuggestion.office_address.append(rest_user.userid)
+        update_friendsuggestion(user, rest_user, user_friendsuggestion, friendsuggestion, "user_office_address", 'office_address', 'string')
 
         friendsuggestion.save()
 
