@@ -38,6 +38,20 @@ def register_social_user(provider, user_email, user_fullname, user_image):
                     "tokens": registered_user.tokens(),
                 }
 
+            elif filtered_user_by_email[0].auth_provider == "email":
+                # print('email::::::::::',filtered_user_by_email[0].user_email)
+                # print('password::::::::::',filtered_user_by_email[0].password)
+                # registered_user = authenticate(
+                #     user_email=filtered_user_by_email[0].user_email, password=filtered_user_by_email[0].password
+                # )
+
+                return {
+                    "user_fullname": filtered_user_by_email[0].user_fullname,
+                    "user_email": filtered_user_by_email[0].user_email,
+                    # "user_image": user_image,
+                    "tokens": filtered_user_by_email[0].tokens(),
+                }
+
             else:
                 # raise AuthenticationFailed(
                 #     detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
@@ -45,11 +59,11 @@ def register_social_user(provider, user_email, user_fullname, user_image):
                     "fail": f"'Please continue your login using ' {filtered_user_by_email[0].auth_provider}"
                 }
         else:
-                # raise AuthenticationFailed(
-                #     detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
-                return {
-                    "fail": f"'inactive user ' {filtered_user_by_email[0].auth_provider}"
-                }
+            # raise AuthenticationFailed(
+            #     detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
+            return {
+                "fail": f"'inactive user ' {filtered_user_by_email[0].auth_provider}"
+            }
 
     else:
         social_secret = "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"
