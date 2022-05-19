@@ -132,7 +132,16 @@ class DemoConsumer(AsyncWebsocketConsumer):
                     "chat": data_l,
                 }
 
-                # chat_data = data_l
+                chat_data = recent_data
+                await self.channel_layer.group_send(
+                    self.room_group_name_temp,
+                    {
+                        "type": "send_chat",
+                        # 'data': data,
+                        "data": recent_data,
+                    },
+                )
+
                 self.room_group_name_2 = "chat_" + self.room_name
 
                 await self.channel_layer.group_send(
@@ -221,7 +230,15 @@ class DemoConsumer(AsyncWebsocketConsumer):
                     "type": "latest_recent",
                     "chat": data_l,
                 }
-                # chat_data = data_l
+                chat_data = recent_data
+                await self.channel_layer.group_send(
+                    self.room_group_name_temp,
+                    {
+                        "type": "send_chat",
+                        # 'data': data,
+                        "data": recent_data,
+                    },
+                )
                 self.room_group_name_2 = "chat_" + self.room_name
 
                 await self.channel_layer.group_send(
