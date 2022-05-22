@@ -38,7 +38,7 @@ def register_social_user(provider, user_email, user_fullname, user_image):
                     "tokens": registered_user.tokens(),
                 }
 
-            elif filtered_user_by_email[0].auth_provider == "email":
+            elif filtered_user_by_email[0].auth_provider == 'email':
                 # print('email::::::::::',filtered_user_by_email[0].user_email)
                 # print('password::::::::::',filtered_user_by_email[0].password)
                 # registered_user = authenticate(
