@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "user_blog_app",
     "user_chat_app",
     "social_auth",
+
+    "django_extensions",
 ]
 
 MIDDLEWARE = [

@@ -119,8 +119,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
             self.room_name_temp = text_data_json["receiverid"]
             self.room_group_name_temp = "chat_" + self.room_name_temp
             # exist       new
-            if table_status == "new":
-                userid = self.room_name
+            if table_status == "exist":
+                userid = self.room_name_temp
                 limit = 1
                 data = await get_all_chat_data(userid, limit)
                 data = dict(data)
@@ -132,7 +132,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                     "chat": data_l,
                 }
 
-                chat_data = recent_data
+                # chat_data = recent_data
                 await self.channel_layer.group_send(
                     self.room_group_name_temp,
                     {
@@ -143,6 +143,18 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 )
 
                 self.room_group_name_2 = "chat_" + self.room_name
+
+                userid = self.room_name
+                limit = 1
+                data = await get_all_chat_data(userid, limit)
+                data = dict(data)
+                data_l = list(data.values())
+                data_l = list(filter(None, data_l))
+
+                recent_data = {
+                    "type": "latest_recent",
+                    "chat": data_l,
+                }
 
                 await self.channel_layer.group_send(
                     self.room_group_name_2,
@@ -218,19 +230,21 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             self.room_name_temp = text_data_json["receiverid"]
             self.room_group_name_temp = "chat_" + self.room_name_temp
-
-            if table_status == "new":
-                userid = self.room_name
+            # exist       new
+            if table_status == "exist":
+                userid = self.room_name_temp
                 limit = 1
                 data = await get_all_chat_data(userid, limit)
                 data = dict(data)
                 data_l = list(data.values())
                 data_l = list(filter(None, data_l))
+
                 recent_data = {
                     "type": "latest_recent",
                     "chat": data_l,
                 }
-                chat_data = recent_data
+
+                # chat_data = recent_data
                 await self.channel_layer.group_send(
                     self.room_group_name_temp,
                     {
@@ -239,7 +253,20 @@ class DemoConsumer(AsyncWebsocketConsumer):
                         "data": recent_data,
                     },
                 )
+
                 self.room_group_name_2 = "chat_" + self.room_name
+
+                userid = self.room_name
+                limit = 1
+                data = await get_all_chat_data(userid, limit)
+                data = dict(data)
+                data_l = list(data.values())
+                data_l = list(filter(None, data_l))
+
+                recent_data = {
+                    "type": "latest_recent",
+                    "chat": data_l,
+                }
 
                 await self.channel_layer.group_send(
                     self.room_group_name_2,
@@ -250,6 +277,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                     },
                 )
 
+                # print("chat_data::::::::::::::::::::::::", chat_data)
             chat_data = {
                 "type": "single message",
                 "sender": self.room_name,
