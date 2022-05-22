@@ -37,7 +37,7 @@ def create_chat_table(user_1, user_2):
     return table_title
 
 
-def get_last_chat_data(user_1, user_2):
+def get_last_chat_data(user_1, user_2, table_namee):
     table_title = (
         ChatTable.objects.using("probashi_chat")
         .get(user_1=user_1, user_2=user_2)
@@ -69,12 +69,15 @@ def get_last_chat_data(user_1, user_2):
 
     result = sql_array_to_object(values=result, field_names=fields)
     result["message_time"] = str(result["timezone"]) + str("+06:00")
+    del result["id"]
+    result["id"] = table_namee
     del result["timezone"]
     try:
         # print('sender::::::',result['sender'])
         sender_data = User.objects.filter(userid=result["sender"]).values(
             "userid", "user_fullname", "is_consultant", "user_photopath"
         )[0]
+
         result["sender"] = sender_data
 
         receiver_data = User.objects.filter(userid=result["receiver"]).values(

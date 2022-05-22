@@ -313,7 +313,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
             noti_data = await get_all_notifications(self.room_name)
 
-            print("data::::::::::::", noti_data)
+            # print("data::::::::::::", noti_data)
 
             chat_data = {
                 "type": "notification-list",

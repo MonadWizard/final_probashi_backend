@@ -31,13 +31,13 @@ def get_all_chat_data(userid, limit):
         .order_by("-id")[(limit - 1) * 20 : (limit * 20)]
     )
     data = {}
-    # print('chat list:::::::::',chat_list)
+    # print("chat list:::::::::", chat_list)
 
     for chat in chat_list:
-        data[chat.user_2] = get_last_chat_data(chat.user_1, chat.user_2)
+        data[chat.user_2] = get_last_chat_data(chat.user_1, chat.user_2, chat.table_name)
         # data['specific_user'] = get_last_chat_data(chat.user_1, chat.user_2)
 
-        # print('data::::::::::',data)
+        # print("data::::::::::", data)
     return data
 
 
