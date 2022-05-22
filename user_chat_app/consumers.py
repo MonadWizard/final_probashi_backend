@@ -119,7 +119,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             self.room_name_temp = text_data_json["receiverid"]
             self.room_group_name_temp = "chat_" + self.room_name_temp
             # exist       new
-            if table_status == "exist":
+            if table_status == "new":
                 userid = self.room_name_temp
                 limit = 1
                 data = await get_all_chat_data(userid, limit)
@@ -231,7 +231,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
             self.room_name_temp = text_data_json["receiverid"]
             self.room_group_name_temp = "chat_" + self.room_name_temp
             # exist       new
-            if table_status == "exist":
+            if table_status == "new":
                 userid = self.room_name_temp
                 limit = 1
                 data = await get_all_chat_data(userid, limit)
