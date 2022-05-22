@@ -691,7 +691,7 @@ class LoginVerificationCodeSend(views.APIView):
             return Response(
                 {
                     "success": False,
-                    "user_callphone": "This phone number is not valid or registered.",
+                    "message": "This phone number is not valid or registered.",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
