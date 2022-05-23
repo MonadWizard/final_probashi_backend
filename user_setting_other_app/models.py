@@ -94,6 +94,21 @@ class StaticSettingData(models.Model):
             or self.user_education_data
             or self.faq_title
             or self.privacypolicy_title
+            or self.educationService_degree
+            or self.overseasrecruitmentservice_job_type
+            or self.medicalconsultancyservice_treatment_area
+            or self.legalcivilservice_required
+            or self.legalcivilservice_issue
+            or self.propertymanagementservice_propertylocation
+            or self.propertymanagementservice_type
+            or self.propertymanagementservice_need
+            or self.tourismservices
+            or self.trainingservice_topic
+            or self.trainingservice_duration
+            or self.digitalservice_type
+            or self.tradefacilitationservice_type
+            or self.tradefacilitationservice_Purpose
+            or self.country_name
         ):
 
             return (
@@ -106,6 +121,21 @@ class StaticSettingData(models.Model):
                 or self.user_education_data
                 or self.faq_title
                 or self.privacypolicy_title
+                or self.educationService_degree
+                or self.overseasrecruitmentservice_job_type
+                or self.medicalconsultancyservice_treatment_area
+                or self.legalcivilservice_required
+                or self.legalcivilservice_issue
+                or self.propertymanagementservice_propertylocation
+                or self.propertymanagementservice_type
+                or self.propertymanagementservice_need
+                or self.tourismservices
+                or self.trainingservice_topic
+                or self.trainingservice_duration
+                or self.digitalservice_type
+                or self.tradefacilitationservice_type
+                or self.tradefacilitationservice_Purpose
+                or self.country_name
             )
 
         else:
