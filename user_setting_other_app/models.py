@@ -16,6 +16,10 @@ class StaticSettingData(models.Model):
     user_industry_data = models.CharField(
         max_length=255, unique=True, blank=True, null=True
     )
+    user_current_designation = models.CharField(
+        max_length=255, unique=True, blank=True, null=True
+    )
+    
     user_areaof_experience_data = models.CharField(
         max_length=255, unique=True, blank=True, null=True
     )

@@ -29,6 +29,7 @@ from .serializers import (
     DigitalServiceDataSerializer,
     TradeFacilitationServiceDataSerializer,
     GetCitySerializer,
+    UserCurrentDesignationDataSerializer,
 )
 from auth_user_app.utils import Util
 from django.db.models import Q
@@ -67,6 +68,35 @@ class UserIndustryDataView(generics.ListCreateAPIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
+#
+
+
+class UserCurrentDesignationDataView(generics.ListCreateAPIView):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    queryset = StaticSettingData.objects.filter(user_current_designation__isnull=False)
+    serializer_class = UserCurrentDesignationDataSerializer
+    renderer_classes = [UserRenderer]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        errorcontext = {
+            "user_current_designation": serializer.errors["user_current_designation"][0]
+        }
+        return Response(errorcontext, status=status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = self.serializer_class(queryset, many=True)
+        context = {"data": serializer.data}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+#
 class UserAreaOfExperienceDataView(generics.ListCreateAPIView):
     permission_classes = [
         permissions.IsAuthenticated,

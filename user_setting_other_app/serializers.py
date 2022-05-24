@@ -14,6 +14,12 @@ class UserAreaOfExperienceDataSerializer(serializers.ModelSerializer):
         model = StaticSettingData
         fields = ["user_areaof_experience_data"]
 
+class UserCurrentDesignationDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StaticSettingData
+        fields = ["user_current_designation"]
+
+
 
 class UserInterestedAreaDataSerializer(serializers.ModelSerializer):
     class Meta:
