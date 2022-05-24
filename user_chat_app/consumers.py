@@ -8,7 +8,12 @@ from auth_user_app.models import User
 
 
 from user_chat_app.db_utilities_async import get_previous_chat_data
-from user_chat_app.db_utilities_async import get_all_chat_data, get_all_notifications
+from user_chat_app.db_utilities_async import (
+    get_all_chat_data,
+    get_all_notifications,
+    update_online_true,
+    update_online_false,
+)
 from user_chat_app.db_utilities_async import (
     save_chat_data,
     save_chat_data_image,
@@ -34,6 +39,9 @@ class DemoConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
 
+        # active
+        await update_online_true(self.room_name)
+
         # get previous data
         limit = 1
         data = await get_all_chat_data(self.room_name, limit)
@@ -54,6 +62,11 @@ class DemoConsumer(AsyncWebsocketConsumer):
         )
 
     async def disconnect(self, close_code):
+        # print("disconnect.....", self.scope["url_route"]["kwargs"]["userid"])
+        # User.objects.filter(userid=self.room_name).update(is_active=True)
+        await update_online_false(self.room_name)
+        
+
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     # Receive message from WebSocket
@@ -391,4 +404,3 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 }
             )
         )
-

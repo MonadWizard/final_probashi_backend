@@ -22,6 +22,16 @@ import pytz
 
 
 @sync_to_async
+def update_online_true(user_id):
+    User.objects.filter(userid=user_id).update(is_online=True)
+
+
+@sync_to_async
+def update_online_false(user_id):
+    User.objects.filter(userid=user_id).update(is_online=False)
+
+
+@sync_to_async
 def get_all_chat_data(userid, limit):
 
     limit = limit or 1
@@ -34,8 +44,16 @@ def get_all_chat_data(userid, limit):
     # print("chat list:::::::::", chat_list)
 
     for chat in chat_list:
-        data[chat.user_2] = get_last_chat_data(chat.user_1, chat.user_2, chat.table_name)
+        data[chat.user_2] = get_last_chat_data(
+            chat.user_1, chat.user_2, chat.table_name
+        )
         # data['specific_user'] = get_last_chat_data(chat.user_1, chat.user_2)
+
+        # online_user2 = User.objects.filter(userid=chat.user_2).values(
+        #     "userid", "is_online"
+        # )
+
+        # print("online:::::::::", online)
 
         # print("data::::::::::", data)
     return data
