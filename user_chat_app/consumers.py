@@ -53,7 +53,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
         self.all_online_user.append(self.room_name)
 
         # active
-        await update_online_true(self.room_name)  # need to be removed
+        # await update_online_true(self.room_name)  # need to be removed
 
         await OnlineStatusSend_self(self.room_name, self.all_online_user)
 
@@ -81,12 +81,12 @@ class DemoConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         # print("disconnect.....", self.scope["url_route"]["kwargs"]["userid"])
         # User.objects.filter(userid=self.room_name).update(is_active=True)
-        await update_online_false(self.room_name)
+        # await update_online_false(self.room_name)
 
         # online status send
 
         self.all_online_user.remove(self.room_name)
-        print("online all user.....", self.all_online_user)
+        # print("online all user.....", self.all_online_user)
         await OnlineStatusSend(self.room_name, self.all_online_user)
 
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
