@@ -25,7 +25,6 @@ from probashi_backend.renderers import UserRenderer
 from user_profile_app.models import User_education
 from consultancy_app.models import ConsultancyCreate
 from user_connection_app.utility import match_friends
-import itertools
 from .helper_filter import *
 
 

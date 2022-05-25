@@ -4,7 +4,8 @@ from asgiref.sync import sync_to_async
 from pytz import timezone
 from user_chat_app.utility import sql_array_to_object
 from auth_user_app.utils import Util
-
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 import json
 
 from auth_user_app.models import User
@@ -16,9 +17,98 @@ from user_setting_other_app.models import Notification, User_settings
 
 from user_chat_app.db_utility import create_chat_table
 from user_chat_app.db_utility import get_last_chat_data
-
+from itertools import chain
 from datetime import datetime, timezone, timedelta
 import pytz
+
+
+
+@sync_to_async
+def OnlineStatusSend_self(user_id, all_online_user):
+    all_online_user.append(user_id)
+    chat_users = list(ChatOnlineUsers(user_id))
+    # chat_users.append(user_id)
+
+    # for i in chat_users:
+    #     if i in self.all_online_user:
+    #         online_chat_user.append(i)
+
+    # self.online_chat_user.append(user_id)
+    online_chat_user = []
+    [online_chat_user.append(i) for i in chat_users if i in all_online_user]
+
+    online_chat_user = list(set(online_chat_user))
+
+    
+    room_group_name = "chat_" + user_id
+
+    async_to_sync(get_channel_layer().group_send)(
+        room_group_name,
+        {
+            "type": "send_chat",
+            "success": True,
+            "data": {
+                "type": "online-users",
+                "users": online_chat_user,
+            },
+        },
+    )
+
+
+
+@sync_to_async
+def OnlineStatusSend(user_id, all_online_user):
+    all_online_user.append(user_id)
+    chat_users = list(ChatOnlineUsers(user_id))
+    # chat_users.append(user_id)
+
+    # for i in chat_users:
+    #     if i in self.all_online_user:
+    #         online_chat_user.append(i)
+
+    # self.online_chat_user.append(user_id)
+    online_chat_user = []
+    [online_chat_user.append(i) for i in chat_users if i in all_online_user]
+
+    online_chat_user = list(set(online_chat_user))
+
+    for user in online_chat_user:
+        room_group_name = "chat_" + user
+
+        async_to_sync(get_channel_layer().group_send)(
+            room_group_name,
+            {
+                "type": "send_chat",
+                "success": True,
+                "data": {
+                    "type": "online-users",
+                    "users": online_chat_user,
+                },
+            },
+        )
+
+
+async def send_chat(self, event):
+    data = event["data"]
+    await self.send(
+        text_data=json.dumps(
+            {
+                "data": data,
+            }
+        )
+    )
+
+
+def ChatOnlineUsers(user_id):
+    try:
+        if user1 := ChatTable.objects.filter(user_1=user_id).values_list(
+            "user_2", flat=True
+        ):
+            return user1
+
+    except Exception as e:
+        print(e)
+        return None
 
 
 @sync_to_async
@@ -47,15 +137,7 @@ def get_all_chat_data(userid, limit):
         data[chat.user_2] = get_last_chat_data(
             chat.user_1, chat.user_2, chat.table_name
         )
-        # data['specific_user'] = get_last_chat_data(chat.user_1, chat.user_2)
 
-        # online_user2 = User.objects.filter(userid=chat.user_2).values(
-        #     "userid", "is_online"
-        # )
-
-        # print("online:::::::::", online)
-
-        # print("data::::::::::", data)
     return data
 
 
@@ -66,9 +148,7 @@ def save_chat_data(data):
         chat_table = ChatTable.objects.using("probashi_chat").get(
             user_1=data["sender"], user_2=data["receiver"]
         )
-        # print('table name::', chat_table.table_name)
 
-        # print('data::::::::::', data)
         table_status = "exist"
         print("table-found")
     except:
@@ -82,12 +162,6 @@ def save_chat_data(data):
         table_status = "new"
         print("create-a-table")
 
-    # print('chat table', chat_table)
-
-    # if 'type' in data :
-    #     del data['type']
-    # if 'message-type' in data :
-    #     del data['message-type']
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
 
@@ -152,13 +226,6 @@ def save_chat_data_image(data):
         )
         table_status = "new"
         print("create-a-table")
-
-    # print('chat table', chat_table)
-
-    # if 'type' in data :
-    #     del data['type']
-    # if 'message-type' in data :
-    #     del data['message-type']
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
 
@@ -272,7 +339,6 @@ def get_all_notifications(userid):
             tzinfo=tz
         ) + timedelta(hours=6)
 
-    # data = list(Notification.objects.extra(select={'date':"to_char(<DATABASENAME>_<TableName>.created_at, 'YYYY-MM-DD hh:mi AM')"}).values_list('date', flat='true')
 
     noti_data = json.dumps(list(all_noti), sort_keys=True, default=str)
 
