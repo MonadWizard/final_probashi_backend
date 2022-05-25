@@ -53,43 +53,86 @@ class Friends_suggation(views.APIView):
         user = request.user.userid
 
         try:
-            user_data = FriendsSuggation.objects.filter(user=user)
+            user_data = FriendsSuggation.objects.get(user=user)
         except:
             user_data = None
 
-        
-
         if user_data is not None:
-            match_all = user_data.values(
-                "location",
-                "goals",
-                "interest",
-                "durationyear_abroad",
-                "current_location_durationyear",
-                "industry",
-                "areaof_experience",
-                "industry_experienceyear",
-                "serviceholder",
-                "selfemployed",
-                "currentdesignation",
-                "company_name",
-                "office_address",
-            )[0]
-
-            match_friend_all = [list(set(x)) for x in match_all.values() if x != None]
-
-            match_friend_all = list(
-                set(itertools.chain.from_iterable(match_friend_all))
+            match_all = []
+            match_all = user_data.location if user_data.location else match_all
+            match_all = (
+                list(chain(match_all, user_data.goals))
+                if user_data.goals
+                else match_all
             )
+            match_all = (
+                list(chain(match_all, user_data.interest))
+                if user_data.interest
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.durationyear_abroad))
+                if user_data.durationyear_abroad
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.current_location_durationyear))
+                if user_data.current_location_durationyear
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.industry))
+                if user_data.industry
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.areaof_experience))
+                if user_data.areaof_experience
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.industry_experienceyear))
+                if user_data.industry_experienceyear
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.serviceholder))
+                if user_data.serviceholder
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.selfemployed))
+                if user_data.selfemployed
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.currentdesignation))
+                if user_data.currentdesignation
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.company_name))
+                if user_data.company_name
+                else match_all
+            )
+            match_all = (
+                list(chain(match_all, user_data.office_address))
+                if user_data.office_address
+                else match_all
+            )
+
+            # print(":::::::::::::::::", match_all)
+
             match_friend_data = [
-                User.objects.filter(userid=x).values(
+                user := User.objects.filter(userid=x).values(
                     "userid",
                     "user_fullname",
                     "user_areaof_experience",
                     "user_photopath",
                     "is_consultant",
                 )[0]
-                for x in match_friend_all
+                for x in match_all
+                if User.objects.filter(userid=x).exists()
             ]
             context = {"success": True, "data": match_friend_data}
             return Response(context, status=status.HTTP_200_OK)
