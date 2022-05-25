@@ -78,16 +78,17 @@ def get_last_chat_data(user_1, user_2, table_namee):
             "userid", "user_fullname", "is_consultant", "user_photopath"
         )[0]
 
-        # online_sender = User.objects.get(userid=sender_data["userid"]).is_online
-        # sender_data["is_online"] = online_sender
+        online_sender = User.objects.get(userid=sender_data["userid"]).is_online
+        sender_data["is_online"] = online_sender
         result["sender"] = sender_data
 
         receiver_data = User.objects.filter(userid=result["receiver"]).values(
             "userid", "user_fullname", "is_consultant", "user_photopath"
         )[0]
 
-        # online_reciver = User.objects.get(userid=receiver_data["userid"]).is_online
-        # receiver_data["is_online"] = online_reciver
+        online_reciver = User.objects.get(userid=receiver_data["userid"]).is_online
+        receiver_data["is_online"] = online_reciver
+
         result["receiver"] = receiver_data
 
         return result
