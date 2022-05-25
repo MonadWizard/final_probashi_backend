@@ -57,6 +57,8 @@ class Friends_suggation(views.APIView):
         except:
             user_data = None
 
+        
+
         if user_data is not None:
             match_all = user_data.values(
                 "location",

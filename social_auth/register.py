@@ -38,7 +38,12 @@ def register_social_user(provider, user_email, user_fullname, user_image):
                     "tokens": registered_user.tokens(),
                 }
 
-            elif filtered_user_by_email[0].auth_provider == "email":
+            elif (
+                filtered_user_by_email[0].auth_provider == "email"
+                or filtered_user_by_email[0].auth_provider == "google"
+                or filtered_user_by_email[0].auth_provider == "facebook"
+                or filtered_user_by_email[0].auth_provider == "linkedin"
+            ):
 
                 return {
                     "user_fullname": filtered_user_by_email[0].user_fullname,
