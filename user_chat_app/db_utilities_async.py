@@ -22,7 +22,6 @@ from datetime import datetime, timezone, timedelta
 import pytz
 
 
-
 @sync_to_async
 def OnlineStatusSend_self(user_id, all_online_user):
     all_online_user.append(user_id)
@@ -39,7 +38,6 @@ def OnlineStatusSend_self(user_id, all_online_user):
 
     online_chat_user = list(set(online_chat_user))
 
-    
     room_group_name = "chat_" + user_id
 
     async_to_sync(get_channel_layer().group_send)(
@@ -53,7 +51,6 @@ def OnlineStatusSend_self(user_id, all_online_user):
             },
         },
     )
-
 
 
 @sync_to_async
@@ -161,7 +158,6 @@ def save_chat_data(data):
         )
         table_status = "new"
         print("create-a-table")
-
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
 
@@ -338,7 +334,6 @@ def get_all_notifications(userid):
         noti["notification_date"] = noti["notification_date"].replace(
             tzinfo=tz
         ) + timedelta(hours=6)
-
 
     noti_data = json.dumps(list(all_noti), sort_keys=True, default=str)
 
