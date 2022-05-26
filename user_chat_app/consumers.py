@@ -16,6 +16,7 @@ from user_chat_app.db_utilities_async import (
     update_online_false,
     ChatOnlineUsers,
     OnlineStatusSend,
+    OnlineStatusSend_connection,
 )
 from user_chat_app.db_utilities_async import (
     save_chat_data,
@@ -34,15 +35,10 @@ import os
 from django.conf import settings
 from user_connection_app.utility import match_friends
 
+all_online_user = []
+
 
 class DemoConsumer(AsyncWebsocketConsumer):
-
-    # @sync_to_async
-    # def update_online_false(user_id):
-    #     User.objects.filter(userid=user_id).update(is_online=False)
-
-    all_online_user = []
-
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["userid"]
         self.room_group_name = "chat_" + self.room_name
@@ -50,14 +46,16 @@ class DemoConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
 
-        self.all_online_user.append(self.room_name)
+        all_online_user.append(self.room_name)
+
+        # print("online all user connection.....", all_online_user)
 
         # active
         # await update_online_true(self.room_name)  # need to be removed
 
-        await OnlineStatusSend_self(self.room_name, self.all_online_user)
+        # await OnlineStatusSend_self(self.room_name, all_online_user)
 
-        await OnlineStatusSend(self.room_name, self.all_online_user)
+        await OnlineStatusSend_connection(self.room_name, all_online_user)
 
         # get previous data
         limit = 1
@@ -79,15 +77,18 @@ class DemoConsumer(AsyncWebsocketConsumer):
         )
 
     async def disconnect(self, close_code):
-        # print("disconnect.....", self.scope["url_route"]["kwargs"]["userid"])
-        # User.objects.filter(userid=self.room_name).update(is_active=True)
-        # await update_online_false(self.room_name)
 
         # online status send
+        # print("user name.....", type(self.room_name))
+        # print("online all user.....", all_online_user)
 
-        self.all_online_user.remove(self.room_name)
-        # print("online all user.....", self.all_online_user)
-        await OnlineStatusSend(self.room_name, self.all_online_user)
+        all_online_user.remove(self.room_name)
+
+        # all_online_user.clear()
+
+        # print("online all user.....", all_online_user)
+
+        await OnlineStatusSend(self.room_name, all_online_user)
 
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
@@ -98,7 +99,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         # filter
 
-        ChatOnlineUsers(self.room_name)
+        # ChatOnlineUsers(self.room_name)
 
         # await self.send(
         #         text_data=json.dumps(
