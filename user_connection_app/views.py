@@ -121,6 +121,7 @@ class Friends_suggation(views.APIView):
             )
 
             # print(":::::::::::::::::", match_all)
+            match_all = list(set(match_all))
 
             match_friend_data = [
                 user := User.objects.filter(userid=x).values(
