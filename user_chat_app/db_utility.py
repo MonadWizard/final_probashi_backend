@@ -55,9 +55,6 @@ def get_last_chat_data(user_1, user_2, table_namee):
     with connections["probashi_chat"].cursor() as cursor:
         cursor.execute(sql)
         result = cursor.fetchone()
-
-        # print('result::::::', result)
-
         if result is None:
             return {}
 
@@ -66,7 +63,6 @@ def get_last_chat_data(user_1, user_2, table_namee):
     fields = [field[0] for field in cursor.description]
 
     # print('fields::::::', fields)
-
     result = sql_array_to_object(values=result, field_names=fields)
     result["message_time"] = str(result["timezone"]) + str("+06:00")
     del result["id"]
@@ -77,17 +73,12 @@ def get_last_chat_data(user_1, user_2, table_namee):
         sender_data = User.objects.filter(userid=result["sender"]).values(
             "userid", "user_fullname", "is_consultant", "user_photopath"
         )[0]
-
-        # online_sender = User.objects.get(userid=sender_data["userid"]).is_online
-        # sender_data["is_online"] = online_sender
         result["sender"] = sender_data
 
         receiver_data = User.objects.filter(userid=result["receiver"]).values(
             "userid", "user_fullname", "is_consultant", "user_photopath"
         )[0]
 
-        # online_reciver = User.objects.get(userid=receiver_data["userid"]).is_online
-        # receiver_data["is_online"] = online_reciver
         result["receiver"] = receiver_data
 
         return result

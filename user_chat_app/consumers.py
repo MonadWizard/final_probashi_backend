@@ -12,8 +12,6 @@ from user_chat_app.db_utilities_async import get_previous_chat_data
 from user_chat_app.db_utilities_async import (
     get_all_chat_data,
     get_all_notifications,
-    update_online_true,
-    update_online_false,
     ChatOnlineUsers,
     OnlineStatusSend,
     OnlineStatusSend_connection,
@@ -49,15 +47,12 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         all_online_user.append(self.room_name)
 
-        print("online all user connection.....", all_online_user)
+        # print("online all user connection.....", all_online_user)
 
-        # active
-        # await update_online_true(self.room_name)  # need to be removed
 
         await OnlineStatusSend_self(self.room_name, all_online_user)
 
         await OnlineStatusSend_others(self.room_name, all_online_user)
-        # await OnlineStatusSend_connection(self.room_name, all_online_user)
 
         # get previous data
         limit = 1
@@ -80,10 +75,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
 
-        # online status send
-        # print("user name.....", type(self.room_name))
-        # print("online all user.....", all_online_user)
-
         all_online_user.remove(self.room_name)
 
         # all_online_user.clear()
@@ -98,20 +89,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         chat_data = {}
         text_data_json = json.loads(text_data)
-
-        # filter
-
-        # ChatOnlineUsers(self.room_name)
-
-        # await self.send(
-        #         text_data=json.dumps(
-        #             {
-        #                 "success": True,
-        #                 "type": "all_recent",
-        #                 "chat": data_l,
-        #             }
-        #         )
-        #     )
 
         if text_data_json["data"] == "friend_match":
             userid = self.room_name

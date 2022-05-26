@@ -60,11 +60,10 @@ def OnlineStatusSend_self(user_id, all_online_user):
         )
 
 
-
 @sync_to_async
 def OnlineStatusSend_others(user_id, all_online_user):
 
-    print("all_online_user.........", all_online_user)
+    # print("all_online_user.........", all_online_user)
     # all_online_user.append(user_id)
     chat_users = ChatOnlineUsers(user_id)
 
@@ -92,37 +91,24 @@ def OnlineStatusSend_others(user_id, all_online_user):
                 {
                     "type": "send_chat",
                     "success": True,
-                    "data": [
-                        {
-                            "isOnline": True,
-                            "type": "online-users",
-                            "users": [user_id],
-                        }
-                    ],
+                    "data": {
+                        "isOnline": True,
+                        "type": "online-users",
+                        "users": [user_id],
+                    },
                 },
             )
-
-            
-
-
-
-
-
-
-
-
-
 
 
 @sync_to_async
 def OnlineStatusSend_connection(user_id, all_online_user):
-    print("all_online_user connection===================", all_online_user)
+    # print("all_online_user connection===================", all_online_user)
     # all_online_user.append(user_id)
     chat_users = ChatOnlineUsers(user_id)
 
     if chat_users:
 
-        print("chat_users===================", chat_users)
+        # print("chat_users===================", chat_users)
 
         chat_users = list(chat_users)
 
@@ -156,18 +142,13 @@ def OnlineStatusSend_connection(user_id, all_online_user):
 @sync_to_async
 def OnlineStatusSend(user_id, all_online_user):
 
-    print("all_online_user.........", all_online_user)
+    # print("all_online_user.........", all_online_user)
     # all_online_user.append(user_id)
     chat_users = ChatOnlineUsers(user_id)
 
-    # for i in chat_users:
-    #     if i in self.all_online_user:
-    #         online_chat_user.append(i)
-
-    # self.online_chat_user.append(user_id)
     if chat_users:
 
-        print("chat_users===================", chat_users)
+        # print("chat_users===================", chat_users)
 
         chat_users = list(chat_users)
 
@@ -184,20 +165,13 @@ def OnlineStatusSend(user_id, all_online_user):
                 {
                     "type": "send_chat",
                     "success": True,
-                    "data": [
-                        {
-                            "isOnline": False,
-                            "type": "online-users",
-                            "users": [user_id],
-                        }
-                    ],
+                    "data": {
+                        "isOnline": False,
+                        "type": "online-users",
+                        "users": [user_id],
+                    },
                 },
             )
-
-
-
-
-
 
 
 async def send_chat(self, event):
@@ -221,16 +195,6 @@ def ChatOnlineUsers(user_id):
     except Exception as e:
         print(e)
         return [user_id]
-
-
-@sync_to_async
-def update_online_true(user_id):
-    User.objects.filter(userid=user_id).update(is_online=True)
-
-
-@sync_to_async
-def update_online_false(user_id):
-    User.objects.filter(userid=user_id).update(is_online=False)
 
 
 @sync_to_async
