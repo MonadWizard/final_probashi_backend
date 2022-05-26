@@ -52,11 +52,13 @@ def OnlineStatusSend_self(user_id, all_online_user):
                 "type": "send_chat",
                 "success": True,
                 "data": {
-                    "type": "online-users self",
+                    "isOnline": True,
+                    "type": "online-users",
                     "users": online_chat_user,
                 },
             },
         )
+
 
 
 @sync_to_async
@@ -73,7 +75,7 @@ def OnlineStatusSend_others(user_id, all_online_user):
     # self.online_chat_user.append(user_id)
     if chat_users:
 
-        print("chat_users===================", chat_users)
+        # print("chat_users===================", chat_users)
 
         chat_users = list(chat_users)
 
@@ -92,15 +94,15 @@ def OnlineStatusSend_others(user_id, all_online_user):
                     "success": True,
                     "data": [
                         {
-                            "type": "online-user",
-                            "users": user_id,
+                            "isOnline": True,
+                            "type": "online-users",
+                            "users": [user_id],
                         }
                     ],
                 },
             )
 
-
-
+            
 
 
 
@@ -184,12 +186,18 @@ def OnlineStatusSend(user_id, all_online_user):
                     "success": True,
                     "data": [
                         {
-                            "type": "offline-user",
-                            "users": user_id,
+                            "isOnline": False,
+                            "type": "online-users",
+                            "users": [user_id],
                         }
                     ],
                 },
             )
+
+
+
+
+
 
 
 async def send_chat(self, event):
