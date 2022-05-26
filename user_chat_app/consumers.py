@@ -5,6 +5,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.db.models import Q
 from user_setting_other_app.models import Notification
 from auth_user_app.models import User
+from asgiref.sync import sync_to_async
 
 
 from user_chat_app.db_utilities_async import get_previous_chat_data
@@ -13,6 +14,8 @@ from user_chat_app.db_utilities_async import (
     get_all_notifications,
     update_online_true,
     update_online_false,
+    ChatOnlineUsers,
+    OnlineStatusSend,
 )
 from user_chat_app.db_utilities_async import (
     save_chat_data,
@@ -20,6 +23,7 @@ from user_chat_app.db_utilities_async import (
     save_notification_data,
     delete_notification_data,
     seen_notification_data,
+    OnlineStatusSend_self,
 )
 from django.utils import timezone
 
@@ -32,6 +36,13 @@ from user_connection_app.utility import match_friends
 
 
 class DemoConsumer(AsyncWebsocketConsumer):
+
+    # @sync_to_async
+    # def update_online_false(user_id):
+    #     User.objects.filter(userid=user_id).update(is_online=False)
+
+    all_online_user = []
+
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["userid"]
         self.room_group_name = "chat_" + self.room_name
@@ -39,8 +50,14 @@ class DemoConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
 
+        self.all_online_user.append(self.room_name)
+
         # active
-        await update_online_true(self.room_name)
+        # await update_online_true(self.room_name)  # need to be removed
+
+        await OnlineStatusSend_self(self.room_name, self.all_online_user)
+
+        await OnlineStatusSend(self.room_name, self.all_online_user)
 
         # get previous data
         limit = 1
@@ -64,8 +81,13 @@ class DemoConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         # print("disconnect.....", self.scope["url_route"]["kwargs"]["userid"])
         # User.objects.filter(userid=self.room_name).update(is_active=True)
-        await update_online_false(self.room_name)
-        
+        # await update_online_false(self.room_name)
+
+        # online status send
+
+        self.all_online_user.remove(self.room_name)
+        # print("online all user.....", self.all_online_user)
+        await OnlineStatusSend(self.room_name, self.all_online_user)
 
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
@@ -73,6 +95,20 @@ class DemoConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         chat_data = {}
         text_data_json = json.loads(text_data)
+
+        # filter
+
+        ChatOnlineUsers(self.room_name)
+
+        # await self.send(
+        #         text_data=json.dumps(
+        #             {
+        #                 "success": True,
+        #                 "type": "all_recent",
+        #                 "chat": data_l,
+        #             }
+        #         )
+        #     )
 
         if text_data_json["data"] == "friend_match":
             userid = self.room_name
