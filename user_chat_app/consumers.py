@@ -17,6 +17,7 @@ from user_chat_app.db_utilities_async import (
     ChatOnlineUsers,
     OnlineStatusSend,
     OnlineStatusSend_connection,
+    OnlineStatusSend_others,
 )
 from user_chat_app.db_utilities_async import (
     save_chat_data,
@@ -48,14 +49,15 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         all_online_user.append(self.room_name)
 
-        # print("online all user connection.....", all_online_user)
+        print("online all user connection.....", all_online_user)
 
         # active
         # await update_online_true(self.room_name)  # need to be removed
 
-        # await OnlineStatusSend_self(self.room_name, all_online_user)
+        await OnlineStatusSend_self(self.room_name, all_online_user)
 
-        await OnlineStatusSend_connection(self.room_name, all_online_user)
+        await OnlineStatusSend_others(self.room_name, all_online_user)
+        # await OnlineStatusSend_connection(self.room_name, all_online_user)
 
         # get previous data
         limit = 1
@@ -86,7 +88,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         # all_online_user.clear()
 
-        # print("online all user.....", all_online_user)
+        print("online all user disconnect.....", all_online_user)
 
         await OnlineStatusSend(self.room_name, all_online_user)
 

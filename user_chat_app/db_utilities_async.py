@@ -24,8 +24,8 @@ import pytz
 
 @sync_to_async
 def OnlineStatusSend_self(user_id, all_online_user):
-    all_online_user.append(user_id)
-    chat_users = list(ChatOnlineUsers(user_id))
+    # all_online_user.append(user_id)
+    chat_users = ChatOnlineUsers(user_id)
     # chat_users.append(user_id)
 
     # for i in chat_users:
@@ -33,36 +33,95 @@ def OnlineStatusSend_self(user_id, all_online_user):
     #         online_chat_user.append(i)
 
     # self.online_chat_user.append(user_id)
-    online_chat_user = []
-    [online_chat_user.append(i) for i in chat_users if i in all_online_user]
 
-    online_chat_user = list(set(online_chat_user))
+    if chat_users:
+        chat_users = list(chat_users)
 
-    # print("online chat user self.........", online_chat_user)
+        online_chat_user = []
+        [online_chat_user.append(i) for i in chat_users if i in all_online_user]
 
-    room_group_name = "chat_" + user_id
+        online_chat_user = list(set(online_chat_user))
 
-    async_to_sync(get_channel_layer().group_send)(
-        room_group_name,
-        {
-            "type": "send_chat",
-            "success": True,
-            "data": {
-                "type": "online-users self",
-                "users": online_chat_user,
+        # print("online chat user self.........", online_chat_user)
+
+        room_group_name = "chat_" + user_id
+
+        async_to_sync(get_channel_layer().group_send)(
+            room_group_name,
+            {
+                "type": "send_chat",
+                "success": True,
+                "data": {
+                    "type": "online-users self",
+                    "users": online_chat_user,
+                },
             },
-        },
-    )
+        )
+
+
+@sync_to_async
+def OnlineStatusSend_others(user_id, all_online_user):
+
+    print("all_online_user.........", all_online_user)
+    # all_online_user.append(user_id)
+    chat_users = ChatOnlineUsers(user_id)
+
+    # for i in chat_users:
+    #     if i in self.all_online_user:
+    #         online_chat_user.append(i)
+
+    # self.online_chat_user.append(user_id)
+    if chat_users:
+
+        print("chat_users===================", chat_users)
+
+        chat_users = list(chat_users)
+
+        online_chat_user = []
+        [online_chat_user.append(i) for i in chat_users if i in all_online_user]
+
+        online_chat_user = list(set(online_chat_user))
+
+        for user in online_chat_user:
+            room_group_name = "chat_" + user
+
+            async_to_sync(get_channel_layer().group_send)(
+                room_group_name,
+                {
+                    "type": "send_chat",
+                    "success": True,
+                    "data": [
+                        {
+                            "type": "online-user",
+                            "users": user_id,
+                        }
+                    ],
+                },
+            )
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @sync_to_async
 def OnlineStatusSend_connection(user_id, all_online_user):
-    # print("user_id===================", user_id)
+    print("all_online_user connection===================", all_online_user)
     # all_online_user.append(user_id)
     chat_users = ChatOnlineUsers(user_id)
-    # print("chat_users===================", chat_users)
 
     if chat_users:
+
+        print("chat_users===================", chat_users)
+
         chat_users = list(chat_users)
 
         online_chat_user = []
@@ -97,32 +156,40 @@ def OnlineStatusSend(user_id, all_online_user):
 
     print("all_online_user.........", all_online_user)
     # all_online_user.append(user_id)
-    chat_users = list(ChatOnlineUsers(user_id))
+    chat_users = ChatOnlineUsers(user_id)
 
     # for i in chat_users:
     #     if i in self.all_online_user:
     #         online_chat_user.append(i)
 
     # self.online_chat_user.append(user_id)
-    online_chat_user = []
-    [online_chat_user.append(i) for i in chat_users if i in all_online_user]
+    if chat_users:
 
-    online_chat_user = list(set(online_chat_user))
+        print("chat_users===================", chat_users)
 
-    for user in online_chat_user:
-        room_group_name = "chat_" + user
+        chat_users = list(chat_users)
 
-        async_to_sync(get_channel_layer().group_send)(
-            room_group_name,
-            {
-                "type": "send_chat",
-                "success": True,
-                "data": {
-                    "type": "online-users",
-                    "users": online_chat_user,
+        online_chat_user = []
+        [online_chat_user.append(i) for i in chat_users if i in all_online_user]
+
+        online_chat_user = list(set(online_chat_user))
+
+        for user in online_chat_user:
+            room_group_name = "chat_" + user
+
+            async_to_sync(get_channel_layer().group_send)(
+                room_group_name,
+                {
+                    "type": "send_chat",
+                    "success": True,
+                    "data": [
+                        {
+                            "type": "offline-user",
+                            "users": user_id,
+                        }
+                    ],
                 },
-            },
-        )
+            )
 
 
 async def send_chat(self, event):
