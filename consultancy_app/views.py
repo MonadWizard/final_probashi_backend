@@ -269,6 +269,33 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
         )
 
 
+class IpnSslcommerze_pro(views.APIView):
+    # permission_classes = [AllowAny]
+
+    def post(self, request):
+
+        print("i am from ipn probashi pro")
+        print("ipn Data pro================", request.data)
+        if request.data:
+            data = orderVerify(request)
+            print("validation response probashi IPN pro===============", data)
+            if data["status"] == "VALID":
+                tran_id = data["tran_id"]
+
+                if ProUserPayment.objects.filter(tran_id=tran_id).exists():
+                    pro_user = ProUserPayment.objects.filter(tran_id=tran_id).values(
+                        "userid"
+                    )[0]["userid"]
+                    User.objects.filter(userid=pro_user).update(is_pro_user=True)
+
+                    ProUserPayment.objects.filter(tran_id=tran_id).update(
+                        payment_details=json.dumps(data)
+                    )
+
+                    return Response("success", status=status.HTTP_200_OK)
+                return Response("Payment Invalid", status=status.HTTP_400_BAD_REQUEST)
+
+
 class IpnSslcommerze(views.APIView):
     # permission_classes = [AllowAny]
 
@@ -295,7 +322,7 @@ class IpnSslcommerze(views.APIView):
                     ).update(payment_status=True)
 
                     ConsultancyPayment.objects.filter(Q(tran_id=tran_id)).update(
-                        payment_details= json.dumps(data),
+                        payment_details=json.dumps(data),
                     )
                     return Response("success", status=status.HTTP_200_OK)
                 except Exception as e:
@@ -303,15 +330,13 @@ class IpnSslcommerze(views.APIView):
                     return Response("success call", status=status.HTTP_200_OK)
 
 
-        
-
 # need to test in server...................................
 class Consultancy_Payment_success(views.APIView):
     def post(self, request):
         # tran_id = request.data["tran_id"]
         print("success request data===================", request.data)
         return Response("payment is success", status.HTTP_200_OK)
-        
+
 
 @api_view(["POST"])
 def Consultancy_Payment_fail(request):

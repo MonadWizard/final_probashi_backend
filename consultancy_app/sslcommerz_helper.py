@@ -41,7 +41,7 @@ def Pro_user_CREATE_and_GET_session(request, user):
     post_body["product_name"] = "become a pro"
     post_body["product_category"] = "paid user"
     post_body["product_profile"] = "premium"
-    post_body["total_amount"] = "100"
+    post_body["total_amount"] = "10"
     post_body["currency"] = "BDT"
     post_body[
         "success_url"
@@ -52,6 +52,11 @@ def Pro_user_CREATE_and_GET_session(request, user):
     post_body[
         "cancel_url"
     ] = "https://probashiapi.algorithmgeneration.com/consultancy/pro-cancle/"
+
+    post_body[
+        "ipn_url"
+    ] = "https://probashiapi.algorithmgeneration.com/consultancy/ipn-pro/"
+
     post_body["shipping_method"] = "NO"
     post_body["cus_name"] = name
     post_body["cus_email"] = email

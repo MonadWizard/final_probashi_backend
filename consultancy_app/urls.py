@@ -25,6 +25,7 @@ from .views import (
     SpecificServiceDescription,
     ConsultancyInfo,
     IpnSslcommerze,
+    IpnSslcommerze_pro
 )
 
 
@@ -90,6 +91,7 @@ urlpatterns = [
         name="AppointmentSeeker_MissingAppointmentReason",
     ),
     path("pro/", BecomeProUser.as_view(), name="BecomeProUser"),
+    path("ipn-pro/",IpnSslcommerze_pro.as_view()),
     # payment
     path("pro-success/", Pro_Payment_success.as_view(), name="payment_success"),
     path("pro-fail/", Pro_Payment_fail, name="payment_fail"),
