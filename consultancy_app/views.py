@@ -1,3 +1,4 @@
+import json
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from rest_framework import permissions
@@ -276,22 +277,6 @@ class IpnSslcommerze(views.APIView):
         print("i am from ipn probashi")
         print("ipn Data================", request.data)
         if request.data:
-            # Order.objects.filter(tran_id=request.data['tran_id']).update(is_payment_success=True)
-            data = orderVerify(request)
-            print("validation response probashi IPN===============", data)
-            # if data['status'] == 'VALID':
-            #     LiveOrderSerializer.objects.filter(order_id=data['tran_id']).update(payment_status="Amount Fully Paid")
-        return Response(request.data, status.HTTP_200_OK)
-
-        
-
-# need to test in server...................................
-class Consultancy_Payment_success(views.APIView):
-    def post(self, request):
-        # tran_id = request.data["tran_id"]
-        print("success request data===================", request.data)
-
-        if request.data:
             data = orderVerify(request)
             print("validation response probashi===============", data)
             if data["status"] == "VALID":
@@ -310,53 +295,23 @@ class Consultancy_Payment_success(views.APIView):
                     ).update(payment_status=True)
 
                     ConsultancyPayment.objects.filter(Q(tran_id=tran_id)).update(
-                        payment_details=request.data,
-                        # val_id=data["val_id"],
-                        # amount=data["amount"],
-                        # store_amount=data["store_amount"],
-                        # currency=data["currency"],
-                        # bank_tran_id=data["bank_tran_id"],
-                        # card_type=data["card_type"],
-                        # card_no=data["card_no"],
-                        # status=data["status"],
-                        # tran_date=data["tran_date"],
-                        # card_issuer=data["card_issuer"],
-                        # card_brand=data["card_brand"],
-                        # card_sub_brand=data["card_sub_brand"],
-                        # card_issuer_country=data["card_issuer_country"],
-                        # card_issuer_country_code=data["card_issuer_country_code"],
-                        # currency_type=data["currency_type"],
-                        # currency_amount=data["currency_amount"],
-                        # currency_rate=data["currency_rate"],
-                        # addition_charge=data["addition_charge"],
-                        # base_fair=data["base_fair"],
-                        # value_a=data["value_a"],
-                        # value_b=data["value_b"],
-                        # value_c=data["value_c"],
-                        # value_d=data["value_d"],
-                        # emi_instalment = data["emi_instalment"],
-                        # emi_amount = data["emi_amount"],
-                        # emi_description = data["emi_description"],
-                        # emi_issuer = data["emi_issuer"],
-                        # risk_level=data["risk_level"],
-                        # risk_title=data["risk_title"],
-                        # discount_percentage=data["discount_percentage"],
-                        # discount_remarks=data["discount_remarks"],
-                        # discount_amount=data["discount_amount"],
-                        # validated_on=data["validated_on"],
-                        # gw_version=data["gw_version"],
-                        # payment_channel=data["payment_channel"],
-                        # card_ref_id=data["card_ref_id"],
-                        # cus_name=data["cus_name"],
-                        # cus_email=data["cus_email"],
-                        # cus_phone=data["cus_phone"],
-                        # campaign_code=data["campaign_code"],
+                        payment_details= json.dumps(data),
                     )
                     return Response("success", status=status.HTTP_200_OK)
                 except Exception as e:
                     print("error::::::", e)
                     return Response("success call", status=status.HTTP_200_OK)
 
+
+        
+
+# need to test in server...................................
+class Consultancy_Payment_success(views.APIView):
+    def post(self, request):
+        # tran_id = request.data["tran_id"]
+        print("success request data===================", request.data)
+        return Response("payment is success", status.HTTP_200_OK)
+        
 
 @api_view(["POST"])
 def Consultancy_Payment_fail(request):
