@@ -341,6 +341,11 @@ class Consultancy_Payment_success(views.APIView):
     def post(self, request):
         tran_id = request.data["tran_id"]
         print("success request data===================", request.data)
+
+        if request.data:
+            data = orderVerify(request)
+            print("validation response probashi===============", data)
+
         # try:
         #     consultancy_data = ConsultancyPayment.objects.filter(
         #         tran_id=tran_id
