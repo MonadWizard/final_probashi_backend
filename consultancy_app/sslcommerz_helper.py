@@ -61,7 +61,7 @@ def Pro_user_CREATE_and_GET_session(request, user):
     post_body["cus_country"] = country
     post_body["cus_phone"] = phone
 
-    sslcommerz_api_url = "https://sandbox.sslcommerz.com/gwprocess/v4/api.php"
+    sslcommerz_api_url = "https://securepay.sslcommerz.com/gwprocess/v4/api.php"
     res = requests.post(sslcommerz_api_url, post_body)
     print("::::::::", res)
     resp = {"res": res.json(), "post_body": post_body}
@@ -139,8 +139,8 @@ def Consultancy_CREATE_and_GET_session(request, user):
     post_body["shipping_method"] = "NO"
 
     # print("::::::::::::::::::::::::",post_body)
-    sslcommerz_api_url = "https://sandbox.sslcommerz.com/gwprocess/v4/api.php"
+    sslcommerz_api_url = "https://securepay.sslcommerz.com/gwprocess/v4/api.php"
     res = requests.post(sslcommerz_api_url, post_body)
     resp = {"res": res.json(), "post_body": post_body}
-    # print("resp::::::::::", resp)
+    print("resp::::::::::", resp)
     return resp
