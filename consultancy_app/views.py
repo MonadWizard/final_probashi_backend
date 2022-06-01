@@ -272,112 +272,123 @@ class IpnSslcommerze(views.APIView):
     # permission_classes = [AllowAny]
 
     def post(self, request):
-        print("IpnSslcommerze request data::::::::", request.data)
-        tran_id = request.data["tran_id"]
-        # print("train id:::::::::::::", request.data)
-        try:
-            consultancy_data = ConsultancyPayment.objects.filter(
-                tran_id=tran_id
-            ).values("userid", "consultancy_sheduleid")
-            consultancy_sheduleid = consultancy_data[0]["consultancy_sheduleid"]
-            ConsultancyTimeSchudile.objects.filter(id=consultancy_sheduleid).update(
-                is_consultancy_take=True
-            )
-            UserConsultAppointmentRequest.objects.filter(
-                ConsultancyTimeSchudile=consultancy_sheduleid
-            ).update(payment_status=True)
 
-            ConsultancyPayment.objects.filter(Q(tran_id=tran_id)).update(
-                val_id=request.data["val_id"],
-                amount=request.data["amount"],
-                card_type=request.data["card_type"],
-                store_amount=request.data["store_amount"],
-                card_no=request.data["card_no"],
-                bank_tran_id=request.data["bank_tran_id"],
-                status=request.data["status"],
-                tran_date=request.data["tran_date"],
-                error=request.data["error"],
-                currency=request.data["currency"],
-                card_issuer=request.data["card_issuer"],
-                card_brand=request.data["card_brand"],
-                card_sub_brand=request.data["card_sub_brand"],
-                card_issuer_country=request.data["card_issuer_country"],
-                card_issuer_country_code=request.data["card_issuer_country_code"],
-                store_id=request.data["store_id"],
-                verify_sign=request.data["verify_sign"],
-                verify_key=request.data["verify_key"],
-                verify_sign_sha2=request.data["verify_sign_sha2"],
-                currency_type=request.data["currency_type"],
-                currency_amount=request.data["currency_amount"],
-                currency_rate=request.data["currency_rate"],
-                base_fair=request.data["base_fair"],
-                value_a=request.data["value_a"],
-                value_b=request.data["value_b"],
-                value_c=request.data["value_c"],
-                value_d=request.data["value_d"],
-                subscription_id=request.data["subscription_id"],
-                risk_level=request.data["risk_level"],
-                risk_title=request.data["risk_title"],
-            )
-            return Response("success", status=status.HTTP_200_OK)
-        except Exception as e:
-            # print("error::::::", e)
-            return Response("fail", status=status.HTTP_400_BAD_REQUEST)
+        print("i am from ipn")
+        print("ipn Data================", request.data)
+        if request.data:
+            # Order.objects.filter(tran_id=request.data['tran_id']).update(is_payment_success=True)
+            data = orderVerify(request)
+            print("validation response===============", data)
+            # if data['status'] == 'VALID':
+            #     LiveOrderSerializer.objects.filter(order_id=data['tran_id']).update(payment_status="Amount Fully Paid")
+        return Response(request.data, status.HTTP_200_OK)
+
+        # print("IpnSslcommerze request data::::::::", request.data)
+        # tran_id = request.data["tran_id"]
+        # # print("train id:::::::::::::", request.data)
+        # try:
+        #     consultancy_data = ConsultancyPayment.objects.filter(
+        #         tran_id=tran_id
+        #     ).values("userid", "consultancy_sheduleid")
+        #     consultancy_sheduleid = consultancy_data[0]["consultancy_sheduleid"]
+        #     ConsultancyTimeSchudile.objects.filter(id=consultancy_sheduleid).update(
+        #         is_consultancy_take=True
+        #     )
+        #     UserConsultAppointmentRequest.objects.filter(
+        #         ConsultancyTimeSchudile=consultancy_sheduleid
+        #     ).update(payment_status=True)
+
+        #     ConsultancyPayment.objects.filter(Q(tran_id=tran_id)).update(
+        #         val_id=request.data["val_id"],
+        #         amount=request.data["amount"],
+        #         card_type=request.data["card_type"],
+        #         store_amount=request.data["store_amount"],
+        #         card_no=request.data["card_no"],
+        #         bank_tran_id=request.data["bank_tran_id"],
+        #         status=request.data["status"],
+        #         tran_date=request.data["tran_date"],
+        #         error=request.data["error"],
+        #         currency=request.data["currency"],
+        #         card_issuer=request.data["card_issuer"],
+        #         card_brand=request.data["card_brand"],
+        #         card_sub_brand=request.data["card_sub_brand"],
+        #         card_issuer_country=request.data["card_issuer_country"],
+        #         card_issuer_country_code=request.data["card_issuer_country_code"],
+        #         store_id=request.data["store_id"],
+        #         verify_sign=request.data["verify_sign"],
+        #         verify_key=request.data["verify_key"],
+        #         verify_sign_sha2=request.data["verify_sign_sha2"],
+        #         currency_type=request.data["currency_type"],
+        #         currency_amount=request.data["currency_amount"],
+        #         currency_rate=request.data["currency_rate"],
+        #         base_fair=request.data["base_fair"],
+        #         value_a=request.data["value_a"],
+        #         value_b=request.data["value_b"],
+        #         value_c=request.data["value_c"],
+        #         value_d=request.data["value_d"],
+        #         subscription_id=request.data["subscription_id"],
+        #         risk_level=request.data["risk_level"],
+        #         risk_title=request.data["risk_title"],
+        #     )
+        #     return Response("success", status=status.HTTP_200_OK)
+        # except Exception as e:
+        #     # print("error::::::", e)
+        #     return Response("fail", status=status.HTTP_400_BAD_REQUEST)
 
 
 # need to test in server...................................
 class Consultancy_Payment_success(views.APIView):
     def post(self, request):
         tran_id = request.data["tran_id"]
-        print("success request data:::::::::::::", request.data)
-        try:
-            consultancy_data = ConsultancyPayment.objects.filter(
-                tran_id=tran_id
-            ).values("userid", "consultancy_sheduleid")
-            consultancy_sheduleid = consultancy_data[0]["consultancy_sheduleid"]
-            ConsultancyTimeSchudile.objects.filter(id=consultancy_sheduleid).update(
-                is_consultancy_take=True
-            )
-            UserConsultAppointmentRequest.objects.filter(
-                ConsultancyTimeSchudile=consultancy_sheduleid
-            ).update(payment_status=True)
+        print("success request data===================", request.data)
+        # try:
+        #     consultancy_data = ConsultancyPayment.objects.filter(
+        #         tran_id=tran_id
+        #     ).values("userid", "consultancy_sheduleid")
+        #     consultancy_sheduleid = consultancy_data[0]["consultancy_sheduleid"]
+        #     ConsultancyTimeSchudile.objects.filter(id=consultancy_sheduleid).update(
+        #         is_consultancy_take=True
+        #     )
+        #     UserConsultAppointmentRequest.objects.filter(
+        #         ConsultancyTimeSchudile=consultancy_sheduleid
+        #     ).update(payment_status=True)
 
-            ConsultancyPayment.objects.filter(Q(tran_id=tran_id)).update(
-                val_id=request.data["val_id"],
-                amount=request.data["amount"],
-                card_type=request.data["card_type"],
-                store_amount=request.data["store_amount"],
-                card_no=request.data["card_no"],
-                bank_tran_id=request.data["bank_tran_id"],
-                status=request.data["status"],
-                tran_date=request.data["tran_date"],
-                error=request.data["error"],
-                currency=request.data["currency"],
-                card_issuer=request.data["card_issuer"],
-                card_brand=request.data["card_brand"],
-                card_sub_brand=request.data["card_sub_brand"],
-                card_issuer_country=request.data["card_issuer_country"],
-                card_issuer_country_code=request.data["card_issuer_country_code"],
-                store_id=request.data["store_id"],
-                verify_sign=request.data["verify_sign"],
-                verify_key=request.data["verify_key"],
-                verify_sign_sha2=request.data["verify_sign_sha2"],
-                currency_type=request.data["currency_type"],
-                currency_amount=request.data["currency_amount"],
-                currency_rate=request.data["currency_rate"],
-                base_fair=request.data["base_fair"],
-                value_a=request.data["value_a"],
-                value_b=request.data["value_b"],
-                value_c=request.data["value_c"],
-                value_d=request.data["value_d"],
-                subscription_id=request.data["subscription_id"],
-                risk_level=request.data["risk_level"],
-                risk_title=request.data["risk_title"],
-            )
-            return Response("success", status=status.HTTP_200_OK)
-        except Exception as e:
-            # print("error::::::", e)
-            return Response("fail", status=status.HTTP_400_BAD_REQUEST)
+        #     ConsultancyPayment.objects.filter(Q(tran_id=tran_id)).update(
+        #         val_id=request.data["val_id"],
+        #         amount=request.data["amount"],
+        #         card_type=request.data["card_type"],
+        #         store_amount=request.data["store_amount"],
+        #         card_no=request.data["card_no"],
+        #         bank_tran_id=request.data["bank_tran_id"],
+        #         status=request.data["status"],
+        #         tran_date=request.data["tran_date"],
+        #         error=request.data["error"],
+        #         currency=request.data["currency"],
+        #         card_issuer=request.data["card_issuer"],
+        #         card_brand=request.data["card_brand"],
+        #         card_sub_brand=request.data["card_sub_brand"],
+        #         card_issuer_country=request.data["card_issuer_country"],
+        #         card_issuer_country_code=request.data["card_issuer_country_code"],
+        #         store_id=request.data["store_id"],
+        #         verify_sign=request.data["verify_sign"],
+        #         verify_key=request.data["verify_key"],
+        #         verify_sign_sha2=request.data["verify_sign_sha2"],
+        #         currency_type=request.data["currency_type"],
+        #         currency_amount=request.data["currency_amount"],
+        #         currency_rate=request.data["currency_rate"],
+        #         base_fair=request.data["base_fair"],
+        #         value_a=request.data["value_a"],
+        #         value_b=request.data["value_b"],
+        #         value_c=request.data["value_c"],
+        #         value_d=request.data["value_d"],
+        #         subscription_id=request.data["subscription_id"],
+        #         risk_level=request.data["risk_level"],
+        #         risk_title=request.data["risk_title"],
+        #     )
+        #     return Response("success", status=status.HTTP_200_OK)
+        # except Exception as e:
+        # print("error::::::", e)
+        return Response("success call", status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
