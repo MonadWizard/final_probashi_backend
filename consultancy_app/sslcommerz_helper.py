@@ -36,8 +36,8 @@ def Pro_user_CREATE_and_GET_session(request, user):
         address = "No Address Given"
 
     post_body = {}
-    post_body["store_id"] = "mworg624bb703abfce"
-    post_body["store_passwd"] = "mworg624bb703abfce@ssl"
+    post_body["store_id"] = "Tripziplive"
+    post_body["store_passwd"] = "5A9651E55CDAA86375"
     post_body["product_name"] = "become a pro"
     post_body["product_category"] = "paid user"
     post_body["product_profile"] = "premium"
@@ -112,8 +112,8 @@ def Consultancy_CREATE_and_GET_session(request, user):
         city = f"{user.user_nonresidential_city}"
 
     post_body = {}
-    post_body["store_id"] = "mworg624bb703abfce"
-    post_body["store_passwd"] = "mworg624bb703abfce@ssl"
+    post_body["store_id"] = "Tripziplive"
+    post_body["store_passwd"] = "5A9651E55CDAA86375"
     post_body["product_name"] = consultancy_name
     post_body["product_category"] = consultancy_category
     post_body["product_profile"] = "counsultancy"
