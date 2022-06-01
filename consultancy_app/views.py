@@ -278,7 +278,7 @@ class IpnSslcommerze(views.APIView):
         if request.data:
             # Order.objects.filter(tran_id=request.data['tran_id']).update(is_payment_success=True)
             data = orderVerify(request)
-            print("validation response===============", data)
+            print("validation response probashi===============", data)
             # if data['status'] == 'VALID':
             #     LiveOrderSerializer.objects.filter(order_id=data['tran_id']).update(payment_status="Amount Fully Paid")
         return Response(request.data, status.HTTP_200_OK)
