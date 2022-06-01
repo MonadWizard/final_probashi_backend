@@ -273,7 +273,7 @@ class IpnSslcommerze(views.APIView):
 
     def post(self, request):
 
-        print("i am from ipn")
+        print("i am from ipn probashi")
         print("ipn Data================", request.data)
         if request.data:
             # Order.objects.filter(tran_id=request.data['tran_id']).update(is_payment_success=True)
