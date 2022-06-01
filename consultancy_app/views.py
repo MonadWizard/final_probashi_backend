@@ -278,7 +278,7 @@ class IpnSslcommerze(views.APIView):
         print("ipn Data================", request.data)
         if request.data:
             data = orderVerify(request)
-            print("validation response probashi===============", data)
+            print("validation response probashi IPN===============", data)
             if data["status"] == "VALID":
                 tran_id = data["tran_id"]
 
