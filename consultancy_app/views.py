@@ -28,6 +28,7 @@ from .serializers import (
 from .sslcommerz_helper import (
     Pro_user_CREATE_and_GET_session,
     Consultancy_CREATE_and_GET_session,
+    orderVerify,
 )
 from rest_framework import pagination
 from rest_framework.pagination import PageNumberPagination
@@ -267,9 +268,11 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
         )
 
 
-# need to test in server...................................
-class Consultancy_Payment_success(views.APIView):
+class IpnSslcommerze(views.APIView):
+    # permission_classes = [AllowAny]
+
     def post(self, request):
+        print("IpnSslcommerze request data::::::::", request.data)
         tran_id = request.data["tran_id"]
         # print("train id:::::::::::::", request.data)
         try:
@@ -322,15 +325,70 @@ class Consultancy_Payment_success(views.APIView):
             return Response("fail", status=status.HTTP_400_BAD_REQUEST)
 
 
+# need to test in server...................................
+class Consultancy_Payment_success(views.APIView):
+    def post(self, request):
+        tran_id = request.data["tran_id"]
+        print("success request data:::::::::::::", request.data)
+        try:
+            consultancy_data = ConsultancyPayment.objects.filter(
+                tran_id=tran_id
+            ).values("userid", "consultancy_sheduleid")
+            consultancy_sheduleid = consultancy_data[0]["consultancy_sheduleid"]
+            ConsultancyTimeSchudile.objects.filter(id=consultancy_sheduleid).update(
+                is_consultancy_take=True
+            )
+            UserConsultAppointmentRequest.objects.filter(
+                ConsultancyTimeSchudile=consultancy_sheduleid
+            ).update(payment_status=True)
+
+            ConsultancyPayment.objects.filter(Q(tran_id=tran_id)).update(
+                val_id=request.data["val_id"],
+                amount=request.data["amount"],
+                card_type=request.data["card_type"],
+                store_amount=request.data["store_amount"],
+                card_no=request.data["card_no"],
+                bank_tran_id=request.data["bank_tran_id"],
+                status=request.data["status"],
+                tran_date=request.data["tran_date"],
+                error=request.data["error"],
+                currency=request.data["currency"],
+                card_issuer=request.data["card_issuer"],
+                card_brand=request.data["card_brand"],
+                card_sub_brand=request.data["card_sub_brand"],
+                card_issuer_country=request.data["card_issuer_country"],
+                card_issuer_country_code=request.data["card_issuer_country_code"],
+                store_id=request.data["store_id"],
+                verify_sign=request.data["verify_sign"],
+                verify_key=request.data["verify_key"],
+                verify_sign_sha2=request.data["verify_sign_sha2"],
+                currency_type=request.data["currency_type"],
+                currency_amount=request.data["currency_amount"],
+                currency_rate=request.data["currency_rate"],
+                base_fair=request.data["base_fair"],
+                value_a=request.data["value_a"],
+                value_b=request.data["value_b"],
+                value_c=request.data["value_c"],
+                value_d=request.data["value_d"],
+                subscription_id=request.data["subscription_id"],
+                risk_level=request.data["risk_level"],
+                risk_title=request.data["risk_title"],
+            )
+            return Response("success", status=status.HTTP_200_OK)
+        except Exception as e:
+            # print("error::::::", e)
+            return Response("fail", status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(["POST"])
 def Consultancy_Payment_fail(request):
-    # print("::::::::::::::::::", request.data)
+    print("fail payment::::::::::::::::::", request.data)
     return Response("Fail....", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
 def Consultancy_Payment_cancle(request):
-    # print("::::::::::::::::::", request.data)
+    print("cancle payment::::::::::::::::::", request.data)
     return Response("cancle", status=status.HTTP_200_OK)
 
 

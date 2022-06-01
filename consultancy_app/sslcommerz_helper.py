@@ -144,3 +144,17 @@ def Consultancy_CREATE_and_GET_session(request, user):
     resp = {"res": res.json(), "post_body": post_body}
     print("resp::::::::::", resp)
     return resp
+
+def orderVerify(request):
+    val_id=request.data['val_id']
+    store_id=request.data['store_id']
+    store_passwd='5A9651E55CDAA86375' 
+    external_api_url = 'https://securepay.sslcommerz.com/validator/api/validationserverAPI.php?val_id='+val_id+'&store_id='+store_id+'&store_passwd='+store_passwd+'&format=json'
+    res = requests.get(external_api_url)
+    return res.json()
+
+
+
+
+
+

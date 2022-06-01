@@ -23,7 +23,8 @@ from .views import (
     ServiceSearchFilter,
     ServiceSearchField,
     SpecificServiceDescription,
-    ConsultancyInfo
+    ConsultancyInfo,
+    IpnSslcommerze,
 )
 
 
@@ -89,13 +90,12 @@ urlpatterns = [
         name="AppointmentSeeker_MissingAppointmentReason",
     ),
     path("pro/", BecomeProUser.as_view(), name="BecomeProUser"),
-    
     # payment
-
     path("pro-success/", Pro_Payment_success.as_view(), name="payment_success"),
     path("pro-fail/", Pro_Payment_fail, name="payment_fail"),
     path("pro-cancle/", Pro_Payment_cancle, name="payment_cancle"),
     # consultancy success fail cancle redirect URL
+    path("ipn/", IpnSslcommerze.as_view()),
     path(
         "consultancy-success/",
         Consultancy_Payment_success.as_view(),
@@ -121,6 +121,5 @@ urlpatterns = [
         SpecificServiceDescription.as_view(),
         name="SpecificServiceDescription",
     ),
-    path("consultancy-info/",ConsultancyInfo.as_view(),name="ConsultancyInfo"),
-
+    path("consultancy-info/", ConsultancyInfo.as_view(), name="ConsultancyInfo"),
 ]
