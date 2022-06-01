@@ -21,14 +21,14 @@ def filterby_educationService_degree(queryset, value):
 
 def filterby_consultant_servicebudget_startrange__gt(queryset, value):
     if value:
-        return queryset.filter(consultant_servicebudget_startrange__gt=value)
+        return queryset.filter(consultant_servicebudget_startrange__gte=value)
     else:
         return queryset
 
 
 def filterby_consultant_servicebudget_endrange__lt(queryset, value):
     if value:
-        return queryset.filter(consultant_servicebudget_endrange__lt=value)
+        return queryset.filter(consultant_servicebudget_endrange__lte=value)
     else:
         return queryset
 
