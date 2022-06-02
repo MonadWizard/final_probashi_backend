@@ -289,9 +289,9 @@ class FaqView(generics.ListAPIView):
 
 
 class privacypolicyView(generics.ListAPIView):
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
+    # permission_classes = [
+    #     permissions.IsAuthenticated,
+    # ]
     queryset = StaticSettingData.objects.filter(privacypolicy_title__isnull=False)
     serializer_class = privacypolicySerializer
     renderer_classes = [UserRenderer]
