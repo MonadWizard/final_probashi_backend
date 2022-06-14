@@ -24,26 +24,13 @@ import pytz
 
 @sync_to_async
 def OnlineStatusSend_self(user_id, all_online_user):
-    # all_online_user.append(user_id)
     chat_users = ChatOnlineUsers(user_id)
-    # chat_users.append(user_id)
-
-    # for i in chat_users:
-    #     if i in self.all_online_user:
-    #         online_chat_user.append(i)
-
-    # self.online_chat_user.append(user_id)
 
     if chat_users:
         chat_users = list(chat_users)
-
         online_chat_user = []
         [online_chat_user.append(i) for i in chat_users if i in all_online_user]
-
         online_chat_user = list(set(online_chat_user))
-
-        # print("online chat user self.........", online_chat_user)
-
         room_group_name = "chat_" + user_id
 
         async_to_sync(get_channel_layer().group_send)(
@@ -62,27 +49,12 @@ def OnlineStatusSend_self(user_id, all_online_user):
 
 @sync_to_async
 def OnlineStatusSend_others(user_id, all_online_user):
-
-    # print("all_online_user.........", all_online_user)
-    # all_online_user.append(user_id)
     chat_users = ChatOnlineUsers(user_id)
-
-    # for i in chat_users:
-    #     if i in self.all_online_user:
-    #         online_chat_user.append(i)
-
-    # self.online_chat_user.append(user_id)
     if chat_users:
-
-        # print("chat_users===================", chat_users)
-
         chat_users = list(chat_users)
-
         online_chat_user = []
         [online_chat_user.append(i) for i in chat_users if i in all_online_user]
-
         online_chat_user = list(set(online_chat_user))
-
         for user in online_chat_user:
             room_group_name = "chat_" + user
 
@@ -102,30 +74,16 @@ def OnlineStatusSend_others(user_id, all_online_user):
 
 @sync_to_async
 def OnlineStatusSend_connection(user_id, all_online_user):
-    # print("all_online_user connection===================", all_online_user)
-    # all_online_user.append(user_id)
     chat_users = ChatOnlineUsers(user_id)
 
     if chat_users:
-
-        # print("chat_users===================", chat_users)
-
         chat_users = list(chat_users)
-
         online_chat_user = []
         [online_chat_user.append(i) for i in chat_users if i in all_online_user]
-
         online_chat_user.append(user_id)
-
-        print("online chat user connection.........", online_chat_user)
-
         online_chat_user = list(set(online_chat_user))
-
         for user in online_chat_user:
-            # if user != user_id:
-
             room_group_name = "chat_" + user
-
             async_to_sync(get_channel_layer().group_send)(
                 room_group_name,
                 {
@@ -141,17 +99,10 @@ def OnlineStatusSend_connection(user_id, all_online_user):
 
 @sync_to_async
 def OnlineStatusSend(user_id, all_online_user):
-
-    # print("all_online_user.........", all_online_user)
-    # all_online_user.append(user_id)
     chat_users = ChatOnlineUsers(user_id)
 
     if chat_users:
-
-        # print("chat_users===================", chat_users)
-
         chat_users = list(chat_users)
-
         online_chat_user = []
         [online_chat_user.append(i) for i in chat_users if i in all_online_user]
 
@@ -207,7 +158,6 @@ def get_all_chat_data(userid, limit):
         .order_by("-id")[(limit - 1) * 20 : (limit * 20)]
     )
     data = {}
-    # print("chat list:::::::::", chat_list)
 
     for chat in chat_list:
         data[chat.user_2] = get_last_chat_data(
@@ -265,7 +215,6 @@ def save_chat_data(data):
 
     sql += ")"
 
-    # print('::::::::::::::::sql', sql)
 
     try:
         with connections["probashi_chat"].cursor() as cursor:
@@ -273,12 +222,10 @@ def save_chat_data(data):
 
             return table_status
     except Exception as e:
-        # print(e)
-        # print("error")
+
         return table_status
 
 
-# image data save. ..............................................
 
 
 @sync_to_async
@@ -288,9 +235,7 @@ def save_chat_data_image(data):
         chat_table = ChatTable.objects.using("probashi_chat").get(
             user_1=data["sender"], user_2=data["receiver"]
         )
-        # print('table name::', chat_table.table_name)
         table_status = "exist"
-        print("table-found....")
     except:
         table_title = create_chat_table(user_1=data["sender"], user_2=data["receiver"])
         chat_table = ChatTable.objects.using("probashi_chat").create(
@@ -300,7 +245,6 @@ def save_chat_data_image(data):
             user_1=data["receiver"], user_2=data["sender"], table_name=table_title
         )
         table_status = "new"
-        print("create-a-table")
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
 
@@ -329,21 +273,18 @@ def save_chat_data_image(data):
 
     sql += ")"
 
-    # print('sql:::::::::', sql)
 
     try:
         with connections["probashi_chat"].cursor() as cursor:
             cursor.execute(sql)
             return table_status
     except Exception as e:
-        # print(e)
-        # print('error')
+
         return table_status
 
 
 @sync_to_async
 def get_previous_chat_data(userid, associated_user_id, chat_id):
-    # off_set =
 
     limit = int(chat_id)
     offset = limit - 10
@@ -366,7 +307,6 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
         sql += "FETCH NEXT 10 ROWS ONLY "
 
         with connections["probashi_chat"].cursor() as cursor:
-            # cursor.execute(f"SET timezone TO 'Asia/Dhaka'")
             cursor.execute(sql)
             result = cursor.fetchall()
 
@@ -381,15 +321,10 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
                 d["message_time"] = str(d["timezone"]) + str("+06:00")
                 del d["timezone"]
                 temp_data.append(d)
-                # print('d:::::::::', d)
-
-            # print('temp_data:::::::::', temp_data)
-            # data[associated_user_id] = temp_data
             data["type"] = "previous message"
             data["chat"] = temp_data
 
     except Exception as e:
-        print("error", e)
         return data
 
     return data
@@ -398,7 +333,6 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
 # ===================================notification.................
 @sync_to_async
 def get_all_notifications(userid):
-    # print('userid:::::::::', userid)
     tz = pytz.timezone("Asia/Dhaka")
 
     all_noti = (
@@ -424,7 +358,6 @@ def get_all_notifications(userid):
 # =====================notification=================
 @sync_to_async
 def save_notification_data(noti_data):
-    # print('noti-data:::::::::', noti_data)
     userid_data = User.objects.get(userid=noti_data["sender"])
     recever_data = User.objects.get(userid=noti_data["receiver"])
     try:
@@ -465,17 +398,13 @@ def save_notification_data(noti_data):
 def delete_notification_data(noti_data):
     try:
         tz = pytz.timezone("Asia/Dhaka")
-        # print('noti-data:::::::::', noti_data)
         noti_id = noti_data["notification_id"]
         delete_status = noti_data["is_notification_delete"]
-        # print('noti-id:::::::::', noti_id, delete_status)
         Notification.objects.filter(id=noti_id).update(
             is_notification_delete=delete_status
         )
 
         time = Notification.objects.filter(id=noti_id).values("notification_date")
-        # print('noti-time:::::::::', noti_time[0])
-        # print('noti-time:::::::::', time[0]['notification_date'].replace(tzinfo=tz) + timedelta(hours=6))
         noti_time = time[0]["notification_date"].replace(tzinfo=tz) + timedelta(hours=6)
         return noti_time
 
@@ -489,10 +418,8 @@ def seen_notification_data(noti_data):
     try:
 
         tz = pytz.timezone("Asia/Dhaka")
-        # print('noti-data:::::::::', noti_data)
         noti_id = noti_data["notification_id"]
         seen_status = noti_data["is_notification_seen"]
-        # print('noti-id:::::::::', noti_id, delete_status)
         Notification.objects.filter(id=noti_id).update(is_notification_seen=seen_status)
 
         time = Notification.objects.filter(id=noti_id).values("notification_date")
@@ -500,5 +427,4 @@ def seen_notification_data(noti_data):
         return noti_time
 
     except Exception as e:
-        print(e)
         return False

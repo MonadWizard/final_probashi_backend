@@ -47,9 +47,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         all_online_user.append(self.room_name)
 
-        # print("online all user connection.....", all_online_user)
-
-
         await OnlineStatusSend_self(self.room_name, all_online_user)
 
         await OnlineStatusSend_others(self.room_name, all_online_user)
@@ -76,10 +73,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
 
         all_online_user.remove(self.room_name)
-
-        # all_online_user.clear()
-
-        # print("online all user disconnect.....", all_online_user)
 
         await OnlineStatusSend(self.room_name, all_online_user)
 
@@ -312,7 +305,6 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         # notification send.................................................
         elif text_data_json["data"] == "post-notification":
-            # print('notification data::::::::::::',text_data_json)
             data = {
                 "sender": self.room_name,
                 "receiver": text_data_json["receiverid"],
