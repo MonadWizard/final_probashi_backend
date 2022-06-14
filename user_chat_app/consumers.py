@@ -79,7 +79,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         # all_online_user.clear()
 
-        print("online all user disconnect.....", all_online_user)
+        # print("online all user disconnect.....", all_online_user)
 
         await OnlineStatusSend(self.room_name, all_online_user)
 
@@ -120,11 +120,12 @@ class DemoConsumer(AsyncWebsocketConsumer):
             chat_data = data
 
         elif text_data_json["data"] == "text":
+            timee = timezone.localtime(timezone.now())
             data = {
                 "sender": self.room_name,
                 "receiver": text_data_json["receiverid"],
                 "message": text_data_json["message"],
-                "message_time": str(timezone.localtime(timezone.now())),
+                "message_time": str(timee),
                 "is_text_message": True,
             }
 
@@ -180,7 +181,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 "sender": self.room_name,
                 "receiver": text_data_json["receiverid"],
                 "message": text_data_json["message"],
-                "message_time": str(timezone.localtime(timezone.now())),
+                "message_time": str(timee),
                 "message-type": text_data_json["data"],
             }
 
@@ -194,6 +195,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         # images send.................................................
         elif text_data_json["data"] == "image":
+            timee = timezone.localtime(timezone.now())
+
             image_data_byte = str.encode(text_data_json["message"])
             image_media_root = settings.MEDIA_ROOT
             image_save_dir = f"{image_media_root}/ChatAppData/images"
@@ -218,7 +221,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 "sender": self.room_name,
                 "receiver": text_data_json["receiverid"],
                 "message": image_save_path,
-                "message_time": str(timezone.localtime(timezone.now())),
+                "message_time": str(timee),
                 "is_image_message": True,
             }
             table_status = await save_chat_data_image(data=data)
@@ -273,7 +276,7 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 "receiver": text_data_json["receiverid"],
                 "message": image_save_path,
                 # 'status': 'sent',
-                "message_time": str(timezone.localtime(timezone.now())),
+                "message_time": str(timee),
                 "message-type": text_data_json["data"],
             }
             self.room_name_temp = text_data_json["receiverid"]
