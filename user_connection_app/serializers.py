@@ -115,3 +115,11 @@ class UserFavouriteListSerializer(serializers.ModelSerializer):
             "favourite_user_designation",
             "is_favourite_user_consultant",
         ]
+
+
+
+class unmatch_useresSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["user_unmatch"]
+

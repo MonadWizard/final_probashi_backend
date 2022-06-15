@@ -127,6 +127,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_company_name = models.CharField(max_length=200, blank=True, null=True)
     user_office_address = models.CharField(max_length=200, blank=True, null=True)
 
+    user_unmatch = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+
     auth_provider = models.CharField(
         max_length=255, blank=False, null=False, default=AUTH_PROVIDERS.get("email")
     )

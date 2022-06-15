@@ -12,6 +12,7 @@ from .views import (
     UserSearchGetData,
     UserSearchFilter,
     UserSearchField,
+    unmatch_useres
 )
 
 # from user_connection_app import views
@@ -56,4 +57,6 @@ urlpatterns = [
     path("favourite-list/", FavouritesList.as_view(), name="FavouritesList"),
     path("friend-suggation/", Friends_suggation.as_view(), name="Friends_suggation"),
     # now work with favourite request reject.
+    path("unmatch-users/<str:userid>/", unmatch_useres.as_view(), name="unmatch_useres"),
+
 ]

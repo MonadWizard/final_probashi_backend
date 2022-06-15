@@ -125,7 +125,7 @@ class UserProfileViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         # fields = "__all__"
-        exclude = ["is_staff", "is_superuser", "password", "groups", "user_permissions"]
+        exclude = ["is_staff", "is_superuser", "password", "groups", "user_permissions","user_unmatch"]
 
 
 class UserConsultancyHomepageSerializer(serializers.ModelSerializer):
@@ -145,4 +145,4 @@ class UserProfileWithConsultancyViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ["is_staff", "is_superuser", "password", "groups", "user_permissions"]
+        exclude = ["is_staff", "is_superuser", "password", "groups", "user_permissions", "user_unmatch"]
