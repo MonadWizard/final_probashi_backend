@@ -39,43 +39,70 @@ all_online_user = []
 
 class DemoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = self.scope["url_route"]["kwargs"]["userid"]
-        self.room_group_name = "chat_" + self.room_name
+        self.connect_user = self.scope["url_route"]["kwargs"]["userid"]
+        # self.room_name = self.scope["url_route"]["kwargs"]["userid"]
+        self.room_name = ""
+        if '-background' in self.connect_user:
+            self.room_name = self.connect_user.split("-")[0]
+            # self.room_name = self.scope["url_route"]["kwargs"]["userid"]
+            self.room_group_name = "chat_" + self.room_name
 
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.accept()
+            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+            await self.accept()
+            # get previous data
+            limit = 1
+            data = await get_all_chat_data(self.room_name, limit)
+            data = dict(data)
+            data_l = list(data.values())
+            data_l = list(filter(None, data_l))
+            noti_data = await get_all_notifications(self.room_name)
 
-        all_online_user.append(self.room_name)
-
-        await OnlineStatusSend_self(self.room_name, all_online_user)
-
-        await OnlineStatusSend_others(self.room_name, all_online_user)
-
-        # get previous data
-        limit = 1
-        data = await get_all_chat_data(self.room_name, limit)
-        data = dict(data)
-        data_l = list(data.values())
-        data_l = list(filter(None, data_l))
-        noti_data = await get_all_notifications(self.room_name)
-
-        await self.send(
-            text_data=json.dumps(
-                {
-                    "success": True,
-                    "type": "recent",
-                    "chat": data_l,
-                    "notification": noti_data,
-                }
+            await self.send(
+                text_data=json.dumps(
+                    {
+                        "success": True,
+                        "type": "recent",
+                        "chat": data_l,
+                        "notification": noti_data,
+                    }
+                )
             )
-        )
+
+
+        else:
+            self.room_name = self.connect_user
+            self.room_group_name = "chat_" + self.room_name
+
+            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+            await self.accept()
+            all_online_user.append(self.room_name)
+            await OnlineStatusSend_self(self.room_name, all_online_user)
+            await OnlineStatusSend_others(self.room_name, all_online_user)
+
+            # get previous data
+            limit = 1
+            data = await get_all_chat_data(self.room_name, limit)
+            data = dict(data)
+            data_l = list(data.values())
+            data_l = list(filter(None, data_l))
+            noti_data = await get_all_notifications(self.room_name)
+
+            await self.send(
+                text_data=json.dumps(
+                    {
+                        "success": True,
+                        "type": "recent",
+                        "chat": data_l,
+                        "notification": noti_data,
+                    }
+                )
+            )
 
     async def disconnect(self, close_code):
 
-        all_online_user.remove(self.room_name)
-
-        await OnlineStatusSend(self.room_name, all_online_user)
-
+        if '-background' not in self.connect_user:
+            all_online_user.remove(self.room_name)
+            await OnlineStatusSend(self.room_name, all_online_user)
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     # Receive message from WebSocket

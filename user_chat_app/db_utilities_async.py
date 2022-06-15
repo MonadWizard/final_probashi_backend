@@ -176,7 +176,7 @@ def save_chat_data(data):
         )
 
         table_status = "exist"
-        print("table-found")
+        # print("table-found")
     except:
         table_title = create_chat_table(user_1=data["sender"], user_2=data["receiver"])
         chat_table = ChatTable.objects.using("probashi_chat").create(
