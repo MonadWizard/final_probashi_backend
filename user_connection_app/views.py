@@ -121,10 +121,13 @@ class Friends_suggation(views.APIView):
                 else match_all
             )
 
+            # print(":::::::::::::::::", match_all)
             match_all = list(set(match_all))
-            
-            unmatch_all = list(set(User.objects.get(userid=user).user_unmatch))
-
+            try:
+                unmatch_all = list(set(User.objects.get(userid=user).user_unmatch))
+            except Exception as e:
+                unmatch_all = []
+                
             for element in unmatch_all:
                 if element in match_all:
                     match_all.remove(element)
