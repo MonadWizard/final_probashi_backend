@@ -124,4 +124,6 @@ urlpatterns = [
         name="SpecificServiceDescription",
     ),
     path("consultancy-info/", ConsultancyInfo.as_view(), name="ConsultancyInfo"),
+
+    
 ]

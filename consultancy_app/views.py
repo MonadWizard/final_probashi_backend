@@ -805,3 +805,7 @@ class ConsultancyInfo(views.APIView):
             err_context,
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+
+
+

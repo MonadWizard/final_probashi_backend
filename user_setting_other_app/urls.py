@@ -27,6 +27,7 @@ from .views import (
     SpecificConsultancyData,
     GetCityView,
     UserCurrentDesignationDataView,
+    region_country
 )
 
 
@@ -138,4 +139,6 @@ urlpatterns = [
         name="TradeFacilitationServiceDataView",
     ),
     path("city-get/", GetCityView.as_view(), name="city-get"),
+
+    path("region-country/", region_country.as_view(), name="region_country"),
 ]

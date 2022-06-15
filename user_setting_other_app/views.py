@@ -1,3 +1,4 @@
+from multiprocessing import context
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from rest_framework import permissions
@@ -808,3 +809,26 @@ class GetCityView(generics.ListCreateAPIView):
         )
         serializer = self.serializer_class(citys_object[0])
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class region_country(views.APIView):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    renderer_classes = [UserRenderer]
+
+    def get(self, request):
+        region = self.request.query_params.get("region")
+        data = {'North America': ['United States', 'Mexico', 'Canada', 'Guatemala', 'Haiti', 'Cuba', 'Dominican Republic', 'Honduras', 'Nicaragua', 'El Salvador', 'Costa Rica', 'Panama', 'Jamaica', 'Puerto Rico', 'Trinidad and Tobago', 'Belize', 'Bahamas', 'Guadeloupe', 'Martinique', 'Barbados', 'Saint Lucia', 'Curacao', 'Grenada', 'Saint Vincent and the Grenadines', 'Aruba', 'United States Virgin Islands', 'Antigua and Barbuda', 'Dominica', 'Cayman Islands', 'Bermuda', 'Greenland', 'Saint Kitts and Nevis', 'Sint Maarten', 'Turks and Caicos Islands', 'Saint Martin', 'British Virgin Islands', 'Anguilla', 'Saint Barthelemy', 'Saint Pierre and Miquelon', 'Montserrat'], 'Europe': ['Russia', 'Germany', 'United Kingdom', 'France', 'Italy', 'Spain', 'Ukraine', 'Poland', 'Romania', 'Netherlands', 'Belgium', 'Czech Republic', 'Greece', 'Sweden', 'Portugal', 'Hungary', 'Belarus', 'Austria', 'Switzerland', 'Serbia', 'Bulgaria', 'Denmark', 'Finland', 'Norway', 'Slovakia', 'Ireland', 'Croatia', 'Moldova', 'Bosnia and Herzegovina', 'Albania', 'Lithuania', 'North Macedonia', 'Slovenia', 'Latvia', 'Estonia', 'Cyprus', 'Luxembourg', 'Montenegro', 'Malta', 'Iceland', 'Isle of Man', 'Andorra', 'Faroe Islands', 'Monaco', 'Liechtenstein', 'San Marino', 'Gibraltar', 'Vatican City'], 'Asia': ['China', 'India', 'Indonesia', 'Pakistan', 'Bangladesh', 'Japan', 'Philippines', 'Vietnam', 'Iran', 'Turkey', 'Thailand', 'Myanmar', 'South Korea', 'Iraq', 'Afghanistan', 'Saudi Arabia', 'Uzbekistan', 'Malaysia', 'Yemen', 'Nepal', 'North Korea', 'Taiwan', 'Sri Lanka', 'Syria', 'Kazakhstan', 'Cambodia', 'Jordan', 'Azerbaijan', 'United Arab Emirates', 'Tajikistan', 'Israel', 'Hong Kong', 'Laos', 'Kyrgyzstan', 'Lebanon', 'Turkmenistan', 'Singapore', 'Palestine', 'Oman', 'Kuwait', 'Georgia', 'Mongolia', 'Qatar', 'Armenia', 'Bahrain', 'Timor-Leste', 'Bhutan', 'Macau', 'Maldives', 'Brunei'], 'Africa': ['Nigeria', 'Ethiopia', 'Egypt', 'DR Congo', 'Tanzania', 'South Africa', 'Kenya', 'Uganda', 'Sudan', 'Algeria', 'Morocco', 'Angola', 'Mozambique', 'Ghana', 'Madagascar', 'Cameroon', 'Ivory Coast', 'Niger', 'Burkina Faso', 'Mali', 'Malawi', 'Zambia', 'Senegal', 'Chad', 'Somalia', 'Zimbabwe', 'Guinea', 'Rwanda', 'Benin', 'Burundi', 'Tunisia', 'South Sudan', 'Togo', 'Sierra Leone', 'Libya', 'Republic of the Congo', 'Liberia', 'Central African Republic', 'Mauritania', 'Eritrea', 'Namibia', 'Gambia', 'Botswana', 'Gabon', 'Lesotho', 'Guinea-Bissau', 'Equatorial Guinea', 'Mauritius', 'Eswatini', 'Djibouti', 'Reunion', 'Comoros', 'Western Sahara', 'Cape Verde', 'Mayotte', 'Sao Tome and Principe', 'Seychelles'], 'Oceania': ['Australia', 'Papua New Guinea', 'New Zealand', 'Fiji', 'Solomon Islands', 'Vanuatu', 'New Caledonia', 'French Polynesia', 'Samoa', 'Guam', 'Kiribati', 'Micronesia', 'Tonga', 'Marshall Islands', 'Northern Mariana Islands', 'American Samoa', 'Palau', 'Cook Islands', 'Tuvalu', 'Wallis and Futuna', 'Nauru', 'Niue', 'Tokelau'], 'South America': ['Brazil', 'Colombia', 'Argentina', 'Peru', 'Venezuela', 'Chile', 'Ecuador', 'Bolivia', 'Paraguay', 'Uruguay', 'Guyana', 'Suriname', 'French Guiana', 'Falkland Islands']}
+        
+        country = data[region]
+        context = {"data": country}
+        return Response(context, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
