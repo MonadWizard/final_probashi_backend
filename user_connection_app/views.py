@@ -1,7 +1,8 @@
+from multiprocessing import context
 from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from django.http import Http404
-from auth_user_app.models import User
+from auth_user_app.models import User,user_unmatch
 from .serializers import SerachUserSerializer
 from rest_framework import pagination
 from rest_framework.pagination import PageNumberPagination
@@ -16,7 +17,6 @@ from .serializers import (
     RejectFavouriteRequestSerializer,
     UserFavouriteListSerializer,
     UserSearchFieldSerializer,
-    unmatch_useresSerializer
 )
 from .models import UserFavoutireRequestSend, UserFavouriteList, FriendsSuggation
 from django.db.models import Q
@@ -123,11 +123,16 @@ class Friends_suggation(views.APIView):
 
             # print(":::::::::::::::::", match_all)
             match_all = list(set(match_all))
+
             try:
-                unmatch_all = list(set(User.objects.get(userid=user).user_unmatch))
+                unmatch_all = list(user_unmatch.objects.filter(user_id=user).values_list('user_unmatch', flat=True))
+                # print("unmatch_all:::::::::", unmatch_all)
             except Exception as e:
                 unmatch_all = []
-                
+                # print("exception unmatch_all:::::::::", unmatch_all)
+
+
+
             for element in unmatch_all:
                 if element in match_all:
                     match_all.remove(element)
@@ -613,39 +618,72 @@ class unmatch_useres(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     renderer_classes = [UserRenderer]
 
-    def get_user(self, userid):
+    def post(self, request):
+        unmatch_userid = request.data["user_unmatch"]
+        userid = request.user.userid
         try:
-            return User.objects.get(pk=userid)
-        except User.DoesNotExist:
-            raise Http404
-
-    def get(self, request, userid):
-        userid = self.get_user(userid)
-        serializer = unmatch_useresSerializer(userid)
-        context = {"data": serializer.data}
-        return Response(context, status=status.HTTP_200_OK)
-
-    def put(self, request, userid):
-        userid = self.get_user(userid)
-        user = request.user
-        if request.data != {}:
-            try:
-                unmatch_exist = User.objects.get(userid=user.userid).user_unmatch
-                new_match = unmatch_exist + [request.data["user_unmatch"]]
-                update_unmatch = {"user_unmatch": new_match}
-                # print("new_match", new_match)
-            except Exception as e:
-                update_unmatch = {"user_unmatch": [request.data["user_unmatch"]]}
-
-            serializer = unmatch_useresSerializer(userid, data=update_unmatch)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        errorContext = {"error": "No data found"}
-        return Response(errorContext, status=status.HTTP_400_BAD_REQUEST)
+            user_id = User.objects.get(userid=userid)
+            bi_user_id = User.objects.get(userid=unmatch_userid)
+            user_unmatch.objects.create(
+                user_id=user_id, user_unmatch=bi_user_id
+            )
+            
+            user_unmatch.objects.create(
+                user_id=bi_user_id, user_unmatch=user_id
+            )
+            context = {"data": "unmatch user created"}
+            return Response(context,status=status.HTTP_200_OK)
+        except Exception as e:
+            # print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 
+
+
+
+
+
+
+
+        # serializer = self.serializer_class(data=request.data)
+        # if serializer.is_valid():
+            # serializer.save()
+            # user_data = serializer.data
+
+        # bidirection = {"user_id": unmatch_userid, "unmatch_userid": userid}
+        # serializer = self.serializer_class(data=bidirection)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     unfollow_user_data = serializer.data
+
+            # context = {"data": user_data, "unfollow_data": unfollow_user_data}
+        #     return Response(serializer.data,status=status.HTTP_201_CREATED)
+        # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+        # return Response(status=status.HTTP_200_OK)
+
+    # def put(self, request, userid):
+    #     userid = self.get_user(userid)
+    #     user = request.user
+    #     if request.data != {}:
+    #         try:
+    #             unmatch_exist = User.objects.get(userid=user.userid).user_unmatch
+    #             new_match = unmatch_exist + [request.data["user_unmatch"]]
+    #             update_unmatch = {"user_unmatch": new_match}
+    #             # print("new_match", new_match)
+    #         except Exception as e:
+    #             update_unmatch = {"user_unmatch": [request.data["user_unmatch"]]}
+
+    #         serializer = unmatch_useresSerializer(userid, data=update_unmatch)
+    #         if serializer.is_valid():
+    #             serializer.save()
+    #             return Response(serializer.data)
+    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #     errorContext = {"error": "No data found"}
+    #     return Response(errorContext, status=status.HTTP_400_BAD_REQUEST)
+
+    
 
 

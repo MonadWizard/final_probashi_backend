@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, PhoneOTP, mailVerify
+from .models import User, PhoneOTP, mailVerify, user_unmatch
 
 from rest_framework_simplejwt.token_blacklist import models
 from rest_framework_simplejwt.token_blacklist.admin import OutstandingTokenAdmin
@@ -24,3 +24,9 @@ admin.site.register(models.OutstandingToken, NewOutstandingTokenAdmin)
 
 admin.site.register(PhoneOTP)
 admin.site.register(mailVerify)
+
+class user_unmatchAdmin(admin.ModelAdmin):
+    list_display = ["user_id", "user_unmatch", "user_unmatch_created_at"]
+
+admin.site.register(user_unmatch, user_unmatchAdmin)
+# admin.site.register(user_unmatch)
