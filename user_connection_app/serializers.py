@@ -1,6 +1,6 @@
 from attr import field
 from rest_framework import serializers
-from auth_user_app.models import User, user_unmatch
+from auth_user_app.models import User
 from user_profile_app.models import User_education
 from consultancy_app.models import ConsultancyCreate
 from .models import UserFavoutireRequestSend, UserFavouriteList
