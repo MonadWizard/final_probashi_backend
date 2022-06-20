@@ -653,20 +653,21 @@ class unmatch_useres(views.APIView):
         unmatch_userid = request.data["user_unmatch"]
         userid = request.user.userid
         try:
-            user_id = User.objects.get(userid=userid).userid
-            bi_user_id = User.objects.get(userid=unmatch_userid).userid
+            user_id = User.objects.get(userid=userid)
+            bi_user_id = User.objects.get(userid=unmatch_userid)
             user_unmatch.objects.create(
-                user_id=user_id, user_unmatch=bi_user_id
+                user_id=user_id, user_unmatch=bi_user_id.userid
             )
             
             user_unmatch.objects.create(
-                user_id=bi_user_id, user_unmatch=user_id
+                user_id=bi_user_id, user_unmatch=user_id.userid
             )
             context = {"data": "unmatch user created"}
             return Response(context,status=status.HTTP_200_OK)
         except Exception as e:
             # print(e)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            context = {"data": e}
+            return Response(context,status=status.HTTP_400_BAD_REQUEST)
         
 
 
