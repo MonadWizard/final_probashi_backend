@@ -125,7 +125,7 @@ class Friends_suggation(views.APIView):
             match_all = list(set(match_all))
 
             try:
-                unmatch_all = list(user_unmatch.objects.filter(user_id=user).values_list('user_unmatch', flat=True))
+                unmatch_all = list(set(list(user_unmatch.objects.filter(user_id=user).values_list('user_unmatch', flat=True))))
                 # print("unmatch_all:::::::::", unmatch_all)
             except Exception as e:
                 unmatch_all = []
@@ -646,44 +646,5 @@ class unmatch_useres(views.APIView):
 
 
 
-
-        # serializer = self.serializer_class(data=request.data)
-        # if serializer.is_valid():
-            # serializer.save()
-            # user_data = serializer.data
-
-        # bidirection = {"user_id": unmatch_userid, "unmatch_userid": userid}
-        # serializer = self.serializer_class(data=bidirection)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     unfollow_user_data = serializer.data
-
-            # context = {"data": user_data, "unfollow_data": unfollow_user_data}
-        #     return Response(serializer.data,status=status.HTTP_201_CREATED)
-        # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-        
-        # return Response(status=status.HTTP_200_OK)
-
-    # def put(self, request, userid):
-    #     userid = self.get_user(userid)
-    #     user = request.user
-    #     if request.data != {}:
-    #         try:
-    #             unmatch_exist = User.objects.get(userid=user.userid).user_unmatch
-    #             new_match = unmatch_exist + [request.data["user_unmatch"]]
-    #             update_unmatch = {"user_unmatch": new_match}
-    #             # print("new_match", new_match)
-    #         except Exception as e:
-    #             update_unmatch = {"user_unmatch": [request.data["user_unmatch"]]}
-
-    #         serializer = unmatch_useresSerializer(userid, data=update_unmatch)
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return Response(serializer.data)
-    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #     errorContext = {"error": "No data found"}
-    #     return Response(errorContext, status=status.HTTP_400_BAD_REQUEST)
-
-    
 
 
