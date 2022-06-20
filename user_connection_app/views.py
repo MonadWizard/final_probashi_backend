@@ -570,7 +570,15 @@ class UserSearchFilter(views.APIView):
         data = request.data
         search_user = self.get_user(data, user)
 
-        details = User.objects.filter(userid__in=search_user).values(
+
+        try:
+                unmatch_all = list(set(user_unmatch.objects.filter(user_id=user).values_list('user_unmatch', flat=True)))
+        except Exception as e:
+                unmatch_all = []
+
+        # search_user = search_user.exclude(userid__in=unmatch_all)
+
+        details = User.objects.filter(userid__in=search_user).exclude(userid__in=unmatch_all).values(
             "userid",
             "user_fullname",
             "user_areaof_experience",
@@ -602,6 +610,13 @@ class UserSearchField(views.APIView):
                 | Q(user_username__icontains=user_name)
             )
         )
+
+        try:
+                unmatch_all = list(set(user_unmatch.objects.filter(user_id=user).values_list('user_unmatch', flat=True)))
+        except Exception as e:
+                unmatch_all = []
+        search_data = search_data.exclude(userid__in=unmatch_all)
+
         return search_data
 
     def post(self, request):
@@ -609,6 +624,21 @@ class UserSearchField(views.APIView):
         data = request.data
         search_user = self.get_user(data, user)
         serializer = UserSearchFieldSerializer(search_user, many=True)
+
+        # print("serializer data:::::::::::::::::::",serializer.data)
+
+        # try:
+        #         unmatch_all = list(set(user_unmatch.objects.filter(user_id=user).values_list('user_unmatch', flat=True)))
+        #         print("unmatch_all:::::::::", unmatch_all)
+        # except Exception as e:
+        #         unmatch_all = []
+        #         print("exception unmatch_all:::::::::", unmatch_all)
+
+        # for element in unmatch_all:
+        #     if element in match_all:
+        #         match_all.remove(element)
+
+
         paginator = UserSearchFilterPagination()
         page = paginator.paginate_queryset(serializer.data, request)
         if page is not None:
