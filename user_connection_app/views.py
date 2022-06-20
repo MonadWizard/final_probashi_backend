@@ -576,8 +576,6 @@ class UserSearchFilter(views.APIView):
         except Exception as e:
                 unmatch_all = []
 
-        # search_user = search_user.exclude(userid__in=unmatch_all)
-
         details = User.objects.filter(userid__in=search_user).exclude(userid__in=unmatch_all).values(
             "userid",
             "user_fullname",
