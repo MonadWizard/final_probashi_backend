@@ -122,23 +122,16 @@ class Friends_suggation(views.APIView):
             )
 
             match_all = list(set(match_all))
-            print(":::::::::::::::::", match_all)
-
 
             try:
                 unmatch_all = list(set(user_unmatch.objects.filter(user_id=user).values_list('user_unmatch', flat=True)))
-                print("unmatch_all:::::::::", unmatch_all)
             except Exception as e:
                 unmatch_all = []
-                print("exception unmatch_all:::::::::", unmatch_all)
-
-
 
             for element in unmatch_all:
                 if element in match_all:
                     match_all.remove(element)
 
-            print("match_all:::::::::", match_all)
 
             match_friend_data = [
                 user := User.objects.filter(userid=x).values(
@@ -622,21 +615,6 @@ class UserSearchField(views.APIView):
         data = request.data
         search_user = self.get_user(data, user)
         serializer = UserSearchFieldSerializer(search_user, many=True)
-
-        # print("serializer data:::::::::::::::::::",serializer.data)
-
-        # try:
-        #         unmatch_all = list(set(user_unmatch.objects.filter(user_id=user).values_list('user_unmatch', flat=True)))
-        #         print("unmatch_all:::::::::", unmatch_all)
-        # except Exception as e:
-        #         unmatch_all = []
-        #         print("exception unmatch_all:::::::::", unmatch_all)
-
-        # for element in unmatch_all:
-        #     if element in match_all:
-        #         match_all.remove(element)
-
-
         paginator = UserSearchFilterPagination()
         page = paginator.paginate_queryset(serializer.data, request)
         if page is not None:
