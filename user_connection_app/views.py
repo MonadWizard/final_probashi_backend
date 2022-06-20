@@ -653,8 +653,8 @@ class unmatch_useres(views.APIView):
         unmatch_userid = request.data["user_unmatch"]
         userid = request.user.userid
         try:
-            user_id = User.objects.get(userid=userid)
-            bi_user_id = User.objects.get(userid=unmatch_userid)
+            user_id = User.objects.get(userid=userid).userid
+            bi_user_id = User.objects.get(userid=unmatch_userid).userid
             user_unmatch.objects.create(
                 user_id=user_id, user_unmatch=bi_user_id
             )
