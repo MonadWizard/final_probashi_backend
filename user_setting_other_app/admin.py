@@ -10,6 +10,9 @@ from .models import (
 from .resource import (
     PromoCodeDataPropertyAdminResource,
     StaticSettingDataPropertyAdminResource,
+    User_settingsPropertyAdminResource,
+    NotificationPropertyAdminResource,
+    Facing_troublePropertyAdminResource,
 )
 
 
@@ -30,6 +33,24 @@ class StaticSettingAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 # admin.site.register(StaticSettingData,StaticSettingAdmin)
 
 
-admin.site.register(User_settings)
-admin.site.register(Notification)
-admin.site.register(Facing_trouble)
+# admin.site.register(User_settings)
+# admin.site.register(Notification)
+# admin.site.register(Facing_trouble)
+
+
+@admin.register(User_settings)
+class User_settingsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = User_settingsPropertyAdminResource
+
+
+@admin.register(Notification)
+class NotificationAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = NotificationPropertyAdminResource
+
+
+@admin.register(Facing_trouble)
+class Facing_troubleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = Facing_troublePropertyAdminResource
+
+
+

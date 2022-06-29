@@ -69,7 +69,7 @@ ROOT_URLCONF = "probashi_backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -199,9 +199,9 @@ image_directory = Path(__file__).resolve().parent.parent.parent.parent
 STATIC_URL = "/static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'probashi_backend/static')
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'probashi_backend/static')
+]
 MEDIA_URL = "/probashi_images/"
 MEDIA_ROOT = os.path.join(image_directory, "probashi_images")
 
