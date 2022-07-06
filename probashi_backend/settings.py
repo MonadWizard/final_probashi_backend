@@ -16,6 +16,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "192.168.100.87",
     "114.129.10.3",
+    "192.168.50.87",
 ]
 
 # user model
@@ -185,8 +186,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Asia/Dhaka"
-
+# TIME_ZONE = "Asia/Dhaka"
+TIME_ZONE = "UTC"
 USE_I18N = True
 
 # USE_L10N = False

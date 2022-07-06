@@ -25,7 +25,8 @@ def create_chat_table(user_1, user_2):
     sql += "is_audio_message BOOLEAN NOT NULL DEFAULT FALSE,"
     sql += "is_image_message BOOLEAN NOT NULL DEFAULT FALSE,"
     sql += "message TEXT NOT NULL,"
-    sql += "message_time TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Dhaka')"
+    # sql += "message_time TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Dhaka')"
+    sql += "message_time TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')"
     sql += ")"
 
     # timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
@@ -44,11 +45,20 @@ def get_last_chat_data(user_1, user_2, table_namee):
         .table_name
     )
 
+    # sql = (
+    #     "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'Asia/Dhaka' FROM "
+    #     + str(table_title)
+    #     + " ORDER BY id DESC LIMIT 1"
+    # )
+
     sql = (
-        "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'Asia/Dhaka' FROM "
+        "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'UTC' FROM "
         + str(table_title)
         + " ORDER BY id DESC LIMIT 1"
     )
+
+
+
 
     # print('sql::::get last chat data::::::::',sql)
 
@@ -64,7 +74,7 @@ def get_last_chat_data(user_1, user_2, table_namee):
 
     # print('fields::::::', fields)
     result = sql_array_to_object(values=result, field_names=fields)
-    result["message_time"] = str(result["timezone"]) + str("+06:00")
+    result["message_time"] = str(result["timezone"]) + str("+00:00")
     del result["id"]
     result["id"] = table_namee
     del result["timezone"]

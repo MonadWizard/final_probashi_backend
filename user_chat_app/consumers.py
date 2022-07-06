@@ -39,6 +39,7 @@ all_online_user = []
 
 class DemoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        # print("scope:::::::::::", timezone.now())
         self.connect_user = self.scope["url_route"]["kwargs"]["userid"]
         # self.room_name = self.scope["url_route"]["kwargs"]["userid"]
         self.room_name = ""
@@ -140,7 +141,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
             chat_data = data
 
         elif text_data_json["data"] == "text":
-            timee = timezone.localtime(timezone.now())
+            # timee = timezone.localtime(timezone.now())
+            timee = timezone.now()
             data = {
                 "sender": self.room_name,
                 "receiver": text_data_json["receiverid"],
@@ -215,7 +217,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
 
         # images send.................................................
         elif text_data_json["data"] == "image":
-            timee = timezone.localtime(timezone.now())
+            # timee = timezone.localtime(timezone.now())
+            timee = timezone.now()
 
             image_data_byte = str.encode(text_data_json["message"])
             image_media_root = settings.MEDIA_ROOT
@@ -337,7 +340,9 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 "receiver": text_data_json["receiverid"],
                 "notification_title": text_data_json["notification_title"],
                 "notification_description": text_data_json["notification_description"],
-                "notification_date": str(timezone.localtime(timezone.now())),
+                # "notification_date": str(timezone.localtime(timezone.now())),
+                "notification_date": str(timezone.now()),
+
             }
             # Save to DataBase.................
             await save_notification_data(noti_data=data)
@@ -347,7 +352,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 "receiver": text_data_json["receiverid"],
                 "notification_title": text_data_json["notification_title"],
                 "notification_description": text_data_json["notification_description"],
-                "notification_date": str(timezone.localtime(timezone.now())),
+                # "notification_date": str(timezone.localtime(timezone.now())),
+                "notification_date": str(timezone.now()),
                 "is_notification_delete": False,
                 "is_notification_seen": False,
             }

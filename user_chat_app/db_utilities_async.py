@@ -298,8 +298,13 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
             .table_name
         )
 
+        # sql = (
+        #     "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'Asia/Dhaka' FROM "
+        #     + str(chat_table)
+        #     + " ORDER BY id DESC "
+        # )
         sql = (
-            "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'Asia/Dhaka' FROM "
+            "SELECT id,receiver,sender,message,is_text_message,is_file_message,is_audio_message,is_image_message,message_time AT TIME ZONE 'UTC' FROM "
             + str(chat_table)
             + " ORDER BY id DESC "
         )
@@ -318,7 +323,7 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
 
             for row in result:
                 d = sql_array_to_object(field_names=fields, values=row)
-                d["message_time"] = str(d["timezone"]) + str("+06:00")
+                d["message_time"] = str(d["timezone"]) + str("+00:00")
                 del d["timezone"]
                 temp_data.append(d)
             data["type"] = "previous message"
@@ -333,7 +338,8 @@ def get_previous_chat_data(userid, associated_user_id, chat_id):
 # ===================================notification.................
 @sync_to_async
 def get_all_notifications(userid):
-    tz = pytz.timezone("Asia/Dhaka")
+    # tz = pytz.timezone("Asia/Dhaka")
+    tz = pytz.timezone("UTC")
 
     all_noti = (
         Notification.objects.filter(
@@ -344,9 +350,13 @@ def get_all_notifications(userid):
     )
 
     for noti in all_noti:
+        # noti["notification_date"] = noti["notification_date"].replace(
+        #     tzinfo=tz
+        # ) + timedelta(hours=6)
         noti["notification_date"] = noti["notification_date"].replace(
             tzinfo=tz
-        ) + timedelta(hours=6)
+        )
+
 
     noti_data = json.dumps(list(all_noti), sort_keys=True, default=str)
 
@@ -397,7 +407,8 @@ def save_notification_data(noti_data):
 @sync_to_async
 def delete_notification_data(noti_data):
     try:
-        tz = pytz.timezone("Asia/Dhaka")
+        # tz = pytz.timezone("Asia/Dhaka")
+        tz = pytz.timezone("UTC")
         noti_id = noti_data["notification_id"]
         delete_status = noti_data["is_notification_delete"]
         Notification.objects.filter(id=noti_id).update(
@@ -405,7 +416,9 @@ def delete_notification_data(noti_data):
         )
 
         time = Notification.objects.filter(id=noti_id).values("notification_date")
-        noti_time = time[0]["notification_date"].replace(tzinfo=tz) + timedelta(hours=6)
+        # noti_time = time[0]["notification_date"].replace(tzinfo=tz) + timedelta(hours=6)
+        noti_time = time[0]["notification_date"].replace(tzinfo=tz)
+
         return noti_time
 
     except Exception as e:
@@ -417,13 +430,16 @@ def delete_notification_data(noti_data):
 def seen_notification_data(noti_data):
     try:
 
-        tz = pytz.timezone("Asia/Dhaka")
+        # tz = pytz.timezone("Asia/Dhaka")
+        tz = pytz.timezone("UTC")
         noti_id = noti_data["notification_id"]
         seen_status = noti_data["is_notification_seen"]
         Notification.objects.filter(id=noti_id).update(is_notification_seen=seen_status)
 
         time = Notification.objects.filter(id=noti_id).values("notification_date")
-        noti_time = time[0]["notification_date"].replace(tzinfo=tz) + timedelta(hours=6)
+        # noti_time = time[0]["notification_date"].replace(tzinfo=tz) + timedelta(hours=6)
+        noti_time = time[0]["notification_date"].replace(tzinfo=tz)
+
         return noti_time
 
     except Exception as e:

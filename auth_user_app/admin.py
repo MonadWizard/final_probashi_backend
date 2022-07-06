@@ -21,7 +21,13 @@ from rest_framework_simplejwt.token_blacklist.admin import OutstandingTokenAdmin
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = UserDataPropertyAdminResource
-    list_display = ["user_fullname", "user_email", "user_callphone", "user_created_at"]
+    list_display = ["user_fullname", "user_email", "user_callphone", "user_created_at",
+    "is_active", "is_consultant", "is_superuser", "is_pro_user", "pro_user_created_at", "user_geolocation",
+    "user_device_typeserial", "user_username", "user_gender", "user_dob", "user_photopath",
+    "user_residential_district", "user_nonresidential_country", "user_nonresidential_city", "user_durationyear_abroad",
+    "user_current_location_durationyear", "user_industry", "user_areaof_experience", "user_industry_experienceyear",
+    "user_interested_area", "user_goal", "is_user_serviceholder", "is_user_selfemployed", "user_currentdesignation",
+    "user_company_name", "user_office_address", "auth_provider"]
 
 
 @admin.register(PhoneOTP)
