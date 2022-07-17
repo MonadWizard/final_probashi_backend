@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 from auth_user_app.models import User
 from django.contrib.postgres.fields import ArrayField
@@ -11,6 +12,16 @@ class UserFavoutireRequestSend(models.Model):
     is_favourite_accept = models.BooleanField(default=False)
     is_favourite_reject = models.BooleanField(default=False)
     favourite_request_note = models.TextField(blank=True, null=True)
+    
+    def __str__(self):  
+        return str(self.userid) if self.userid else "userid is none"
+
+    class Meta:
+        verbose_name = "User Favorite request send"
+        verbose_name_plural = "User Favorite request sends"
+
+
+
 
 
 class UserFavouriteList(models.Model):
@@ -28,6 +39,9 @@ class UserFavouriteList(models.Model):
         return (
             str(self.userid.user_fullname) if self.userid else "user_fullname is none"
         )
+    class Meta:
+        verbose_name = "User Favorite list"
+        verbose_name_plural = "User Favorite lists"
 
 
 # -------------------X----------------------------friend matching-------------------------------X-----------------
@@ -51,3 +65,7 @@ class FriendsSuggation(models.Model):
 
     def __str__(self):
         return str(self.user) if self.user else "user is none"
+
+    class Meta:
+        verbose_name = "Friends Suggestion"
+        verbose_name_plural = "Friends Suggestions"

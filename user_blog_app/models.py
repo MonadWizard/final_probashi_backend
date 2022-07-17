@@ -18,6 +18,10 @@ class Blog(models.Model):
     userblog_publishlocation = models.CharField(max_length=200, blank=True, null=True)
     userblog_publishdate = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
+        return str(self.id) if self.id else "id is none"
+
 
 class Blog_comment(models.Model):
     userid = models.ForeignKey(
@@ -31,6 +35,9 @@ class Blog_comment(models.Model):
         max_length=200, blank=True, null=True
     )
 
+    def __str__(self):
+        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
+        return str(self.blogid) if self.blogid else "blogid is none"
 
 class Blog_reaction(models.Model):
     userid = models.ForeignKey(
@@ -41,3 +48,14 @@ class Blog_reaction(models.Model):
     )
     is_user_like = models.BooleanField(default=False)
     is_user_dislike = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
+        return str(self.blogid) if self.blogid else "blogid is none"
+
+
+
+
+
+

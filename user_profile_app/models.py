@@ -34,6 +34,10 @@ class User_experience(models.Model):
     userexperience_startdate = models.DateField(blank=True, null=True)
     userexperience_enddate = models.DateField(blank=True, null=True)
 
+    def __str__(self):
+        return str(self.userid) if self.userid else "userid is none"
+
+
 
 class User_education(models.Model):
     userid = models.ForeignKey(
@@ -57,3 +61,8 @@ class User_idverification(models.Model):
     user_verify_passportphoto_path = models.ImageField(
         upload_to="user/ID_verification", blank=True, null=True
     )
+
+    def __str__(self):
+        return str(self.userid) if self.userid else "userid is none"
+
+

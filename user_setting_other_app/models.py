@@ -87,63 +87,63 @@ class StaticSettingData(models.Model):
     country_name = models.CharField(max_length=200, blank=True, null=True)
     state_name = ArrayField(models.CharField(max_length=200), blank=True, null=True)
 
-    def __str__(self):
-        if (
-            self.user_industry_data
-            or self.user_areaof_experience_data
-            or self.user_interested_area_data
-            or self.user_goal_data
-            or self.consultancyservice_category_data
-            or self.blog_tags_data
-            or self.user_education_data
-            or self.faq_title
-            or self.privacypolicy_title
-            or self.educationService_degree
-            or self.overseasrecruitmentservice_job_type
-            or self.medicalconsultancyservice_treatment_area
-            or self.legalcivilservice_required
-            or self.legalcivilservice_issue
-            or self.propertymanagementservice_propertylocation
-            or self.propertymanagementservice_type
-            or self.propertymanagementservice_need
-            or self.tourismservices
-            or self.trainingservice_topic
-            or self.trainingservice_duration
-            or self.digitalservice_type
-            or self.tradefacilitationservice_type
-            or self.tradefacilitationservice_Purpose
-            or self.country_name
-        ):
+    # def __str__(self):
+    #     if (
+    #         self.user_industry_data
+    #         or self.user_areaof_experience_data
+    #         or self.user_interested_area_data
+    #         or self.user_goal_data
+    #         or self.consultancyservice_category_data
+    #         or self.blog_tags_data
+    #         or self.user_education_data
+    #         or self.faq_title
+    #         or self.privacypolicy_title
+    #         or self.educationService_degree
+    #         or self.overseasrecruitmentservice_job_type
+    #         or self.medicalconsultancyservice_treatment_area
+    #         or self.legalcivilservice_required
+    #         or self.legalcivilservice_issue
+    #         or self.propertymanagementservice_propertylocation
+    #         or self.propertymanagementservice_type
+    #         or self.propertymanagementservice_need
+    #         or self.tourismservices
+    #         or self.trainingservice_topic
+    #         or self.trainingservice_duration
+    #         or self.digitalservice_type
+    #         or self.tradefacilitationservice_type
+    #         or self.tradefacilitationservice_Purpose
+    #         or self.country_name
+    #     ):
 
-            return (
-                self.user_industry_data
-                or self.user_areaof_experience_data
-                or self.user_interested_area_data
-                or self.user_goal_data
-                or self.consultancyservice_category_data
-                or self.blog_tags_data
-                or self.user_education_data
-                or self.faq_title
-                or self.privacypolicy_title
-                or self.educationService_degree
-                or self.overseasrecruitmentservice_job_type
-                or self.medicalconsultancyservice_treatment_area
-                or self.legalcivilservice_required
-                or self.legalcivilservice_issue
-                or self.propertymanagementservice_propertylocation
-                or self.propertymanagementservice_type
-                or self.propertymanagementservice_need
-                or self.tourismservices
-                or self.trainingservice_topic
-                or self.trainingservice_duration
-                or self.digitalservice_type
-                or self.tradefacilitationservice_type
-                or self.tradefacilitationservice_Purpose
-                or self.country_name
-            )
+    #         return (
+    #             self.user_industry_data
+    #             or self.user_areaof_experience_data
+    #             or self.user_interested_area_data
+    #             or self.user_goal_data
+    #             or self.consultancyservice_category_data
+    #             or self.blog_tags_data
+    #             or self.user_education_data
+    #             or self.faq_title
+    #             or self.privacypolicy_title
+    #             or self.educationService_degree
+    #             or self.overseasrecruitmentservice_job_type
+    #             or self.medicalconsultancyservice_treatment_area
+    #             or self.legalcivilservice_required
+    #             or self.legalcivilservice_issue
+    #             or self.propertymanagementservice_propertylocation
+    #             or self.propertymanagementservice_type
+    #             or self.propertymanagementservice_need
+    #             or self.tourismservices
+    #             or self.trainingservice_topic
+    #             or self.trainingservice_duration
+    #             or self.digitalservice_type
+    #             or self.tradefacilitationservice_type
+    #             or self.tradefacilitationservice_Purpose
+    #             or self.country_name
+    #         )
 
-        else:
-            return "No Data"
+    #     else:
+    #         return "No Data"
 
 
 class PromoCodeData(models.Model):
@@ -173,6 +173,10 @@ class User_settings(models.Model):
     user_reward_point = models.IntegerField(default=0)
     # user_promo_code_pk =
 
+    class Meta:
+        # db_table = 'User_settings'
+        # verbose_name = 'user_settings'
+        verbose_name_plural = 'user_settings'
 
 class Facing_trouble(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

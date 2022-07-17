@@ -139,9 +139,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        if self.user_fullname:
-            return str(self.user_fullname)
-        return "user_fullname is none"
+        if self.userid:
+            return str(self.userid)
+        return "userid is none"
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)
@@ -155,7 +155,7 @@ class user_unmatch(models.Model):
     user_unmatch_created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.user_id)
+        return str(self.user_id) if self.user_id else "user id is none"
 
 
 class PhoneOTP(models.Model):
@@ -178,3 +178,7 @@ class mailVerify(models.Model):
 
     def __str__(self):
         return str(self.user_email) if self.user_email else "user_email is none"
+
+    class Meta:
+        # verbose_name = ("My Book")
+        verbose_name_plural = ("mail Verifies")

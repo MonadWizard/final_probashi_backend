@@ -127,8 +127,8 @@ class ConsultancyCreate(models.Model):
     consultant_created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.consultant_service_category
-
+        # return self.consultant_service_category
+        return str(self.id) if self.id else "id is none"
 
 class ConsultancyTimeSchudile(models.Model):
     consultancyid = models.ForeignKey(
@@ -142,9 +142,15 @@ class ConsultancyTimeSchudile(models.Model):
     consultancy_rate = models.IntegerField(blank=True, null=True)
     is_consultancy_take = models.BooleanField(default=False)
 
-    # def __str__(self):
-    #     return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
+    def __str__(self):
+        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
+        return str(self.consultancyid) if self.consultancyid else "consultancyid is none"
 
+    class Meta:
+        # ordering = ["consultancy_timeschudile_startdate"]
+        verbose_name = "Consultancy Time Schedule"
+        verbose_name_plural = "Consultancy Time Schedules"
+    
 
 class UserConsultAppointmentRequest(models.Model):
     seekerid = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -175,42 +181,20 @@ class UserConsultAppointmentRequest(models.Model):
 
     payment_status = models.BooleanField(default=False)  # not use yet
 
+    def __str__(self):
+        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
+        return str(self.ConsultancyTimeSchudile) if self.ConsultancyTimeSchudile else "ConsultancyTimeSchudile is none"
+
+
 
 class ProUserPayment(models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE)
     tran_id = models.CharField(max_length=200, blank=True, null=True)
     payment_details = models.JSONField(blank=True, null=True)
-    # val_id = models.CharField(max_length=200, blank=True, null=True)
-    # amount = models.CharField(max_length=200, blank=True, null=True)
-    # card_type = models.CharField(max_length=200, blank=True, null=True)
-    # store_amount = models.CharField(max_length=200, blank=True, null=True)
-    # card_no = models.CharField(max_length=200, blank=True, null=True)
-    # bank_tran_id = models.CharField(max_length=200, blank=True, null=True)
-    # status = models.CharField(max_length=200, blank=True, null=True)
-    # tran_date = models.CharField(max_length=200, blank=True, null=True)
-    # error = models.CharField(max_length=200, blank=True, null=True)
-    # currency = models.CharField(max_length=200, blank=True, null=True)
-    # card_issuer = models.CharField(max_length=200, blank=True, null=True)
-    # card_brand = models.CharField(max_length=200, blank=True, null=True)
-    # card_sub_brand = models.CharField(max_length=200, blank=True, null=True)
-    # card_issuer_country = models.CharField(max_length=200, blank=True, null=True)
-    # card_issuer_country_code = models.CharField(max_length=200, blank=True, null=True)
-    # store_id = models.CharField(max_length=200, blank=True, null=True)
-    # verify_sign = models.CharField(max_length=200, blank=True, null=True)
-    # verify_key = models.TextField(blank=True, null=True)
-    # verify_sign_sha2 = models.TextField(blank=True, null=True)
-    # currency_type = models.CharField(max_length=200, blank=True, null=True)
-    # currency_amount = models.CharField(max_length=200, blank=True, null=True)
-    # currency_rate = models.CharField(max_length=200, blank=True, null=True)
-    # base_fair = models.CharField(max_length=200, blank=True, null=True)
-    # value_a = models.CharField(max_length=200, blank=True, null=True)
-    # value_b = models.CharField(max_length=200, blank=True, null=True)
-    # value_c = models.CharField(max_length=200, blank=True, null=True)
-    # value_d = models.CharField(max_length=200, blank=True, null=True)
-    # subscription_id = models.CharField(max_length=200, blank=True, null=True)
-    # risk_level = models.CharField(max_length=200, blank=True, null=True)
-    # risk_title = models.CharField(max_length=200, blank=True, null=True)
-
+    
+    def __str__(self):
+        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
+        return str(self.userid) if self.userid else "userid is none"
 
 class ConsultancyPayment(models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -220,33 +204,13 @@ class ConsultancyPayment(models.Model):
     tran_id = models.CharField(max_length=200, blank=True, null=True)
     payment_details = models.JSONField(blank=True, null=True)
 
-    # val_id = models.CharField(max_length=200, blank=True, null=True)
-    # amount = models.CharField(max_length=200, blank=True, null=True)
-    # card_type = models.CharField(max_length=200, blank=True, null=True)
-    # store_amount = models.CharField(max_length=200, blank=True, null=True)
-    # card_no = models.CharField(max_length=200, blank=True, null=True)
-    # bank_tran_id = models.CharField(max_length=200, blank=True, null=True)
-    # status = models.CharField(max_length=200, blank=True, null=True)
-    # tran_date = models.CharField(max_length=200, blank=True, null=True)
-    # error = models.CharField(max_length=200, blank=True, null=True)
-    # currency = models.CharField(max_length=200, blank=True, null=True)
-    # card_issuer = models.CharField(max_length=200, blank=True, null=True)
-    # card_brand = models.CharField(max_length=200, blank=True, null=True)
-    # card_sub_brand = models.CharField(max_length=200, blank=True, null=True)
-    # card_issuer_country = models.CharField(max_length=200, blank=True, null=True)
-    # card_issuer_country_code = models.CharField(max_length=200, blank=True, null=True)
-    # store_id = models.CharField(max_length=200, blank=True, null=True)
-    # verify_sign = models.CharField(max_length=200, blank=True, null=True)
-    # verify_key = models.TextField(blank=True, null=True)
-    # verify_sign_sha2 = models.TextField(blank=True, null=True)
-    # currency_type = models.CharField(max_length=200, blank=True, null=True)
-    # currency_amount = models.CharField(max_length=200, blank=True, null=True)
-    # currency_rate = models.CharField(max_length=200, blank=True, null=True)
-    # base_fair = models.CharField(max_length=200, blank=True, null=True)
-    # value_a = models.CharField(max_length=200, blank=True, null=True)
-    # value_b = models.CharField(max_length=200, blank=True, null=True)
-    # value_c = models.CharField(max_length=200, blank=True, null=True)
-    # value_d = models.CharField(max_length=200, blank=True, null=True)
-    # subscription_id = models.CharField(max_length=200, blank=True, null=True)
-    # risk_level = models.CharField(max_length=200, blank=True, null=True)
-    # risk_title = models.CharField(max_length=200, blank=True, null=True)
+    def __str__(self):
+        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
+        return str(self.consultancy_sheduleid) if self.consultancy_sheduleid else "consultancy_sheduleid is none"
+
+
+
+
+
+
+
