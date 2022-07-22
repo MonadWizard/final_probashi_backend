@@ -12,13 +12,13 @@ class Google:
             idinfo = id_token.verify_oauth2_token(
                 auth_token, google_auth_request.Request()
             )
-            print("idinfo::::", idinfo)
+            # print("idinfo::::", idinfo)
 
             if "accounts.google.com" in idinfo["iss"]:
                 return idinfo
 
         except Exception as e:
-            print("exception:::::::", e)
+            # print("exception:::::::", e)
             return "The token is either invalid or has expired."
 
 
@@ -61,7 +61,7 @@ class Linkedin:
             headers["Accept"] = "*/*"
             resp_name = requests.get(url, headers=headers)
             resp_dict_name = resp_name.json()
-            print("resp_dict_name:::---", resp_dict_name)
+            # print("resp_dict_name:::---", resp_dict_name)
             resp_fullname = (
                 resp_dict_name["localizedFirstName"]
                 + " "
@@ -77,11 +77,11 @@ class Linkedin:
             resp_mail = requests.get(url, headers=headers)
             resp_dict_mail = resp_mail.json()
             resp_mail = resp_dict_mail["elements"][0]["handle~"]["emailAddress"]
-            print("resp:::", resp_dict_mail)
+            # print("resp:::", resp_dict_mail)
             # print(resp.status_code)
 
             resp_data = {"name": resp_fullname, "email": resp_mail, "picture": None}
-            print("resp_data:::", resp_data)
+            # print("resp_data:::", resp_data)
             return resp_data
 
         except:

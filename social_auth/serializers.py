@@ -13,7 +13,7 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
 
     def validate_auth_token(self, auth_token):
         user_data = Google.validate(auth_token)
-        print("user_data::::", user_data)
+        # print("user_data::::", user_data)
         try:
             user_data["sub"]
         except Exception as e:
@@ -43,7 +43,7 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
             and user_data["aud"] != googleClientID_android
             and user_data["aud"] != googleClientID_iso
         ):
-            print("user_data['aud']::::", user_data["aud"])
+            # print("user_data['aud']::::", user_data["aud"])
             raise AuthenticationFailed("oops, who are you?")
         userid = user_data["sub"]
         user_email = user_data["email"]
@@ -75,7 +75,7 @@ class FacebookSocialAuthSerializer(serializers.Serializer):
             user_email = user_data["email"]
             user_fullname = user_data["name"]
             user_image = user_data["picture"]["data"]["url"]
-            print("user_image::::", user_image)
+            # print("user_image::::", user_image)
             provider = "facebook"
             return register_social_user(
                 provider=provider,
@@ -105,7 +105,7 @@ class LinkedinSocialAuthSerializer(serializers.Serializer):
             user_email = user_data["email"]
             user_fullname = user_data["name"]
             user_image = user_data["picture"]
-            print("user_image::::", user_image)
+            # print("user_image::::", user_image)
             provider = "linkedin"
             return register_social_user(
                 provider=provider,

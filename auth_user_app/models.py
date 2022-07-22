@@ -167,7 +167,10 @@ class PhoneOTP(models.Model):
 
     def __str__(self):
         return str(self.otp) if self.otp else "otp is none"
-
+    
+    class Meta:
+        # verbose_name = ("My Book")
+        verbose_name_plural = ("Phone OTP for login and Registration Verification")
 
 class mailVerify(models.Model):
     user_id = models.CharField(max_length=30, db_index=True)
@@ -181,4 +184,4 @@ class mailVerify(models.Model):
 
     class Meta:
         # verbose_name = ("My Book")
-        verbose_name_plural = ("mail Verifies")
+        verbose_name_plural = ("mail Verifies for forget Password")

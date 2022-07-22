@@ -54,7 +54,7 @@ class MailVerifyRequestView(views.APIView):
         try:
             # User.objects.get(user_email=user_email)
             provider = User.objects.get(user_email=user_email).auth_provider
-            print("user already exists")
+            # print("user already exists")
             return Response(
                 {
                     "success": False,
@@ -92,8 +92,13 @@ class MailVerifyRequestView(views.APIView):
 
             Util.send_email(data)
 
-            resp_msg = {"success": True}
-            resp_msg.update(data)
+            resp_msg = {"success": True,
+                        "email_subject": "Verify your email",
+                        "to_email": "unknown@unknown.com"
+            }
+
+            
+            # resp_msg.update(data)
 
             return Response(resp_msg, status=status.HTTP_200_OK)
 
@@ -604,7 +609,19 @@ class RegistrationVerificationCodeSend(views.APIView):
             data = {f"""প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}"""}
 
             send = SendMessage.send_message(user_callphone, data)
-            res_data = {"success": True, "data": serializer.data, "send-message": send}
+
+            response_extra = {
+                        "id": 00,
+                        "user_callphone": "88000000000000",
+                        "otp": "0000",
+                        "created_at": "2022-00-00T06:22:26.976589Z",
+                        "updated_at": "2022-00-00T06:27:26.974631Z",
+                        "is_used": True
+            }
+
+
+            res_data = {"success": True, "data": response_extra, "send-message": send}
+            # res_data = {"success": True, "data": serializer.data, "send-message": send}
             return Response(res_data, status=status.HTTP_200_OK)
 
 
@@ -675,9 +692,23 @@ class LoginVerificationCodeSend(views.APIView):
                 data = {f"""প্রিয় {user_fullname}, আপনার ভেরিফিকেশন কোডটি {otp}"""}
 
                 send = SendMessage.send_message(user_callphone, data)
+
+                response_extra = {
+                            "id": 00,
+                            "user_callphone": "88000000000000",
+                            "otp": "0000",
+                            "created_at": "2022-00-00T06:26:42.854808Z",
+                            "updated_at": "2022-00-00T06:31:42.853660Z",
+                            "is_used": False
+                }
+                # response_extra["id"] = serializer.data.get("id")
+                # response_extra["user_callphone"] = serializer.data.get("user_callphone")
+                # response_extra["is_used"] = serializer.data.get("is_used")
+
                 res_data = {
                     "success": True,
-                    "data": serializer.data,
+                    "data": response_extra,
+                    # "data": serializer.data,
                     "send-message": send,
                 }
                 return Response(res_data, status=status.HTTP_200_OK)

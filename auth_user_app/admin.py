@@ -56,7 +56,7 @@ class mailVerifyAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 @admin.register(user_unmatch)
 class user_unmatchAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = user_unmatchPropertyAdminResource
-    list_display = ["user_id", "user_unmatch", "user_unmatch_created_at"]
+    list_display = ["id","user_id", "user_unmatch", "user_unmatch_created_at"]
     # list_filter = ('user_email',)
     search_fields = ['user_id__userid']
     list_per_page = 20

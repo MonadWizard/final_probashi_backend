@@ -20,7 +20,7 @@ class UserFavoutireRequestSendAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = UserFavoutireRequestSendPropertyAdminResource
     list_display = ["id","userid", "favourite_request_to", "is_favourite_accept", "is_favourite_reject", "favourite_request_note"]
     list_filter = ('is_favourite_accept','is_favourite_reject')
-    search_fields = ['userid__user_fullname', 'favourite_request_to__user_fullname']
+    search_fields = ['userid__userid', 'favourite_request_to__userid']
     list_per_page = 20
 
 @admin.register(UserFavouriteList)
