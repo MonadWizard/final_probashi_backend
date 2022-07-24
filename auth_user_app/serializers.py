@@ -23,25 +23,12 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
     userid = serializers.CharField(max_length=68, min_length=6, write_only=True)
 
-    # default_error_messages = {
-    #     'email': 'The email should only contain alphanumeric characters'}
-
+    
     class Meta:
         model = User
         fields = ["userid", "user_email", "user_fullname", "password"]
 
-    # def validate(self, attrs):
-    #     # userid = attrs.get('userid', '')
-    #     # user_email = attrs.get('user_email', '')
-    #     # user_fullname = attrs.get('user_fullname', '')
-    #     # print('attrs', attrs)
-
-    #     # # validet fullname is allphanumeric
-    #     # if not fullname.isalnum():
-    #     #     raise serializers.ValidationError(
-    #     #         self.default_error_messages)
-
-    #     return attrs
+    
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
@@ -87,7 +74,6 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ["user_email", "password", "tokens"]
 
     def validate(self, attrs):
-        # start = time.time()  # start time..............................
         user_email = attrs.get("user_email", "")
         password = attrs.get("password", "")
         try:
@@ -98,10 +84,7 @@ class LoginSerializer(serializers.ModelSerializer):
         except User.DoesNotExist:
             raise AuthenticationFailed("User does not exist")
 
-        # end1 = time.time()  # end time..............................1
-        # print("end time filter 1 is:", end1 - start)
-
-        # start2 = time.time()  # end time..............................2
+        
         try:
 
             user = auth.authenticate(user_email=user_email, password=password)
@@ -113,14 +96,11 @@ class LoginSerializer(serializers.ModelSerializer):
                 )
 
             if not user:
-                # print(":::::::::::::Invalid credentials, try again")
                 raise serializers.ValidationError("Invalid credentials, try again")
 
             if not user.is_active:
-                # print(":::::::::::::::::::Account disabled, contact admin")
                 raise serializers.ValidationError("Account disabled, contact admin")
             if not user.is_verified:
-                # print(":::::::::::::::::::::Email is not verified")
                 raise serializers.ValidationError("Email is not verified")
 
             if user is None:
@@ -128,12 +108,10 @@ class LoginSerializer(serializers.ModelSerializer):
             else:
                 return attrs
 
-        # end2 = time.time()  # end time..............................3
-        # print("end time filter 2 is:", end2 - start2)
+        
 
         return {"user_email": user.user_email, "tokens": user.tokens}
 
-        # return super().validate(attrs)
 
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
@@ -202,7 +180,6 @@ class RequestPasswordResetEmailSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# ---------------------x-----------------------x----------------------------x----------
 
 
 class userOTP(serializers.ModelSerializer):
@@ -212,7 +189,6 @@ class userOTP(serializers.ModelSerializer):
 
 
 class PhoneOtpRegisterSerializer(serializers.ModelSerializer):
-    # password = serializers.CharField(max_length=68, min_length=6, write_only=True)
     userid = serializers.CharField(max_length=68, min_length=6, write_only=True)
 
     class Meta:
@@ -220,16 +196,11 @@ class PhoneOtpRegisterSerializer(serializers.ModelSerializer):
         fields = ["userid", "user_callphone", "user_fullname"]
 
     def create(self, validated_data):
-        # print("validated_data:::::",validated_data)
         return User.objects.create_user_phone(**validated_data)
 
 
 class PhoneLoginSerializer(serializers.ModelSerializer):
     user_callphone = serializers.CharField(max_length=255, min_length=3)
-    # password = serializers.CharField(max_length=68, min_length=6, write_only=True)
-    # user_fullname = serializers.CharField(
-    #     max_length=255, min_length=3, read_only=True)
-
     tokens = serializers.SerializerMethodField()
 
     def get_tokens(self, obj):
@@ -246,8 +217,6 @@ class PhoneLoginSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         user_callphone = attrs.get("user_callphone", "")
-        # print("user_callphone::::::",user_callphone)
-        # password = attrs.get('password', '')
         filtered_user_by_user_callphone = User.objects.filter(
             user_callphone=user_callphone
         )

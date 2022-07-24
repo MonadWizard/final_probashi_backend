@@ -21,6 +21,5 @@ def sql_array_to_object(field_names, values):
         if data.get("is_image_message") == False:
             data.pop("is_image_message")
 
-    # print('data:::::', data)
 
     return data

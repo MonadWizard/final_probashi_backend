@@ -1,6 +1,5 @@
 from django.urls import path
 
-# from .views import GoogleSocialAuthView, FacebookSocialAuthView, TwitterSocialAuthView
 from .views import GoogleSocialAuthView, FacebookSocialAuthView, LinkedinSocialAuthView
 
 urlpatterns = [

@@ -1,5 +1,14 @@
-need to be
+For Probashi_db:
 
-> > python manage.py makemigrations consultancy_app
+    makemigrations:
+            ❯python manage.py makemigrations
+    migration:
+            ❯python manage.py migrate
 
-> > python manage.py migrate consultancy_app
+For probashichat_db:
+
+    makemigrations:
+        ❯ python manage.py makemigrations user_chat_app
+
+    migration:
+        ❯ python manage.py migrate user_chat_app --database=probashi_chat

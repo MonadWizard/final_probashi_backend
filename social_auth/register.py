@@ -23,7 +23,6 @@ def register_social_user(provider, user_email, user_fullname, user_image):
     filtered_user_by_email = User.objects.filter(user_email=user_email)
 
     if filtered_user_by_email.exists():
-        # print("exist................", filtered_user_by_email[0].auth_provider)
         if filtered_user_by_email[0].is_active == True:
             if provider == filtered_user_by_email[0].auth_provider:
                 social_secret = "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"
@@ -34,7 +33,6 @@ def register_social_user(provider, user_email, user_fullname, user_image):
                 return {
                     "user_fullname": registered_user.user_fullname,
                     "user_email": registered_user.user_email,
-                    # "user_image": user_image,
                     "tokens": registered_user.tokens(),
                 }
 
@@ -48,7 +46,6 @@ def register_social_user(provider, user_email, user_fullname, user_image):
                 return {
                     "user_fullname": filtered_user_by_email[0].user_fullname,
                     "user_email": filtered_user_by_email[0].user_email,
-                    # "user_image": user_image,
                     "tokens": filtered_user_by_email[0].tokens(),
                 }
 
@@ -69,7 +66,6 @@ def register_social_user(provider, user_email, user_fullname, user_image):
         userid = current_time
 
         user = {
-            # 'username': generate_username(name), 'email': email,
             "userid": userid,
             "user_fullname": generate_username(user_fullname),
             "user_email": user_email,

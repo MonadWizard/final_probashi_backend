@@ -39,13 +39,10 @@ all_online_user = []
 
 class DemoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        # print("scope:::::::::::", timezone.now())
         self.connect_user = self.scope["url_route"]["kwargs"]["userid"]
-        # self.room_name = self.scope["url_route"]["kwargs"]["userid"]
         self.room_name = ""
         if '-background' in self.connect_user:
             self.room_name = self.connect_user.split("-")[0]
-            # self.room_name = self.scope["url_route"]["kwargs"]["userid"]
             self.room_group_name = "chat_" + self.room_name
 
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -226,9 +223,10 @@ class DemoConsumer(AsyncWebsocketConsumer):
             if not os.path.exists(image_save_dir):
                 try:
                     Path(f"{image_save_dir}").mkdir(parents=True, exist_ok=True)
-                    print("directory created")
+                    # print("directory created")
                 except:
-                    print("can not build dir")
+                    # print("can not build dir")
+                    pass
 
             current_time = datetime.datetime.now()
             current_time = current_time.strftime("%m%d%H%M%S%f")
@@ -239,7 +237,8 @@ class DemoConsumer(AsyncWebsocketConsumer):
                 with open(f"{image_save_path}", "wb") as new_file:
                     new_file.write(base64.decodebytes(image_data_byte))
             except Exception as e:
-                print("can not save image", e)
+                # print("can not save image", e)
+                pass
             data = {
                 "sender": self.room_name,
                 "receiver": text_data_json["receiverid"],

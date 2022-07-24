@@ -67,9 +67,6 @@ class GetAllCategoryScheduleSerializer(serializers.ModelSerializer):
         ]
 
 
-# --------------------------------x-------------------------------x------------------
-
-
 class FilteredListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         data = data.filter(is_consultancy_take=False)
@@ -113,13 +110,10 @@ class GetAllServicesCategoryScheduleSerializer(serializers.ModelSerializer):
         ]
 
 
-# --------------------------------x-------------------------------x------------------
-
 
 class ConsultantAppointmentRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserConsultAppointmentRequest
-        # fields = '__all__'
         fields = [
             "seekerid",
             "ConsultancyTimeSchudile",

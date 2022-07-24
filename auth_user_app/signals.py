@@ -10,7 +10,6 @@ def post_delete_action(sender, **kwargs):
     user = kwargs["instance"]
 
     user_id = [str(user.userid)]
-    # print("user_id:", user_id)
 
     fields = [
         "location",

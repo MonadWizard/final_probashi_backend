@@ -87,64 +87,6 @@ class StaticSettingData(models.Model):
     country_name = models.CharField(max_length=200, blank=True, null=True)
     state_name = ArrayField(models.CharField(max_length=200), blank=True, null=True)
 
-    # def __str__(self):
-    #     if (
-    #         self.user_industry_data
-    #         or self.user_areaof_experience_data
-    #         or self.user_interested_area_data
-    #         or self.user_goal_data
-    #         or self.consultancyservice_category_data
-    #         or self.blog_tags_data
-    #         or self.user_education_data
-    #         or self.faq_title
-    #         or self.privacypolicy_title
-    #         or self.educationService_degree
-    #         or self.overseasrecruitmentservice_job_type
-    #         or self.medicalconsultancyservice_treatment_area
-    #         or self.legalcivilservice_required
-    #         or self.legalcivilservice_issue
-    #         or self.propertymanagementservice_propertylocation
-    #         or self.propertymanagementservice_type
-    #         or self.propertymanagementservice_need
-    #         or self.tourismservices
-    #         or self.trainingservice_topic
-    #         or self.trainingservice_duration
-    #         or self.digitalservice_type
-    #         or self.tradefacilitationservice_type
-    #         or self.tradefacilitationservice_Purpose
-    #         or self.country_name
-    #     ):
-
-    #         return (
-    #             self.user_industry_data
-    #             or self.user_areaof_experience_data
-    #             or self.user_interested_area_data
-    #             or self.user_goal_data
-    #             or self.consultancyservice_category_data
-    #             or self.blog_tags_data
-    #             or self.user_education_data
-    #             or self.faq_title
-    #             or self.privacypolicy_title
-    #             or self.educationService_degree
-    #             or self.overseasrecruitmentservice_job_type
-    #             or self.medicalconsultancyservice_treatment_area
-    #             or self.legalcivilservice_required
-    #             or self.legalcivilservice_issue
-    #             or self.propertymanagementservice_propertylocation
-    #             or self.propertymanagementservice_type
-    #             or self.propertymanagementservice_need
-    #             or self.tourismservices
-    #             or self.trainingservice_topic
-    #             or self.trainingservice_duration
-    #             or self.digitalservice_type
-    #             or self.tradefacilitationservice_type
-    #             or self.tradefacilitationservice_Purpose
-    #             or self.country_name
-    #         )
-
-    #     else:
-    #         return "No Data"
-
 
 class PromoCodeData(models.Model):
     promo_code = models.CharField(
@@ -153,9 +95,6 @@ class PromoCodeData(models.Model):
     promo_code_point = models.IntegerField(default=0)
     promo_code_amount = models.IntegerField(default=0)
     is_promo_code_active = models.BooleanField(default=False)
-    # promo_code_status = models.BooleanField(default=False)
-    # promo_code_start_date = models.DateField(blank=True, null=True)
-    # promo_code_end_date = models.DateField(blank=True, null=True)
 
     # class Meta:
     #     db_table = 'PromoCodeData'
@@ -171,7 +110,6 @@ class User_settings(models.Model):
     user_mail_notification_enable = models.BooleanField(default=True)
     user_monthly_newsleter_enable = models.BooleanField(default=True)
     user_reward_point = models.IntegerField(default=0)
-    # user_promo_code_pk =
 
     class Meta:
         # db_table = 'User_settings'

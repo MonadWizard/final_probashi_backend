@@ -29,8 +29,7 @@ def create_chat_table(user_1, user_2):
     sql += "message_time TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')"
     sql += ")"
 
-    # timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
-    # print(sql)
+
 
     with connections["probashi_chat"].cursor() as cursor:
         cursor.execute(sql)
@@ -60,7 +59,6 @@ def get_last_chat_data(user_1, user_2, table_namee):
 
 
 
-    # print('sql::::get last chat data::::::::',sql)
 
     with connections["probashi_chat"].cursor() as cursor:
         cursor.execute(sql)
@@ -68,18 +66,15 @@ def get_last_chat_data(user_1, user_2, table_namee):
         if result is None:
             return {}
 
-    # print('result::::::', result)
 
     fields = [field[0] for field in cursor.description]
 
-    # print('fields::::::', fields)
     result = sql_array_to_object(values=result, field_names=fields)
     result["message_time"] = str(result["timezone"]) + str("+00:00")
     del result["id"]
     result["id"] = table_namee
     del result["timezone"]
     try:
-        # print('sender::::::',result['sender'])
         sender_data = User.objects.filter(userid=result["sender"]).values(
             "userid", "user_fullname", "is_consultant", "user_photopath"
         )[0]

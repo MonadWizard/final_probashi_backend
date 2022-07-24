@@ -41,7 +41,6 @@ class BlogPaginateListViewSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="userid.user_fullname")
     userphoto = serializers.ImageField(source="userid.user_photopath")
     is_consultant = serializers.BooleanField(source="userid.is_consultant")
-    # blog_reaction = BlogHomePageReactionSerializer(many=True, read_only=True)
     blog_comment = BlogHomePageCommentSerializer(many=True, read_only=True)
     totalliked = serializers.SerializerMethodField("get_total_like")
     totaldisliked = serializers.SerializerMethodField("get_total_dislike")
@@ -94,7 +93,6 @@ class SpecificBlogReactionDetailsSerializers(serializers.ModelSerializer):
     userdisliked = serializers.SerializerMethodField("get_user_dislike")
 
     def get_total_like(self, obj):
-        # print("reaction id:::",obj)
         return Blog_reaction.objects.filter(
             Q(blogid=obj.blogid) & Q(is_user_like=True)
         ).count()
@@ -105,7 +103,6 @@ class SpecificBlogReactionDetailsSerializers(serializers.ModelSerializer):
         ).count()
 
     def get_user_like(self, obj):
-        print("user_id::::::", self.context.get("userid"))
         userid = self.context.get("userid")
         if Blog_reaction.objects.filter(
             Q(blogid=obj.blogid) & Q(is_user_like=True) & Q(userid=userid)
@@ -126,7 +123,6 @@ class SpecificBlogReactionDetailsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Blog_reaction
         fields = ["totalliked", "totaldisliked", "userliked", "userdisliked"]
-        # fields = ['totalliked', 'totaldisliked' ]
 
 
 class SpecificBlogCommentDetailsSerializer(serializers.ModelSerializer):

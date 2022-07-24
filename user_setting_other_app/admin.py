@@ -24,7 +24,6 @@ class PromoCodeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     search_fields = ['promo_code']
     list_per_page = 20
 
-# admin.site.register(PromoCodeData, PromoCodeAdmin)
 
 
 @admin.register(StaticSettingData)
@@ -41,13 +40,6 @@ class StaticSettingAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     # list_filter = ('is_consultancy_take',)
     # search_fields = ['userid', 'consultancy_sheduleid']
     list_per_page = 20
-
-# admin.site.register(StaticSettingData,StaticSettingAdmin)
-
-
-# admin.site.register(User_settings)
-# admin.site.register(Notification)
-# admin.site.register(Facing_trouble)
 
 
 @admin.register(User_settings)

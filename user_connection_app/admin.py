@@ -9,11 +9,6 @@ from .resource import (
     FriendsSuggationPropertyAdminResource,
 )
 
-# Register your models here.
-
-# admin.site.register(UserFavoutireRequestSend)
-# admin.site.register(UserFavouriteList)
-# admin.site.register(FriendsSuggation)
 
 @admin.register(UserFavoutireRequestSend)
 class UserFavoutireRequestSendAdmin(ImportExportModelAdmin, admin.ModelAdmin):

@@ -35,10 +35,3 @@ class Blog_reactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 
 
-
-
-# Register your models here.
-
-# admin.site.register(Blog)
-# admin.site.register(Blog_comment)
-# admin.site.register(Blog_reaction)

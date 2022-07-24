@@ -1,10 +1,8 @@
 from django.core.mail import EmailMessage
 import threading
 
-# from django.http import Http404
 import requests
 
-# from .models import User
 
 
 class EmailThread(threading.Thread):
@@ -42,15 +40,6 @@ class SendMessage:
         }
         response = (requests.post(url, data=payload, headers=headers),)
         resp = str(response)
-        # print("respons:::::::::", resp)
         return resp
 
 
-# checking method
-
-
-# def get_object(self, user_email):
-#     try:
-#         return User.objects.get(user_email__exact=user_email)
-#     except User.DoesNotExist:
-#         raise Http404

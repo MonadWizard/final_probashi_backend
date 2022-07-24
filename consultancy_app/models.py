@@ -143,23 +143,19 @@ class ConsultancyTimeSchudile(models.Model):
     is_consultancy_take = models.BooleanField(default=False)
 
     def __str__(self):
-        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
         return str(self.consultancyid) if self.consultancyid else "consultancyid is none"
 
     class Meta:
-        # ordering = ["consultancy_timeschudile_startdate"]
         verbose_name = "Consultancy Time Schedule"
         verbose_name_plural = "Consultancy Time Schedules"
     
 
 class UserConsultAppointmentRequest(models.Model):
     seekerid = models.ForeignKey(User, on_delete=models.CASCADE)
-    # consultancy_id = models.ForeignKey(ConsultancyCreate, on_delete=models.CASCADE)
     ConsultancyTimeSchudile = models.ForeignKey(
         ConsultancyTimeSchudile, on_delete=models.CASCADE
     )
     appointment_request_datetime = models.DateTimeField(auto_now_add=True)
-    # appointment_seeker_requested_datetime = models.DateTimeField()
     appointment_attendent_name = models.CharField(max_length=200, blank=True, null=True)
     appointment_seeker_cellphone = models.CharField(
         max_length=200, blank=True, null=True
@@ -182,7 +178,6 @@ class UserConsultAppointmentRequest(models.Model):
     payment_status = models.BooleanField(default=False)  # not use yet
 
     def __str__(self):
-        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
         return str(self.ConsultancyTimeSchudile) if self.ConsultancyTimeSchudile else "ConsultancyTimeSchudile is none"
 
 
@@ -193,7 +188,6 @@ class ProUserPayment(models.Model):
     payment_details = models.JSONField(blank=True, null=True)
     
     def __str__(self):
-        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
         return str(self.userid) if self.userid else "userid is none"
 
 class ConsultancyPayment(models.Model):
@@ -205,7 +199,6 @@ class ConsultancyPayment(models.Model):
     payment_details = models.JSONField(blank=True, null=True)
 
     def __str__(self):
-        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
         return str(self.consultancy_sheduleid) if self.consultancy_sheduleid else "consultancy_sheduleid is none"
 
 

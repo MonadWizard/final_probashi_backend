@@ -26,7 +26,6 @@ class UserAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     "user_interested_area", "user_goal", "is_user_serviceholder", "is_user_selfemployed", "user_currentdesignation",
     "user_company_name", "user_office_address", "auth_provider"]
     list_per_page = 20 
-    # empty_value_display = 'null'
     list_display_links = ["user_fullname", "user_email", "user_callphone", "user_created_at",
     "auth_provider"]
     list_filter = ('is_staff', 'is_consultant','is_active',)
@@ -38,7 +37,6 @@ class UserAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class PhoneOTPAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = PhoneOTPPropertyAdminResource
     list_display = ('user_callphone', 'otp', 'created_at', 'updated_at', 'is_used')
-    # empty_value_display = 'null'
     list_filter = ('is_used',)
     search_fields = ['user_callphone', 'otp']
     list_per_page = 20 
@@ -48,8 +46,6 @@ class PhoneOTPAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class mailVerifyAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = mailVerifyPropertyAdminResource
     list_display = ["user_id", "user_email", "created_at", "updated_at"]
-    # empty_value_display = 'null'
-    # list_filter = ('user_email',)
     search_fields = ['user_email']
     list_per_page = 20
 
@@ -57,7 +53,6 @@ class mailVerifyAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class user_unmatchAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = user_unmatchPropertyAdminResource
     list_display = ["id","user_id", "user_unmatch", "user_unmatch_created_at"]
-    # list_filter = ('user_email',)
     search_fields = ['user_id__userid']
     list_per_page = 20
 

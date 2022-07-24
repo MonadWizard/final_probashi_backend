@@ -43,7 +43,6 @@ class UserManager(BaseUserManager):
         user = self.model(
             userid=userid, user_fullname=user_fullname, user_callphone=user_callphone
         )
-        # user.set_password(password)
         user.save()
         return user
 
@@ -82,12 +81,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_consultant = models.BooleanField(default=False)
     is_complete = models.BooleanField(default=False)
     user_created_at = models.DateTimeField(auto_now_add=True)
-    # is_online = models.BooleanField(default=True)
 
     is_pro_user = models.BooleanField(default=False)  # work with payment
     pro_user_created_at = models.DateTimeField(auto_now=True)
-    # user_updated_at = models.DateTimeField(auto_now=True)
-    # user_promocode_pk =
+    
     user_callphone = models.CharField(
         max_length=30, unique=True, db_index=True, blank=True, null=True
     )
@@ -97,7 +94,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_device_typeserial = models.CharField(
         max_length=30, blank=True, null=True, db_index=True
     )
-    # user_fullname_passport = models.CharField(max_length=200, blank=True, null=True)
     user_username = models.CharField(max_length=100, unique=True, blank=True, null=True)
     user_gender = models.CharField(max_length=20, blank=True, null=True)
     user_dob = models.DateField(blank=True, null=True)
@@ -127,7 +123,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_company_name = models.CharField(max_length=200, blank=True, null=True)
     user_office_address = models.CharField(max_length=200, blank=True, null=True)
 
-    # user_unmatch = ArrayField(models.CharField(max_length=200), blank=True, null=True)
 
     auth_provider = models.CharField(
         max_length=255, blank=False, null=False, default=AUTH_PROVIDERS.get("email")
@@ -169,7 +164,6 @@ class PhoneOTP(models.Model):
         return str(self.otp) if self.otp else "otp is none"
     
     class Meta:
-        # verbose_name = ("My Book")
         verbose_name_plural = ("Phone OTP for login and Registration Verification")
 
 class mailVerify(models.Model):
@@ -177,11 +171,9 @@ class mailVerify(models.Model):
     user_email = models.EmailField(max_length=255, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField()
-    # is_used = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.user_email) if self.user_email else "user_email is none"
 
     class Meta:
-        # verbose_name = ("My Book")
         verbose_name_plural = ("mail Verifies for forget Password")

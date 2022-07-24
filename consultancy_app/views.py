@@ -270,15 +270,12 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
 
 
 class IpnSslcommerze_pro(views.APIView):
-    # permission_classes = [AllowAny]
-
+    
     def post(self, request):
 
-        print("i am from ipn probashi pro")
-        print("ipn Data pro================", request.data)
+
         if request.data:
             data = orderVerify(request)
-            print("validation response probashi IPN pro===============", data)
             if data["status"] == "VALID":
                 tran_id = data["tran_id"]
 
@@ -297,15 +294,10 @@ class IpnSslcommerze_pro(views.APIView):
 
 
 class IpnSslcommerze(views.APIView):
-    # permission_classes = [AllowAny]
 
     def post(self, request):
-
-        print("i am from ipn probashi")
-        print("ipn Data================", request.data)
         if request.data:
             data = orderVerify(request)
-            print("validation response probashi IPN===============", data)
             if data["status"] == "VALID":
                 tran_id = data["tran_id"]
 
@@ -326,31 +318,24 @@ class IpnSslcommerze(views.APIView):
                     )
                     return Response("success", status=status.HTTP_200_OK)
                 except Exception as e:
-                    print("error::::::", e)
                     return Response("success call", status=status.HTTP_200_OK)
 
 
-# need to test in server...................................
 class Consultancy_Payment_success(views.APIView):
     def post(self, request):
-        # tran_id = request.data["tran_id"]
-        print("success request data===================", request.data)
         return Response("payment is success", status.HTTP_200_OK)
 
 
 @api_view(["POST"])
 def Consultancy_Payment_fail(request):
-    print("fail payment::::::::::::::::::", request.data)
     return Response("Fail....", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
 def Consultancy_Payment_cancle(request):
-    print("cancle payment::::::::::::::::::", request.data)
     return Response("cancle", status=status.HTTP_200_OK)
 
 
-# ----------------------------------------x---------------------------------------x--------------------------
 
 
 class AppointmentSeeker_StarRating(generics.UpdateAPIView):
@@ -622,7 +607,6 @@ class GetSpecificCategoryServiceSearchData(views.APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-# ------------------------------------------------- pro user payment start------------------------------------------------------
 
 
 class BecomeProUser(views.APIView):
@@ -650,22 +634,17 @@ class BecomeProUser(views.APIView):
 
 
 class Pro_Payment_success(views.APIView):
-    # permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
-        # data = request.data
         return Response("success", status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
 def Pro_Payment_fail(request):
-    # print("::::::::::::::::::", request.data)
-
     return Response("Fail", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
 def Pro_Payment_cancle(request):
-    # print("::::::::::::::::::", request.data)
     return Response("cancle", status=status.HTTP_200_OK)
 
 
@@ -792,7 +771,6 @@ class ConsultancyInfo(views.APIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    # renderer_classes = [UserRenderer]
 
     def get(self, request):
         consultancy_id = request.query_params.get("id")

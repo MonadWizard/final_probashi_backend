@@ -5,7 +5,6 @@ from .models import UserConsultAppointmentRequest, ConsultancyTimeSchudile
 
 def Pro_user_CREATE_and_GET_session(request, user):
 
-    # print('request data::::::::;', request.data)
     current_time = datetime.datetime.now()
     current_time = current_time.strftime("%m%d%H%M%S%f")
     tran_id = current_time
@@ -68,7 +67,6 @@ def Pro_user_CREATE_and_GET_session(request, user):
 
     sslcommerz_api_url = "https://securepay.sslcommerz.com/gwprocess/v4/api.php"
     res = requests.post(sslcommerz_api_url, post_body)
-    print("::::::::", res)
     resp = {"res": res.json(), "post_body": post_body}
     return resp
 
@@ -78,7 +76,6 @@ def Consultancy_CREATE_and_GET_session(request, user):
     current_time = datetime.datetime.now()
     current_time = current_time.strftime("%m%d%H%M%S%f")
 
-    # print("request data", request.data)
 
     tran_id = current_time
     name = user.user_fullname
@@ -94,11 +91,9 @@ def Consultancy_CREATE_and_GET_session(request, user):
         "consultancyid__consultant_service_category",
     )
 
-    # print('consultancy ::::::::::::::::::',consultancy)
     consultancy_name = consultancy[0]["consultancyid__consultant_name"]
     consultancy_amount = consultancy[0]["consultancy_rate"]
     consultancy_category = consultancy[0]["consultancyid__consultant_service_category"]
-    # print("::::::::::::::::",consultancy_name, '\n', consultancy_amount, '\n', consultancy_category)
 
     if email is None:
         email = "callphone@probashi.com"
@@ -148,11 +143,9 @@ def Consultancy_CREATE_and_GET_session(request, user):
 
     post_body["shipping_method"] = "NO"
 
-    # print("::::::::::::::::::::::::",post_body)
     sslcommerz_api_url = "https://securepay.sslcommerz.com/gwprocess/v4/api.php"
     res = requests.post(sslcommerz_api_url, post_body)
     resp = {"res": res.json(), "post_body": post_body}
-    print("resp::::::::::", resp)
     return resp
 
 

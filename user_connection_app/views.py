@@ -191,7 +191,6 @@ class GetSpecificUserView(views.APIView):
         ).exists():
             serializer = UserProfileWithConsultancyViewSerializer(data)
             context = {"data": serializer.data}
-            # print(context)
             return Response(context, status=status.HTTP_200_OK)
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
 
@@ -444,7 +443,6 @@ class UserSearchGetData(views.APIView):
                     ).values_list("user_residential_district", flat=True)
                 )
             )
-            print("residential location:::::::::", residential_location)
             residential_location_data = [
                 "Bangladesh," + x for x in residential_location if x != ""
             ]
@@ -538,21 +536,17 @@ class UserSearchFilter(views.APIView):
 
         try:
             if service_queryset and education_queryset:
-                # print(" service and edu exist")
                 search_data = all_user.intersection(
                     user_queryset, education_queryset, service_queryset
                 )
                 return search_data
             if education_queryset and not service_queryset:
-                # print(" edu exist")
                 search_data = all_user.intersection(user_queryset, education_queryset)
                 return search_data
             if service_queryset and not education_queryset:
-                # print(" service exist")
                 search_data = all_user.intersection(user_queryset, service_queryset)
                 return search_data
             else:
-                # print("all user data")
                 return all_user.intersection(user_queryset)
 
         except:
@@ -643,7 +637,6 @@ class unmatch_useres(views.APIView):
             context = {"data": "unmatch user created"}
             return Response(context,status=status.HTTP_200_OK)
         except Exception as e:
-            # print(e)
             context = {"data": e}
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
         

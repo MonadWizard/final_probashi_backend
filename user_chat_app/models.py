@@ -10,12 +10,6 @@ class ChatTable(models.Model):
         return self.table_name
 
 
-# class chatTable(models.Model):
-#     userid = models.CharField(max_length=20)
-#     message = models.TextField()
-#     date_time = models.DateTimeField(auto_now_add=True)
-# is_deleted = models.BooleanField(default=False)
-# is_seen = models.BooleanField(default=False)
 
 
 """

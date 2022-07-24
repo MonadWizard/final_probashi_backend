@@ -13,7 +13,6 @@ class UserRenderer(renderers.JSONRenderer):
                 complete_error = complete_error + single_err
             return complete_error
         else:
-            # print("type::::", type(data), "data::::", data)
             return data
 
     charset = "utf-8"
@@ -26,7 +25,6 @@ class UserRenderer(renderers.JSONRenderer):
 
             response = json.dumps({"success": False, "message": complete_error})
         elif renderer_context["response"].status_code == 400:
-            print("400:::::::", complete_error)
             response = json.dumps({"success": False, "message": complete_error})
         elif renderer_context["response"].status_code == 401:
 
@@ -41,13 +39,6 @@ class UserRenderer(renderers.JSONRenderer):
         else:
             response = {"success": True}
             response.update(data)
-
-            # response = json.dumps({'success': True, 'data': data})
-
             return json.dumps(response)
         return response
 
-        # import pdb
-        # pdb.set_trace()
-
-        # return super.render(data, accepted_media_type=accepted_media_type, renderer_context=renderer_context)

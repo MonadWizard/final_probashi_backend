@@ -6,22 +6,3 @@ websocket_urlpatterns = [
     path("socket/<str:userid>/", consumers.DemoConsumer.as_asgi()),
 ]
 
-
-# response body =
-# {
-#   'data' : {
-#     "message": "Hello, world!",
-#     "senderid": 124545456454
-#      }
-# }
-
-
-#  ws://127.0.0.1:8000/chat/2/3
-
-# basic message sending:
-
-#     {"data": "kisui kori na vai... hudai boisa asi."}
-
-
-# pagination message sending:
-#     {"data":"resend","page":"2"}

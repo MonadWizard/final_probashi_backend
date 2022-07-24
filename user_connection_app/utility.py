@@ -248,6 +248,5 @@ def match_friends(user_id):
 
 
         friendsuggestion.save()
-        # print(":::::::::::::::::::::::::::::::","friendsuggestion.friend_suggestion_id")
 
     user_friendsuggestion.save()

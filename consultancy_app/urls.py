@@ -96,7 +96,6 @@ urlpatterns = [
     path("pro-success/", Pro_Payment_success.as_view(), name="payment_success"),
     path("pro-fail/", Pro_Payment_fail, name="payment_fail"),
     path("pro-cancle/", Pro_Payment_cancle, name="payment_cancle"),
-    # consultancy success fail cancle redirect URL
     path("ipn/", IpnSslcommerze.as_view()),
     path(
         "consultancy-success/",

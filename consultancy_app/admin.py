@@ -21,12 +21,6 @@ from .resource import (
 
 
 
-# admin.site.register(ConsultancyCreate)
-# admin.site.register(UserConsultAppointmentRequest)
-# admin.site.register(ConsultancyTimeSchudile)
-# admin.site.register(ProUserPayment)
-# admin.site.register(ConsultancyPayment)
-
 
 @admin.register(ConsultancyCreate)
 class ConsultancyCreateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
@@ -73,7 +67,6 @@ class ConsultancyTimeSchudileAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class ProUserPaymentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = ProUserPaymentPropertyAdminResource
     list_display = ["id","userid", "tran_id", "payment_details"]
-    # list_filter = ('is_consultancy_take',)
     search_fields = ['userid__userid', 'tran_id']
     list_per_page = 20
 
@@ -81,7 +74,6 @@ class ProUserPaymentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class ConsultancyPaymentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = ConsultancyPaymentPropertyAdminResource
     list_display = ["id","userid", "consultancy_sheduleid", "tran_id", "payment_details"]
-    # list_filter = ('is_consultancy_take',)
     search_fields = ['userid__userid', 'consultancy_sheduleid__id', 'tran_id']
     list_per_page = 20
 

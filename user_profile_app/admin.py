@@ -15,10 +15,6 @@ from .resource import (
     User_idverificationPropertyAdminResource,
 )
 
-# admin.site.register(User_socialaccount_and_about)
-# admin.site.register(User_experience)
-# admin.site.register(User_education)
-# admin.site.register(User_idverification)
 
 @admin.register(User_socialaccount_and_about)
 class User_socialaccount_and_aboutAdmin(ImportExportModelAdmin, admin.ModelAdmin):

@@ -106,9 +106,6 @@ class UserEditProfile(views.APIView):
     def put(self, request, userid):
         userid = self.get_user(userid)
 
-        # request.data["user_fullname"] = request.data["user_fullname_passport"]
-        # del request.data["user_fullname_passport"]
-
         if request.data["user_photopath"] == "":
             serializer = UserEditPrifileWithoutImageSerializer(
                 userid, data=request.data
@@ -311,9 +308,7 @@ class UserProfileView(generics.ListAPIView):
         #  id verification
         if data["user_idverificationdata"] != []:
             complete_profile_persentage += 25
-        print("complete profile percentage:", complete_profile_persentage)
         if complete_profile_persentage == 100:
-            print("profile is 100")
             user.is_complete = True
             user.save()
 
@@ -327,7 +322,6 @@ class UserProfileView(generics.ListAPIView):
         user = self.get_user()
         if user.is_complete:
             serializer = UserProfileWithConsultancyViewSerializer(user)
-            print(type(serializer.data))
 
             return Response(
                 self.get_profile_persentage(serializer.data, user),

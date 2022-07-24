@@ -19,7 +19,6 @@ class Blog(models.Model):
     userblog_publishdate = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
         return str(self.id) if self.id else "id is none"
 
 
@@ -36,7 +35,6 @@ class Blog_comment(models.Model):
     )
 
     def __str__(self):
-        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
         return str(self.blogid) if self.blogid else "blogid is none"
 
 class Blog_reaction(models.Model):
@@ -51,7 +49,6 @@ class Blog_reaction(models.Model):
 
 
     def __str__(self):
-        # return str(self.consultancyid) + ' ' + str(self.consultancy_timeschudile_startdate)
         return str(self.blogid) if self.blogid else "blogid is none"
 
 

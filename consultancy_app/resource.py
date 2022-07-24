@@ -10,7 +10,6 @@ from .models import (
 class ConsultancyCreatePropertyAdminResource(resources.ModelResource):
     class Meta:
         model = ConsultancyCreate
-        # exclude = ('id',)
         import_id_fields = ("userid",)
 
 
@@ -23,7 +22,6 @@ class UserConsultAppointmentRequestPropertyAdminResource(resources.ModelResource
 class ConsultancyTimeSchudilePropertyAdminResource(resources.ModelResource):
     class Meta:
         model = ConsultancyTimeSchudile
-        # exclude = ('id',)
         import_id_fields = ("consultancyid",)
 
 

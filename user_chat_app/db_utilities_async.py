@@ -144,7 +144,7 @@ def ChatOnlineUsers(user_id):
             return user1
 
     except Exception as e:
-        print(e)
+        # print(e)
         return [user_id]
 
 
@@ -186,7 +186,7 @@ def save_chat_data(data):
             user_1=data["receiver"], user_2=data["sender"], table_name=table_title
         )
         table_status = "new"
-        print("create-a-table")
+        # print("create-a-table")
 
     sql = "INSERT INTO " + str(chat_table.table_name) + "("
 
@@ -380,7 +380,7 @@ def save_notification_data(noti_data):
             is_notification_seen=False,
             is_notification_delete=False,
         )
-        print("noti-saved")
+        # print("noti-saved")
 
         if User_settings.objects.filter(
             Q(userid=recever_data.userid) & Q(user_mail_notification_enable=True)
@@ -400,7 +400,7 @@ def save_notification_data(noti_data):
 
         return True
     except Exception as e:
-        print(e)
+        # print(e)
         return False
 
 
@@ -422,7 +422,7 @@ def delete_notification_data(noti_data):
         return noti_time
 
     except Exception as e:
-        print(e)
+        # print(e)
         return False
 
 

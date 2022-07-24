@@ -701,14 +701,11 @@ class LoginVerificationCodeSend(views.APIView):
                             "updated_at": "2022-00-00T06:31:42.853660Z",
                             "is_used": False
                 }
-                # response_extra["id"] = serializer.data.get("id")
-                # response_extra["user_callphone"] = serializer.data.get("user_callphone")
-                # response_extra["is_used"] = serializer.data.get("is_used")
+                
 
                 res_data = {
                     "success": True,
                     "data": response_extra,
-                    # "data": serializer.data,
                     "send-message": send,
                 }
                 return Response(res_data, status=status.HTTP_200_OK)
@@ -776,9 +773,6 @@ class PhoneUpdateRegisterView(views.APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, user_callphone):
-        # request.data["user_fullname"] = request.data["user_fullname_passport"]
-        # del request.data["user_fullname_passport"]
-
         user_callphone = self.get_object(user_callphone)
         fullname_pasport = request.data["user_fullname"]
         serializer = UpdateRegisterSerializer(user_callphone, data=request.data)
@@ -786,20 +780,13 @@ class PhoneUpdateRegisterView(views.APIView):
         serializer.save()
         user_data = serializer.data
 
-        # userid = User.objects.filter(
-        #     user_callphone=user_callphone.user_callphone
-        # ).values("userid")[0]["userid"]
-        # print("userid::::::::::::", userid)
-
         email_body = "Hi " + fullname_pasport + " welcome to probashi.. \n"
         data = {
             "email_body": email_body,
             "to_email": user_callphone,
             "email_subject": "welcome to probashi",
         }
-        # print('data:::::::::', data)
-
-        # Util.send_email(data)
+        
         return Response(user_data, status=status.HTTP_200_OK)
 
 
@@ -814,7 +801,6 @@ class DeleteUserView(views.APIView):
         try:
             User.objects.filter(userid=user.userid).update(is_active=False)
 
-            # print("user deleted", User.is_active)
             return Response({"user": "User delete Success"}, status=status.HTTP_200_OK)
         except:
             return Response(
