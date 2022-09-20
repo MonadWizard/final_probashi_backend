@@ -2,6 +2,7 @@ BUILD/
 probashi_images/
 __pycache__/
 migrations/
+probashienv/
 
 
 
