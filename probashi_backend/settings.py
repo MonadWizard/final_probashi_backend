@@ -3,20 +3,21 @@ import datetime
 from pathlib import Path
 
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#PROJECT_DIR = Path(__file__).resolve().parent
 
 
 SECRET_KEY = "django-insecure-@=34_6+7@__b9br5$*#*ywmlh*aco__-jg87!*8b53%m+veidy"
 
-DEBUG = True
+DEBUG = False
+#DEBUG = True
 
 ALLOWED_HOSTS = [
-    "probashiapi.algorithmgeneration.com",
-    "192.168.0.101",
+    "api.probashi.info",
+    "www.api.probashi.info",
     "127.0.0.1",
-    "192.168.100.87",
-    "114.129.10.3",
-    "192.168.50.87",
+    "157.245.199.231",
 ]
 
 # user model
@@ -106,8 +107,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://localhost:8080",
     "http://127.0.0.1:4200",
-    "https://probashiapi.algorithmgeneration.com",
-    "http://probashiapi.algorithmgeneration.com",
+    "https://api.probashi.info",
+    "http://api.probashi.info",
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -129,7 +130,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "probashi_db",
         "USER": "agl",
-        "PASSWORD": "12345",
+        "PASSWORD": "?!agl@agl12345",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     },
@@ -137,7 +138,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "probashichat_db",
         "USER": "agl",
-        "PASSWORD": "12345",
+        "PASSWORD": "?!agl@agl12345",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     },
@@ -160,7 +161,8 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=30, minutes=100),
+    # "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=30,minutes=100),
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=90),
     "USER_ID_FIELD": "userid",
     # 'ROTATE_REFRESH_TOKENS': True,
@@ -195,16 +197,21 @@ USE_I18N = True
 USE_TZ = True
 
 
-image_directory = Path(__file__).resolve().parent.parent.parent.parent
+#image_directory = Path(__file__).resolve().parent.parent.parent.parent
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'probashi_backend/static')
+   os.path.join(BASE_DIR, 'probashi_backend/static')
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_URL = "/probashi_images/"
-MEDIA_ROOT = os.path.join(image_directory, "probashi_images")
+MEDIA_ROOT = os.path.join(BASE_DIR, "probashi_images")
+
+#STATIC_URL = '/static/'
+#MEDIA_URL = '/probashi_image/'
+#MEDIA_ROOT = os.path.join(BASE_DIR, "probashi_image")
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

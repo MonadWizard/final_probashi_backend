@@ -44,17 +44,17 @@ def Pro_user_CREATE_and_GET_session(request, user):
     post_body["currency"] = "BDT"
     post_body[
         "success_url"
-    ] = "https://probashiapi.algorithmgeneration.com/consultancy/pro-success/"
+    ] = "http://api.probashi.info/consultancy/pro-success/"
     post_body[
         "fail_url"
-    ] = "https://probashiapi.algorithmgeneration.com/consultancy/pro-fail/"
+    ] = "http://api.probashi.info/consultancy/pro-fail/"
     post_body[
         "cancel_url"
-    ] = "https://probashiapi.algorithmgeneration.com/consultancy/pro-cancle/"
+    ] = "http://api.probashi.info/consultancy/pro-cancle/"
 
     post_body[
         "ipn_url"
-    ] = "https://probashiapi.algorithmgeneration.com/consultancy/ipn-pro/"
+    ] = "http://api.probashi.info/consultancy/ipn-pro/"
 
     post_body["shipping_method"] = "NO"
     post_body["cus_name"] = name
@@ -129,17 +129,17 @@ def Consultancy_CREATE_and_GET_session(request, user):
 
     post_body[
         "success_url"
-    ] = "https://probashiapi.algorithmgeneration.com/consultancy/consultancy-success/"
+    ] = "http://api.probashi.info/consultancy/consultancy-success/"
     post_body[
         "fail_url"
-    ] = "https://probashiapi.algorithmgeneration.com/consultancy/consultancy-fail/"
+    ] = "http://api.probashi.info/consultancy-fail/"
     post_body[
         "cancel_url"
-    ] = "https://probashiapi.algorithmgeneration.com/consultancy/consultancy-cancle/"
+    ] = "http://api.probashi.info/consultancy/consultancy-cancle/"
 
     post_body[
         "ipn_url"
-    ] = "https://probashiapi.algorithmgeneration.com/consultancy/ipn/"
+    ] = "http://api.probashi.info/consultancy/ipn/"
 
     post_body["shipping_method"] = "NO"
 
