@@ -41,6 +41,7 @@ def register_social_user(provider, user_email, user_fullname, user_image):
                 or filtered_user_by_email[0].auth_provider == "google"
                 or filtered_user_by_email[0].auth_provider == "facebook"
                 or filtered_user_by_email[0].auth_provider == "linkedin"
+                or filtered_user_by_email[0].auth_provider == "apple"
             ):
 
                 return {

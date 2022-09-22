@@ -64,6 +64,7 @@ AUTH_PROVIDERS = {
     "google": "google",
     "linkedin": "linkedin",
     "email": "email",
+    "apple": "apple"
 }
 
 

@@ -76,3 +76,40 @@ class Linkedin:
 
         except:
             return "The token is invalid or expired."
+
+
+import jwt
+
+
+class Apple:
+    @staticmethod
+    def validate(auth_token):
+
+        try:
+            # print("auth_token============", "auth_token" )
+
+            verified_payload = jwt.decode(auth_token, options={"verify_signature": False})
+
+            # print(verified_payload['email'])
+            
+            resp_data = {"name": verified_payload['email'], "email": verified_payload['email'], "picture": None}
+            return resp_data
+
+        except Exception as e:
+            # print('Error: ', str(e))
+            return "The token is invalid or expired."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

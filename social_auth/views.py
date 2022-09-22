@@ -5,6 +5,7 @@ from .serializers import (
     GoogleSocialAuthSerializer,
     FacebookSocialAuthSerializer,
     LinkedinSocialAuthSerializer,
+    AppleSocialAuthSerializer
 )
 
 from probashi_backend.renderers import UserRenderer
@@ -53,3 +54,16 @@ class LinkedinSocialAuthView(GenericAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
+class AppleSocialAuthView(GenericAPIView):
+
+    serializer_class = AppleSocialAuthSerializer
+    # renderer_classes = [UserRenderer]
+
+    def post(self, request):
+        # data = request.data["auth_token"]
+        # print("request.data:::", request.data["auth_token"])
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = (serializer.validated_data)["auth_token"]
+        return Response(data, status=status.HTTP_200_OK)

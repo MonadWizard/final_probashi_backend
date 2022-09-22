@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .helper import Google, Facebook, Linkedin
+from .helper import Google, Facebook, Linkedin, Apple
 from .register import register_social_user
 import os
 from rest_framework.exceptions import AuthenticationFailed
@@ -106,3 +106,30 @@ class LinkedinSocialAuthSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 "The token  is invalid or expired. Please login again."
             )
+
+
+class AppleSocialAuthSerializer(serializers.Serializer):
+    """Handles serialization of linkedin related data"""
+
+    auth_token = serializers.CharField()
+
+    def validate_auth_token(self, auth_token):
+        user_data = Apple.validate(auth_token)
+        # print("user_Data:::::::::::::::", user_data)
+        try:
+            user_email = user_data["email"]
+            user_fullname = user_data["name"]
+            user_image = user_data["picture"]
+            provider = "Apple"
+            return register_social_user(
+                provider=provider,
+                user_email=user_email,
+                user_fullname=user_fullname,
+                user_image=user_image,
+            )
+        except Exception as identifier:
+
+            raise serializers.ValidationError(
+                "The token  is invalid or expired. Please login again."
+            )
+
