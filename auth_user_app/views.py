@@ -238,11 +238,11 @@ class RequestPasswordResetEmail(views.APIView):
         otp = random.sample(range(0, 9), 4)
         otp = "".join(map(str, otp))
 
-        print("otp:", user_email)
+        # print("otp:", user_email)
 
         try:
             user = User.objects.get(user_email=user_email)
-            print("user::::::::", user)
+            # print("user::::::::", user)
 
             email_body = f"""Hello,{user.user_fullname} \n Welcome back to probashi, your code for reset password is {otp}"""
 
@@ -270,7 +270,7 @@ class RequestPasswordResetEmail(views.APIView):
                 status=status.HTTP_200_OK,
             )
         except Exception as e:
-            print("e:", e)
+            # print("e:", e)
             return Response(
                 {
                     "success": False,
@@ -508,7 +508,7 @@ class CheckChangableEmailView(views.APIView):
             return Response({"mail found": False}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            print("e:", e)
+            # print("e:", e)
             return Response({"mail found": False}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -528,8 +528,8 @@ class InAppChangePassword(generics.UpdateAPIView):
 
         if request.data["user_email"] != "" or request.data["new_password"] != "":
             serializer = UserEmailandPasswordChangeSerializer(data=request.data)
-            print("serializer:", serializer.is_valid())
-            print("serializer.data:", serializer.data)
+            # print("serializer:", serializer.is_valid())
+            # print("serializer.data:", serializer.data)
 
             if serializer != None or serializer.is_valid():
 
@@ -715,7 +715,7 @@ class LoginVerificationCodeSend(views.APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         except Exception as e:
-            print(e)
+            # print(e)
             return Response(
                 {
                     "success": False,

@@ -18,6 +18,7 @@ ALLOWED_HOSTS = [
     "www.api.probashi.info",
     "127.0.0.1",
     "157.245.199.231",
+    "192.168.50.20"
 ]
 
 # user model

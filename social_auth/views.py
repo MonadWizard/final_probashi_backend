@@ -57,7 +57,7 @@ class LinkedinSocialAuthView(GenericAPIView):
 class AppleSocialAuthView(GenericAPIView):
 
     serializer_class = AppleSocialAuthSerializer
-    # renderer_classes = [UserRenderer]
+    # renderer_classes = [UserRenderer] 
 
     def post(self, request):
         # data = request.data["auth_token"]
@@ -66,4 +66,7 @@ class AppleSocialAuthView(GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = (serializer.validated_data)["auth_token"]
+        data["user_callphone"] = None
+
+        print(data)
         return Response(data, status=status.HTTP_200_OK)
