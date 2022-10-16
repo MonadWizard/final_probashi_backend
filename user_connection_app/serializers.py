@@ -1,12 +1,9 @@
-from attr import field
+# from attr import field
 from rest_framework import serializers
 from auth_user_app.models import User
 from user_profile_app.models import User_education
 from consultancy_app.models import ConsultancyCreate
-from .models import UserFavoutireRequestSend, UserFavouriteList
-from django.db.models import Q
-from itertools import chain
-from django.db.models import F
+from user_connection_app.models import UserFavoutireRequestSend, UserFavouriteList
 
 
 class UserEducationSerializer(serializers.ModelSerializer):
