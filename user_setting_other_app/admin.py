@@ -37,9 +37,14 @@ class StaticSettingAdmin(ImportExportModelAdmin, admin.ModelAdmin):
                     "propertymanagementservice_type", "propertymanagementservice_need", "tourismservices",
                     "trainingservice_topic", "trainingservice_duration", "digitalservice_type",
                     "tradefacilitationservice_type", "tradefacilitationservice_Purpose", "country_name"]
-    # list_filter = ('is_consultancy_take',)
+    list_filter = ('medicalconsultancyservice_treatment_area','overseasrecruitmentservice_job_type', 
+                'legalcivilservice_required','legalcivilservice_issue', 'propertymanagementservice_propertylocation', 'propertymanagementservice_type',
+                'propertymanagementservice_need', 'tourismservices', 'trainingservice_topic', 'trainingservice_duration', 'digitalservice_type',
+                'tradefacilitationservice_type','tradefacilitationservice_Purpose')
     # search_fields = ['userid', 'consultancy_sheduleid']
     list_per_page = 20
+
+    
 
 
 @admin.register(User_settings)

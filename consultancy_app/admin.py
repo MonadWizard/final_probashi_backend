@@ -25,7 +25,7 @@ from .resource import (
 @admin.register(ConsultancyCreate)
 class ConsultancyCreateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = ConsultancyCreatePropertyAdminResource
-    list_display = ["id","userid", "is_userconsultant_personal", "is_userconsultant_company", "consultant_name",
+    list_display = ["id","userid","user_fullname", "is_userconsultant_personal", "is_userconsultant_company", "consultant_name",
     "consultant_contactnumber", "consultant_email", "consultantpersonal_about", "consultantpersonal_presentaddress",
     "consultantpersonal_permanentaddress","consultantcompany_primarycontract_name", "consultantcompany_primarycontract_number",
     "consultantcompany_primarycontract_email", "consultantcompany_about", "consultantcompany_reg_officeaddress",
@@ -41,6 +41,10 @@ class ConsultancyCreateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_filter = ('consultant_service_category','is_userconsultant_personal', 'is_userconsultant_company')
     search_fields = ['id','userid__userid','consultant_name']
     list_per_page = 20
+
+    @admin.display(description='user_fullname')
+    def user_fullname(self, obj):
+        return obj.userid.user_fullname
 
 @admin.register(UserConsultAppointmentRequest)
 class UserConsultAppointmentRequestAdmin(ImportExportModelAdmin, admin.ModelAdmin):

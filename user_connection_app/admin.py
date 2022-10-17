@@ -21,10 +21,22 @@ class UserFavoutireRequestSendAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 @admin.register(UserFavouriteList)
 class UserFavouriteListAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = UserFavouriteListPropertyAdminResource
-    list_display = ["id","userid", "favourite_userid", "is_unread", "is_Report", "is_unmatch"]
+    list_display = ["id","userid","user_fullname", "favourite_userid", "favourite_fullname", "is_unread", "is_Report", "is_unmatch"]
     list_filter = ('is_unread','is_Report','is_unmatch')
     search_fields = ['userid__user_fullname', 'favourite_userid__user_fullname']
     list_per_page = 20
+
+    @admin.display(description='user_fullname')
+    def user_fullname(self, obj):
+        return obj.userid.user_fullname
+
+    @admin.display(description='favourite_fullname')
+    def favourite_fullname(self, obj):
+        return obj.favourite_userid.user_fullname
+
+    
+
+
 
 @admin.register(FriendsSuggation)
 class FriendsSuggationAdmin(ImportExportModelAdmin, admin.ModelAdmin):
