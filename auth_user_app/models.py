@@ -116,6 +116,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_interested_area = ArrayField(
         models.CharField(max_length=200), blank=True, null=True
     )
+    user_opinion = models.TextField(blank=True, null=True)
+
     user_goal = ArrayField(models.CharField(max_length=200), blank=True, null=True)
 
     is_user_serviceholder = models.BooleanField(default=False)

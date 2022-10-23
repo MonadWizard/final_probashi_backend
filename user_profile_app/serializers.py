@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from auth_user_app.models import User
-from .models import (
+from user_profile_app.models import (
     User_socialaccount_and_about,
     User_experience,
     User_education,
@@ -36,7 +36,7 @@ class UserProfileSkipPart1Serializer(serializers.ModelSerializer):
 class UserProfileSkipPart2Serializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["user_interested_area", "user_goal"]
+        fields = ["user_interested_area", "user_goal", "user_opinion"]
 
 
 class UserEditPrifileSerializer(serializers.ModelSerializer):
