@@ -1,5 +1,4 @@
 from django.db import models
-from django.dispatch import receiver
 from auth_user_app.models import User
 from django.contrib.postgres.fields import ArrayField
 
@@ -139,3 +138,14 @@ class Notification(models.Model):
 
     def __str__(self):
         return str(self.notification_title) if self.notification_title else "No Data"
+
+
+class Probashi_administrative_payment(models.Model):
+    pro_user_payment = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.pro_user_payment) if self.pro_user_payment else "No Data"
+
+
+
+

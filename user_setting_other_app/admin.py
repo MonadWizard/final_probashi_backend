@@ -1,13 +1,14 @@
 from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
-from .models import (
+from user_setting_other_app.models import (
     StaticSettingData,
     PromoCodeData,
     User_settings,
     Notification,
     Facing_trouble,
+    Probashi_administrative_payment,
 )
-from .resource import (
+from user_setting_other_app.resource import (
     PromoCodeDataPropertyAdminResource,
     StaticSettingDataPropertyAdminResource,
     User_settingsPropertyAdminResource,
@@ -75,3 +76,12 @@ class Facing_troubleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_per_page = 20
 
 
+# admin.site.register(Probashi_administrative_payment)
+
+@admin.register(Probashi_administrative_payment)
+class Probashi_administrative_paymentAdmin(admin.ModelAdmin):
+    # resource_class = Facing_troublePropertyAdminResource
+    list_display = ["id", "pro_user_payment"]
+    # # list_filter = ('is_consultancy_take',)
+    # search_fields = ['user__userid']
+    # list_per_page = 20

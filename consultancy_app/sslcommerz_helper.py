@@ -1,9 +1,14 @@
 import requests
 import datetime
-from .models import UserConsultAppointmentRequest, ConsultancyTimeSchudile
+from consultancy_app.models import ConsultancyTimeSchudile
+from user_setting_other_app.models import Probashi_administrative_payment
 
 
 def Pro_user_CREATE_and_GET_session(request, user):
+
+    pro_user_amount = str(Probashi_administrative_payment.objects.filter(id=1).values("pro_user_payment")[0]["pro_user_payment"])
+    
+    # print(":::::::::::::::::::::::::::::::::",pro_user_amount)
 
     current_time = datetime.datetime.now()
     current_time = current_time.strftime("%m%d%H%M%S%f")
@@ -40,7 +45,7 @@ def Pro_user_CREATE_and_GET_session(request, user):
     post_body["product_name"] = "become a pro"
     post_body["product_category"] = "paid user"
     post_body["product_profile"] = "premium"
-    post_body["total_amount"] = "10"
+    post_body["total_amount"] = pro_user_amount
     post_body["currency"] = "BDT"
     post_body[
         "success_url"
