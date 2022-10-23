@@ -42,6 +42,9 @@ from .helper_filter import *
 
 from probashi_backend.renderers import UserRenderer
 
+from auth_user_app.utils import Util
+
+
 
 class GetAllServicesCategoryView(generics.ListAPIView):
     serializer_class = ServiceCategorySerializer
@@ -635,6 +638,24 @@ class BecomeProUser(views.APIView):
 
 class Pro_Payment_success(views.APIView):
     def post(self, request):
+
+
+        # email_body = (
+        #         "Hi "
+        #         + "Probashi User \n"
+        #         + " Congratulation , you become a pro user. \n"
+        #         + "now you can create your own consultancy and get more clients. \n"
+        #     )
+
+        # data = {
+        #     "email_body": email_body,
+        #     "to_email": user_email,
+        #     "email_subject": "Verify your email",
+        # }
+
+        # Util.send_email(data)
+
+
         return Response("success", status=status.HTTP_200_OK)
 
 

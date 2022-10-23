@@ -2,16 +2,12 @@ from rest_framework import generics, status, views, permissions
 from rest_framework.response import Response
 from rest_framework import permissions
 from django.http import Http404
-from django.db.models import Q
 from probashi_backend.renderers import UserRenderer
 from auth_user_app.models import User
-from .models import (
+from user_profile_app.models import (
     User_socialaccount_and_about,
-    User_experience,
-    User_education,
-    User_idverification,
 )
-from .serializers import (
+from user_profile_app.serializers import (
     UserProfileSkipPart0Serializer,
     UserProfileSkipPart1Serializer,
     UserProfileSkipPart2Serializer,
@@ -256,6 +252,9 @@ class UserProfileView(generics.ListAPIView):
             return None
 
     def get_profile_persentage(self, data, user):
+
+        print("::::::::::::::::::::::::::::::::",data)
+
         complete_profile_persentage = 5
         if data["user_username"]:
             complete_profile_persentage += 5
@@ -308,7 +307,25 @@ class UserProfileView(generics.ListAPIView):
         #  id verification
         if data["user_idverificationdata"] != []:
             complete_profile_persentage += 25
-        if complete_profile_persentage == 100:
+
+# """
+# {'userid': '1016060825534071', 'user_socialaboutdata': OrderedDict([('id', 1), ('user_about', None), ('user_fbaccount', None),
+#  ('user_twitteraccount', None), ('user_instagramaccount', None), ('user_linkedinaccount', None), ('user_website', None), 
+#  ('user_whatsapp_account', None), ('user_whatsapp_visibility', None), ('user_viber_account', None), ('user_viber_visibility', None),
+#   ('user_immo_account', None), ('user_immo_visibility', None), ('userid', '1016060825534071')]), 'user_experiencedata': [],
+#    'user_educationdata': [], 'user_idverificationdata': [], 'last_login': None, 'user_fullname': 'Rakib Hasan',
+#     'user_email': 'monad.wizard.r@gmail.com', 'is_verified': True, 'is_active': True, 'is_consultant': False, 'is_complete': False,
+#      'user_created_at': '2022-10-16T06:08:25.789922Z', 'is_pro_user': False, 'pro_user_created_at': '2022-10-23T16:31:43.097236Z',
+#       'user_callphone': None, 'user_geolocation': None, 'user_device_typeserial': None, 'user_username': None, 'user_gender': None,
+#        'user_dob': None, 'user_photopath': None, 'user_residential_district': None, 'user_nonresidential_country': None,
+#         'user_nonresidential_city': None, 'user_durationyear_abroad': 0, 'user_current_location_durationyear': None,
+#          'user_industry': None, 'user_areaof_experience': None, 'user_industry_experienceyear': None, 'user_interested_area': ['IOT'],
+#           'user_opinion': 'What to say...', 'user_goal': ['AI'], 'is_user_serviceholder': False, 'is_user_selfemployed': False,
+#            'user_currentdesignation': None, 'user_company_name': None, 'user_office_address': None, 'auth_provider': 'email'}
+
+# """
+
+        if (data["user_interested_area"] != []) and ( data["user_socialaboutdata"].get("user_about") != None and len(data["user_socialaboutdata"].get("user_about")) > 2) and (data["user_experiencedata"] != []):
             user.is_complete = True
             user.save()
 
