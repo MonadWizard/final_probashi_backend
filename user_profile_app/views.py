@@ -253,7 +253,7 @@ class UserProfileView(generics.ListAPIView):
 
     def get_profile_persentage(self, data, user):
 
-        print("::::::::::::::::::::::::::::::::",data)
+        # print("::::::::::::::::::::::::::::::::",data)
 
         complete_profile_persentage = 5
         if data["user_username"]:
@@ -325,7 +325,8 @@ class UserProfileView(generics.ListAPIView):
 
 # """
 
-        if (data["user_interested_area"] != []) and ( data["user_socialaboutdata"].get("user_about") != None and len(data["user_socialaboutdata"].get("user_about")) > 2) and (data["user_experiencedata"] != []):
+        if (data["user_interested_area"] != []) and ( data["user_socialaboutdata"].get("user_about") != None
+                and len(data["user_socialaboutdata"].get("user_about")) > 2) and (data["user_experiencedata"] != []):
             user.is_complete = True
             user.save()
 
