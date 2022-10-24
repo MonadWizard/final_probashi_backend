@@ -6,8 +6,9 @@ from user_setting_other_app.models import Probashi_administrative_payment
 
 def Pro_user_CREATE_and_GET_session(request, user):
 
-    pro_user_amount = str(Probashi_administrative_payment.objects.filter(id=1).values("pro_user_payment")[0]["pro_user_payment"])
+    # pro_user_amount = str(Probashi_administrative_payment.objects.filter(id=1).values("pro_user_payment")[0]["pro_user_payment"])
     
+    pro_user_amount = str(Probashi_administrative_payment.objects.all().values("pro_user_payment")[0]["pro_user_payment"])
     # print(":::::::::::::::::::::::::::::::::",pro_user_amount)
 
     current_time = datetime.datetime.now()

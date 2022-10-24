@@ -639,6 +639,13 @@ class BecomeProUser(views.APIView):
 class Pro_Payment_success(views.APIView):
     def post(self, request):
 
+        tran_id = request.data["tran_id"]
+
+        tran_id = ProUserPayment.objects.get(tran_id=tran_id)
+
+        print("::::::::::::::::::::::::::::",tran_id)        
+
+        
 
         # email_body = (
         #         "Hi "
