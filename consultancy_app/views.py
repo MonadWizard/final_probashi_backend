@@ -224,6 +224,11 @@ class AppointmentSeeker_ConsultantRequest(views.APIView):
             consultancyTimeSchudile = ConsultancyTimeSchudile.objects.get(
                 id=request.data["ConsultancyTimeSchudile"]
             )
+
+            
+
+
+
         except Exception as e:
             return Response(
                 "incorrect time schedule id", status=status.HTTP_400_BAD_REQUEST
@@ -288,9 +293,31 @@ class IpnSslcommerze_pro(views.APIView):
                     )[0]["userid"]
                     User.objects.filter(userid=pro_user).update(is_pro_user=True)
 
+                    
                     ProUserPayment.objects.filter(tran_id=tran_id).update(
                         payment_details=json.dumps(data)
                     )
+
+                    # print("::::::::::::::::::::::::::::",tran_id)        
+                    user_data = User.objects.filter(userid=pro_user).values("user_fullname", "user_email")[0]
+                    user_name = user_data["user_fullname"]
+                    user_email = user_data["user_email"]
+
+
+                    email_body = (
+                            "Hi "
+                            + user_name ,"\n"
+                            + " Congratulation , you become a pro user. \n"
+                            + "now you can create your own consultancy and get more clients. \n"
+                        )
+
+                    data = {
+                        "email_body": email_body,
+                        "to_email": user_email,
+                        "email_subject": "Probashi Pro User",
+                    }
+
+                    Util.send_email(data)
 
                     return Response("success", status=status.HTTP_200_OK)
                 return Response("Payment Invalid", status=status.HTTP_400_BAD_REQUEST)
@@ -319,6 +346,45 @@ class IpnSslcommerze(views.APIView):
                     ConsultancyPayment.objects.filter(Q(tran_id=tran_id)).update(
                         payment_details=json.dumps(data),
                     )
+
+                    consultancy_payment_info = ConsultancyTimeSchudile.objects.filter(
+                        id=consultancy_sheduleid
+                    ).values("consultancy_timeschudile_startdate", "consultancy_starttime", "consultancy_endtime", "consultancy_rate", "consultancyid__consultant_name")[0]
+
+                    # print("::::::::::::::::::::::::::::",consultancy_payment_info)
+
+                    consultancy_name = consultancy_payment_info["consultancyid__consultant_name"]
+                    consultancy_startdate = consultancy_payment_info["consultancy_timeschudile_startdate"]
+                    consultancy_starttime = consultancy_payment_info["consultancy_starttime"]
+                    consultancy_endtime = consultancy_payment_info["consultancy_endtime"]
+                    consultancy_rate = consultancy_payment_info["consultancy_rate"]
+
+                    user_id = consultancy_data[0]["userid"]
+                    user_data = User.objects.filter(userid=user_id).values("user_fullname", "user_email")[0]
+                    user_name = user_data["user_fullname"]
+                    user_email = user_data["user_email"]
+
+                    email_body = (
+                            "Hi "
+                            + user_name ,"\n"
+                            + " Congratulation , You got a sheduleid for \n"
+                            + consultancy_name
+                            + "now you can Take This service on \n"
+                            + consultancy_startdate
+                            + "\n"
+                            + "at ", consultancy_starttime, "to", consultancy_endtime, "\n"
+                            + "and your rate is ", consultancy_rate, "\n"
+                        )
+
+                    data = {
+                        "email_body": email_body,
+                        "to_email": user_email,
+                        "email_subject": "Probashi Service Payment",
+                    }
+
+                    Util.send_email(data)
+
+
                     return Response("success", status=status.HTTP_200_OK)
                 except Exception as e:
                     return Response("success call", status=status.HTTP_200_OK)
@@ -643,7 +709,7 @@ class Pro_Payment_success(views.APIView):
 
         tran_id = ProUserPayment.objects.get(tran_id=tran_id)
 
-        print("::::::::::::::::::::::::::::",tran_id)        
+        # print("::::::::::::::::::::::::::::",tran_id)        
 
         
 
