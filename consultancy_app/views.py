@@ -372,8 +372,14 @@ class IpnSslcommerze(views.APIView):
                             + "now you can Take This service on \n"
                             + consultancy_startdate
                             + "\n"
-                            + "at ", consultancy_starttime, "to", consultancy_endtime, "\n"
-                            + "and your rate is ", consultancy_rate, "\n"
+                            + "at, "
+                            + consultancy_starttime
+                            +"to, " 
+                            +consultancy_endtime
+                            + "and your rate is "
+                            + consultancy_rate
+                            + " \n"
+                            + "Thank you for using our service. \n"
                         )
 
                     data = {
