@@ -1,0 +1,954 @@
+[
+	{
+		"country_name": "Afghanistan",
+		"state_name": "Badakhshan,Badgis,Baglan,Balkh,Bamiyan,Farah,Faryab,Gawr,Gazni,Herat,Hilmand,Jawzjan,Kabul,Kapisa,Khawst,Kunar,Lagman,Lawghar,Nangarhar,Nimruz,Nuristan,Paktika,Paktiya,Parwan,Qandahar,Qunduz,Samangan,Sar-e Pul,Takhar,Uruzgan,Wardag,Zabul"
+	},
+	{
+		"country_name": "Albania",
+		"state_name": "Berat,Bulqize,Delvine,Devoll,Dibre,Durres,Elbasan,Fier,Gjirokaster,Gramsh,Has,Kavaje,Kolonje,Korce,Kruje,Kucove,Kukes,Kurbin,Lezhe,Librazhd,Lushnje,Mallakaster,Malsi e Madhe,Mat,Mirdite,Peqin,Permet,Pogradec,Puke,Sarande,Shkoder,Skrapar,Tepelene,Tirane,Tropoje,Vlore"
+	},
+	{
+		"country_name": "Algeria",
+		"state_name": "Ayn Daflah,Ayn Tamushanat,Adrar,al-Aghwat,al-Bayadh,al-Jaza'ir,al-Wad,Algiers,Annabah,ash-Shalif,at-Tarif,Bashshar,Batnah,Bijayah,Biskrah,Blidah,Buirah,Bumardas,Burj Bu Arririj,Ghalizan,Ghardayah,Ilizi,Jijili,Jilfah,Khanshalah,Masilah,Midyah,Milah,Muaskar,Mustaghanam,Naama,Oran,Ouargla,Qalmah,Qustantinah,Sakikdah,Satif,Sayda',Sidi ban-al-'Abbas,Suq Ahras,Tamanghasat,Tibazah,Tibissah,Tilimsan,Tinduf,Tisamsilt,Tiyarat,Tizi Wazu,Umm-al-Bawaghi,Wahran,Warqla,Wilaya d Alger,Wilaya de Bejaia,Wilaya de Constantine"
+	},
+	{
+		"country_name": "American Samoa",
+		"state_name": "Eastern, Manu'a, Swains Island, Western"
+	},
+	{
+		"country_name": "Andorra",
+		"state_name": "Andorra la Vella,Canillo,Encamp,La Massana,Les Escaldes,Ordino,Sant Julia de Loria"
+	},
+	{
+		"country_name": "Angola",
+		"state_name": "Bengo,Benguela,Bie,Cabinda,Cunene,Huambo,Huila,Kuando-Kubango,Kwanza Norte,Kwanza Sul,Luanda,Lunda Norte,Lunda Sul,Malanje,Moxico,Namibe,Uige,Zaire"
+	},
+	{
+		"country_name": "Anguilla",
+		"state_name": "Other Provinces"
+	},
+	{
+		"country_name": "Antarctica",
+		"state_name": "Sector claimed by Argentina/Ch,Sector claimed by Argentina/UK,Sector claimed by Australia,Sector claimed by France,Sector claimed by New Zealand,Sector claimed by Norway,Unclaimed Sector"
+	},
+	{
+		"country_name": "Antigua And Barbuda",
+		"state_name": "Barbuda,Saint George,Saint John,Saint Mary,Saint Paul,Saint Peter,Saint Philip"
+	},
+	{
+		"country_name": "Argentina",
+		"state_name": "Buenos Aires,Catamarca,Chaco,Chubut,Cordoba,Corrientes,Distrito Federal,Entre Rios,Formosa,Jujuy,La Pampa,La Rioja,Mendoza,Misiones,Neuquen,Rio Negro,Salta,San Juan,San Luis,Santa Cruz,Santa Fe,Santiago del Estero,Tierra del Fuego,Tucuman"
+	},
+	{
+		"country_name": "Armenia",
+		"state_name": "Aragatsotn,Ararat,Armavir,Gegharkunik,Kotaik,Lori,Shirak,Stepanakert,Syunik,Tavush,Vayots Dzor,Yerevan"
+	},
+	{
+		"country_name": "Aruba",
+		"state_name": "Aruba"
+	},
+	{
+		"country_name": "Australia",
+		"state_name": "New South Wales,Queensland,South Australia,Tasmania,Victoria,Western Australia"
+	},
+	{
+		"country_name": "Austria",
+		"state_name": "Bundesland Salzburg,Bundesland Steiermark,Bundesland Tirol,Burgenland,Carinthia,Karnten,Liezen,Lower Austria,Niederosterreich,Oberosterreich,Salzburg,Schleswig-Holstein,Steiermark,Styria,Tirol,Upper Austria,Vorarlberg,Wien"
+	},
+	{
+		"country_name": "Azerbaijan",
+		"state_name": "Abseron,Baki Sahari,Ganca,Ganja,Kalbacar,Lankaran,Mil-Qarabax,Mugan-Salyan,Nagorni-Qarabax,Naxcivan,Priaraks,Qazax,Saki,Sirvan,Xacma "
+	},
+	{
+		"country_name": "Bahamas The",
+		"state_name": "Abaco,Acklins Island,Andros,Berry Islands,Biminis,Cat Island,Crooked Island,Eleuthera,Exuma and Cays,Grand Bahama,Inagua Islands,Long Island,Mayaguana,New Providence,Ragged Island,Rum Cay,San Salvador"
+	},
+	{
+		"country_name": "Bahrain",
+		"state_name": "Isa,al-Manamah,al-Muharraq,ar-Rifa'a,Badiyah,Hidd,Jidd Hafs,Mahama,Manama,Sitrah"
+	},
+	{
+		"country_name": "Bangladesh",
+		"state_name": "Bagerhat,Bandarban,Barguna,Barisal,Bhola,Bogra,Brahmanbaria,Chandpur,Chittagong,Chuadanga,Dhaka,Dinajpur,Faridpur,Feni,Gaibandha,Gazipur,Gopalganj,Habiganj,Joypurhat,Jamalpur,Jessor,Jhalokati,Jhenaidah,Khagrachhari,Khulna,Kishoreganj,Cox's Bazar,Comilla,Kurigram,Kushtia,Lakshmipur,Lalmonirhat,Madaripur,Magura,Mymensingh,Manikganj,Moulvibazar,Meherpur,Munshiganj,Narail,Narayanganj,Narsingdi,Nator,Naogaon,Nawabganj,Netrokona,Nilphamari,Noakhali,Pabna,Panchagarh,Patuakhali,Pirojpur,Rajbari,Rajshahi,Rangamati,Rangpur,Satkhira,Shariatpur,Sherpur,Sylhet,Sirajganj,Sunamganj,Tangail,Thakurgaon"
+	},
+	{
+		"country_name": "Barbados",
+		"state_name": "Christ Church,Saint Andrew,Saint George,Saint James,Saint John,Saint Joseph,Saint Lucy,Saint Michael,Saint Peter,Saint Philip,Saint Thomas"
+	},
+	{
+		"country_name": "Belarus",
+		"state_name": "Brest,Homjel',Hrodna,Mahiljow,Mahilyowskaya Voblasts,Minsk,Minskaja Voblasts',Petrik,Vicebsk"
+	},
+	{
+		"country_name": "Belgium",
+		"state_name": "Antwerpen,Berchem,Brabant,Brabant Wallon,Brussel,East Flanders,Hainaut,Liege,Limburg,Luxembourg,Namur,Ontario,Oost-Vlaanderen,Provincie Brabant,Vlaams-Brabant,Wallonne,West-Vlaanderen"
+	},
+	{
+		"country_name": "Belize",
+		"state_name": "Belize,Cayo,Corozal,Orange Walk,Stann Creek,Toledo"
+	},
+	{
+		"country_name": "Benin",
+		"state_name": "Alibori,Atacora,Atlantique,Borgou,Collines,Couffo,Donga,Littoral,Mono,Oueme,Plateau,Zou"
+	},
+	{
+		"country_name": "Bermuda",
+		"state_name": "Hamilton, Saint George"
+	},
+	{
+		"country_name": "Bhutan",
+		"state_name": "Bumthang,Chhukha,Chirang,Daga,Geylegphug,Ha,Lhuntshi,Mongar,Pemagatsel,Punakha,Rinpung,Samchi,Samdrup Jongkhar,Shemgang,Tashigang,Timphu,Tongsa,Wangdiphodrang"
+	},
+	{
+		"country_name": "Bolivia",
+		"state_name": "Beni,Chuquisaca,Cochabamba,La Paz,Oruro,Pando,Potosi,Santa Cruz,Tarija"
+	},
+	{
+		"country_name": "Bosnia and Herzegovina",
+		"state_name": "Federacija Bosna i Hercegovina, Republika Srpska"
+	},
+	{
+		"country_name": "Botswana",
+		"state_name": "Central Bobonong,Central Boteti,Central Mahalapye,Central Serowe-Palapye,Central Tutume,Chobe,Francistown,Gaborone,Ghanzi,Jwaneng,Kgalagadi North,Kgalagadi South,Kgatleng,Kweneng,Lobatse,Ngamiland,Ngwaketse,North East,Okavango,Orapa,Selibe Phikwe,South East,Sowa"
+	},
+	{
+		"country_name": "Bouvet Island",
+		"state_name": "Bouvet Island"
+	},
+	{
+		"country_name": "Brazil",
+		"state_name": "Acre,Alagoas,Amapa,Amazonas,Bahia,Ceara,Distrito Federal,Espirito Santo,Estado de Sao Paulo,Goias,Maranhao,Mato Grosso,Mato Grosso do Sul,Minas Gerais,Para,Paraiba,Parana,Pernambuco,Piaui,Rio de Janeiro,Rio Grande do Norte,Rio Grande do Sul,Rondonia,Roraima,Santa Catarina,Sao Paulo,Sergipe,Tocantins"
+	},
+	{
+		"country_name": "British Indian Ocean Territory",
+		"state_name": "British Indian Ocean Territory"
+	},
+	{
+		"country_name": "Brunei",
+		"state_name": "Belait, Brunei-Muara, Temburong, Tutong"
+	},
+	{
+		"country_name": "Bulgaria",
+		"state_name": "Blagoevgrad,Burgas,Dobrich,Gabrovo,Haskovo,Jambol,Kardzhali,Kjustendil,Lovech,Montana,Oblast Sofiya-Grad,Pazardzhik,Pernik,Pleven,Plovdiv,Razgrad,Ruse,Shumen,Silistra,Sliven,Smoljan,Sofija grad,Sofijska oblast,Stara Zagora,Targovishte,Varna,Veliko Tarnovo,Vidin,Vraca,Yablaniza"
+	},
+	{
+		"country_name": "Burkina Faso",
+		"state_name": "Bale,Bam,Bazega,Bougouriba,Boulgou,Boulkiemde,Comoe,Ganzourgou,Gnagna,Gourma,Houet,Ioba,Kadiogo,Kenedougou,Komandjari,Kompienga,Kossi,Kouritenga,Kourweogo,Leraba,Mouhoun,Nahouri,Namentenga,Noumbiel,Oubritenga,Oudalan,Passore,Poni,Sanguie,Sanmatenga,Seno,Sissili,Soum,Sourou,Tapoa,Tuy,Yatenga,Zondoma,Zoundweogo"
+	},
+	{
+		"country_name": "Burundi",
+		"state_name": "Bubanza,Bujumbura,Bururi,Cankuzo,Cibitoke,Gitega,Karuzi,Kayanza,Kirundo,Makamba,Muramvya,Muyinga,Ngozi,Rutana,Ruyigi"
+	},
+	{
+		"country_name": "Cambodia",
+		"state_name": "Banteay Mean Chey,Bat Dambang,Kampong Cham,Kampong Chhnang,Kampong Spoeu,Kampong Thum,Kampot,Kandal,Kaoh Kong,Kracheh,Krong Kaeb,Krong Pailin,Krong Preah Sihanouk,Mondol Kiri,Otdar Mean Chey,Phnum Penh,Pousat,Preah Vihear,Prey Veaeng,Rotanak Kiri,Siem Reab,Stueng Traeng,Svay Rieng,Takaev"
+	},
+	{
+		"country_name": "Cameroon",
+		"state_name": "Adamaoua,Centre,Est,Littoral,Nord,Nord Extreme,Nordouest,Ouest,Sud,Sudouest"
+	},
+	{
+		"country_name": "Canada",
+		"state_name": "Alberta,British Columbia,Manitoba,New Brunswick,Newfoundland and Labrador,Northwest Territories,Nova Scotia,Nunavut,Ontario,Prince Edward Island,Quebec,Saskatchewan,Yukon"
+	},
+	{
+		"country_name": "Cape Verde",
+		"state_name": "Boavista,Brava,Fogo,Maio,Sal,Santo Antao,Sao Nicolau,Sao Tiago,Sao Vicente"
+	},
+	{
+		"country_name": "Cayman Islands",
+		"state_name": "Grand Cayman"
+	},
+	{
+		"country_name": "Central African Republic",
+		"state_name": "Bamingui-Bangoran,Bangui,Basse-Kotto,Haut-Mbomou,Haute-Kotto,Kemo,Lobaye,Mambere-Kadei,Mbomou,Nana-Gribizi,Nana-Mambere,Ombella Mpoko,Ouaka,Ouham,Ouham-Pende,Sangha-Mbaere,Vakaga"
+	},
+	{
+		"country_name": "Chad",
+		"state_name": "Batha,Biltine,Bourkou-Ennedi-Tibesti,Chari-Baguirmi,Guera,Kanem,Lac,Logone Occidental,Logone Oriental,Mayo-Kebbi,Moyen-Chari,Ouaddai,Salamat,Tandjile"
+	},
+	{
+		"country_name": "Chile",
+		"state_name": "Aisen,Antofagasta,Araucania,Atacama,Bio Bio,Coquimbo,Libertador General Bernardo O',Los Lagos,Magellanes,Maule,Metropolitana,Metropolitana de Santiago,Tarapaca,Valparaiso"
+	},
+	{
+		"country_name": "China",
+		"state_name": "Anhui,Aomen,Beijing,Beijing Shi,Chongqing,Fujian,Gansu,Guangdong,Guangxi,Guizhou,Hainan,Hebei,Heilongjiang,Henan,Hubei,Hunan,Jiangsu,Jiangxi,Jilin,Liaoning,Nei Monggol,Ningxia Hui,Qinghai,Shaanxi,Shandong,Shanghai,Shanxi,Sichuan,Tianjin,Xianggang,Xinjiang,Xizang,Yunnan,Zhejiang"
+	},
+	{
+		"country_name": "Christmas Island",
+		"state_name": "Christmas Island"
+	},
+	{
+		"country_name": "Cocos (Keeling) Islands",
+		"state_name": "Cocos (Keeling) Islands"
+	},
+	{
+		"country_name": "Colombia",
+		"state_name": "Amazonas,Antioquia,Arauca,Atlantico,Bogota,Bolivar,Boyaca,Caldas,Caqueta,Casanare,Cauca,Cesar,Choco,Cordoba,Cundinamarca,Guainia,Guaviare,Huila,La Guajira,Magdalena,Meta,Narino,Norte de Santander,Putumayo,Quindio,Risaralda,San Andres y Providencia,Santander,Sucre,Tolima,Valle del Cauca,Vaupes,Vichada"
+	},
+	{
+		"country_name": "Comoros",
+		"state_name": "Mwali, Njazidja, Nzwani"
+	},
+	{
+		"country_name": "Cook Islands",
+		"state_name": "Aitutaki,Atiu,Mangaia,Manihiki,Mauke,Mitiaro,Nassau,Pukapuka,Rakahanga,Rarotonga,Tongareva"
+	},
+	{
+		"country_name": "Costa Rica",
+		"state_name": "Alajuela,Cartago,Guanacaste,Heredia,Limon,Puntarenas,San Jose"
+	},
+	{
+		"country_name": "Cote D'Ivoire (Ivory Coast)",
+		"state_name": "Abidjan,Agneby,Bafing,Denguele,Dix-huit Montagnes,Fromager,Haut-Sassandra,Lacs,Lagunes,Marahoue,Moyen-Cavally,Moyen-Comoe,N'zi-Comoe,Sassandra,Savanes,Sud-Bandama,Sud-Comoe,Vallee du Bandama,Worodougou,Zanzan"
+	},
+	{
+		"country_name": "Croatia (Hrvatska)",
+		"state_name": "Bjelovar-Bilogora,Dubrovnik-Neretva,Grad Zagreb,Istra,Karlovac,Koprivnica-Krizhevci,Krapina-Zagorje,Lika-Senj,Medhimurje,Medimurska Zupanija,Osijek-Baranja,Osjecko-Baranjska Zupanija,Pozhega-Slavonija,Primorje-Gorski Kotar,Shibenik-Knin,Sisak-Moslavina,Slavonski Brod-Posavina,Split-Dalmacija,Varazhdin,Virovitica-Podravina,Vukovar-Srijem,Zadar,Zagreb"
+	},
+	{
+		"country_name": "Cuba",
+		"state_name": "Camaguey,Ciego de Avila,Cienfuegos,Ciudad de la Habana,Granma,Guantanamo,Habana,Holguin,Isla de la Juventud,La Habana,Las Tunas,Matanzas,Pinar del Rio,Sancti Spiritus,Santiago de Cuba,Villa Clara"
+	},
+	{
+		"country_name": "Cyprus",
+		"state_name": "Government controlled area,Limassol,Nicosia District,Paphos,Turkish controlled area"
+	},
+	{
+		"country_name": "Czech Republic",
+		"state_name": "Central Bohemian,Frycovice,Jihocesky Kraj,Jihochesky,Jihomoravsky,Karlovarsky,Klecany,Kralovehradecky,Liberecky,Lipov,Moravskoslezsky,Olomoucky,Olomoucky Kraj,Pardubicky,Plzensky,Praha,Rajhrad,Smirice,South Moravian,Straz nad Nisou,Stredochesky,Unicov,Ustecky,Valletta,Velesin,Vysochina,Zlinsky"
+	},
+	{
+		"country_name": "Democratic Republic Of The Congo",
+		"state_name": "Bandundu,Bas-Congo,Equateur,Haut-Congo,Kasai-Occidental,Kasai-Oriental,Katanga,Kinshasa,Maniema,Nord-Kivu,Sud-Kivu"
+	},
+	{
+		"country_name": "Denmark",
+		"state_name": "Arhus,Bornholm,Frederiksborg,Fyn,Hovedstaden,Kobenhavn,Kobenhavns Amt,Kobenhavns Kommune,Nordjylland,Ribe,Ringkobing,Roervig,Roskilde,Roslev,Sjaelland,Soeborg,Sonderjylland,Storstrom,Syddanmark,Toelloese,Vejle,Vestsjalland,Viborg"
+	},
+	{
+		"country_name": "Djibouti",
+		"state_name": "'Ali Sabih, Dikhil, Jibuti, Tajurah, Ubuk"
+	},
+	{
+		"country_name": "Dominica",
+		"state_name": "Saint Andrew,Saint David,Saint George,Saint John,Saint Joseph,Saint Luke,Saint Mark,Saint Patrick,Saint Paul,Saint Peter"
+	},
+	{
+		"country_name": "Dominican Republic",
+		"state_name": "Azua,Bahoruco,Barahona,Dajabon,Distrito Nacional,Duarte,El Seybo,Elias Pina,Espaillat,Hato Mayor,Independencia,La Altagracia,La Romana,La Vega,Maria Trinidad Sanchez,Monsenor Nouel,Monte Cristi,Monte Plata,Pedernales,Peravia,Puerto Plata,Salcedo,Samana,San Cristobal,San Juan,San Pedro de Macoris,Sanchez Ramirez,Santiago,Santiago Rodriguez,Valverde"
+	},
+	{
+		"country_name": "East Timor",
+		"state_name": "Aileu,Ainaro,Ambeno,Baucau,Bobonaro,Cova Lima,Dili,Ermera,Lautem,Liquica,Manatuto,Manufahi,Viqueque"
+	},
+	{
+		"country_name": "Ecuador",
+		"state_name": "Azuay,Bolivar,Canar,Carchi,Chimborazo,Cotopaxi,El Oro,Esmeraldas,Galapagos,Guayas,Imbabura,Loja,Los Rios,Manabi,Morona Santiago,Napo,Orellana,Pastaza,Pichincha,Sucumbios,Tungurahua,Zamora Chinchipe"
+	},
+	{
+		"country_name": "Egypt",
+		"state_name": "ad-Daqahliyah,al-Bahr-al-Ahmar,al-Buhayrah,al-Fayyum,al-Gharbiyah,al-Iskandariyah,al-Ismailiyah,al-Jizah,al-Minufiyah,al-Minya,al-Qahira,al-Qalyubiyah,al-Uqsur,al-Wadi al-Jadid,as-Suways,ash-Sharqiyah,Aswan,Asyut,Bani Suwayf,Bur Sa'id,Cairo,Dumyat,Kafr-ash-Shaykh,Matruh,Muhafazat ad Daqahliyah,Muhafazat al Fayyum,Muhafazat al Gharbiyah,Muhafazat al Iskandariyah,Muhafazat al Qahirah,Qina,Sawhaj,Sina al-Janubiyah,Sina ash-Shamaliyah"
+	},
+	{
+		"country_name": "El Salvador",
+		"state_name": "Ahuachapan,Cabanas,Chalatenango,Cuscatlan,La Libertad,La Paz,La Union,Morazan,San Miguel,San Salvador,San Vicente,Santa Ana,Sonsonate,Usulutan"
+	},
+	{
+		"country_name": "Equatorial Guinea",
+		"state_name": "Annobon,Bioko Norte,Bioko Sur,Centro Sur,Kie-Ntem,Litoral,Wele-Nzas"
+	},
+	{
+		"country_name": "Eritrea",
+		"state_name": "Anseba,Debub,Debub-Keih-Bahri,Gash-Barka,Maekel,Semien-Keih-Bahri"
+	},
+	{
+		"country_name": "Estonia",
+		"state_name": "Harju,Hiiu,Ida-Viru,Jarva,Jogeva,Laane,Laane-Viru,Parnu,Polva,Rapla,Saare,Tartu,Valga,Viljandi,Voru"
+	},
+	{
+		"country_name": "Ethiopia",
+		"state_name": "Addis Abeba,Afar,Amhara,Benishangul,Diredawa,Gambella,Harar,Jigjiga,Mekele,Oromia,Somali,Southern,Tigray"
+	},
+	{
+		"country_name": "Falkland Islands",
+		"state_name": "Falkland Islands, South Georgia"
+	},
+	{
+		"country_name": "Faroe Islands",
+		"state_name": "Klaksvik,Nor ara Eysturoy,Nor oy,Sandoy,Streymoy,Su uroy,Sy ra Eysturoy,Torshavn,Vaga"
+	},
+	{
+		"country_name": "Fiji Islands",
+		"state_name": "Central,Eastern,Northern,South Pacific,Western"
+	},
+	{
+		"country_name": "Finland",
+		"state_name": "Ahvenanmaa,Etela-Karjala,Etela-Pohjanmaa,Etela-Savo,Etela-Suomen Laani,Ita-Suomen Laani,Ita-Uusimaa,Kainuu,Kanta-Hame,Keski-Pohjanmaa,Keski-Suomi,Kymenlaakso,Lansi-Suomen Laani,Lappi,Northern Savonia,Ostrobothnia,Oulun Laani,Paijat-Hame,Pirkanmaa,Pohjanmaa,Pohjois-Karjala,Pohjois-Pohjanmaa,Pohjois-Savo,Saarijarvi,Satakunta,Southern Savonia,Tavastia Proper,Uleaborgs Lan,Uusimaa,Varsinais-Suomi"
+	},
+	{
+		"country_name": "France",
+		"state_name": "Ain,Aisne,Albi Le Sequestre,Allier,Alpes-Cote dAzur,Alpes-de-Haute-Provence,Alpes-Maritimes,Alsace,Aquitaine,Ardeche,Ardennes,Ariege,Aube,Aude,Auvergne,Aveyron,Bas-Rhin,Basse-Normandie,Bouches-du-Rhone,Bourgogne,Bretagne,Brittany,Burgundy,Calvados,Cantal,Cedex,Centre,Charente,Charente-Maritime,Cher,Correze,Corse-du-Sud,Cote-d'Or,Cotes-d'Armor,Creuse,Crolles,Deux-Sevres,Dordogne,Doubs,Drome,Essonne,Eure,Eure-et-Loir,Feucherolles,Finistere,Franche-Comte,Gard,Gers,Gironde,Haut-Rhin,Haute-Corse,Haute-Garonne,Haute-Loire,Haute-Marne,Haute-Saone,Haute-Savoie,Haute-Vienne,Hautes-Alpes,Hautes-Pyrenees,Hauts-de-Seine,Herault,Ile-de-France,Ille-et-Vilaine,Indre,Indre-et-Loire,Isere,Jura,Klagenfurt,Landes,Languedoc-Roussillon,Larcay,Le Castellet,Le Creusot,Limousin,Loir-et-Cher,Loire,Loire-Atlantique,Loiret,Lorraine,Lot,Lot-et-Garonne,Lower Normandy,Lozere,Maine-et-Loire,Manche,Marne,Mayenne,Meurthe-et-Moselle,Meuse,Midi-Pyrenees,Morbihan,Moselle,Nievre,Nord,Nord-Pas-de-Calais,Oise,Orne,Paris,Pas-de-Calais,Pays de la Loire,Pays-de-la-Loire,Picardy,Puy-de-Dome,Pyrenees-Atlantiques,Pyrenees-Orientales,Quelmes,Rhone,Rhone-Alpes,Saint Ouen,Saint Viatre,Saone-et-Loire,Sarthe,Savoie,Seine-et-Marne,Seine-Maritime,Seine-Saint-Denis,Somme,Sophia Antipolis,Souvans,Tarn,Tarn-et-Garonne,Territoire de Belfort,Treignac,Upper Normandy,Val-d'Oise,Val-de-Marne,Var,Vaucluse,Vellise,Vendee,Vienne,Vosges,Yonne,Yvelines"
+	},
+	{
+		"country_name": "French Guiana",
+		"state_name": "Cayenne, Saint-Laurent-du-Maroni"
+	},
+	{
+		"country_name": "French Polynesia",
+		"state_name": "Iles du Vent,Iles sous le Vent,Marquesas,Tuamotu,Tubuai"
+	},
+	{
+		"country_name": "French Southern Territories",
+		"state_name": "Amsterdam, Crozet Islands, Kerguelen"
+	},
+	{
+		"country_name": "Gabon",
+		"state_name": "Estuaire,Haut-Ogooue,Moyen-Ogooue,Ngounie,Nyanga,Ogooue-Ivindo,Ogooue-Lolo,Ogooue-Maritime,Woleu-Ntem"
+	},
+	{
+		"country_name": "Gambia",
+		"state_name": "Banjul,Basse,Brikama,Janjanbureh,Kanifing,Kerewan,Kuntaur,Mansakonko"
+	},
+	{
+		"country_name": "Georgia",
+		"state_name": "Abhasia,Ajaria,Guria,Imereti,Kaheti,Kvemo Kartli,Mcheta-Mtianeti,Racha,Samagrelo-Zemo Svaneti,Samche-Zhavaheti,Shida Kartli,Tbilisi"
+	},
+	{
+		"country_name": "Germany",
+		"state_name": "Auvergne,Baden-Wurttemberg,Bavaria,Bayern,Beilstein Wurtt,Berlin,Brandenburg,Bremen,Dreisbach,Freistaat Bayern,Hamburg,Hannover,Heroldstatt,Hessen,Kortenberg,Laasdorf,Land Baden-Wurttemberg,Land Bayern,Land Brandenburg,Land Hessen,Land Mecklenburg-Vorpommern,Land Nordrhein-Westfalen,Land Rheinland-Pfalz,Land Sachsen,Land Sachsen-Anhalt,Land Thuringen,Lower Saxony,Mecklenburg-Vorpommern,Mulfingen,Munich,Neubeuern,Niedersachsen,Noord-Holland,Nordrhein-Westfalen,North Rhine-Westphalia,Osterode,Rheinland-Pfalz,Rhineland-Palatinate,Saarland,Sachsen,Sachsen-Anhalt,Saxony,Schleswig-Holstein,schlobborn,Thuringia,Webling,Weinstrabe"
+	},
+	{
+		"country_name": "Ghana",
+		"state_name": "Ashanti,Brong-Ahafo,Central,Eastern,Greater Accra,Northern,Upper East,Upper West,Volta,Western"
+	},
+	{
+		"country_name": "Gibraltar",
+		"state_name": "Gibraltar"
+	},
+	{
+		"country_name": "Greece",
+		"state_name": "Acharnes,Ahaia,Aitolia kai Akarnania,Argolis,Arkadia,Arta,Attica,Attiki,Ayion Oros,Crete,Dodekanisos,Drama,Evia,Evritania,Evros,Evvoia,Florina,Fokis,Fthiotis,Grevena,Halandri,Halkidiki,Hania,Heraklion,Hios,Ilia,Imathia,Ioannina,Iraklion,Karditsa,Kastoria,Kavala,Kefallinia,Kerkira,Kiklades,Kilkis,Korinthia,Kozani,Lakonia,Larisa,Lasithi,Lesvos,Levkas,Magnisia,Messinia,Nomos Attikis,Nomos Zakynthou,Pella,Pieria,Piraios,Preveza,Rethimni,Rodopi,Samos,Serrai,Thesprotia,Thessaloniki,Trikala,Voiotia,West Greece,Xanthi,Zakinthos"
+	},
+	{
+		"country_name": "Greenland",
+		"state_name": "Aasiaat,Ammassalik,Illoqqortoormiut,Ilulissat,Ivittuut,Kangaatsiaq,Maniitsoq,Nanortalik,Narsaq,Nuuk,Paamiut,Qaanaaq,Qaqortoq,Qasigiannguit,Qeqertarsuaq,Sisimiut,Udenfor kommunal inddeling,Upernavik,Uummannaq"
+	},
+	{
+		"country_name": "Grenada",
+		"state_name": "Carriacou-Petite Martinique,Saint Andrew,Saint Davids,Saint George's,Saint John,Saint Mark,Saint Patrick"
+	},
+	{
+		"country_name": "Guadeloupe",
+		"state_name": "Basse-Terre,Grande-Terre,Iles des Saintes,La Desirade,Marie-Galante,Saint Barthelemy,Saint Martin"
+	},
+	{
+		"country_name": "Guam",
+		"state_name": "Agana Heights,Agat,Barrigada,Chalan-Pago-Ordot,Dededo,Hagatna,Inarajan,Mangilao,Merizo,Mongmong-Toto-Maite,Santa Rita,Sinajana,Talofofo,Tamuning,Yigo,Yona"
+	},
+	{
+		"country_name": "Guatemala",
+		"state_name": "Alta Verapaz,Baja Verapaz,Chimaltenango,Chiquimula,El Progreso,Escuintla,Guatemala,Huehuetenango,Izabal,Jalapa,Jutiapa,Peten,Quezaltenango,Quiche,Retalhuleu,Sacatepequez,San Marcos,Santa Rosa,Solola,Suchitepequez,Totonicapan,Zacapa"
+	},
+	{
+		"country_name": "Guinea",
+		"state_name": "Beyla,Boffa,Boke,Conakry,Coyah,Dabola,Dalaba,Dinguiraye,Faranah,Forecariah,Fria,Gaoual,Gueckedou,Kankan,Kerouane,Kindia,Kissidougou,Koubia,Koundara,Kouroussa,Labe,Lola,Macenta,Mali,Mamou,Mandiana,Nzerekore,Pita,Siguiri,Telimele,Tougue,Yomou"
+	},
+	{
+		"country_name": "Guinea-Bissau",
+		"state_name": "Bafata,Bissau,Bolama,Cacheu,Gabu,Oio,Quinara,Tombali"
+	},
+	{
+		"country_name": "Guyana",
+		"state_name": "Barima-Waini,Cuyuni-Mazaruni,Demerara-Mahaica,East Berbice-Corentyne,Essequibo Islands-West Demerar,Mahaica-Berbice,Pomeroon-Supenaam,Potaro-Siparuni,Upper Demerara-Berbice,Upper Takutu-Upper Essequibo"
+	},
+	{
+		"country_name": "Haiti",
+		"state_name": "Artibonite,Centre,Grand'Anse,Nord,Nord-Est,Nord-Ouest,Ouest,Sud,Sud-Est"
+	},
+	{
+		"country_name": "Honduras",
+		"state_name": "Atlantida,Choluteca,Colon,Comayagua,Copan,Cortes,Distrito Central,El Paraiso,Francisco Morazan,Gracias a Dios,Intibuca,Islas de la Bahia,La Paz,Lempira,Ocotepeque,Olancho,Santa Barbara,Valle,Yoro"
+	},
+	{
+		"country_name": "Hong Kong S.A.R.",
+		"state_name": "Hong Kong"
+	},
+	{
+		"country_name": "Hungary",
+		"state_name": "Bacs-Kiskun,Baranya,Bekes,Borsod-Abauj-Zemplen,Budapest,Csongrad,Fejer,Gyor-Moson-Sopron,Hajdu-Bihar,Heves,Jasz-Nagykun-Szolnok,Komarom-Esztergom,Nograd,Pest,Somogy,Szabolcs-Szatmar-Bereg,Tolna,Vas,Veszprem,Zala"
+	},
+	{
+		"country_name": "Iceland",
+		"state_name": "Austurland,Gullbringusysla,Hofu borgarsva i,Nor urland eystra,Nor urland vestra,Su urland,Su urnes,Vestfir ir,Vesturland"
+	},
+	{
+		"country_name": "India",
+		"state_name": "Andaman and Nicobar Islands,Andhra Pradesh,Arunachal Pradesh,Assam,Bihar,Chandigarh,Chhattisgarh,Dadra and Nagar Haveli,Daman and Diu,Delhi,Goa,Gujarat,Haryana,Himachal Pradesh,Jammu and Kashmir,Jharkhand,Karnataka,Kenmore,Kerala,Ladakh,Lakshadweep,Madhya Pradesh,Maharashtra,Manipur,Meghalaya,Mizoram,Nagaland,Narora,Odisha,Pondicherry,Punjab,Rajasthan,Sikkim,Tamil Nadu,Telangana,Tripura,Uttar Pradesh,Uttarakhand,West Bengal"
+	},
+	{
+		"country_name": "Indonesia",
+		"state_name": "Aceh,Bali,Bangka-Belitung,Banten,Bengkulu,Gandaria,Gorontalo,Jakarta,Jambi,Jawa Barat,Jawa Tengah,Jawa Timur,Kalimantan Barat,Kalimantan Selatan,Kalimantan Tengah,Kalimantan Timur,Kendal,Lampung,Maluku,Maluku Utara,Nusa Tenggara Barat,Nusa Tenggara Timur,Papua,Riau,Riau Kepulauan,Solo,Sulawesi Selatan,Sulawesi Tengah,Sulawesi Tenggara,Sulawesi Utara,Sumatera Barat,Sumatera Selatan,Sumatera Utara,Yogyakarta"
+	},
+	{
+		"country_name": "Iran",
+		"state_name": "Ardabil,Azarbayjan-e Bakhtari,Azarbayjan-e Khavari,Bushehr,Chahar Mahal-e Bakhtiari,Esfahan,Fars,Gilan,Golestan,Hamadan,Hormozgan,Ilam,Kerman,Kermanshah,Khorasan,Khuzestan,Kohgiluyeh-e Boyerahmad,Kordestan,Lorestan,Markazi,Mazandaran,Ostan-e Esfahan,Qazvin,Qom,Semnan,Sistan-e Baluchestan,Tehran,Yazd,Zanjan"
+	},
+	{
+		"country_name": "Iraq",
+		"state_name": "al-Anbar,al-Basrah,al-Muthanna,al-Qadisiyah,an-Najaf,as-Sulaymaniyah,at-Ta'mim,Babil,Baghdad,Dahuk,Dhi Qar,Diyala,Erbil,Irbil,Karbala,Kurdistan,Maysan,Ninawa,Salah-ad-Din,Wasit"
+	},
+	{
+		"country_name": "Ireland",
+		"state_name": "Armagh,Carlow,Cavan,Clare,Cork,Donegal,Dublin,Galway,Kerry,Kildare,Kilkenny,Laois,Leinster,Leitrim,Limerick,Loch Garman,Longford,Louth,Mayo,Meath,Monaghan,Offaly,Roscommon,Sligo,Tipperary North Riding,Tipperary South Riding,Ulster,Waterford,Westmeath,Wexford,Wicklow"
+	},
+	{
+		"country_name": "Israel",
+		"state_name": "Beit Hanania,Ben Gurion Airport,Bethlehem,Caesarea,Centre,Gaza,Hadaron,Haifa District,Hamerkaz,Hazafon,Hebron,Jaffa,Jerusalem,Khefa,Kiryat Yam,Lower Galilee,Qalqilya,Talme Elazar,Tel Aviv,Tsafon,Umm El Fahem,Yerushalayim"
+	},
+	{
+		"country_name": "Italy",
+		"state_name": "Abruzzi,Abruzzo,Agrigento,Alessandria,Ancona,Arezzo,Ascoli Piceno,Asti,Avellino,Bari,Basilicata,Belluno,Benevento,Bergamo,Biella,Bologna,Bolzano,Brescia,Brindisi,Calabria,Campania,Cartoceto,Caserta,Catania,Chieti,Como,Cosenza,Cremona,Cuneo,Emilia-Romagna,Ferrara,Firenze,Florence,Forli-Cesena ,Friuli-Venezia Giulia,Frosinone,Genoa,Gorizia,L'Aquila,Lazio,Lecce,Lecco,Liguria,Lodi,Lombardia,Lombardy,Macerata,Mantova,Marche,Messina,Milan,Modena,Molise,Molteno,Montenegro,Monza and Brianza,Naples,Novara,Padova,Parma,Pavia,Perugia,Pesaro-Urbino,Piacenza,Piedmont,Piemonte,Pisa,Pordenone,Potenza,Puglia,Reggio Emilia,Rimini,Roma,Salerno,Sardegna,Sassari,Savona,Sicilia,Siena,Sondrio,South Tyrol,Taranto,Teramo,Torino,Toscana,Trapani,Trentino-Alto Adige,Trento,Treviso,Udine,Umbria,Valle d'Aosta,Varese,Veneto,Venezia,Verbano-Cusio-Ossola,Vercelli,Verona,Vicenza,Viterbo"
+	},
+	{
+		"country_name": "Jamaica",
+		"state_name": "Buxoro Viloyati,Clarendon,Hanover,Kingston,Manchester,Portland,Saint Andrews,Saint Ann,Saint Catherine,Saint Elizabeth,Saint James,Saint Mary,Saint Thomas,Trelawney,Westmoreland"
+	},
+	{
+		"country_name": "Japan",
+		"state_name": "Aichi,Akita,Aomori,Chiba,Ehime,Fukui,Fukuoka,Fukushima,Gifu,Gumma,Hiroshima,Hokkaido,Hyogo,Ibaraki,Ishikawa,Iwate,Kagawa,Kagoshima,Kanagawa,Kanto,Kochi,Kumamoto,Kyoto,Mie,Miyagi,Miyazaki,Nagano,Nagasaki,Nara,Niigata,Oita,Okayama,Okinawa,Osaka,Saga,Saitama,Shiga,Shimane,Shizuoka,Tochigi,Tokushima,Tokyo,Tottori,Toyama,Wakayama,Yamagata,Yamaguchi,Yamanashi"
+	},
+	{
+		"country_name": "Jersey",
+		"state_name": "Grouville,Saint Brelade,Saint Clement,Saint Helier,Saint John,Saint Lawrence,Saint Martin,Saint Mary,Saint Peter,Saint Saviour,Trinity"
+	},
+	{
+		"country_name": "Jordan",
+		"state_name": "Ajlun,al-'Aqabah,al-Balqa',al-Karak,al-Mafraq,Amman,at-Tafilah,az-Zarqa',Irbid,Jarash,Ma'an,Madaba"
+	},
+	{
+		"country_name": "Kazakhstan",
+		"state_name": "Akmecet,Akmola,Aktobe,Almati,Atirau,Batis Kazakstan,Burlinsky Region,Karagandi,Kostanay,Mankistau,Ontustik Kazakstan,Pavlodar,Sigis Kazakstan,Soltustik Kazakstan,Taraz"
+	},
+	{
+		"country_name": "Kenya",
+		"state_name": "Central,Coast,Eastern,Nairobi,North Eastern,Nyanza,Rift Valley,Western"
+	},
+	{
+		"country_name": "Kiribati",
+		"state_name": "Abaiang,Abemana,Aranuka,Arorae,Banaba,Beru,Butaritari,Kiritimati,Kuria,Maiana,Makin,Marakei,Nikunau,Nonouti,Onotoa,Phoenix Islands,Tabiteuea North,Tabiteuea South,Tabuaeran,Tamana,Tarawa North,Tarawa South,Teraina"
+	},
+	{
+		"country_name": "Korea South",
+		"state_name": "Busan,Cheju,Chollabuk,Chollanam,Chungbuk,Chungcheongbuk,Chungcheongnam,Chungnam,Daegu,Gangwon-do,Goyang-si,gwangyoksi,Gyeonggi-do,Gyeongsang ,Gyeongsangnam-do,Incheon,Jeju-Si,Jeonbuk,Kangweon,Kwangju,Kyeonggi,Kyeongsangbuk,Kyeongsangnam,Kyonggi-do,Kyungbuk-Do,Kyunggi-Do,Kyunggi-do,Pusan,Seoul,Sudogwon,Taegu,Taejeon,Taejon-gwangyoksi,Ulsan,Wonju"
+	},
+	{
+		"country_name": "Kuwait",
+		"state_name": "Al Asimah,al-Ahmadi,al-Farwaniyah,al-Jahra,al-Kuwayt,Hawalli,Mishref,Qadesiya,Safat,Salmiya"
+	},
+	{
+		"country_name": "Kyrgyzstan",
+		"state_name": "Batken,Bishkek,Chui,Issyk-Kul,Jalal-Abad,Naryn,Osh,Talas"
+	},
+	{
+		"country_name": "Laos",
+		"state_name": "Attopu,Bokeo,Bolikhamsay,Champasak,Houaphanh,Khammouane,Luang Nam Tha,Luang Prabang,Oudomxay,Phongsaly,Saravan,Savannakhet,Sekong,Viangchan Prefecture,Viangchan Province,Xaignabury,Xiang Khuang"
+	},
+	{
+		"country_name": "Latvia",
+		"state_name": "Aizkraukles,Aluksnes,Balvu,Bauskas,Cesu,Daugavpils,Daugavpils City,Dobeles,Gulbenes,Jekabspils,Jelgava,Jelgavas,Jurmala City,Kraslavas,Kuldigas,Liepaja,Liepajas,Limbazhu,Ludzas,Madonas,Ogres,Preilu,Rezekne,Rezeknes,Riga,Rigas,Saldus,Talsu,Tukuma,Valkas,Valmieras,Ventspils,Ventspils City"
+	},
+	{
+		"country_name": "Lebanon",
+		"state_name": "al-Biqa,al-Janub,an-Nabatiyah,ash-Shamal,Beirut,Jabal Lubnan,Mohafazat Liban-Nord,Mohafazat Mont-Liban,Sidon"
+	},
+	{
+		"country_name": "Lesotho",
+		"state_name": "Berea,Butha-Buthe,Leribe,Mafeteng,Maseru,Mohale's Hoek,Mokhotlong,Qacha's Nek,Quthing,Thaba-Tseka"
+	},
+	{
+		"country_name": "Liberia",
+		"state_name": "Bomi,Bong,Grand Bassa,Grand Cape Mount,Grand Gedeh,Loffa,Margibi,Maryland and Grand Kru,Montserrado,Nimba,Rivercess,Sinoe"
+	},
+	{
+		"country_name": "Libya",
+		"state_name": "Ajdabiya,al-'Aziziyah,al-Fatih,al-Jabal al Akhdar,al-Jufrah,al-Khums,al-Kufrah,an-Nuqat al-Khams,ash-Shati',az-Zawiyah,Banghazi,Darnah,Fezzan,Ghadamis,Gharyan,Misratah,Murzuq,Sabha,Sawfajjin,Surt,Tarabulus,Tarhunah,Tripolitania,Tubruq,Yafran,Zlitan"
+	},
+	{
+		"country_name": "Liechtenstein",
+		"state_name": "Balzers,Eschen,Gamprin,Mauren,Planken,Ruggell,Schaan,Schellenberg,Triesen,Triesenberg,Vaduz"
+	},
+	{
+		"country_name": "Lithuania",
+		"state_name": "Alytaus,Anyksciai,Kauno,Klaipedos,Marijampoles,Panevezhio,Panevezys,Shiauliu,Taurages,Telshiu,Telsiai,Utenos,Vilniaus"
+	},
+	{
+		"country_name": "Luxembourg",
+		"state_name": "Capellen,Clervaux,Diekirch,Echternach,Esch-sur-Alzette,Grevenmacher,Luxembourg,Mersch,Redange,Remich,Vianden,Wiltz"
+	},
+	{
+		"country_name": "Macau S.A.R.",
+		"state_name": "Macau"
+	},
+	{
+		"country_name": "Macedonia",
+		"state_name": "Berovo,Bitola,Brod,Debar,Delchevo,Demir Hisar,Gevgelija,Gostivar,Kavadarci,Kichevo,Kochani,Kratovo,Kriva Palanka,Krushevo,Kumanovo,Negotino,Ohrid,Prilep,Probishtip,Radovish,Resen,Shtip,Skopje,Struga,Strumica,Sveti Nikole,Tetovo,Valandovo,Veles,Vinica"
+	},
+	{
+		"country_name": "Madagascar",
+		"state_name": "Antananarivo,Antsiranana,Fianarantsoa,Mahajanga,Toamasina,Toliary"
+	},
+	{
+		"country_name": "Malawi",
+		"state_name": "Balaka,Blantyre City,Chikwawa,Chiradzulu,Chitipa,Dedza,Dowa,Karonga,Kasungu,Lilongwe City,Machinga,Mangochi,Mchinji,Mulanje,Mwanza,Mzimba,Mzuzu City,Nkhata Bay,Nkhotakota,Nsanje,Ntcheu,Ntchisi,Phalombe,Rumphi,Salima,Thyolo,Zomba Municipality"
+	},
+	{
+		"country_name": "Malaysia",
+		"state_name": "Johor,Kedah,Kelantan,Kuala Lumpur,Labuan,Melaka,Negeri Johor,Negeri Sembilan,Pahang,Penang,Perak,Perlis,Pulau Pinang,Sabah,Sarawak,Selangor,Sembilan,Terengganu"
+	},
+	{
+		"country_name": "Maldives",
+		"state_name": "Alif Alif,Alif Dhaal,Baa,Dhaal,Faaf,Gaaf Alif,Gaaf Dhaal,Ghaviyani,Haa Alif,Haa Dhaal,Kaaf,Laam,Lhaviyani,Male,Miim,Nuun,Raa,Shaviyani,Siin,Thaa,Vaav"
+	},
+	{
+		"country_name": "Mali",
+		"state_name": "Bamako,Gao,Kayes,Kidal,Koulikoro,Mopti,Segou,Sikasso,Tombouctou"
+	},
+	{
+		"country_name": "Malta",
+		"state_name": "Gozo and Comino,Inner Harbour,Northern,Outer Harbour,South Eastern,Valletta,Western"
+	},
+	{
+		"country_name": "Man (Isle of)",
+		"state_name": "Castletown,Douglas,Laxey,Onchan,Peel,Port Erin,Port Saint Mary,Ramsey"
+	},
+	{
+		"country_name": "Marshall Islands",
+		"state_name": "Ailinlaplap,Ailuk,Arno,Aur,Bikini,Ebon,Enewetak,Jabat,Jaluit,Kili,Kwajalein,Lae,Lib,Likiep,Majuro,Maloelap,Mejit,Mili,Namorik,Namu,Rongelap,Ujae,Utrik,Wotho,Wotje"
+	},
+	{
+		"country_name": "Martinique",
+		"state_name": "Fort-de-France,La Trinite,Le Marin,Saint-Pierre"
+	},
+	{
+		"country_name": "Mauritania",
+		"state_name": "Adrar,Assaba,Brakna,Dhakhlat Nawadibu,Hudh-al-Gharbi,Hudh-ash-Sharqi,Inshiri,Nawakshut,Qidimagha,Qurqul,Taqant,Tiris Zammur,Trarza"
+	},
+	{
+		"country_name": "Mauritius",
+		"state_name": "Black River,Eau Coulee,Flacq,Floreal,Grand Port,Moka,Pamplempousses,Plaines Wilhelm,Port Louis,Riviere du Rempart,Rodrigues,Rose Hill,Savanne"
+	},
+	{
+		"country_name": "Mexico",
+		"state_name": "Aguascalientes,Baja California,Baja California Sur,Campeche,Chiapas,Chihuahua,Coahuila,Colima,Distrito Federal,Durango,Estado de Mexico,Guanajuato,Guerrero,Hidalgo,Jalisco,Mexico,Michoacan,Morelos,Nayarit,Nuevo Leon,Oaxaca,Puebla,Queretaro,Quintana Roo,San Luis Potosi,Sinaloa,Sonora,Tabasco,Tamaulipas,Tlaxcala,Veracruz,Yucatan,Zacatecas"
+	},
+	{
+		"country_name": "Micronesia",
+		"state_name": "Chuuk, Kusaie, Pohnpei, Yap"
+	},
+	{
+		"country_name": "Moldova",
+		"state_name": "Balti,Cahul,Chisinau,Chisinau Oras,Edinet,Gagauzia,Lapusna,Orhei,Soroca,Taraclia,Tighina,Transnistria,Ungheni"
+	},
+	{
+		"country_name": "Monaco",
+		"state_name": "Fontvieille,La Condamine,Monaco-Ville,Monte Carlo"
+	},
+	{
+		"country_name": "Mongolia",
+		"state_name": "Arhangaj,Bajan-Olgij,Bajanhongor,Bulgan,Darhan-Uul,Dornod,Dornogovi,Dundgovi,Govi-Altaj,Govisumber,Hentij,Hovd,Hovsgol,Omnogovi,Orhon,Ovorhangaj,Selenge,Suhbaatar,Tov,Ulaanbaatar,Uvs,Zavhan"
+	},
+	{
+		"country_name": "Montserrat",
+		"state_name": "Montserrat"
+	},
+	{
+		"country_name": "Morocco",
+		"state_name": "Agadir,Casablanca,Chaouia-Ouardigha,Doukkala-Abda,Fes-Boulemane,Gharb-Chrarda-Beni Hssen,Guelmim,Kenitra,Marrakech-Tensift-Al Haouz,Meknes-Tafilalet,Oriental,Oujda,Province de Tanger,Rabat-Sale-Zammour-Zaer,Sala Al Jadida,Settat,Souss Massa-Draa,Tadla-Azilal,Tangier-Tetouan,Taza-Al Hoceima-Taounate,Wilaya de Casablanca,Wilaya de Rabat-Sale"
+	},
+	{
+		"country_name": "Mozambique",
+		"state_name": "Cabo Delgado,Gaza,Inhambane,Manica,Maputo,Maputo Provincia,Nampula,Niassa,Sofala,Tete,Zambezia"
+	},
+	{
+		"country_name": "Myanmar",
+		"state_name": "Ayeyarwady,Bago,Chin,Kachin,Kayah,Kayin,Magway,Mandalay,Mon,Nay Pyi Taw,Rakhine,Sagaing,Shan,Tanintharyi,Yangon"
+	},
+	{
+		"country_name": "Namibia",
+		"state_name": "Caprivi,Erongo,Hardap,Karas,Kavango,Khomas,Kunene,Ohangwena,Omaheke,Omusati,Oshana,Oshikoto,Otjozondjupa"
+	},
+	{
+		"country_name": "Nauru",
+		"state_name": "Yaren"
+	},
+	{
+		"country_name": "Nepal",
+		"state_name": "Bagmati,Bheri,Dhawalagiri,Gandaki,Janakpur,Karnali,Koshi,Lumbini,Mahakali,Mechi,Narayani,Rapti,Sagarmatha,Seti"
+	},
+	{
+		"country_name": "Netherlands Antilles",
+		"state_name": "Bonaire,Curacao,Saba,Sint Eustatius,Sint Maarten"
+	},
+	{
+		"country_name": "New Caledonia",
+		"state_name": "Iles, Nord, Sud"
+	},
+	{
+		"country_name": "New Zealand",
+		"state_name": "Area Outside Region,Auckland,Bay of Plenty,Canterbury,Gisborne,Hawke's Bay,Manawatu-Wanganui,Marlborough,Nelson,Northland,Otago,Southland,Taranaki,Tasman,Waikato,Wellington,West Coast"
+	},
+	{
+		"country_name": "Nicaragua",
+		"state_name": "Atlantico Norte,Atlantico Sur,Boaco,Carazo,Chinandega,Chontales,Esteli,Granada,Jinotega,Leon,Madriz,Managua,Masaya,Matagalpa,Nueva Segovia,Rio San Juan,Rivas"
+	},
+	{
+		"country_name": "Niger",
+		"state_name": "Agadez,Diffa,Dosso,Maradi,Niamey,Tahoua,Tillabery,Zinder"
+	},
+	{
+		"country_name": "Nigeria",
+		"state_name": "Abia,Abuja Federal Capital Territor,Adamawa,Akwa Ibom,Anambra,Bauchi,Bayelsa,Benue,Borno,Cross River,Delta,Ebonyi,Edo,Ekiti,Enugu,Gombe,Imo,Jigawa,Kaduna,Kano,Katsina,Kebbi,Kogi,Kwara,Lagos,Nassarawa,Niger,Ogun,Ondo,Osun,Oyo,Plateau,Rivers,Sokoto,Taraba,Yobe,Zamfara"
+	},
+	{
+		"country_name": "Norfolk Island",
+		"state_name": "Norfolk Island"
+	},
+	{
+		"country_name": "North Korea",
+		"state_name": "Chagangdo,Hamgyeongbukto,Hamgyeongnamdo,Hwanghaebukto,Hwanghaenamdo,Kaeseong,Kangweon,Nampo,Pyeonganbukto,Pyeongannamdo,Pyeongyang,Yanggang"
+	},
+	{
+		"country_name": "Northern Mariana Islands",
+		"state_name": "Northern Islands, Rota, Saipan, Tinian"
+	},
+	{
+		"country_name": "Norway",
+		"state_name": "Akershus,Aust Agder,ÃƒÂ˜stfold,Bergen,Buskerud,Finnmark,Hedmark,Hordaland,Moere og Romsdal,Nord Trondelag,Nordland,Oestfold,Oppland,Oslo,Rogaland,Soer Troendelag,Sogn og Fjordane,Stavern,Sykkylven,Telemark,Troms,Vest Agder,Vestfold"
+	},
+	{
+		"country_name": "Oman",
+		"state_name": "ad-Dakhiliyah,adh-Dhahirah,Al Buraimi,al-Batinah,ash-Sharqiyah,Dhufar,Masqat,Musandam,Rusayl,Wadi Kabir"
+	},
+	{
+		"country_name": "Pakistan",
+		"state_name": "Baluchistan,Federal Capital Area,Federally administered Tribal ,North-West Frontier,Northern Areas,Punjab,Sind"
+	},
+	{
+		"country_name": "Palau",
+		"state_name": "Aimeliik,Airai,Angaur,Hatobohei,Kayangel,Koror,Melekeok,Ngaraard,Ngardmau,Ngaremlengui,Ngatpang,Ngchesar,Ngerchelong,Ngiwal,Peleliu,Sonsorol"
+	},
+	{
+		"country_name": "Palestinian Territory Occupied",
+		"state_name": "al-Khalil,al-Quds,Ariha,Bayt Lahm,Bethlehem,Dayr-al-Balah,Ghazzah,Ghazzah ash-Shamaliyah,Janin,Khan Yunis,Nabulus,Qalqilyah,Rafah,Ram Allah wal-Birah,Salfit,Tubas,Tulkarm"
+	},
+	{
+		"country_name": "Panama",
+		"state_name": "Bocas del Toro,Chiriqui,Cocle,Colon,Darien,Embera,Herrera,Kuna Yala,Los Santos,Ngobe Bugle,Panama,Veraguas"
+	},
+	{
+		"country_name": "Papua new Guinea",
+		"state_name": "East New Britain,East Sepik,Eastern Highlands,Enga,Fly River,Gulf,Madang,Manus,Milne Bay,Morobe,National Capital District,New Ireland,North Solomons,Oro,Sandaun,Simbu,Southern Highlands,West New Britain,Western Highlands"
+	},
+	{
+		"country_name": "Paraguay",
+		"state_name": "Alto Paraguay,Alto Parana,Amambay,Asuncion,Boqueron,Caaguazu,Caazapa,Canendiyu,Central,Concepcion,Cordillera,Guaira,Itapua,Misiones,Neembucu,Paraguari,Presidente Hayes,San Pedro"
+	},
+	{
+		"country_name": "Peru",
+		"state_name": "Amazonas,Ancash,Apurimac,Arequipa,Ayacucho,Cajamarca,Cusco,Huancavelica,Huanuco,Ica,Junin,La Libertad,Lambayeque,Lima y Callao,Loreto,Madre de Dios,Moquegua,Pasco,Piura,Puno,San Martin,Tacna,Tumbes,Ucayali"
+	},
+	{
+		"country_name": "Philippines",
+		"state_name": "Batangas,Bicol,Bulacan,Cagayan,Caraga,Central Luzon,Central Mindanao,Central Visayas,Cordillera,Davao,Eastern Visayas,Greater Metropolitan Area,Ilocos,Laguna,Luzon,Mactan,Metropolitan Manila Area,Muslim Mindanao,Northern Mindanao,Southern Mindanao,Southern Tagalog,Western Mindanao,Western Visayas"
+	},
+	{
+		"country_name": "Pitcairn Island",
+		"state_name": "Pitcairn Island"
+	},
+	{
+		"country_name": "Poland",
+		"state_name": "Biale Blota,Dobroszyce,Dolnoslaskie,Dziekanow Lesny,Hopowo,Kartuzy,Koscian,Krakow,Kujawsko-Pomorskie,Lodzkie,Lubelskie,Lubuskie,Malomice,Malopolskie,Mazowieckie,Mirkow,Opolskie,Ostrowiec,Podkarpackie,Podlaskie,Polska,Pomorskie,Poznan,Pruszkow,Rymanowska,Rzeszow,Slaskie,Stare Pole,Swietokrzyskie,Warminsko-Mazurskie,Warsaw,Wejherowo,Wielkopolskie,Wroclaw,Zachodnio-Pomorskie,Zukowo"
+	},
+	{
+		"country_name": "Portugal",
+		"state_name": "Abrantes,Acores,Alentejo,Algarve,Braga,Centro,Distrito de Leiria,Distrito de Viana do Castelo,Distrito de Vila Real,Distrito do Porto,Lisboa e Vale do Tejo,Madeira,Norte,Paivas"
+	},
+	{
+		"country_name": "Puerto Rico",
+		"state_name": "Arecibo,Bayamon,Carolina,Florida,Guayama,Humacao,Mayaguez-Aguadilla,Ponce,Salinas,San Juan"
+	},
+	{
+		"country_name": "Qatar",
+		"state_name": "ad-Dawhah,al-Ghuwayriyah,al-Jumayliyah,al-Khawr,al-Wakrah,ar-Rayyan,ash-Shamal,Doha,Jarian-al-Batnah,Umm Salal"
+	},
+	{
+		"country_name": "Reunion",
+		"state_name": "Saint-Benoit,Saint-Denis,Saint-Paul,Saint-Pierre"
+	},
+	{
+		"country_name": "Romania",
+		"state_name": "Alba,Arad,Arges,Bacau,Bihor,Bistrita-Nasaud,Botosani,Braila,Brasov,Bucuresti,Buzau,Calarasi,Caras-Severin,Cluj,Constanta,Covasna,Dambovita,Dolj,Galati,Giurgiu,Gorj,Harghita,Hunedoara,Ialomita,Iasi,Ilfov,Maramures,Mehedinti,Mures,Neamt,Olt,Prahova,Salaj,Satu Mare,Sibiu,Sondelor,Suceava,Teleorman,Timis,Tulcea,Valcea,Vaslui,Vrancea"
+	},
+	{
+		"country_name": "Russia",
+		"state_name": "Adygeja,Aga,Alanija,Altaj,Amur,Arhangelsk,Astrahan,Bashkortostan,Belgorod,Brjansk,Burjatija,Chechenija,Cheljabinsk,Chita,Chukotka,Chuvashija,Dagestan,Evenkija,Gorno-Altaj,Habarovsk,Hakasija,Hanty-Mansija,Ingusetija,Irkutsk,Ivanovo,Jamalo-Nenets,Jaroslavl,Jevrej,Kabardino-Balkarija,Kaliningrad,Kalmykija,Kaluga,Kamchatka,Karachaj-Cherkessija,Karelija,Kemerovo,Khabarovskiy Kray,Kirov,Komi,Komi-Permjakija,Korjakija,Kostroma,Krasnodar,Krasnojarsk,Krasnoyarskiy Kray,Kurgan,Kursk,Leningrad,Lipeck,Magadan,Marij El,Mordovija,Moscow,Moskovskaja Oblast,Moskovskaya Oblast,Moskva,Murmansk,Nenets,Nizhnij Novgorod,Novgorod,Novokusnezk,Novosibirsk,Omsk,Orenburg,Orjol,Penza,Perm,Primorje,Pskov,Pskovskaya Oblast,Rjazan,Rostov,Saha,Sahalin,Samara,Samarskaya,Sankt-Peterburg,Saratov,Smolensk,Stavropol,Sverdlovsk,Tajmyrija,Tambov,Tatarstan,Tjumen,Tomsk,Tula,Tver,Tyva,Udmurtija,Uljanovsk,Ulyanovskaya Oblast,Ust-Orda,Vladimir,Volgograd,Vologda,Voronezh"
+	},
+	{
+		"country_name": "Rwanda",
+		"state_name": "Butare,Byumba,Cyangugu,Gikongoro,Gisenyi,Gitarama,Kibungo,Kibuye,Kigali-ngali,Ruhengeri"
+	},
+	{
+		"country_name": "Saint Helena",
+		"state_name": "Ascension,Gough Island,Saint Helena,Tristan da Cunha"
+	},
+	{
+		"country_name": "Saint Kitts And Nevis",
+		"state_name": "Christ Church Nichola Town,Saint Anne Sandy Point,Saint George Basseterre,Saint George Gingerland,Saint James Windward,Saint John Capesterre,Saint John Figtree,Saint Mary Cayon,Saint Paul Capesterre,Saint Paul Charlestown,Saint Peter Basseterre,Saint Thomas Lowland,Saint Thomas Middle Island,Trinity Palmetto Point"
+	},
+	{
+		"country_name": "Saint Lucia",
+		"state_name": "Anse-la-Raye,Canaries,Castries,Choiseul,Dennery,Gros Inlet,Laborie,Micoud,Soufriere,Vieux Fort"
+	},
+	{
+		"country_name": "Saint Pierre and Miquelon",
+		"state_name": "Miquelon-Langlade, Saint-Pierre"
+	},
+	{
+		"country_name": "Saint Vincent And The Grenadines",
+		"state_name": "Charlotte,Grenadines,Saint Andrew,Saint David,Saint George,Saint Patrick"
+	},
+	{
+		"country_name": "Samoa",
+		"state_name": "A'ana,Aiga-i-le-Tai,Atua,Fa'asaleleaga,Gaga'emauga,Gagaifomauga,Palauli,Satupa'itea,Tuamasaga,Va'a-o-Fonoti,Vaisigano"
+	},
+	{
+		"country_name": "San Marino",
+		"state_name": "Acquaviva,Borgo Maggiore,Chiesanuova,Domagnano,Faetano,Fiorentino,Montegiardino,San Marino,Serravalle"
+	},
+	{
+		"country_name": "Sao Tome and Principe",
+		"state_name": "Agua Grande,Cantagalo,Lemba,Lobata,Me-Zochi,Pague"
+	},
+	{
+		"country_name": "Saudi Arabia",
+		"state_name": "Al Khobar,al-Bahah,al-Hudud-ash-Shamaliyah,al-Madinah,ar-Riyad,Aseer,Ash Sharqiyah,Asir,Central Province,Eastern Province,Ha'il,Jawf,Jizan,Makkah,Najran,Qasim,Tabuk,Western Province"
+	},
+	{
+		"country_name": "Senegal",
+		"state_name": "Dakar,Diourbel,Fatick,Kaolack,Kolda,Louga,Saint-Louis,Tambacounda,Thies,Ziguinchor"
+	},
+	{
+		"country_name": "Serbia",
+		"state_name": "Central Serbia, Kosovo and Metohija, Vojvodina"
+	},
+	{
+		"country_name": "Seychelles",
+		"state_name": "Anse Boileau,Anse Royale,Cascade,Takamaka,Victoria"
+	},
+	{
+		"country_name": "Sierra Leone",
+		"state_name": "Eastern, Northern, Southern, Western"
+	},
+	{
+		"country_name": "Singapore",
+		"state_name": "Singapore"
+	},
+	{
+		"country_name": "Slovakia",
+		"state_name": "Banskobystricky,Bratislavsky,Kosicky,Nitriansky,Presovsky,Trenciansky,Trnavsky,Zilinsky"
+	},
+	{
+		"country_name": "Slovenia",
+		"state_name": "Benedikt,Gorenjska,Gorishka,Jugovzhodna Slovenija,Koroshka,Notranjsko-krashka,Obalno-krashka,Obcina Domzale,Obcina Vitanje,Osrednjeslovenska,Podravska,Pomurska,Savinjska,Slovenian Littoral,Spodnjeposavska,Zasavska"
+	},
+	{
+		"country_name": "Solomon Islands",
+		"state_name": "Central,Choiseul,Guadalcanal,Isabel,Makira and Ulawa,Malaita,Rennell and Bellona,Temotu,Western"
+	},
+	{
+		"country_name": "Somalia",
+		"state_name": "Awdal,Bakol,Banadir,Bari,Bay,Galgudug,Gedo,Hiran,Jubbada Hose,Jubbadha Dexe,Mudug,Nugal,Sanag,Shabellaha Dhexe,Shabellaha Hose,Togdher,Woqoyi Galbed"
+	},
+	{
+		"country_name": "South Africa",
+		"state_name": "Eastern Cape,Free State,Gauteng,KwaZulu Natal,Limpopo,Mpumalanga,North West,Northern Cape,Western Cape"
+	},
+	{
+		"country_name": "South Georgia",
+		"state_name": "South Georgia"
+	},
+	{
+		"country_name": "South Sudan",
+		"state_name": "Central Equatoria"
+	},
+	{
+		"country_name": "Spain",
+		"state_name": "A Coruna,Alacant,Alava,Albacete,Almeria,Asturias,Avila,Badajoz,Balears,Barcelona,Burgos,Caceres,Cadiz,Cantabria,Castello,Ceuta,Ciudad Real,Cordoba,Cuenca,Girona,Granada,Guadalajara,Guipuzcoa,Huelva,Huesca,Jaen,La Rioja,Las Palmas,Leon,Lleida,Lugo,Madrid,Malaga,Melilla,Murcia,Navarra,Ourense,Palencia,Pontevedra,Salamanca,Santa Cruz de Tenerife,Segovia,Sevilla,Soria,Tarragona,Teruel,Toledo,Valencia,Valladolid,Vizcaya,Zamora,Zaragoza"
+	},
+	{
+		"country_name": "Sri Lanka",
+		"state_name": "Amparai,Anuradhapuraya,Badulla,Boralesgamuwa,Colombo,Galla,Gampaha,Hambantota,kadawatha,Kalatura,Kegalla,Kilinochchi,Kurunegala,Madakalpuwa,Maha Nuwara,Malwana,Mannarama,Matale,Matara,Monaragala,Mullaitivu,North Eastern Province,North Western Province,Nuwara Eliya,Polonnaruwa,Puttalama,Ratnapuraya,Southern Province,Tirikunamalaya,Tuscany,Vavuniyawa,Western Province,Yapanaya"
+	},
+	{
+		"country_name": "Sudan",
+		"state_name": "A'ali-an-Nil,al-Bahr-al-Ahmar,al-Buhayrat,al-Jazirah,al-Khartum,al-Qadarif,al-Wahdah,an-Nil-al-Abyad,an-Nil-al-Azraq,ash-Shamaliyah,Bahr-al-Jabal,Central Equatoria,Gharb Bahr-al-Ghazal,Gharb Darfur,Gharb Kurdufan,Gharb-al-Istiwa'iyah,Janub Darfur,Janub Kurdufan,Junqali,Kassala,Nahr-an-Nil,Shamal Bahr-al-Ghazal,Shamal Darfur,Shamal Kurdufan,Sharq-al-Istiwa'iyah,Sinnar,Warab,Wilayat al Khartum"
+	},
+	{
+		"country_name": "Suriname",
+		"state_name": "Brokopondo,Commewijne,Coronie,Marowijne,Nickerie,Para,Paramaribo,Saramacca,Wanica"
+	},
+	{
+		"country_name": "Svalbard And Jan Mayen Islands",
+		"state_name": "Svalbard"
+	},
+	{
+		"country_name": "Swaziland",
+		"state_name": "Hhohho, Lubombo, Manzini, Shiselweni"
+	},
+	{
+		"country_name": "Sweden",
+		"state_name": "Alvsborgs Lan,Angermanland,Blekinge,Bohuslan,Dalarna,Gavleborg,Gaza,Gotland,Halland,Jamtland,Jonkoping,Kalmar,Kristianstads,Kronoberg,Norrbotten,Orebro,Ostergotland,Saltsjo-Boo,Skane,Smaland,Sodermanland,Stockholm,Uppsala,Varmland,Vasterbotten,Vastergotland,Vasternorrland,Vastmanland,Vastra Gotaland"
+	},
+	{
+		"country_name": "Switzerland",
+		"state_name": "Aargau,Appenzell Inner-Rhoden,Appenzell-Ausser Rhoden,Basel-Landschaft,Basel-Stadt,Bern,Canton Ticino,Fribourg,Geneve,Glarus,Graubunden,Heerbrugg,Jura,Kanton Aargau,Luzern,Morbio Inferiore,Muhen,Neuchatel,Nidwalden,Obwalden,Sankt Gallen,Schaffhausen,Schwyz,Solothurn,Thurgau,Ticino,Uri,Valais,Vaud,Vauffelin,Zug,Zurich"
+	},
+	{
+		"country_name": "Syria",
+		"state_name": "al-Hasakah,al-Ladhiqiyah,al-Qunaytirah,Aleppo,ar-Raqqah,as-Suwayda,Dar'a,Dayr-az-Zawr,Dimashq,Halab,Hamah,Hims,Idlib,Madinat Dimashq,Tartus"
+	},
+	{
+		"country_name": "Taiwan",
+		"state_name": "Changhua County,Chiayi City,Chiayi County,Hsinchu City,Hsinchu County,Hualien County,Kaohsiung City,Keelung City,Kinmen County,Lienchiang County,Miaoli County,Nantou County,New Taipei City,Penghu County,Pingtung County,Taichung City,Tainan City,Taipei City,Taitung County,Taoyuan City,Yilan County,YunLin County"
+	},
+	{
+		"country_name": "Tajikistan",
+		"state_name": "Dushanbe,Gorno-Badakhshan,Karotegin,Khatlon,Sughd"
+	},
+	{
+		"country_name": "Tanzania",
+		"state_name": "Arusha,Dar es Salaam,Dodoma,Iringa,Kagera,Kigoma,Kilimanjaro,Lindi,Mara,Mbeya,Morogoro,Mtwara,Mwanza,Pwani,Rukwa,Ruvuma,Shinyanga,Singida,Tabora,Tanga,Zanzibar and Pemba"
+	},
+	{
+		"country_name": "Thailand",
+		"state_name": "Amnat Charoen,Ang Thong,Bangkok,Buri Ram,Chachoengsao,Chai Nat,Chaiyaphum,Changwat Chaiyaphum,Chanthaburi,Chiang Mai,Chiang Rai,Chon Buri,Chumphon,Kalasin,Kamphaeng Phet,Kanchanaburi,Khon Kaen,Krabi,Krung Thep,Lampang,Lamphun,Loei,Lop Buri,Mae Hong Son,Maha Sarakham,Mukdahan,Nakhon Nayok,Nakhon Pathom,Nakhon Phanom,Nakhon Ratchasima,Nakhon Sawan,Nakhon Si Thammarat,Nan,Narathiwat,Nong Bua Lam Phu,Nong Khai,Nonthaburi,Pathum Thani,Pattani,Phangnga,Phatthalung,Phayao,Phetchabun,Phetchaburi,Phichit,Phitsanulok,Phra Nakhon Si Ayutthaya,Phrae,Phuket,Prachin Buri,Prachuap Khiri Khan,Ranong,Ratchaburi,Rayong,Roi Et,Sa Kaeo,Sakon Nakhon,Samut Prakan,Samut Sakhon,Samut Songkhran,Saraburi,Satun,Si Sa Ket,Sing Buri,Songkhla,Sukhothai,Suphan Buri,Surat Thani,Surin,Tak,Trang,Trat,Ubon Ratchathani,Udon Thani,Uthai Thani,Uttaradit,Yala,Yasothon"
+	},
+	{
+		"country_name": "The Netherlands",
+		"state_name": "Amsterdam,Benelux,Drenthe,Flevoland,Friesland,Gelderland,Groningen,Limburg,Noord-Brabant,Noord-Holland,Overijssel,South Holland,Utrecht,Zeeland,Zuid-Holland"
+	},
+	{
+		"country_name": "Togo",
+		"state_name": "Centre, Kara, Maritime, Plateaux, Savanes"
+	},
+	{
+		"country_name": "Tokelau",
+		"state_name": "Atafu, Fakaofo, Nukunonu"
+	},
+	{
+		"country_name": "Tonga",
+		"state_name": "Eua, Ha'apai, Niuas, Tongatapu, Vava'u"
+	},
+	{
+		"country_name": "Trinidad And Tobago",
+		"state_name": "Arima-Tunapuna-Piarco,Caroni,Chaguanas,Couva-Tabaquite-Talparo,Diego Martin,Glencoe,Penal Debe,Point Fortin,Port of Spain,Princes Town,Saint George,San Fernando,San Juan,Sangre Grande,Siparia,Tobago"
+	},
+	{
+		"country_name": "Tunisia",
+		"state_name": "al-Kaf,al-Mahdiyah,al-Munastir,al-Qasrayn,al-Qayrawan,Aryanah,Bajah,Bin 'Arus,Binzart,Gouvernorat de Ariana,Gouvernorat de Nabeul,Gouvernorat de Sousse,Hammamet Yasmine,Jundubah,Madaniyin,Manubah,Monastir,Nabul,Qabis,Qafsah,Qibili,Safaqis,Sfax,Sidi Bu Zayd,Silyanah,Susah,Tatawin,Tawzar,Tunis,Zaghwan"
+	},
+	{
+		"country_name": "Turkey",
+		"state_name": "Adana,Adiyaman,Afyon,Agri,Aksaray,Amasya,Ankara,Antalya,Ardahan,Artvin,Aydin,Balikesir,Bartin,Batman,Bayburt,Bilecik,Bingol,Bitlis,Bolu,Burdur,Bursa,Canakkale,Cankiri,Corum,Denizli,Diyarbakir,Duzce,Edirne,Elazig,Erzincan,Erzurum,Eskisehir,Gaziantep,Giresun,Gumushane,Hakkari,Hatay,Icel,Igdir,Isparta,Istanbul,Izmir,Kahramanmaras,Karabuk,Karaman,Kars,Karsiyaka,Kastamonu,Kayseri,Kilis,Kirikkale,Kirklareli,Kirsehir,Kocaeli,Konya,Kutahya,Lefkosa,Malatya,Manisa,Mardin,Mugla,Mus,Nevsehir,Nigde,Ordu,Osmaniye,Rize,Sakarya,Samsun,Sanliurfa,Siirt,Sinop,Sirnak,Sivas,Tekirdag,Tokat,Trabzon,Tunceli,Usak,Van,Yalova,Yozgat,Zonguldak"
+	},
+	{
+		"country_name": "Turkmenistan",
+		"state_name": "Ahal, Asgabat, Balkan, Dasoguz, Lebap, Mari"
+	},
+	{
+		"country_name": "Turks And Caicos Islands",
+		"state_name": "Grand Turk, South Caicos and East Caicos"
+	},
+	{
+		"country_name": "Tuvalu",
+		"state_name": "Funafuti,Nanumanga,Nanumea,Niutao,Nui,Nukufetau,Nukulaelae,Vaitupu"
+	},
+	{
+		"country_name": "Uganda",
+		"state_name": "Central, Eastern, Northern, Western"
+	},
+	{
+		"country_name": "Ukraine",
+		"state_name": "Cherkas'ka,Chernihivs'ka,Chernivets'ka,Crimea,Dnipropetrovska,Donets'ka,Ivano-Frankivs'ka,Kharkiv,Kharkov,Khersonska,Khmel'nyts'ka,Kirovohrad,Krym,Kyyiv,Kyyivs'ka,L'vivs'ka,Luhans'ka,Mykolayivs'ka,Odes'ka,Odessa,Poltavs'ka,Rivnens'ka,Sevastopol',Sums'ka,Ternopil's'ka,Volyns'ka,Vynnyts'ka,Zakarpats'ka,Zaporizhia,Zhytomyrs'ka"
+	},
+	{
+		"country_name": "United Arab Emirates",
+		"state_name": "Abu Zabi,Ajman,al-Fujayrah,ash-Shariqah,Dubai,Ras al-Khaymah,Sharjah,Sharjha,Umm al Qaywayn"
+	},
+	{
+		"country_name": "United Kingdom",
+		"state_name": "Aberdeen,Aberdeenshire,Argyll,Armagh,Bedfordshire,Belfast,Berkshire,Birmingham,Brechin,Bridgnorth,Bristol,Buckinghamshire,Cambridge,Cambridgeshire,Channel Islands,Cheshire,Cleveland,Co Fermanagh,Conwy,Cornwall,Coventry,Craven Arms,Cumbria,Denbighshire,Derby,Derbyshire,Devon,Dial Code Dungannon,Didcot,Dorset,Dunbartonshire,Durham,East Dunbartonshire,East Lothian,East Midlands,East Sussex,East Yorkshire,England,Essex,Fermanagh,Fife,Flintshire,Fulham,Gainsborough,Glocestershire,Gwent,Hampshire,Hants,Herefordshire,Hertfordshire,Ireland,Isle Of Man,Isle of Wight,Kenford,Kent,Kilmarnock,Lanarkshire,Lancashire,Leicestershire,Lincolnshire,Llanymynech,London,Ludlow,Manchester,Mayfair,Merseyside,Mid Glamorgan,Middlesex,Mildenhall,Monmouthshire,Newton Stewart,Norfolk,North Humberside,North Yorkshire,Northamptonshire,Northants,Northern Ireland,Northumberland,Nottinghamshire,Oxford,Powys,Roos-shire,Sark,Scotland,Scottish Borders,Shropshire,Somerset,South Glamorgan,South Wales,South Yorkshire,Southwell,Staffordshire,Strabane,Suffolk,Surrey,SUSSEX,Sussex,Twickenham,Tyne and Wear,Tyrone,Utah,Wales,Warwickshire,West Lothian,West Midlands,West Sussex,West Yorkshire,Whissendine,Wiltshire,Wokingham,Worcestershire,Wrexham,Wurttemberg,Yorkshire"
+	},
+	{
+		"country_name": "United state",
+		"state_name": "Alabama,Alaska,Arizona,Arkansas,California,Colorado,Connecticut,Delaware,District of Columbia,Florida,Georgia,Hawaii,Idaho,Illinois,Indiana,Iowa,Kansas,Kentucky,Louisiana,Maine,Maryland,Massachusetts,Michigan,Minnesota,Mississippi,Missouri,Montana,Nebraska,Nevada,New Hampshire,New Jersey,New Mexico,New York,North Carolina,North Dakota,Ohio,Oklahoma,Ontario,Oregon,Pennsylvania,Ramey,Rhode Island,South Carolina,South Dakota,Sublimity,Tennessee,Texas,Trimble,Utah,Vermont,Virginia,Washington,West Virginia,Wisconsin,Wyoming"
+	},
+	{
+		"country_name": "Uruguay",
+		"state_name": "Artigas,Canelones,Cerro Largo,Colonia,Durazno,Flores,FLorida,Lavalleja,Maldonado,Montevideo,Paysandu,Rio Negro,Rivera,Rocha,Salto,San Jose,Soriano,Tacuarembo,Treinta y Tres"
+	},
+	{
+		"country_name": "Uzbekistan",
+		"state_name": "Andijon,Buhoro,Buxoro Viloyati,Cizah,Fargona,Horazm,Kaskadar,Korakalpogiston,Namangan,Navoi,Samarkand,Sirdare,Surhondar,Toskent"
+	},
+	{
+		"country_name": "Vanuatu",
+		"state_name": "Malampa, Penama, Sanma, Shefa, Tafea, Torba"
+	},
+	{
+		"country_name": "Vatican City State (Holy See)",
+		"state_name": "Vatican City State (Holy See)"
+	},
+	{
+		"country_name": "Venezuela",
+		"state_name": "Amazonas,Anzoategui,Apure,Aragua,Barinas,Bolivar,Carabobo,Cojedes,Delta Amacuro,Distrito Federal,Falcon,Guarico,Lara,Merida,Miranda,Monagas,Nueva Esparta,Portuguesa,Sucre,Tachira,Trujillo,Vargas,Yaracuy,Zulia"
+	},
+	{
+		"country_name": "Vietnam",
+		"state_name": "Bac Giang,Binh Dinh,Binh Duong,Da Nang,Dong Bang Song Cuu Long,Dong Bang Song Hong,Dong Nai,Dong Nam Bo,Duyen Hai Mien Trung,Hanoi,Hung Yen,Khu Bon Cu,Long An,Mien Nui Va Trung Du,Thai Nguyen,Thanh Pho Ho Chi Minh,Thu Do Ha Noi,Tinh Can Tho,Tinh Da Nang,Tinh Gia Lai"
+	},
+	{
+		"country_name": "Virgin Islands (British)",
+		"state_name": "Anegada, Jost van Dyke, Tortola"
+	},
+	{
+		"country_name": "Virgin Islands (US)",
+		"state_name": "Saint Croix, Saint John, Saint Thomas"
+	},
+	{
+		"country_name": "Wallis And Futuna Islands",
+		"state_name": "Alo, Singave, Wallis"
+	},
+	{
+		"country_name": "Western Sahara",
+		"state_name": "al-'Ayun, as-Samarah, Bu Jaydur, Wad-adh-Dhahab"
+	},
+	{
+		"country_name": "Yemen",
+		"state_name": "'Adan,Abyan,al-Bayda,al-Hudaydah,al-Jawf,al-Mahrah,al-Mahwit,Dhamar,Hadramaut,Hajjah,Hudaydah,Ibb,Lahij,Ma'rib,Madinat San'a,Sa'dah,Sana,Shabwah,Ta'izz"
+	},
+	{
+		"country_name": "Yugoslavia",
+		"state_name": "Central Serbia,Kosovo and Metohija,Montenegro,Republic of Serbia,Serbia,Vojvodina"
+	},
+	{
+		"country_name": "Zambia",
+		"state_name": "Central,Copperbelt,Eastern,Luapala,Lusaka,North-Western,Northern,Southern,Western"
+	},
+	{
+		"country_name": "Zimbabwe",
+		"state_name": "Bulawayo,Harare,Manicaland,Mashonaland Central,Mashonaland East,Mashonaland West,Masvingo,Matabeleland North,Matabeleland South,Midlands"
+	}
+]
