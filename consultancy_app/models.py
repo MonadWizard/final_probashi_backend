@@ -36,7 +36,7 @@ class ConsultancyCreate(models.Model):
     )
 
     consultant_service_category = models.CharField(
-        max_length=200, blank=True, null=True
+        max_length=200, null=False, blank=False
     )
     # Education Service
     educationService_degree = ArrayField(
